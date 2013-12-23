@@ -12,6 +12,10 @@
 bin/
 gen/
 .gwt
+vograbulary-html/gwt-unitCache
+vograbulary-html/war/WEB-INF/deploy
+vograbulary-html/war/assets
+vograbulary-html/war/com.github.donkirkby.vograbulary.GwtDefinition
 
 # Local configuration file (sdk path, etc)
 local.properties
