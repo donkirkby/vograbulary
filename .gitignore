@@ -1,0 +1,6 @@
+# Local configuration file (sdk path, etc)
+.settings
+
+# Backup files
+*~
+
