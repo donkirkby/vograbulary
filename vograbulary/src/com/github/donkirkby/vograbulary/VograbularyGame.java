@@ -15,7 +15,7 @@ public class VograbularyGame implements ApplicationListener {
 	
 	@Override
 	public void create() {		
-        Skin skin = new Skin(Gdx.files.internal("data/uiskin.json"));
+        Skin skin = new Skin(Gdx.files.internal("data/ui/uiskin.json"));
         
         stage = new Stage();
         button = new TextButton("Click Me!", skin);
