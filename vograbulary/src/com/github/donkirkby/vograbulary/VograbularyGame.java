@@ -7,25 +7,32 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class VograbularyGame implements ApplicationListener {
 	private Stage stage;
+	private TextField letters;
 	private TextButton button;
+	private UltraghostController ultraghostController = 
+	        new UltraghostController();
 	
 	@Override
 	public void create() {		
         Skin skin = new Skin(Gdx.files.internal("data/ui/uiskin.json"));
         
         stage = new Stage();
-        button = new TextButton("Click Me!", skin);
+        letters = new TextField("", skin);
+        stage.addActor(letters);
+        button = new TextButton("Next", skin);
         stage.addActor(button);
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                button.setText("Clicked!");
+                letters.setText(ultraghostController.next());
             }
         });
+        
         Gdx.input.setInputProcessor(stage);
 	}
 
