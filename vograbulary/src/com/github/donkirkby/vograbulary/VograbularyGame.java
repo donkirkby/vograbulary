@@ -34,6 +34,8 @@ public class VograbularyGame implements ApplicationListener {
         });
         
         Gdx.input.setInputProcessor(stage);
+        ultraghostController.readWordList(
+                Gdx.files.internal("data/wordlist.txt").reader());
 	}
 
 	@Override
@@ -42,7 +44,7 @@ public class VograbularyGame implements ApplicationListener {
 	}
 
 	@Override
-	public void render() {		
+	public void render() {
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		

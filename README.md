@@ -11,4 +11,16 @@ Contributing
 
 Vograbulary is built using Eclipse. Install the tools listed under [libgdx prerequisites][tools], clone this project from git, and then import the project files into Eclipse.
 
+License
+=======
+
+Vograbulary is released under the MIT license.
+
+[Mockito][mockito] is released under the MIT license, and [libgdx][libgdx] is released under the Apache 2.0 license.
+
+Word list from [Curlew Communications Limited][wordlist], used under the following terms: These files are provided "as is" without any warranty. They may be used and copied freely for non-commercial purposes provided that this notice is included. Downloading of the files signifies acceptance of these conditions.
+
 [tools]: https://github.com/libgdx/libgdx/wiki/Project-setup%2C-running-%26-debugging
+[mockito]: https://code.google.com/p/mockito/
+[libgdx]: http://libgdx.badlogicgames.com/
+[wordlist]: http://www.curlewcommunications.co.uk/wordlist.html
