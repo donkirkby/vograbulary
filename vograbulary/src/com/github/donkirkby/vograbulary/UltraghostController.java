@@ -28,6 +28,7 @@ public class UltraghostController {
         if (currentPuzzle == null)
         {
             currentPuzzle = nextPuzzle();
+            bestSolution = null;
             return currentPuzzle;
         }
         if (searchTask == null)

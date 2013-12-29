@@ -283,11 +283,22 @@ public class UltraghostControllerTest {
     
     @Test
     public void createSearchTaskForSecondPuzzle() {
+        setUpWordList("PIPE\nPIECE");
+        setUpNextLetters("PIEXKR");
+        
         controller.next(); // get puzzle
-        controller.createSearchTask();
-        controller.next(); // get solution
+        Task searchTask = controller.createSearchTask();
+        searchTask.run();
+        String solution1 = controller.next();
         controller.next(); // get next puzzle
         controller.createSearchTask(); // shouldn't throw.
+        String solution2 = controller.next();
+        
+        assertThat("solution 1", solution1, is("PIPE"));
+        assertThat(
+                "solution 2", 
+                solution2, 
+                is(UltraghostController.NO_MATCH_MESSAGE));
     }
     
     @Test
