@@ -9,6 +9,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Timer;
+import com.github.donkirkby.vograbulary.UltraghostController.State;
 
 public class VograbularyGame implements ApplicationListener {
 	private Stage stage;
@@ -30,6 +32,12 @@ public class VograbularyGame implements ApplicationListener {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 letters.setText(ultraghostController.next());
+                if (ultraghostController.getState() == State.PUZZLE) {
+                    Timer.schedule(
+                            ultraghostController.createSearchTask(30), 
+                            0.01f, 
+                            0.01f);
+                }
             }
         });
         
