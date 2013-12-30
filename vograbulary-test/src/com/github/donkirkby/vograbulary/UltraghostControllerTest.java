@@ -34,7 +34,7 @@ public class UltraghostControllerTest {
     @Test
     public void nextPuzzle() {
         String expectedLetters = "AXQ";
-        setUpNextLetters(expectedLetters);
+        controller.setGenerator(new UltraghostDummyGenerator(expectedLetters));
         
         String puzzle = controller.next();
         
@@ -44,7 +44,7 @@ public class UltraghostControllerTest {
     @Test
     public void nextSolution() {
         String expectedLetters = "PIE";
-        setUpNextLetters(expectedLetters);
+        controller.setGenerator(new UltraghostDummyGenerator(expectedLetters));
         String expectedSolution = "PICKLE";
         setUpWordList(expectedSolution);
         
@@ -56,8 +56,9 @@ public class UltraghostControllerTest {
     
     @Test
     public void nextSolutionThenPuzzle() {
-        String expectedLetters = "PIEAPE";
-        setUpNextLetters(expectedLetters);
+        controller.setGenerator(new UltraghostDummyGenerator(
+                "PIE",
+                "APE"));
         String expectedPuzzle = "APE";
         
         controller.next(); // get puzzle
@@ -70,7 +71,7 @@ public class UltraghostControllerTest {
     @Test
     public void nextSolutionMatchesLastLetter() {
         String expectedLetters = "PIE";
-        setUpNextLetters(expectedLetters);
+        controller.setGenerator(new UltraghostDummyGenerator(expectedLetters));
         String expectedSolution = "PICKLE";
         setUpWordList("PINT\nPICKLE");
         
@@ -83,7 +84,7 @@ public class UltraghostControllerTest {
     @Test
     public void nextSolutionMatchesFirstLetter() {
         String expectedLetters = "PIE";
-        setUpNextLetters(expectedLetters);
+        controller.setGenerator(new UltraghostDummyGenerator(expectedLetters));
         String expectedSolution = "PICKLE";
         setUpWordList("LIME\nPICKLE");
         
@@ -96,7 +97,7 @@ public class UltraghostControllerTest {
     @Test
     public void nextSolutionMatchesInteriorLetter() {
         String expectedLetters = "PIE";
-        setUpNextLetters(expectedLetters);
+        controller.setGenerator(new UltraghostDummyGenerator(expectedLetters));
         String expectedSolution = "PICKLE";
         setUpWordList("PASTE\nPICKLE");
         
@@ -109,7 +110,7 @@ public class UltraghostControllerTest {
     @Test
     public void nextSolutionMatchesInteriorLetterNotLast() {
         String expectedLetters = "PEE";
-        setUpNextLetters(expectedLetters);
+        controller.setGenerator(new UltraghostDummyGenerator(expectedLetters));
         String expectedSolution = "PEACE";
         setUpWordList("PASTE\nPEACE");
         
@@ -122,7 +123,7 @@ public class UltraghostControllerTest {
     @Test
     public void nextSolutionShortest() {
         String expectedLetters = "PIE";
-        setUpNextLetters(expectedLetters);
+        controller.setGenerator(new UltraghostDummyGenerator(expectedLetters));
         String expectedSolution = "PIPE";
         setUpWordList("PICKLE\nPIPE");
         
@@ -135,7 +136,7 @@ public class UltraghostControllerTest {
     @Test
     public void nextSolutionEarliest() {
         String expectedLetters = "PIE";
-        setUpNextLetters(expectedLetters);
+        controller.setGenerator(new UltraghostDummyGenerator(expectedLetters));
         String expectedSolution = "PILE";
         setUpWordList("PILE\nPIPE");
         
@@ -148,7 +149,7 @@ public class UltraghostControllerTest {
     @Test
     public void nextSolutionAtLeastFourLetters() {
         String expectedLetters = "PIE";
-        setUpNextLetters(expectedLetters);
+        controller.setGenerator(new UltraghostDummyGenerator(expectedLetters));
         String expectedSolution = "PILE";
         setUpWordList("PIE\nPILE");
         
@@ -161,7 +162,7 @@ public class UltraghostControllerTest {
     @Test
     public void nextSolutionNoneFound() {
         String expectedLetters = "AFR";
-        setUpNextLetters(expectedLetters);
+        controller.setGenerator(new UltraghostDummyGenerator(expectedLetters));
         String expectedSolution = UltraghostController.NO_MATCH_MESSAGE;
         setUpWordList("ABDICATE");
         
@@ -174,7 +175,7 @@ public class UltraghostControllerTest {
     @Test
     public void wordListLowerCase() {
         String expectedLetters = "PIE";
-        setUpNextLetters(expectedLetters);
+        controller.setGenerator(new UltraghostDummyGenerator(expectedLetters));
         String expectedSolution = "PICKLE";
         setUpWordList("pickle");
         
@@ -187,7 +188,7 @@ public class UltraghostControllerTest {
     @Test
     public void createSearchTaskWithNoCalls() {
         String expectedLetters = "PIE";
-        setUpNextLetters(expectedLetters);
+        controller.setGenerator(new UltraghostDummyGenerator(expectedLetters));
         String expectedSolution = UltraghostController.NO_MATCH_MESSAGE;
         setUpWordList("PICKLE\nPIPE");
         
@@ -202,7 +203,7 @@ public class UltraghostControllerTest {
     public void createSearchTaskCancelsAfterNext() {
         Gdx.app = mock(Application.class);
         String expectedLetters = "PIE";
-        setUpNextLetters(expectedLetters);
+        controller.setGenerator(new UltraghostDummyGenerator(expectedLetters));
         String expectedSolution = "PICKLE";
         setUpWordList("PICKLE\nPIPE");
         
@@ -229,7 +230,7 @@ public class UltraghostControllerTest {
     public void createSearchTaskCancelsAfterLastWord() {
         Gdx.app = mock(Application.class);
         String expectedLetters = "PIE";
-        setUpNextLetters(expectedLetters);
+        controller.setGenerator(new UltraghostDummyGenerator(expectedLetters));
         String expectedSolution = "PIPE";
         setUpWordList("PICKLE\nPIPE");
         
@@ -257,7 +258,7 @@ public class UltraghostControllerTest {
     public void createSearchTaskForTwoWordsEachRun() {
         Gdx.app = mock(Application.class);
         String expectedLetters = "PIE";
-        setUpNextLetters(expectedLetters);
+        controller.setGenerator(new UltraghostDummyGenerator(expectedLetters));
         String expectedSolution = "PICKLE";
         setUpWordList("AIRBAG\nPICKLE\nPIPE");
         
@@ -272,6 +273,7 @@ public class UltraghostControllerTest {
     
     @Test
     public void createSearchTaskTwice() {
+        setUpWordList("ARBITRARY\nWORDS");
         controller.next(); // get puzzle
         controller.createSearchTask();
         
@@ -284,7 +286,9 @@ public class UltraghostControllerTest {
     @Test
     public void createSearchTaskForSecondPuzzle() {
         setUpWordList("PIPE\nPIECE");
-        setUpNextLetters("PIEXKR");
+        controller.setGenerator(new UltraghostDummyGenerator(
+                "PIE",
+                "XKR"));
         
         controller.next(); // get puzzle
         Task searchTask = controller.createSearchTask();
@@ -309,18 +313,25 @@ public class UltraghostControllerTest {
         controller.createSearchTask();
     }
     
-    private void setUpWordList(String expectedSolution) {
-        controller.readWordList(new StringReader(expectedSolution));
+    @Test
+    public void passWordsToGenerator() {
+        setUpWordList("ARBITRARY\nWORDS");
+        UltraghostDummyGenerator generator = new UltraghostDummyGenerator();
+        controller.setGenerator(generator);
+        
+        assertThat("word list", generator.getWordList(), hasItem("ARBITRARY"));
     }
-
-    private void setUpNextLetters(String expectedLetters) {
-        Integer first = expectedLetters.charAt(0) - 'A';
-        Integer[] others = new Integer[expectedLetters.length() - 1];
-        for (int i = 1; i < expectedLetters.length(); i++) {
-            char c = expectedLetters.charAt(i);
-            others[i-1] = c - 'A';
-        }
-        int alphabetSize = 26;
-        when(random.nextInt(alphabetSize)).thenReturn(first, others);
+    
+    @Test
+    public void passWordsToGeneratorWhenWordsSetLater() {
+        UltraghostDummyGenerator generator = new UltraghostDummyGenerator();
+        controller.setGenerator(generator);
+        setUpWordList("ARBITRARY\nWORDS");
+        
+        assertThat("word list", generator.getWordList(), hasItem("ARBITRARY"));
+    }
+    
+    private void setUpWordList(String words) {
+        controller.readWordList(new StringReader(words));
     }
 }

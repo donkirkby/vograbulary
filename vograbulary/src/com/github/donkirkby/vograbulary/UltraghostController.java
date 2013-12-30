@@ -14,6 +14,7 @@ public class UltraghostController {
     public enum State {PUZZLE, SOLUTION};
     
     private Random random = new Random();
+    private UltraghostGenerator generator = new UltraghostDefaultGenerator();
     private String currentPuzzle;
     private ArrayList<String> wordList = new ArrayList<String>();
     private int searchBatchSize;
@@ -27,7 +28,7 @@ public class UltraghostController {
     public String next() {
         if (currentPuzzle == null)
         {
-            currentPuzzle = nextPuzzle();
+            currentPuzzle = generator.generate();
             bestSolution = null;
             return currentPuzzle;
         }
@@ -57,23 +58,21 @@ public class UltraghostController {
         return 0 < foundAt && foundAt < word.length() - 1;
     }
 
-    private String nextPuzzle() {
-        int numLetters = 3;
-        int alphabetSize = 26;
-        StringBuilder builder = new StringBuilder(numLetters);
-        for (int i = 0; i < numLetters; i++) {
-            char j = (char) ('A' + getRandom().nextInt(alphabetSize));
-            builder.append(j);
-        }
-        return builder.toString();
-    }
-
     public Random getRandom() {
         return random;
     }
 
     public void setRandom(Random random) {
         this.random = random;
+    }
+
+    public UltraghostGenerator getGenerator() {
+        return generator;
+    }
+
+    public void setGenerator(UltraghostGenerator generator) {
+        this.generator = generator;
+        generator.loadWordList(wordList);
     }
 
     /**
@@ -92,6 +91,7 @@ public class UltraghostController {
         } catch (IOException e) {
             throw new RuntimeException("Reading word list failed.", e);
         }
+        generator.loadWordList(wordList);
     }
 
     public Task createSearchTask() {
@@ -136,9 +136,6 @@ public class UltraghostController {
             int wordCount = searchBatchSize;
             for (int i = 0; i < wordCount && index < wordList.size(); i++) {
                 String word = wordList.get(index);
-                if (index % 10000 == 0) {
-                    System.out.println("searching " + index + ": " + word);
-                }
                 checkWord(word);
                 index++;
             }
