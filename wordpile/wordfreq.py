@@ -1,44 +1,34 @@
 from nltk.corpus import brown
+from nltk.corpus import gutenberg
 from nltk.probability import FreqDist
 from re import match
 
-word_counts = {}
 max_words = 70000
-excluded_tags = {'NP'}
+is_summary_printed = False
+valid_words = set()
 
-class WordCount(object):
-    total = 0
-    excluded = 0
-    seen_lower = False
-    
-    def is_valid(self):
-        return self.seen_lower
-#         return self.excluded < self.total / 2 # less than 50% excluded
+all_words = brown.words() + gutenberg.words()
 
-default_count = WordCount()
-default_count.total = 1
-default_count.excluded = 1
+for word in all_words:
+    lower_word = word.lower()
+    if lower_word == word:
+        valid_words.add(lower_word)
 
-for word, tag in brown.tagged_words():
-    if '-' not in tag: # exclude headlines, titles, and foreign words
-        lower_word = word.lower()
-        word_count = word_counts.get(lower_word)
-        if word_count is None:
-            word_count = WordCount()
-            word_counts[lower_word] = word_count
-        word_count.total += 1
-        if tag in excluded_tags:
-            word_count.excluded += 1
-        if lower_word == word:
-            word_count.seen_lower = True
-            
+if is_summary_printed:
+    print '%d words' % len(valid_words)
+    print '-' * 10
+                        
 freqdist = FreqDist(word.lower() 
-                    for word in brown.words()
-                    if word_counts.get(word.lower(), default_count).is_valid())
+                    for word in all_words
+                    if word.lower() in valid_words)
 word_count = 0
 for word, freq in freqdist.items():
-    if match(r'^[a-z]+$', word):
+    if match(r'^[a-z]+$', word) and freq > 1:
         print word
         word_count += 1
-        if word_count > max_words:
-            exit()
+        if word_count >= max_words:
+            break
+
+if is_summary_printed:
+    print '-' * 10
+    print '%d words' % word_count

@@ -48,13 +48,17 @@ public class UltraghostController {
     }
 
     private boolean isMatch(String word) {
-        if (word.charAt(word.length()-1) != currentPuzzle.charAt(2)) {
+        String puzzle = currentPuzzle;
+        if (puzzle == null) {
             return false;
         }
-        if (word.charAt(0) != currentPuzzle.charAt(0)) {
+        if (word.charAt(word.length()-1) != puzzle.charAt(2)) {
             return false;
         }
-        int foundAt = word.indexOf(currentPuzzle.charAt(1), 1);
+        if (word.charAt(0) != puzzle.charAt(0)) {
+            return false;
+        }
+        int foundAt = word.indexOf(puzzle.charAt(1), 1);
         return 0 < foundAt && foundAt < word.length() - 1;
     }
 
@@ -126,10 +130,9 @@ public class UltraghostController {
     
     private void checkWord(String word) {
         if (isMatch(word)) {
-            if (bestSolution == null) {
-                bestSolution = word;
-            }
-            else if (word.length() < bestSolution.length()) {
+            String previousSolution = bestSolution;
+            if (previousSolution == null 
+                    || word.length() < previousSolution.length()) {
                 bestSolution = word;
             }
         }
