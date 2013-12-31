@@ -75,9 +75,6 @@ public class VograbularyGame implements ApplicationListener {
 
 	@Override
 	public void resize(int width, int height) {
-        button.setPosition(
-                (width-button.getWidth())/2, 
-                (height-button.getHeight())/2);
 	}
 
 	@Override
