@@ -81,14 +81,21 @@ public class UltraghostController {
      * be closed before the method returns.
      */
     public void readWordList(Reader reader) {
-        try (BufferedReader lineReader = new BufferedReader(reader)) {
-            String line;
-            while ((line = lineReader.readLine()) != null) {
-                if (line.length() > 3) {
-                    wordList.add(line.toUpperCase());
+        try {
+            BufferedReader lineReader = new BufferedReader(reader);
+            try {
+                String line;
+                while ((line = lineReader.readLine()) != null) {
+                    if (line.length() > 3) {
+                        wordList.add(line.toUpperCase());
+                    }
                 }
+            } 
+            finally {
+                lineReader.close();
             }
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new RuntimeException("Reading word list failed.", e);
         }
         generator.loadWordList(wordList);
