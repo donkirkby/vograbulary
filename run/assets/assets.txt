@@ -1,5 +1,6 @@
 d:war/:0:application/unknown
 d:data:0:application/unknown
+t:data/wordlist.txt:285071:text/plain
 d:data/ui:0:application/unknown
 t:data/ui/uiskin.json:2850:application/unknown
 i:data/ui/uiskin.png:22779:image/png
