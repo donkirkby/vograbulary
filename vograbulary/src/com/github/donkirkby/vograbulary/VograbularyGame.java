@@ -5,17 +5,17 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Timer;
 import com.github.donkirkby.vograbulary.UltraghostController.State;
 
 public class VograbularyGame implements ApplicationListener {
 	private Stage stage;
-	private TextField letters;
+	private Label letters;
 	private TextButton button;
 	private UltraghostController ultraghostController = 
 	        new UltraghostController();
@@ -31,14 +31,7 @@ public class VograbularyGame implements ApplicationListener {
         table.setFillParent(true);
         stage.addActor(table);
         
-        float width = Gdx.graphics.getWidth();
-        float height = Gdx.graphics.getHeight();
-        float scaleX = width / 150;
-        float scaleY = height / 20;
-        float scale = Math.min(scaleX, scaleY);
-        
-//        skin.getFont("default-font").setScale(scale);
-        letters = new TextField("", skin);
+        letters = new Label("", skin);
         table.add(letters).expand().fillX();
         button = new TextButton("Next", skin);
         table.add(button);
