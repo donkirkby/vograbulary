@@ -37,7 +37,7 @@ public class VograbularyGame implements ApplicationListener {
         float scaleY = height / 20;
         float scale = Math.min(scaleX, scaleY);
         
-        skin.getFont("default-font").setScale(scale);
+//        skin.getFont("default-font").setScale(scale);
         letters = new TextField("", skin);
         table.add(letters).expand().fillX();
         button = new TextButton("Next", skin);
