@@ -7,28 +7,44 @@ import static org.mockito.Mockito.*;
 import java.io.StringReader;
 import java.util.Random;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.mockito.ArgumentCaptor;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
+import com.github.donkirkby.vograbulary.ultraghost.DummyView;
+import com.github.donkirkby.vograbulary.ultraghost.View;
 
 public class UltraghostControllerTest {
     private UltraghostController controller;
     private Random random;
+    private View view;
+    private Task searchTask;
     
     @Rule
     public ExpectedException thrown = ExpectedException.none();
     
     @Before
     public void setUp() {
+        searchTask = null;
         random = mock(Random.class);
+        view = mock(View.class);
         controller = new UltraghostController();
         controller.setRandom(random);
+        controller.setView(view);
+    }
+    
+    @After
+    public void tearDown() {
+        if (searchTask != null) {
+            searchTask.cancel();
+        }
     }
     
     @Test
@@ -36,9 +52,9 @@ public class UltraghostControllerTest {
         String expectedLetters = "AXQ";
         controller.setGenerator(new UltraghostDummyGenerator(expectedLetters));
         
-        String puzzle = controller.next();
-        
-        assertThat("puzzle", puzzle, is(expectedLetters));
+        controller.next();
+
+        verify(view).setPuzzle(expectedLetters);
     }
     
     @Test
@@ -49,23 +65,26 @@ public class UltraghostControllerTest {
         setUpWordList(expectedSolution);
         
         controller.next(); // get puzzle
-        String solution = controller.next();
+        controller.checkAllWords();
+        controller.next();
         
-        assertThat("solution", solution, is(expectedSolution));
+        verify(view).setPuzzle(expectedLetters);
     }
     
     @Test
     public void nextSolutionThenPuzzle() {
+        String expectedPuzzle1 = "PIE";
+        String expectedPuzzle2 = "APE";
         controller.setGenerator(new UltraghostDummyGenerator(
-                "PIE",
-                "APE"));
-        String expectedPuzzle = "APE";
+                expectedPuzzle1,
+                expectedPuzzle2));
         
         controller.next(); // get puzzle
         controller.next(); // get solution
-        String puzzle = controller.next();
+        controller.next();
         
-        assertThat("puzzle", puzzle, is(expectedPuzzle));
+        verify(view).setPuzzle(expectedPuzzle1);
+        verify(view).setPuzzle(expectedPuzzle2);
     }
     
     @Test
@@ -76,9 +95,10 @@ public class UltraghostControllerTest {
         setUpWordList("PINT\nPICKLE");
         
         controller.next(); // get puzzle
-        String solution = controller.next();
+        controller.checkAllWords();
+        controller.next();
         
-        assertThat("solution", solution, is(expectedSolution));
+        verify(view).setSolution(expectedSolution);
     }
     
     @Test
@@ -89,9 +109,10 @@ public class UltraghostControllerTest {
         setUpWordList("LIME\nPICKLE");
         
         controller.next(); // get puzzle
-        String solution = controller.next();
+        controller.checkAllWords();
+        controller.next();
         
-        assertThat("solution", solution, is(expectedSolution));
+        verify(view).setSolution(expectedSolution);
     }
     
     @Test
@@ -102,9 +123,10 @@ public class UltraghostControllerTest {
         setUpWordList("PASTE\nPICKLE");
         
         controller.next(); // get puzzle
-        String solution = controller.next();
+        controller.checkAllWords();
+        controller.next();
         
-        assertThat("solution", solution, is(expectedSolution));
+        verify(view).setSolution(expectedSolution);
     }
     
     @Test
@@ -115,9 +137,10 @@ public class UltraghostControllerTest {
         setUpWordList("PASTE\nPEACE");
         
         controller.next(); // get puzzle
-        String solution = controller.next();
+        controller.checkAllWords();
+        controller.next();
         
-        assertThat("solution", solution, is(expectedSolution));
+        verify(view).setSolution(expectedSolution);
     }
     
     @Test
@@ -128,9 +151,10 @@ public class UltraghostControllerTest {
         setUpWordList("PICKLE\nPIPE");
         
         controller.next(); // get puzzle
-        String solution = controller.next();
+        controller.checkAllWords();
+        controller.next();
         
-        assertThat("solution", solution, is(expectedSolution));
+        verify(view).setSolution(expectedSolution);
     }
     
     @Test
@@ -141,9 +165,10 @@ public class UltraghostControllerTest {
         setUpWordList("PILE\nPIPE");
         
         controller.next(); // get puzzle
-        String solution = controller.next();
+        controller.checkAllWords();
+        controller.next();
         
-        assertThat("solution", solution, is(expectedSolution));
+        verify(view).setSolution(expectedSolution);
     }
     
     @Test
@@ -154,9 +179,10 @@ public class UltraghostControllerTest {
         setUpWordList("PIE\nPILE");
         
         controller.next(); // get puzzle
-        String solution = controller.next();
+        controller.checkAllWords();
+        controller.next();
         
-        assertThat("solution", solution, is(expectedSolution));
+        verify(view).setSolution(expectedSolution);
     }
     
     @Test
@@ -167,9 +193,10 @@ public class UltraghostControllerTest {
         setUpWordList("ABDICATE");
         
         controller.next(); // get puzzle
-        String solution = controller.next();
+        controller.checkAllWords();
+        controller.next();
         
-        assertThat("solution", solution, is(expectedSolution));
+        verify(view).setSolution(expectedSolution);
     }
     
     @Test
@@ -180,9 +207,10 @@ public class UltraghostControllerTest {
         setUpWordList("pickle");
         
         controller.next(); // get puzzle
-        String solution = controller.next();
+        controller.checkAllWords();
+        controller.next();
         
-        assertThat("solution", solution, is(expectedSolution));
+        verify(view).setSolution(expectedSolution);
     }
     
     @Test
@@ -193,29 +221,28 @@ public class UltraghostControllerTest {
         setUpWordList("PICKLE\nPIPE");
         
         controller.next(); // get puzzle
-        controller.createSearchTask(); // Never called, so no solution found.
-        String solution = controller.next();
         
-        assertThat("solution", solution, is(expectedSolution));
+        // Search task never triggered, so no solution found.
+        controller.next();
+        
+        verify(view).setSolution(expectedSolution);
     }
     
     @Test
     public void createSearchTaskCancelsAfterNext() {
-        Gdx.app = mock(Application.class);
         String expectedLetters = "PIE";
         controller.setGenerator(new UltraghostDummyGenerator(expectedLetters));
         String expectedSolution = "PICKLE";
         setUpWordList("PICKLE\nPIPE");
         
         controller.next(); // get puzzle
-        Task searchTask = controller.createSearchTask();
-        Timer.schedule(searchTask, Float.MAX_VALUE, 1);
+        captureSearchTask();
         searchTask.run();
         boolean isScheduledBeforeSolution = searchTask.isScheduled();
-        String solution = controller.next();
+        controller.next();
         boolean isScheduledAfterSolution = searchTask.isScheduled();
         
-        assertThat("solution", solution, is(expectedSolution));
+        verify(view).setSolution(expectedSolution);
         assertThat(
                 "is scheduled before solution", 
                 isScheduledBeforeSolution, 
@@ -225,25 +252,39 @@ public class UltraghostControllerTest {
                 isScheduledAfterSolution,
                 is(false));
     }
+
+    private void captureSearchTask() {
+        float expectedIntervalSeconds = 0.01f;
+        float expectedDelaySeconds = expectedIntervalSeconds;
+        ArgumentCaptor<Task> captor = ArgumentCaptor.forClass(Task.class);
+        verify(view, atLeastOnce()).schedule(
+                captor.capture(), 
+                eq(expectedDelaySeconds), 
+                eq(expectedIntervalSeconds));
+
+        searchTask = captor.getValue();
+        
+        Gdx.app = mock(Application.class);
+        // Schedule it in the far future so we can check if it gets cancelled.
+        Timer.schedule(searchTask, Float.MAX_VALUE, 1);
+    }
     
     @Test
     public void createSearchTaskCancelsAfterLastWord() {
-        Gdx.app = mock(Application.class);
         String expectedLetters = "PIE";
         controller.setGenerator(new UltraghostDummyGenerator(expectedLetters));
         String expectedSolution = "PIPE";
         setUpWordList("PICKLE\nPIPE");
         
         controller.next(); // get puzzle
-        Task searchTask = controller.createSearchTask();
-        Timer.schedule(searchTask, Float.MAX_VALUE, 1);
+        captureSearchTask();
         searchTask.run();
         boolean isScheduledBeforeLastWord = searchTask.isScheduled();
         searchTask.run();
         boolean isScheduledAfterLastWord = searchTask.isScheduled();
-        String solution = controller.next();
+        controller.next();
         
-        assertThat("solution", solution, is(expectedSolution));
+        verify(view).setSolution(expectedSolution);
         assertThat(
                 "is scheduled before last word", 
                 isScheduledBeforeLastWord, 
@@ -261,56 +302,79 @@ public class UltraghostControllerTest {
         controller.setGenerator(new UltraghostDummyGenerator(expectedLetters));
         String expectedSolution = "PICKLE";
         setUpWordList("AIRBAG\nPICKLE\nPIPE");
+        controller.setSearchBatchSize(2);
         
         controller.next(); // get puzzle
-        Task searchTask = controller.createSearchTask(2);
-        Timer.schedule(searchTask, Float.MAX_VALUE, 1);
+        captureSearchTask();
         searchTask.run();
-        String solution = controller.next();
+        controller.next();
         
-        assertThat("solution", solution, is(expectedSolution));
+        verify(view).setSolution(expectedSolution);
     }
     
     @Test
-    public void createSearchTaskTwice() {
-        setUpWordList("ARBITRARY\nWORDS");
-        controller.next(); // get puzzle
-        controller.createSearchTask();
-        
-        thrown.expect(IllegalStateException.class);
-        thrown.expectMessage(
-                "A search task has already been created for this puzzle.");
-        controller.createSearchTask();
-    }
-    
-    @Test
-    public void createSearchTaskForSecondPuzzle() {
+    public void createSearchTaskForSecondPuzzleWithoutSolution() {
         setUpWordList("PIPE\nPIECE");
+        String expectedSolution1 = "PIPE";
+        String expectedSolution2 = UltraghostController.NO_MATCH_MESSAGE;
         controller.setGenerator(new UltraghostDummyGenerator(
                 "PIE",
                 "XKR"));
         
-        controller.next(); // get puzzle
-        Task searchTask = controller.createSearchTask();
+        controller.next(); // display puzzle
+        captureSearchTask();
         searchTask.run();
-        String solution1 = controller.next();
-        controller.next(); // get next puzzle
-        controller.createSearchTask(); // shouldn't throw.
-        String solution2 = controller.next();
+        controller.next(); // display solution
         
-        assertThat("solution 1", solution1, is("PIPE"));
-        assertThat(
-                "solution 2", 
-                solution2, 
-                is(UltraghostController.NO_MATCH_MESSAGE));
+        
+        controller.next(); // display next puzzle
+        controller.next(); // display next solution
+        
+        verify(view).setSolution(expectedSolution1);
+        verify(view).setSolution(expectedSolution2);
     }
     
     @Test
-    public void createSearchTaskWithoutPuzzle() {
-        thrown.expect(IllegalStateException.class);
-        thrown.expectMessage(
-                "No puzzle to search.");
-        controller.createSearchTask();
+    public void createSearchTaskForSecondPuzzleWithSolution() {
+        setUpWordList("PIPE\nPIECE");
+        String expectedSolution1 = "PIPE";
+        String expectedSolution2 = "PIECE";
+        controller.setGenerator(new UltraghostDummyGenerator(
+                "PIE",
+                "PEE"));
+        DummyView dummyView = new DummyView();
+        controller.setView(dummyView);
+        
+        controller.next(); // display puzzle
+        searchTask = dummyView.getSearchTask();
+        searchTask.run();
+        searchTask.run();
+        controller.next(); // display solution
+        String solution1 = dummyView.getSolution();
+        
+        controller.next(); // display next puzzle
+        String clearedSolution = dummyView.getSolution();
+        searchTask = dummyView.getSearchTask();
+        searchTask.run();
+        searchTask.run();
+        controller.next(); // display next solution
+        String solution2 = dummyView.getSolution();
+        
+        assertThat("solution 1", solution1, is(expectedSolution1));
+        assertThat("cleared solution", clearedSolution, is(""));
+        assertThat("solution 2", solution2, is(expectedSolution2));
+    }
+    
+    @Test
+    public void displayPlayerForFirstPuzzle() {
+        controller.setGenerator(new UltraghostDummyGenerator("ABC", "XYZ"));
+        controller.next(); // display puzzle
+        
+        verify(view).setActivePlayer("Player");
+        
+        controller.next(); // display solution
+        controller.next(); // display second puzzle
+        verify(view).setActivePlayer("Computer");
     }
     
     @Test

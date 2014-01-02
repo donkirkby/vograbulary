@@ -3,20 +3,13 @@ package com.github.donkirkby.vograbulary;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Timer;
-import com.github.donkirkby.vograbulary.UltraghostController.State;
+import com.github.donkirkby.vograbulary.ultraghost.DefaultView;
 
 public class VograbularyGame implements ApplicationListener {
 	private Stage stage;
-	private Label letters;
-	private TextButton button;
 	private UltraghostController ultraghostController = 
 	        new UltraghostController();
 	
@@ -31,25 +24,11 @@ public class VograbularyGame implements ApplicationListener {
         table.setFillParent(true);
         stage.addActor(table);
         
-        letters = new Label("", skin);
-        table.add(letters).expand().fillX();
-        button = new TextButton("Next", skin);
-        table.add(button);
-        button.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                letters.setText(ultraghostController.next());
-                if (ultraghostController.getState() == State.PUZZLE) {
-                    Timer.schedule(
-                            ultraghostController.createSearchTask(30), 
-                            0.01f, 
-                            0.01f);
-                }
-            }
-        });
-        
+        DefaultView view = new DefaultView(ultraghostController);
+        view.create(table, skin);
         ultraghostController.readWordList(
                 Gdx.files.internal("data/wordlist.txt").reader());
+        ultraghostController.setSearchBatchSize(100);
 	}
 
 	@Override

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import com.badlogic.gdx.utils.Timer.Task;
+import com.github.donkirkby.vograbulary.ultraghost.View;
 
 public class UltraghostController {
     public static final String NO_MATCH_MESSAGE = "None";
@@ -15,36 +16,50 @@ public class UltraghostController {
     
     private Random random = new Random();
     private UltraghostGenerator generator = new UltraghostDefaultGenerator();
+    private View view;
     private String currentPuzzle;
     private ArrayList<String> wordList = new ArrayList<String>();
-    private int searchBatchSize;
+    private int searchBatchSize = 1;
     private Task searchTask;
     private String bestSolution;
+    private String[] playerNames = new String[] {"Player", "Computer"};
+    private int playerIndex;
     
     public State getState() {
         return currentPuzzle != null ? State.PUZZLE : State.SOLUTION;
     }
 
-    public String next() {
+    public void next() {
         if (currentPuzzle == null)
         {
             currentPuzzle = generator.generate();
+            view.setPuzzle(currentPuzzle);
+            view.setActivePlayer(playerNames[playerIndex]);
+            playerIndex = (playerIndex+1) % 2;
             bestSolution = null;
-            return currentPuzzle;
+            view.setSolution("");
+            float intervalSeconds = 0.01f;
+            float delaySeconds = intervalSeconds;
+            view.schedule(createSearchTask(), delaySeconds, intervalSeconds);
+            return;
         }
-        if (searchTask == null)
-        {
-            for (String word : wordList) {
-                checkWord(word);
-            }
-        }
-        else
+        if (searchTask != null)
         {
             searchTask.cancel();
             searchTask = null;
         }
         currentPuzzle = null;
-        return bestSolution == null ? NO_MATCH_MESSAGE : bestSolution;
+        String solution = bestSolution;
+        if (solution == null) {
+            solution = NO_MATCH_MESSAGE;
+        }
+        view.setSolution(solution);
+    }
+
+    public void checkAllWords() {
+        for (String word : wordList) {
+            checkWord(word);
+        }
     }
 
     private boolean isMatch(String word) {
@@ -79,6 +94,14 @@ public class UltraghostController {
         generator.loadWordList(wordList);
     }
 
+    public View getView() {
+        return view;
+    }
+
+    public void setView(View view) {
+        this.view = view;
+    }
+
     /**
      * Read a list of words from a reader.
      * @param reader contains the list of words, one per line. The reader will
@@ -105,17 +128,25 @@ public class UltraghostController {
         generator.loadWordList(wordList);
     }
 
-    public Task createSearchTask() {
-        return createSearchTask(1);
+    public int getSearchBatchSize() {
+        return searchBatchSize;
     }
-    
+
+    /**
+     * Set the number of words to check each time the search task is triggered.
+     * @param searchBatchSize
+     */
+    public void setSearchBatchSize(int searchBatchSize) {
+        this.searchBatchSize = searchBatchSize;
+    }
+
     /**
      * Create a timer task that will search the word list. Each run of the 
-     * task examines one word in the word list. Calling next() returns the
-     * best solution found so far.
+     * task examines a batch of words in the word list. Calling next() displays 
+     * the best solution found so far.
      * @return a task for searching the word list.
      */
-    public Task createSearchTask(int searchBatchSize) {
+    private Task createSearchTask() {
         if (searchTask != null) {
             throw new IllegalStateException(
                     "A search task has already been created for this puzzle.");
@@ -123,7 +154,6 @@ public class UltraghostController {
         if (currentPuzzle == null) {
             throw new IllegalStateException("No puzzle to search.");
         }
-        this.searchBatchSize = searchBatchSize;
         searchTask = new SearchTask();
         return searchTask;
     }
@@ -143,7 +173,7 @@ public class UltraghostController {
 
         @Override
         public void run() {
-            int wordCount = searchBatchSize;
+            int wordCount = getSearchBatchSize();
             for (int i = 0; i < wordCount && index < wordList.size(); i++) {
                 String word = wordList.get(index);
                 checkWord(word);
