@@ -2,7 +2,13 @@ package com.github.donkirkby.vograbulary;
 
 import java.util.Random;
 
-public class UltraghostDefaultGenerator implements UltraghostGenerator {
+/**
+ * Source of random choices for Ultraghost. Pulled into a separate class to
+ * make it easier to mock out in tests.
+ * @author don
+ *
+ */
+public class UltraghostRandom {
     private Random random;
     
     // Each entry holds the odds of that letter appearing in that position.
@@ -10,22 +16,33 @@ public class UltraghostDefaultGenerator implements UltraghostGenerator {
     private double[] interiorOdds;
     private double[] endingOdds;
 
-    public UltraghostDefaultGenerator() {
+    public UltraghostRandom() {
         this(new Random());
     }
 
-    public UltraghostDefaultGenerator(Random random) {
+    public UltraghostRandom(Random random) {
         this.random = random;
     }
 
-    @Override
-    public String generate() {
+    /**
+     * Generate a new puzzle.
+     * @return a string with three upper-case letters
+     */
+    public String generatePuzzle() {
         StringBuilder builder = new StringBuilder(3);
         builder.append(generateLetter(startingOdds));
         builder.append(generateLetter(interiorOdds));
         builder.append(generateLetter(endingOdds));
         
         return builder.toString();
+    }
+    
+    /**
+     * Choose the index of the starting player.
+     * @param playerCount the total number of players.
+     */
+    public int chooseStartingPlayer(int playerCount) {
+        return random.nextInt(playerCount);
     }
 
     private char generateLetter(double[] letterOdds) {
@@ -40,7 +57,10 @@ public class UltraghostDefaultGenerator implements UltraghostGenerator {
         throw new RuntimeException("Invalid odds for letters.");
     }
 
-    @Override
+    /**
+     * Load a list of words that can be used to choose letter frequencies
+     * for generating puzzles.
+     */
     public void loadWordList(Iterable<String> wordList) {
         int alphabetSize = 26;
         startingOdds = new double[alphabetSize];

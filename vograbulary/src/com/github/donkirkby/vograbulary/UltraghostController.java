@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
-import java.util.Random;
 
 import com.badlogic.gdx.utils.Timer.Task;
 import com.github.donkirkby.vograbulary.ultraghost.View;
@@ -14,8 +13,7 @@ public class UltraghostController {
     
     public enum State {PUZZLE, SOLUTION};
     
-    private Random random = new Random();
-    private UltraghostGenerator generator = new UltraghostDefaultGenerator();
+    private UltraghostRandom random = new UltraghostRandom();
     private View view;
     private String currentPuzzle;
     private ArrayList<String> wordList = new ArrayList<String>();
@@ -23,7 +21,7 @@ public class UltraghostController {
     private Task searchTask;
     private String bestSolution;
     private String[] playerNames = new String[] {"Player", "Computer"};
-    private int playerIndex;
+    private int playerIndex = -1;
     
     public State getState() {
         return currentPuzzle != null ? State.PUZZLE : State.SOLUTION;
@@ -32,17 +30,10 @@ public class UltraghostController {
     public void next() {
         if (currentPuzzle == null)
         {
-            currentPuzzle = generator.generate();
-            view.setPuzzle(currentPuzzle);
-            view.setActivePlayer(playerNames[playerIndex]);
-            playerIndex = (playerIndex+1) % 2;
-            bestSolution = null;
-            view.setSolution("");
-            float intervalSeconds = 0.01f;
-            float delaySeconds = intervalSeconds;
-            view.schedule(createSearchTask(), delaySeconds, intervalSeconds);
+            displayPuzzle();
             return;
         }
+        view.focusNextButton();
         if (searchTask != null)
         {
             searchTask.cancel();
@@ -54,6 +45,30 @@ public class UltraghostController {
             solution = NO_MATCH_MESSAGE;
         }
         view.setSolution(solution);
+    }
+
+    private void displayPuzzle() {
+        currentPuzzle = random.generatePuzzle();
+        view.setPuzzle(currentPuzzle);
+        int playerCount = 2;
+        if (playerIndex < 0) {
+            playerIndex = random.chooseStartingPlayer(playerCount);
+        }
+        else {
+            playerIndex = (playerIndex+1) % playerCount;
+        }
+        view.setActivePlayer(playerNames[playerIndex]);
+        if (playerNames[playerIndex].equals("Computer")) {
+            view.focusNextButton();
+        }
+        else {
+            view.focusSolution();
+        }
+        bestSolution = null;
+        view.setSolution("");
+        float intervalSeconds = 0.01f;
+        float delaySeconds = intervalSeconds;
+        view.schedule(createSearchTask(), delaySeconds, intervalSeconds);
     }
 
     public void checkAllWords() {
@@ -77,21 +92,13 @@ public class UltraghostController {
         return 0 < foundAt && foundAt < word.length() - 1;
     }
 
-    public Random getRandom() {
+    public UltraghostRandom getRandom() {
         return random;
     }
 
-    public void setRandom(Random random) {
+    public void setRandom(UltraghostRandom random) {
         this.random = random;
-    }
-
-    public UltraghostGenerator getGenerator() {
-        return generator;
-    }
-
-    public void setGenerator(UltraghostGenerator generator) {
-        this.generator = generator;
-        generator.loadWordList(wordList);
+        random.loadWordList(wordList);
     }
 
     public View getView() {
@@ -125,7 +132,7 @@ public class UltraghostController {
         catch (IOException e) {
             throw new RuntimeException("Reading word list failed.", e);
         }
-        generator.loadWordList(wordList);
+        random.loadWordList(wordList);
     }
 
     public int getSearchBatchSize() {

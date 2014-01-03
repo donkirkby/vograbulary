@@ -4,6 +4,7 @@ import com.badlogic.gdx.utils.Timer.Task;
 
 public class DummyView implements View {
     private String solution;
+    private String currentFocus;
     private Task searchTask;
 
     @Override
@@ -30,5 +31,19 @@ public class DummyView implements View {
 
     public String getSolution() {
         return solution;
+    }
+
+    @Override
+    public void focusSolution() {
+        currentFocus = "solution";
+    }
+    
+    @Override
+    public void focusNextButton() {
+        currentFocus = "next button";
+    }
+    
+    public String getCurrentFocus() {
+        return currentFocus;
     }
 }

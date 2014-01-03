@@ -9,17 +9,17 @@ import java.util.Random;
 
 import org.junit.Test;
 
-public class UltraghostDefaultGeneratorTest {
+public class UltraghostRandomTest {
     @Test
     public void evenDistribution() {
         Random random = mock(Random.class);
         when(random.nextDouble()).thenReturn(0.1, 0.3, 0.9);
         
-        UltraghostGenerator generator = new UltraghostDefaultGenerator(random);
+        UltraghostRandom generator = new UltraghostRandom(random);
         generator.loadWordList(
                 Arrays.asList("AAAA", "BBBB", "CCCC", "DDDD", "EEEE"));
         
-        String puzzle = generator.generate();
+        String puzzle = generator.generatePuzzle();
         
         assertThat("puzzle", puzzle, is("ABE"));
     }
@@ -29,11 +29,11 @@ public class UltraghostDefaultGeneratorTest {
         Random random = mock(Random.class);
         when(random.nextDouble()).thenReturn(0.1, 0.3, 0.9);
         
-        UltraghostGenerator generator = new UltraghostDefaultGenerator(random);
+        UltraghostRandom generator = new UltraghostRandom(random);
         generator.loadWordList(
                 Arrays.asList("AABA", "BCCB", "CCCC", "DDDD", "EEEE"));
         
-        String puzzle = generator.generate();
+        String puzzle = generator.generatePuzzle();
         
         assertThat("puzzle", puzzle, is("ACE"));
     }

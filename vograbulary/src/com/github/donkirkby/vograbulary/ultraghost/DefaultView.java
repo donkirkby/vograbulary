@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
@@ -24,6 +25,7 @@ public class DefaultView implements View {
     }
 
     public void create(Table table, Skin skin) {
+        table.align(Align.top);
         playerName = new Label(" ", skin);
         table.add(playerName);
         table.row();
@@ -31,20 +33,13 @@ public class DefaultView implements View {
         table.add(letters);
         table.row();
         solution = new TextField("", skin);
-        table.add(solution).expand().fillX();
+        table.add(solution).expandX().fillX();
         button = new TextButton("Next", skin);
         table.add(button);
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 controller.next();
-//                letters.setText(ultraghostController.next());
-//                if (ultraghostController.getState() == State.PUZZLE) {
-//                    Timer.schedule(
-//                            ultraghostController.createSearchTask(30), 
-//                            0.01f, 
-//                            0.01f);
-//                }
             }
         });
     }
@@ -76,5 +71,17 @@ public class DefaultView implements View {
     @Override
     public void setSolution(String solution) {
         this.solution.setText(solution);
+    }
+    
+    @Override
+    public void focusSolution() {
+        solution.getStage().setKeyboardFocus(solution);
+        solution.getOnscreenKeyboard().show(true);
+    }
+    
+    @Override
+    public void focusNextButton() {
+        button.getStage().setKeyboardFocus(button);
+        solution.getOnscreenKeyboard().show(false);
     }
 }
