@@ -168,16 +168,20 @@ public class UltraghostController {
             if (solution == null) {
                 solution = NO_MATCH_MESSAGE;
             }
+            State nextState = new ImprovingState();
             if (playerIndex == 0) {
                 view.setChallenge(solution);
                 view.focusNextButton();
+                // When computer challenges, we immediately switch to the
+                // results state.
+                nextState = nextState.next();
             }
             else {
                 view.setSolution(solution);
                 view.setChallenge("");
                 view.focusChallenge();
             }
-            return new ImprovingState();
+            return nextState;
         }
     }
     
@@ -188,6 +192,7 @@ public class UltraghostController {
 
         @Override
         public State next() {
+            view.focusNextButton();
             return new ResultState();
         }
         

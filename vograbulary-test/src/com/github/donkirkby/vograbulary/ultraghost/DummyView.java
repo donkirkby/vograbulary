@@ -3,6 +3,7 @@ package com.github.donkirkby.vograbulary.ultraghost;
 import com.badlogic.gdx.utils.Timer.Task;
 
 public class DummyView extends View {
+    private String puzzle;
     private String solution;
     private String challenge;
     private Task searchTask;
@@ -19,6 +20,11 @@ public class DummyView extends View {
 
     @Override
     public void setPuzzle(String letters) {
+        puzzle = letters;
+    }
+    
+    public String getPuzzle() {
+        return puzzle;
     }
 
     @Override

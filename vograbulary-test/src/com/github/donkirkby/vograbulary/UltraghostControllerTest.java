@@ -344,9 +344,7 @@ public class UltraghostControllerTest {
         setUpWordList("PIPE\nPIECE");
         String expectedSolution1 = "PIPE";
         String expectedSolution2 = "PIECE";
-        random.setPuzzles(
-                "PIE",
-                "PEE");
+        random.setPuzzles("PIE", "PEE");
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
         
@@ -357,7 +355,7 @@ public class UltraghostControllerTest {
         controller.next(); // display solution by computer
         String solution1 = dummyView.getSolution();
         dummyView.setChallenge("xxxx");
-        controller.next(); // check challenge
+        controller.next(); // check challenge and display result
         
         controller.next(); // display next puzzle for human
         String clearedSolution = dummyView.getSolution();
@@ -372,6 +370,43 @@ public class UltraghostControllerTest {
         assertThat("cleared solution", clearedSolution, is(""));
         assertThat("cleared challenge", clearedChallenge, is(""));
         assertThat("solution 2", solution2, is(expectedSolution2));
+    }
+    
+    @Test
+    public void computerChallengeImmediatelyShowsResult() {
+        setUpWordList("PIPE\nPIECE");
+        String expectedPuzzle2 = "PEE";
+        random.setPuzzles("PIE", expectedPuzzle2);
+        random.setStartingPlayer(HUMAN_PLAYER_INDEX);
+        DummyView dummyView = new DummyView();
+        controller.setView(dummyView);
+        
+        controller.next(); // display puzzle
+        dummyView.getSearchTask().run(); // find computer challenge
+        dummyView.setSolution("PIECE"); // enter human solution
+        controller.next(); // display computer challenge and result
+        controller.next(); // display puzzle 2
+        String puzzle2 = dummyView.getPuzzle();
+        
+        assertThat("puzzle 2", puzzle2, is(expectedPuzzle2));
+    }
+    
+    @Test
+    public void humanChallenge() {
+        setUpWordList("PIECE\nPIPE");
+        random.setPuzzles("PIE", "PEE");
+        random.setStartingPlayer(COMPUTER_PLAYER_INDEX);
+        DummyView dummyView = new DummyView();
+        controller.setView(dummyView);
+        
+        controller.next(); // display puzzle
+        dummyView.getSearchTask().run(); // find computer solution
+        controller.next(); // display computer solution
+        dummyView.setChallenge("PIPE"); // enter human challenge
+        controller.next(); // display result
+        String focus = dummyView.getCurrentFocus();
+        
+        assertThat("focus", focus, is("next"));
     }
     
     @Test
