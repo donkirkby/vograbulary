@@ -11,8 +11,7 @@ import com.github.donkirkby.vograbulary.ultraghost.View;
 public class UltraghostController {
     public static final String NO_MATCH_MESSAGE = "None";
     
-    public enum State {PUZZLE, SOLUTION};
-    
+    private State state = new ResultState();
     private UltraghostRandom random = new UltraghostRandom();
     private View view;
     private String currentPuzzle;
@@ -22,53 +21,9 @@ public class UltraghostController {
     private String bestSolution;
     private String[] playerNames = new String[] {"Player", "Computer"};
     private int playerIndex = -1;
-    
-    public State getState() {
-        return currentPuzzle != null ? State.PUZZLE : State.SOLUTION;
-    }
 
     public void next() {
-        if (currentPuzzle == null)
-        {
-            displayPuzzle();
-            return;
-        }
-        view.focusNextButton();
-        if (searchTask != null)
-        {
-            searchTask.cancel();
-            searchTask = null;
-        }
-        currentPuzzle = null;
-        String solution = bestSolution;
-        if (solution == null) {
-            solution = NO_MATCH_MESSAGE;
-        }
-        view.setSolution(solution);
-    }
-
-    private void displayPuzzle() {
-        currentPuzzle = random.generatePuzzle();
-        view.setPuzzle(currentPuzzle);
-        int playerCount = 2;
-        if (playerIndex < 0) {
-            playerIndex = random.chooseStartingPlayer(playerCount);
-        }
-        else {
-            playerIndex = (playerIndex+1) % playerCount;
-        }
-        view.setActivePlayer(playerNames[playerIndex]);
-        if (playerNames[playerIndex].equals("Computer")) {
-            view.focusNextButton();
-        }
-        else {
-            view.focusSolution();
-        }
-        bestSolution = null;
-        view.setSolution("");
-        float intervalSeconds = 0.01f;
-        float delaySeconds = intervalSeconds;
-        view.schedule(createSearchTask(), delaySeconds, intervalSeconds);
+        state = state.next();
     }
 
     public void checkAllWords() {
@@ -189,6 +144,85 @@ public class UltraghostController {
             if (index >= wordList.size()) {
                 cancel();
             }
+        }
+        
+    }
+
+    /** An abstract base class for all controller states to implement. */
+    private abstract class State {
+        public abstract State next();
+    }
+    
+    /** The puzzle is displayed, and the player is thinking of a solution. */
+    private class SolvingState extends State {
+
+        @Override
+        public State next() {
+            if (searchTask != null)
+            {
+                searchTask.cancel();
+                searchTask = null;
+            }
+            currentPuzzle = null;
+            String solution = bestSolution;
+            if (solution == null) {
+                solution = NO_MATCH_MESSAGE;
+            }
+            if (playerIndex == 0) {
+                view.setChallenge(solution);
+                view.focusNextButton();
+            }
+            else {
+                view.setSolution(solution);
+                view.setChallenge("");
+                view.focusChallenge();
+            }
+            return new ImprovingState();
+        }
+    }
+    
+    /** A solution, skip, or challenge is displayed, and the player is thinking
+     * of a better solution.
+     */
+    private class ImprovingState extends State {
+
+        @Override
+        public State next() {
+            return new ResultState();
+        }
+        
+    }
+    
+    /** A better solution has been entered, skipped, or timed out. The results
+     * are displayed.
+     */
+    private class ResultState extends State {
+
+        @Override
+        public State next() {
+            currentPuzzle = random.generatePuzzle();
+            view.setPuzzle(currentPuzzle);
+            int playerCount = 2;
+            if (playerIndex < 0) {
+                playerIndex = random.chooseStartingPlayer(playerCount);
+            }
+            else {
+                playerIndex = (playerIndex+1) % playerCount;
+            }
+            view.setActivePlayer(playerNames[playerIndex]);
+            if (playerNames[playerIndex].equals("Computer")) {
+                view.focusNextButton();
+            }
+            else {
+                view.focusSolution();
+            }
+            bestSolution = null;
+            view.setSolution("");
+            view.setChallenge("");
+            float intervalSeconds = 0.01f;
+            float delaySeconds = intervalSeconds;
+            view.schedule(createSearchTask(), delaySeconds, intervalSeconds);
+            return new SolvingState();
         }
         
     }

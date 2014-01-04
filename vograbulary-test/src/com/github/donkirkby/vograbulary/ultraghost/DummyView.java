@@ -2,10 +2,11 @@ package com.github.donkirkby.vograbulary.ultraghost;
 
 import com.badlogic.gdx.utils.Timer.Task;
 
-public class DummyView implements View {
+public class DummyView extends View {
     private String solution;
-    private String currentFocus;
+    private String challenge;
     private Task searchTask;
+    private String currentFocus;
 
     @Override
     public void schedule(Task task, float delaySeconds, float intervalSeconds) {
@@ -29,8 +30,19 @@ public class DummyView implements View {
         this.solution = solution;
     }
 
+    @Override
     public String getSolution() {
         return solution;
+    }
+    
+    @Override
+    public void setChallenge(String challenge) {
+        this.challenge = challenge;
+    }
+    
+    @Override
+    public String getChallenge() {
+        return challenge;
     }
 
     @Override
@@ -39,8 +51,13 @@ public class DummyView implements View {
     }
     
     @Override
+    public void focusChallenge() {
+        currentFocus = "challenge";
+    }
+    
+    @Override
     public void focusNextButton() {
-        currentFocus = "next button";
+        currentFocus = "next";
     }
     
     public String getCurrentFocus() {

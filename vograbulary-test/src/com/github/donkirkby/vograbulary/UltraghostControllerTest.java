@@ -22,6 +22,8 @@ import com.github.donkirkby.vograbulary.ultraghost.DummyView;
 import com.github.donkirkby.vograbulary.ultraghost.View;
 
 public class UltraghostControllerTest {
+    private static final int HUMAN_PLAYER_INDEX = 0;
+    private static final int COMPUTER_PLAYER_INDEX = 1;
     private UltraghostController controller;
     private UltraghostDummyRandom random;
     private View view;
@@ -34,6 +36,7 @@ public class UltraghostControllerTest {
     public void setUp() {
         searchTask = null;
         random = new UltraghostDummyRandom();
+        random.setStartingPlayer(COMPUTER_PLAYER_INDEX);
         view = mock(View.class);
         controller = new UltraghostController();
         controller.setRandom(random);
@@ -65,14 +68,14 @@ public class UltraghostControllerTest {
         
         controller.next(); // get puzzle
         controller.checkAllWords();
-        controller.next();
+        controller.next(); // display solution
         
         verify(view).setSolution(expectedSolution);
-        verify(view).focusNextButton();
+        verify(view).focusChallenge();
     }
     
     @Test
-    public void nextSolutionThenPuzzle() {
+    public void nextSolutionThenChallengeAndPuzzle() {
         String expectedPuzzle1 = "PIE";
         String expectedPuzzle2 = "APE";
         random.setPuzzles(
@@ -81,6 +84,7 @@ public class UltraghostControllerTest {
         
         controller.next(); // get puzzle
         controller.next(); // get solution
+        controller.next(); // get challenge
         controller.next();
         
         verify(view).setPuzzle(expectedPuzzle1);
@@ -321,17 +325,18 @@ public class UltraghostControllerTest {
                 "PIE",
                 "XKR");
         
-        controller.next(); // display puzzle
+        controller.next(); // display puzzle for computer
         captureSearchTask();
         searchTask.run();
-        controller.next(); // display solution
+        controller.next(); // display solution by computer
+        controller.next(); // check challenge
         
         
-        controller.next(); // display next puzzle
-        controller.next(); // display next solution
+        controller.next(); // display next puzzle for human
+        controller.next(); // display challenge by computer
         
         verify(view).setSolution(expectedSolution1);
-        verify(view).setSolution(expectedSolution2);
+        verify(view).setChallenge(expectedSolution2);
     }
     
     @Test
@@ -345,30 +350,72 @@ public class UltraghostControllerTest {
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
         
-        controller.next(); // display puzzle
+        controller.next(); // display puzzle for computer
         searchTask = dummyView.getSearchTask();
         searchTask.run();
         searchTask.run();
-        controller.next(); // display solution
+        controller.next(); // display solution by computer
         String solution1 = dummyView.getSolution();
+        dummyView.setChallenge("xxxx");
+        controller.next(); // check challenge
         
-        controller.next(); // display next puzzle
+        controller.next(); // display next puzzle for human
         String clearedSolution = dummyView.getSolution();
+        String clearedChallenge = dummyView.getChallenge();
         searchTask = dummyView.getSearchTask();
         searchTask.run();
         searchTask.run();
-        controller.next(); // display next solution
-        String solution2 = dummyView.getSolution();
+        controller.next(); // display challenge by computer
+        String solution2 = dummyView.getChallenge();
         
         assertThat("solution 1", solution1, is(expectedSolution1));
         assertThat("cleared solution", clearedSolution, is(""));
+        assertThat("cleared challenge", clearedChallenge, is(""));
         assertThat("solution 2", solution2, is(expectedSolution2));
+    }
+    
+    @Test
+    public void displaySolutionForComputerPlayer() {
+        setUpWordList("PIPE\nPIECE");
+        String expectedSolution = "PIPE";
+        random.setPuzzles("PIE");
+        random.setStartingPlayer(COMPUTER_PLAYER_INDEX);
+        DummyView dummyView = new DummyView();
+        controller.setView(dummyView);
+        
+        controller.next(); // display puzzle
+        searchTask = dummyView.getSearchTask();
+        searchTask.run();
+        controller.next(); // display solution
+        String solution = dummyView.getSolution();
+        String challenge = dummyView.getChallenge();
+        
+        assertThat("solution", solution, is(expectedSolution));
+        assertThat("challenge", challenge, is(""));
+    }
+    
+    @Test
+    public void displayChallengeForHumanPlayer() {
+        setUpWordList("PIPE\nPIECE");
+        String expectedChallenge = "PIPE";
+        random.setPuzzles("PIE");
+        random.setStartingPlayer(HUMAN_PLAYER_INDEX);
+        DummyView dummyView = new DummyView();
+        controller.setView(dummyView);
+        
+        controller.next(); // display puzzle
+        searchTask = dummyView.getSearchTask();
+        searchTask.run();
+        controller.next(); // display challenge
+        String challenge = dummyView.getChallenge();
+        
+        assertThat("challenge", challenge, is(expectedChallenge));
     }
     
     @Test
     public void displayPlayerForFirstPuzzle() {
         random.setPuzzles("ABC");
-        random.setStartingPlayer(0);
+        random.setStartingPlayer(HUMAN_PLAYER_INDEX);
         controller.next(); // display puzzle
         
         verify(view).setActivePlayer("Player");
@@ -378,7 +425,7 @@ public class UltraghostControllerTest {
     @Test
     public void displayComputerForFirstPuzzle() {
         random.setPuzzles("ABC");
-        random.setStartingPlayer(1);
+        random.setStartingPlayer(COMPUTER_PLAYER_INDEX);
         controller.next(); // display puzzle
         
         verify(view).setActivePlayer("Computer");
@@ -388,9 +435,10 @@ public class UltraghostControllerTest {
     @Test
     public void displayPlayerForSecondPuzzle() {
         random.setPuzzles("ABC", "XYZ");
-        random.setStartingPlayer(1);
+        random.setStartingPlayer(COMPUTER_PLAYER_INDEX);
         controller.next(); // display puzzle
         controller.next(); // display solution
+        controller.next(); // display challenge
 
         controller.next(); // display second puzzle
         
