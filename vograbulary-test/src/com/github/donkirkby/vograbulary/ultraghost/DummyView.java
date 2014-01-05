@@ -3,11 +3,12 @@ package com.github.donkirkby.vograbulary.ultraghost;
 import com.badlogic.gdx.utils.Timer.Task;
 
 public class DummyView extends View {
-    private String puzzle;
-    private String solution;
-    private String challenge;
+    private String puzzle = "";
+    private String solution = "";
+    private String challenge = "";
+    private String result = "";
     private Task searchTask;
-    private String currentFocus;
+    private String currentFocus = "";
 
     @Override
     public void schedule(Task task, float delaySeconds, float intervalSeconds) {
@@ -51,6 +52,15 @@ public class DummyView extends View {
         return challenge;
     }
 
+    @Override
+    public void setResult(String result) {
+        this.result = result;
+    }
+    
+    public String getResult() {
+        return result;
+    }
+    
     @Override
     public void focusSolution() {
         currentFocus = "solution";

@@ -17,6 +17,7 @@ public class View {
     private Label playerName;
     private TextField solution;
     private TextField challenge;
+    private Label result;
     private TextButton button;
     
     public void create(
@@ -38,6 +39,9 @@ public class View {
         table.row();
         challenge = new TextField("", skin);
         table.add(challenge).expandX().fillX().pad(5);
+        table.row();
+        result = new Label(" ", skin);
+        table.add(result).fillX();
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -93,6 +97,20 @@ public class View {
      */
     public String getChallenge() {
         return challenge.getText();
+    }
+    
+    /**
+     * Display the result of a solution or challenge.
+     */
+    public void setResult(String result) {
+        this.result.setText(result);
+    }
+    
+    /**
+     * Get the displayed result.
+     */
+    public String getResult() {
+        return result.getText().toString();
     }
     
     /**

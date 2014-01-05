@@ -10,6 +10,8 @@ import com.github.donkirkby.vograbulary.ultraghost.View;
 
 public class UltraghostController {
     public static final String NO_MATCH_MESSAGE = "None";
+    public static final int HUMAN_PLAYER_INDEX = 0;
+    public static final int COMPUTER_PLAYER_INDEX = 1;
     
     private State state = new ResultState();
     private UltraghostRandom random = new UltraghostRandom();
@@ -21,6 +23,7 @@ public class UltraghostController {
     private String bestSolution;
     private String[] playerNames = new String[] {"Player", "Computer"};
     private int playerIndex = -1;
+
 
     public void next() {
         state = state.next();
@@ -169,8 +172,16 @@ public class UltraghostController {
                 solution = NO_MATCH_MESSAGE;
             }
             State nextState = new ImprovingState();
-            if (playerIndex == 0) {
-                view.setChallenge(solution);
+            if (playerIndex == HUMAN_PLAYER_INDEX) {
+                String humanSolution = view.getSolution();
+                if (humanSolution == null ||
+                        humanSolution.length() == 0 || 
+                        wordList.contains(humanSolution.toUpperCase())) {
+                    view.setChallenge(solution);
+                }
+                else {
+                    view.setResult("not a word");
+                }
                 view.focusNextButton();
                 // When computer challenges, we immediately switch to the
                 // results state.
@@ -193,6 +204,20 @@ public class UltraghostController {
         @Override
         public State next() {
             view.focusNextButton();
+            String result = view.getResult();
+            if (result != null && result.length() == 0) {
+                String challenge = view.getChallenge();
+                if (challenge == null || challenge.length() == 0) {
+                    result = "not improved";
+                }
+                else {
+                    challenge = challenge.toUpperCase();
+                    result = wordList.contains(challenge)
+                            ? "improved"
+                            : "not a word";
+                }
+                view.setResult(result);
+            }
             return new ResultState();
         }
         
@@ -224,6 +249,7 @@ public class UltraghostController {
             bestSolution = null;
             view.setSolution("");
             view.setChallenge("");
+            view.setResult("");
             float intervalSeconds = 0.01f;
             float delaySeconds = intervalSeconds;
             view.schedule(createSearchTask(), delaySeconds, intervalSeconds);

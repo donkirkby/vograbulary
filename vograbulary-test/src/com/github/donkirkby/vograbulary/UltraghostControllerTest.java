@@ -22,8 +22,6 @@ import com.github.donkirkby.vograbulary.ultraghost.DummyView;
 import com.github.donkirkby.vograbulary.ultraghost.View;
 
 public class UltraghostControllerTest {
-    private static final int HUMAN_PLAYER_INDEX = 0;
-    private static final int COMPUTER_PLAYER_INDEX = 1;
     private UltraghostController controller;
     private UltraghostDummyRandom random;
     private View view;
@@ -36,11 +34,12 @@ public class UltraghostControllerTest {
     public void setUp() {
         searchTask = null;
         random = new UltraghostDummyRandom();
-        random.setStartingPlayer(COMPUTER_PLAYER_INDEX);
+        random.setStartingPlayer(UltraghostController.COMPUTER_PLAYER_INDEX);
         view = mock(View.class);
         controller = new UltraghostController();
         controller.setRandom(random);
         controller.setView(view);
+        setUpWordList("");
     }
     
     @After
@@ -377,7 +376,7 @@ public class UltraghostControllerTest {
         setUpWordList("PIPE\nPIECE");
         String expectedPuzzle2 = "PEE";
         random.setPuzzles("PIE", expectedPuzzle2);
-        random.setStartingPlayer(HUMAN_PLAYER_INDEX);
+        random.setStartingPlayer(UltraghostController.HUMAN_PLAYER_INDEX);
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
         
@@ -394,19 +393,105 @@ public class UltraghostControllerTest {
     @Test
     public void humanChallenge() {
         setUpWordList("PIECE\nPIPE");
-        random.setPuzzles("PIE", "PEE");
-        random.setStartingPlayer(COMPUTER_PLAYER_INDEX);
+        random.setPuzzles("PIE");
+        random.setStartingPlayer(UltraghostController.COMPUTER_PLAYER_INDEX);
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
         
         controller.next(); // display puzzle
         dummyView.getSearchTask().run(); // find computer solution
         controller.next(); // display computer solution
-        dummyView.setChallenge("PIPE"); // enter human challenge
+        dummyView.setChallenge("pipe"); // enter human challenge
         controller.next(); // display result
         String focus = dummyView.getCurrentFocus();
+        String result = dummyView.getResult();
         
         assertThat("focus", focus, is("next"));
+        assertThat("result", result, is("improved"));
+    }
+    
+    @Test
+    public void humanChallengeNotAWord() {
+        setUpWordList("PIECE\nPIPE");
+        random.setPuzzles("PIE");
+        random.setStartingPlayer(UltraghostController.COMPUTER_PLAYER_INDEX);
+        DummyView dummyView = new DummyView();
+        controller.setView(dummyView);
+        
+        controller.next(); // display puzzle
+        dummyView.getSearchTask().run(); // find computer solution
+        controller.next(); // display computer solution
+        dummyView.setChallenge("PIXE"); // enter human challenge
+        controller.next(); // display result
+        String focus = dummyView.getCurrentFocus();
+        String result = dummyView.getResult();
+        
+        assertThat("focus", focus, is("next"));
+        assertThat("result", result, is("not a word"));
+    }
+    
+    @Test
+    public void computerSolutionNotChallenged() {
+        setUpWordList("PIECE\nPIPE");
+        random.setPuzzles("PIE");
+        random.setStartingPlayer(UltraghostController.COMPUTER_PLAYER_INDEX);
+        DummyView dummyView = new DummyView();
+        controller.setView(dummyView);
+        
+        controller.next(); // display puzzle
+        dummyView.getSearchTask().run(); // find computer solution
+        controller.next(); // display computer solution
+        controller.next(); // display result (No human challenge)
+        String focus = dummyView.getCurrentFocus();
+        String result = dummyView.getResult();
+        
+        assertThat("focus", focus, is("next"));
+        assertThat("result", result, is("not improved"));
+    }
+    
+    @Test
+    public void humanSolutionNotAWord() {
+        setUpWordList("PIECE\nPIPE");
+        random.setPuzzles("PIE", "RPE");
+        random.setStartingPlayer(UltraghostController.HUMAN_PLAYER_INDEX);
+        DummyView dummyView = new DummyView();
+        controller.setView(dummyView);
+        
+        controller.next(); // display puzzle
+        dummyView.getSearchTask().run(); // find computer solution
+        dummyView.setSolution("PIXE"); // enter human challenge
+        controller.next(); // display result
+        String focus = dummyView.getCurrentFocus();
+        String result = dummyView.getResult();
+        
+        controller.next(); // next puzzle
+        String newResult = dummyView.getResult();
+        
+        assertThat("focus", focus, is("next"));
+        assertThat("result", result, is("not a word"));
+        assertThat("new result", newResult, is(""));
+    }
+    
+    @Test
+    public void humanSolutionImproved() {
+        setUpWordList("PIECE\nPIPE");
+        random.setPuzzles("PIE", "RPE");
+        random.setStartingPlayer(UltraghostController.HUMAN_PLAYER_INDEX);
+        DummyView dummyView = new DummyView();
+        controller.setView(dummyView);
+        
+        controller.next(); // display puzzle
+        dummyView.getSearchTask().run(); // find computer solution
+        dummyView.getSearchTask().run(); // find computer solution
+        dummyView.setSolution("piece"); // enter human challenge
+        controller.next(); // display result
+        String focus = dummyView.getCurrentFocus();
+        String result = dummyView.getResult();
+        String challenge = dummyView.getChallenge();
+        
+        assertThat("focus", focus, is("next"));
+        assertThat("result", result, is("improved"));
+        assertThat("challenge", challenge, is("PIPE"));
     }
     
     @Test
@@ -414,7 +499,7 @@ public class UltraghostControllerTest {
         setUpWordList("PIPE\nPIECE");
         String expectedSolution = "PIPE";
         random.setPuzzles("PIE");
-        random.setStartingPlayer(COMPUTER_PLAYER_INDEX);
+        random.setStartingPlayer(UltraghostController.COMPUTER_PLAYER_INDEX);
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
         
@@ -434,7 +519,7 @@ public class UltraghostControllerTest {
         setUpWordList("PIPE\nPIECE");
         String expectedChallenge = "PIPE";
         random.setPuzzles("PIE");
-        random.setStartingPlayer(HUMAN_PLAYER_INDEX);
+        random.setStartingPlayer(UltraghostController.HUMAN_PLAYER_INDEX);
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
         
@@ -450,7 +535,7 @@ public class UltraghostControllerTest {
     @Test
     public void displayPlayerForFirstPuzzle() {
         random.setPuzzles("ABC");
-        random.setStartingPlayer(HUMAN_PLAYER_INDEX);
+        random.setStartingPlayer(UltraghostController.HUMAN_PLAYER_INDEX);
         controller.next(); // display puzzle
         
         verify(view).setActivePlayer("Player");
@@ -460,7 +545,7 @@ public class UltraghostControllerTest {
     @Test
     public void displayComputerForFirstPuzzle() {
         random.setPuzzles("ABC");
-        random.setStartingPlayer(COMPUTER_PLAYER_INDEX);
+        random.setStartingPlayer(UltraghostController.COMPUTER_PLAYER_INDEX);
         controller.next(); // display puzzle
         
         verify(view).setActivePlayer("Computer");
@@ -470,7 +555,7 @@ public class UltraghostControllerTest {
     @Test
     public void displayPlayerForSecondPuzzle() {
         random.setPuzzles("ABC", "XYZ");
-        random.setStartingPlayer(COMPUTER_PLAYER_INDEX);
+        random.setStartingPlayer(UltraghostController.COMPUTER_PLAYER_INDEX);
         controller.next(); // display puzzle
         controller.next(); // display solution
         controller.next(); // display challenge
