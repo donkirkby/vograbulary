@@ -1,12 +1,12 @@
 package com.github.donkirkby.vograbulary;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.Reader;
-import java.util.ArrayList;
+import java.util.Iterator;
 
 import com.badlogic.gdx.utils.Timer.Task;
 import com.github.donkirkby.vograbulary.ultraghost.View;
+import com.github.donkirkby.vograbulary.ultraghost.WordList;
+import com.github.donkirkby.vograbulary.ultraghost.WordResult;
 
 public class UltraghostController {
     public static final String NO_MATCH_MESSAGE = "None";
@@ -17,7 +17,7 @@ public class UltraghostController {
     private UltraghostRandom random = new UltraghostRandom();
     private View view;
     private String currentPuzzle;
-    private ArrayList<String> wordList = new ArrayList<String>();
+    private WordList wordList = new WordList();
     private int searchBatchSize = 1;
     private Task searchTask;
     private String bestSolution;
@@ -33,21 +33,6 @@ public class UltraghostController {
         for (String word : wordList) {
             checkWord(word);
         }
-    }
-
-    private boolean isMatch(String word) {
-        String puzzle = currentPuzzle;
-        if (puzzle == null) {
-            return false;
-        }
-        if (word.charAt(word.length()-1) != puzzle.charAt(2)) {
-            return false;
-        }
-        if (word.charAt(0) != puzzle.charAt(0)) {
-            return false;
-        }
-        int foundAt = word.indexOf(puzzle.charAt(1), 1);
-        return 0 < foundAt && foundAt < word.length() - 1;
     }
 
     public UltraghostRandom getRandom() {
@@ -73,23 +58,7 @@ public class UltraghostController {
      * be closed before the method returns.
      */
     public void readWordList(Reader reader) {
-        try {
-            BufferedReader lineReader = new BufferedReader(reader);
-            try {
-                String line;
-                while ((line = lineReader.readLine()) != null) {
-                    if (line.length() > 3) {
-                        wordList.add(line.toUpperCase());
-                    }
-                }
-            } 
-            finally {
-                lineReader.close();
-            }
-        }
-        catch (IOException e) {
-            throw new RuntimeException("Reading word list failed.", e);
-        }
+        wordList.read(reader);
         random.loadWordList(wordList);
     }
 
@@ -124,7 +93,7 @@ public class UltraghostController {
     }
     
     private void checkWord(String word) {
-        if (isMatch(word)) {
+        if (wordList.isMatch(currentPuzzle, word)) {
             String previousSolution = bestSolution;
             if (previousSolution == null 
                     || word.length() < previousSolution.length()) {
@@ -134,17 +103,16 @@ public class UltraghostController {
     }
 
     private class SearchTask extends Task {
-        private int index;
+        private Iterator<String> itr = wordList.iterator();
 
         @Override
         public void run() {
             int wordCount = getSearchBatchSize();
-            for (int i = 0; i < wordCount && index < wordList.size(); i++) {
-                String word = wordList.get(index);
+            for (int i = 0; i < wordCount && itr.hasNext(); i++) {
+                String word = itr.next();
                 checkWord(word);
-                index++;
             }
-            if (index >= wordList.size()) {
+            if ( ! itr.hasNext()) {
                 cancel();
             }
         }
@@ -166,21 +134,34 @@ public class UltraghostController {
                 searchTask.cancel();
                 searchTask = null;
             }
-            currentPuzzle = null;
-            String solution = bestSolution;
-            if (solution == null) {
-                solution = NO_MATCH_MESSAGE;
+            String computerSolution = bestSolution;
+            if (computerSolution == null) {
+                computerSolution = NO_MATCH_MESSAGE;
             }
             State nextState = new ImprovingState();
             if (playerIndex == HUMAN_PLAYER_INDEX) {
                 String humanSolution = view.getSolution();
-                if (humanSolution == null ||
-                        humanSolution.length() == 0 || 
-                        wordList.contains(humanSolution.toUpperCase())) {
-                    view.setChallenge(solution);
+                WordResult solutionResult = 
+                        wordList.checkSolution(currentPuzzle, humanSolution);
+                if (solutionResult != WordResult.VALID 
+                        && solutionResult != WordResult.SKIPPED) {
+                    
+                    view.setResult(solutionResult.toString());
                 }
                 else {
-                    view.setResult("not a word");
+                    String challenge = bestSolution;
+                    WordResult challengeResult = wordList.checkChallenge(
+                            currentPuzzle, 
+                            humanSolution, 
+                            challenge);
+                    if (challengeResult == WordResult.IMPROVED) {
+                        view.setChallenge(challenge);
+                    }
+                    else {
+                        view.setChallenge(NO_MATCH_MESSAGE);
+                        challengeResult = WordResult.NOT_IMPROVED;
+                    }
+                    view.setResult(challengeResult.toString());
                 }
                 view.focusNextButton();
                 // When computer challenges, we immediately switch to the
@@ -188,10 +169,11 @@ public class UltraghostController {
                 nextState = nextState.next();
             }
             else {
-                view.setSolution(solution);
+                view.setSolution(computerSolution);
                 view.setChallenge("");
                 view.focusChallenge();
             }
+            currentPuzzle = null;
             return nextState;
         }
     }
@@ -206,17 +188,11 @@ public class UltraghostController {
             view.focusNextButton();
             String result = view.getResult();
             if (result != null && result.length() == 0) {
-                String challenge = view.getChallenge();
-                if (challenge == null || challenge.length() == 0) {
-                    result = "not improved";
-                }
-                else {
-                    challenge = challenge.toUpperCase();
-                    result = wordList.contains(challenge)
-                            ? "improved"
-                            : "not a word";
-                }
-                view.setResult(result);
+                WordResult result2 = wordList.checkChallenge(
+                        currentPuzzle, 
+                        view.getSolution(), 
+                        view.getChallenge());
+                view.setResult(result2.toString());
             }
             return new ResultState();
         }
