@@ -13,10 +13,11 @@ import com.badlogic.gdx.utils.Timer.Task;
 
 public class View {
     private Label letters;
-    private Label playerName;
+    private Label studentName;
     private TextField solution;
     private TextField challenge;
     private Label result;
+    private Label scores;
     private TextButton button;
     
     public void create(
@@ -25,8 +26,8 @@ public class View {
             final Controller controller) {
         controller.setView(this);
         table.align(Align.top);
-        playerName = new Label(" ", skin);
-        table.add(playerName);
+        studentName = new Label(" ", skin);
+        table.add(studentName);
         table.row();
         letters = new Label(" ", skin);
         table.add(letters);
@@ -41,6 +42,9 @@ public class View {
         table.row();
         result = new Label(" ", skin);
         table.add(result).fillX();
+        table.row();
+        scores = new Label(" \n ", skin);
+        table.add(scores).fillX();
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -67,7 +71,7 @@ public class View {
      * Display the active player.
      */
     public void setActivePlayer(String name) {
-        playerName.setText(name);
+        studentName.setText(name);
     }
     
     /**
@@ -110,6 +114,13 @@ public class View {
      */
     public String getResult() {
         return result.getText().toString();
+    }
+    
+    /**
+     * Display a list of scores, on multiple lines.
+     */
+    public void setScores(String scores) {
+        this.scores.setText(scores);
     }
     
     /**

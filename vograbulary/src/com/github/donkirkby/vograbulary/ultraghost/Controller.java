@@ -1,6 +1,8 @@
 package com.github.donkirkby.vograbulary.ultraghost;
 
+import java.io.PrintWriter;
 import java.io.Reader;
+import java.io.StringWriter;
 import java.util.Iterator;
 
 import com.badlogic.gdx.utils.Timer.Task;
@@ -19,8 +21,12 @@ public class Controller {
     private Task searchTask;
     private String bestSolution;
     private String[] playerNames = new String[] {"Player", "Computer"};
-    private int playerIndex = -1;
-
+    private Student[] students = new Student[] {
+            new Student("Student"),
+            new Student("Computer")
+    };
+    private int startingStudent = -1;
+    private int studentIndex;
 
     public void next() {
         state = state.next();
@@ -116,6 +122,22 @@ public class Controller {
         
     }
 
+    private void addScore(WordResult result) {
+        students[studentIndex].addScore(result.getScore());
+        StringWriter writer = new StringWriter();
+        PrintWriter printer = new PrintWriter(writer);
+        for (int i = 0; i < students.length; i++) {
+            int scoreIndex = (startingStudent + i) % students.length;
+            Student student = students[scoreIndex];
+            if (i > 0) {
+                printer.println();
+            }
+            printer.print(student);
+        }
+        view.setScores(writer.toString());
+        printer.close();
+    }
+    
     /** An abstract base class for all controller states to implement. */
     private abstract class State {
         public abstract State next();
@@ -136,7 +158,7 @@ public class Controller {
                 computerSolution = NO_MATCH_MESSAGE;
             }
             State nextState = new ImprovingState();
-            if (playerIndex == HUMAN_PLAYER_INDEX) {
+            if (studentIndex == HUMAN_PLAYER_INDEX) {
                 String humanSolution = view.getSolution();
                 WordResult solutionResult = 
                         wordList.checkSolution(currentPuzzle, humanSolution);
@@ -159,6 +181,7 @@ public class Controller {
                         challengeResult = WordResult.NOT_IMPROVED;
                     }
                     view.setResult(challengeResult.toString());
+                    addScore(challengeResult);
                 }
                 view.focusNextButton();
                 // When computer challenges, we immediately switch to the
@@ -190,10 +213,10 @@ public class Controller {
                         view.getSolution(), 
                         view.getChallenge());
                 view.setResult(result2.toString());
+                addScore(result2);
             }
             return new ResultState();
         }
-        
     }
     
     /** A better solution has been entered, skipped, or timed out. The results
@@ -206,14 +229,15 @@ public class Controller {
             currentPuzzle = random.generatePuzzle();
             view.setPuzzle(currentPuzzle);
             int playerCount = 2;
-            if (playerIndex < 0) {
-                playerIndex = random.chooseStartingPlayer(playerCount);
+            if (startingStudent < 0) {
+                studentIndex = startingStudent =
+                        random.chooseStartingPlayer(playerCount);
             }
             else {
-                playerIndex = (playerIndex+1) % playerCount;
+                studentIndex = (studentIndex+1) % playerCount;
             }
-            view.setActivePlayer(playerNames[playerIndex]);
-            if (playerNames[playerIndex].equals("Computer")) {
+            view.setActivePlayer(playerNames[studentIndex]);
+            if (playerNames[studentIndex].equals("Computer")) {
                 view.focusNextButton();
             }
             else {

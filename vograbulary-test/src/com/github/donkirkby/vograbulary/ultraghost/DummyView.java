@@ -7,6 +7,7 @@ public class DummyView extends View {
     private String solution = "";
     private String challenge = "";
     private String result = "";
+    private String scores = "";
     private Task searchTask;
     private String currentFocus = "";
 
@@ -57,8 +58,18 @@ public class DummyView extends View {
         this.result = result;
     }
     
+    @Override
     public String getResult() {
         return result;
+    }
+    
+    @Override
+    public void setScores(String scores) {
+        this.scores = scores;
+    }
+    
+    public String getScores() {
+        return scores;
     }
     
     @Override

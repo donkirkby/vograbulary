@@ -402,9 +402,11 @@ public class ControllerTest {
         controller.next(); // display result
         String focus = dummyView.getCurrentFocus();
         String result = dummyView.getResult();
+        String scores = dummyView.getScores();
         
         assertThat("focus", focus, is("next"));
         assertThat("result", result, is("not a word"));
+        assertThat("scores", scores, is("Computer 3\nStudent 0"));
     }
     
     @Test
@@ -520,10 +522,12 @@ public class ControllerTest {
         String focus = dummyView.getCurrentFocus();
         String result = dummyView.getResult();
         String challenge = dummyView.getChallenge();
-        
+        String scores = dummyView.getScores();
+
         assertThat("focus", focus, is("next"));
         assertThat("result", result, is("improved"));
         assertThat("challenge", challenge, is("PIPE"));
+        assertThat("scores", scores, is("Student 1\nComputer 0"));
     }
     
     @Test
