@@ -1,4 +1,4 @@
-package com.github.donkirkby.vograbulary;
+package com.github.donkirkby.vograbulary.ultraghost;
 
 import java.util.Random;
 

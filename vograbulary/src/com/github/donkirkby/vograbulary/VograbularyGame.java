@@ -6,12 +6,13 @@ import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.github.donkirkby.vograbulary.ultraghost.Controller;
 import com.github.donkirkby.vograbulary.ultraghost.View;
 
 public class VograbularyGame implements ApplicationListener {
 	private Stage stage;
-	private UltraghostController ultraghostController = 
-	        new UltraghostController();
+	private Controller ultraghostController = 
+	        new Controller();
 	
 	@Override
 	public void create() {		

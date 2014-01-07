@@ -1,4 +1,4 @@
-package com.github.donkirkby.vograbulary;
+package com.github.donkirkby.vograbulary.ultraghost;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.util.Random;
 
 import org.junit.Test;
+
+import com.github.donkirkby.vograbulary.ultraghost.UltraghostRandom;
 
 public class UltraghostRandomTest {
     @Test

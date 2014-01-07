@@ -1,14 +1,11 @@
-package com.github.donkirkby.vograbulary;
+package com.github.donkirkby.vograbulary.ultraghost;
 
 import java.io.Reader;
 import java.util.Iterator;
 
 import com.badlogic.gdx.utils.Timer.Task;
-import com.github.donkirkby.vograbulary.ultraghost.View;
-import com.github.donkirkby.vograbulary.ultraghost.WordList;
-import com.github.donkirkby.vograbulary.ultraghost.WordResult;
 
-public class UltraghostController {
+public class Controller {
     public static final String NO_MATCH_MESSAGE = "None";
     public static final int HUMAN_PLAYER_INDEX = 0;
     public static final int COMPUTER_PLAYER_INDEX = 1;

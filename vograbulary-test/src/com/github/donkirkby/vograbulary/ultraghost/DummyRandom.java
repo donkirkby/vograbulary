@@ -1,10 +1,12 @@
-package com.github.donkirkby.vograbulary;
+package com.github.donkirkby.vograbulary.ultraghost;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class UltraghostDummyRandom extends UltraghostRandom {
+import com.github.donkirkby.vograbulary.ultraghost.UltraghostRandom;
+
+public class DummyRandom extends UltraghostRandom {
     private List<String> puzzles;
     private ArrayList<String> wordList = new ArrayList<String>();
     private int puzzleIndex;

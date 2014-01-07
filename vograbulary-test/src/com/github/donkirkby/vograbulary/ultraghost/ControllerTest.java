@@ -1,4 +1,4 @@
-package com.github.donkirkby.vograbulary;
+package com.github.donkirkby.vograbulary.ultraghost;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
@@ -18,12 +18,12 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
-import com.github.donkirkby.vograbulary.ultraghost.DummyView;
+import com.github.donkirkby.vograbulary.ultraghost.Controller;
 import com.github.donkirkby.vograbulary.ultraghost.View;
 
-public class UltraghostControllerTest {
-    private UltraghostController controller;
-    private UltraghostDummyRandom random;
+public class ControllerTest {
+    private Controller controller;
+    private DummyRandom random;
     private View view;
     private Task searchTask;
     
@@ -33,10 +33,10 @@ public class UltraghostControllerTest {
     @Before
     public void setUp() {
         searchTask = null;
-        random = new UltraghostDummyRandom();
-        random.setStartingPlayer(UltraghostController.COMPUTER_PLAYER_INDEX);
+        random = new DummyRandom();
+        random.setStartingPlayer(Controller.COMPUTER_PLAYER_INDEX);
         view = mock(View.class);
-        controller = new UltraghostController();
+        controller = new Controller();
         controller.setRandom(random);
         controller.setView(view);
         setUpWordList("");
@@ -192,7 +192,7 @@ public class UltraghostControllerTest {
     public void nextSolutionNoneFound() {
         String expectedLetters = "AFR";
         random.setPuzzles(expectedLetters);
-        String expectedSolution = UltraghostController.NO_MATCH_MESSAGE;
+        String expectedSolution = Controller.NO_MATCH_MESSAGE;
         setUpWordList("ABDICATE");
         
         controller.next(); // get puzzle
@@ -220,7 +220,7 @@ public class UltraghostControllerTest {
     public void createSearchTaskWithNoCalls() {
         String expectedLetters = "PIE";
         random.setPuzzles(expectedLetters);
-        String expectedSolution = UltraghostController.NO_MATCH_MESSAGE;
+        String expectedSolution = Controller.NO_MATCH_MESSAGE;
         setUpWordList("PICKLE\nPIPE");
         
         controller.next(); // get puzzle
@@ -353,7 +353,7 @@ public class UltraghostControllerTest {
         setUpWordList("PIPE\nPIECE");
         String expectedPuzzle2 = "PEE";
         random.setPuzzles("PIE", expectedPuzzle2);
-        random.setStartingPlayer(UltraghostController.HUMAN_PLAYER_INDEX);
+        random.setStartingPlayer(Controller.HUMAN_PLAYER_INDEX);
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
         
@@ -371,7 +371,7 @@ public class UltraghostControllerTest {
     public void humanChallenge() {
         setUpWordList("PIECE\nPIPE");
         random.setPuzzles("PIE");
-        random.setStartingPlayer(UltraghostController.COMPUTER_PLAYER_INDEX);
+        random.setStartingPlayer(Controller.COMPUTER_PLAYER_INDEX);
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
         
@@ -391,7 +391,7 @@ public class UltraghostControllerTest {
     public void humanChallengeNotAWord() {
         setUpWordList("PIECE\nPIPE");
         random.setPuzzles("PIE");
-        random.setStartingPlayer(UltraghostController.COMPUTER_PLAYER_INDEX);
+        random.setStartingPlayer(Controller.COMPUTER_PLAYER_INDEX);
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
         
@@ -411,7 +411,7 @@ public class UltraghostControllerTest {
     public void humanChallengeLonger() {
         setUpWordList("PIPE\nPIECE");
         random.setPuzzles("PIE");
-        random.setStartingPlayer(UltraghostController.COMPUTER_PLAYER_INDEX);
+        random.setStartingPlayer(Controller.COMPUTER_PLAYER_INDEX);
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
         
@@ -429,7 +429,7 @@ public class UltraghostControllerTest {
     public void humanChallengeLater() {
         setUpWordList("PINE\nPIPE");
         random.setPuzzles("PIE");
-        random.setStartingPlayer(UltraghostController.COMPUTER_PLAYER_INDEX);
+        random.setStartingPlayer(Controller.COMPUTER_PLAYER_INDEX);
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
         
@@ -447,7 +447,7 @@ public class UltraghostControllerTest {
     public void computerSolutionNotChallenged() {
         setUpWordList("PIECE\nPIPE");
         random.setPuzzles("PIE");
-        random.setStartingPlayer(UltraghostController.COMPUTER_PLAYER_INDEX);
+        random.setStartingPlayer(Controller.COMPUTER_PLAYER_INDEX);
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
         
@@ -466,7 +466,7 @@ public class UltraghostControllerTest {
     public void humanSolutionNotAWord() {
         setUpWordList("PIECE\nPIPE");
         random.setPuzzles("PIE", "RPE");
-        random.setStartingPlayer(UltraghostController.HUMAN_PLAYER_INDEX);
+        random.setStartingPlayer(Controller.HUMAN_PLAYER_INDEX);
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
         
@@ -489,7 +489,7 @@ public class UltraghostControllerTest {
     public void humanSolutionNoMatch() {
         setUpWordList("ROPE\nPIECE\nPIPE");
         random.setPuzzles("RPE");
-        random.setStartingPlayer(UltraghostController.HUMAN_PLAYER_INDEX);
+        random.setStartingPlayer(Controller.HUMAN_PLAYER_INDEX);
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
         
@@ -508,7 +508,7 @@ public class UltraghostControllerTest {
     public void humanSolutionImproved() {
         setUpWordList("PIECE\nPIPE");
         random.setPuzzles("PIE", "RPE");
-        random.setStartingPlayer(UltraghostController.HUMAN_PLAYER_INDEX);
+        random.setStartingPlayer(Controller.HUMAN_PLAYER_INDEX);
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
         
@@ -531,7 +531,7 @@ public class UltraghostControllerTest {
         setUpWordList("PIPE\nPIECE");
         String expectedSolution = "PIPE";
         random.setPuzzles("PIE");
-        random.setStartingPlayer(UltraghostController.COMPUTER_PLAYER_INDEX);
+        random.setStartingPlayer(Controller.COMPUTER_PLAYER_INDEX);
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
         
@@ -551,7 +551,7 @@ public class UltraghostControllerTest {
         setUpWordList("PIPE\nPIECE");
         String expectedChallenge = "PIPE";
         random.setPuzzles("PIE");
-        random.setStartingPlayer(UltraghostController.HUMAN_PLAYER_INDEX);
+        random.setStartingPlayer(Controller.HUMAN_PLAYER_INDEX);
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
         
@@ -567,7 +567,7 @@ public class UltraghostControllerTest {
     @Test
     public void displayPlayerForFirstPuzzle() {
         random.setPuzzles("ABC");
-        random.setStartingPlayer(UltraghostController.HUMAN_PLAYER_INDEX);
+        random.setStartingPlayer(Controller.HUMAN_PLAYER_INDEX);
         controller.next(); // display puzzle
         
         verify(view).setActivePlayer("Player");
@@ -577,7 +577,7 @@ public class UltraghostControllerTest {
     @Test
     public void displayComputerForFirstPuzzle() {
         random.setPuzzles("ABC");
-        random.setStartingPlayer(UltraghostController.COMPUTER_PLAYER_INDEX);
+        random.setStartingPlayer(Controller.COMPUTER_PLAYER_INDEX);
         controller.next(); // display puzzle
         
         verify(view).setActivePlayer("Computer");
@@ -587,7 +587,7 @@ public class UltraghostControllerTest {
     @Test
     public void displayPlayerForSecondPuzzle() {
         random.setPuzzles("ABC", "XYZ");
-        random.setStartingPlayer(UltraghostController.COMPUTER_PLAYER_INDEX);
+        random.setStartingPlayer(Controller.COMPUTER_PLAYER_INDEX);
         controller.next(); // display puzzle
         controller.next(); // display solution
         controller.next(); // display challenge
@@ -600,7 +600,7 @@ public class UltraghostControllerTest {
     @Test
     public void passWordsToGenerator() {
         setUpWordList("ARBITRARY\nWORDS");
-        UltraghostDummyRandom generator = new UltraghostDummyRandom();
+        DummyRandom generator = new DummyRandom();
         controller.setRandom(generator);
         
         assertThat("word list", generator.getWordList(), hasItem("ARBITRARY"));
@@ -608,7 +608,7 @@ public class UltraghostControllerTest {
     
     @Test
     public void passWordsToGeneratorWhenWordsSetLater() {
-        UltraghostDummyRandom generator = new UltraghostDummyRandom();
+        DummyRandom generator = new DummyRandom();
         controller.setRandom(generator);
         setUpWordList("ARBITRARY\nWORDS");
         

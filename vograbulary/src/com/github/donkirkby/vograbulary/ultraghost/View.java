@@ -10,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
-import com.github.donkirkby.vograbulary.UltraghostController;
 
 public class View {
     private Label letters;
@@ -23,7 +22,7 @@ public class View {
     public void create(
             final Table table, 
             final Skin skin, 
-            final UltraghostController controller) {
+            final Controller controller) {
         controller.setView(this);
         table.align(Align.top);
         playerName = new Label(" ", skin);
