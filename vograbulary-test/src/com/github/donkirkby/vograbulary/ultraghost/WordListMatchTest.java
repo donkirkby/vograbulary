@@ -28,6 +28,7 @@ public class WordListMatchTest {
    public static List<Object[]> getParameters() {
        return Arrays.asList(new Object[][] { 
                {"PIE", "PIECE", true},
+               {"PIE", "PASTIE", true},
                {"PIE", "RIPE", false},
                {"PIE", "POPE", false} ,
                {"PIE", "PIPS", false} });

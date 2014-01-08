@@ -37,7 +37,7 @@ public class WordListChallengeTest {
                {"PIE", "piece", "pipe", WordResult.IMPROVED},
                {"PIE", "piece", "pize", WordResult.CHALLENGE_NOT_A_WORD},
                {"PIE", "pine", "piece", WordResult.LONGER},
-               {"PIE", "pine", "pipe", WordResult.LATER},
+               {"MIE", "mime", "mine", WordResult.LATER},
                {"PIE", "", "pipe", WordResult.IMPROVED},
                {"PIE", "", "pize", WordResult.CHALLENGED_SKIP_NOT_A_WORD} });
    }
@@ -47,7 +47,7 @@ public class WordListChallengeTest {
    @Before
    public void setUp() {
        wordList = new WordList();
-       wordList.read(new StringReader("piece\npipe\npine\nrope"));
+       wordList.read(new StringReader("piece\npipe\npine\nrope\nmime\nmine"));
    }
    
    @Test

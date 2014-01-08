@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. --><project basedir="." default="build" name="vograbulary-test">
+    <property environment="env"/>
+    <property name="vograbulary.location" value="../vograbulary"/>
+    <property name="ECLIPSE_HOME" value="../../../../../opt/eclipse"/>
+    <property name="junit.output.dir" value="junit"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.6"/>
+    <property name="source" value="1.6"/>
+    <path id="JUnit 4.libraryclasspath">
+        <pathelement location="${ECLIPSE_HOME}/plugins/org.junit_4.11.0.v201303080030/junit.jar"/>
+        <pathelement location="${ECLIPSE_HOME}/plugins/org.hamcrest.core_1.3.0.v201303031735.jar"/>
+    </path>
+    <path id="vograbulary.classpath">
+        <pathelement location="${vograbulary.location}/bin"/>
+        <pathelement location="${vograbulary.location}/libs/gdx.jar"/>
+    </path>
+    <path id="vograbulary-test.classpath">
+        <pathelement location="bin"/>
+        <path refid="JUnit 4.libraryclasspath"/>
+        <path refid="vograbulary.classpath"/>
+        <pathelement location="libs/mockito-all-1.9.5.jar"/>
+        <pathelement location="${vograbulary.location}/libs/gdx-tools.jar"/>
+    </path>
+    <target name="init">
+        <mkdir dir="bin"/>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="src">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="clean">
+        <delete dir="bin"/>
+    </target>
+    <target depends="clean" name="cleanall">
+        <ant antfile="build.xml" dir="${vograbulary.location}" inheritAll="false" target="clean"/>
+    </target>
+    <target depends="build-subprojects,build-project" name="build"/>
+    <target name="build-subprojects">
+        <ant antfile="build.xml" dir="${vograbulary.location}" inheritAll="false" target="build-project">
+            <propertyset>
+                <propertyref name="build.compiler"/>
+            </propertyset>
+        </ant>
+    </target>
+    <target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}">
+            <src path="src"/>
+            <classpath refid="vograbulary-test.classpath"/>
+        </javac>
+    </target>
+    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
+    <target description="copy Eclipse compiler jars to ant lib directory" name="init-eclipse-compiler">
+        <copy todir="${ant.library.dir}">
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </copy>
+        <unzip dest="${ant.library.dir}">
+            <patternset includes="jdtCompilerAdapter.jar"/>
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </unzip>
+    </target>
+    <target description="compile project with Eclipse compiler" name="build-eclipse-compiler">
+        <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+        <antcall target="build"/>
+    </target>
+    <target name="vograbulary-test">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr" haltonfailure="on">
+            <formatter type="xml"/>
+            <test name="com.github.donkirkby.vograbulary.ultraghost.ControllerTest" todir="${junit.output.dir}"/>
+            <test name="com.github.donkirkby.vograbulary.ultraghost.UltraghostRandomTest" todir="${junit.output.dir}"/>
+            <test name="com.github.donkirkby.vograbulary.ultraghost.WordListChallengeTest" todir="${junit.output.dir}"/>
+            <test name="com.github.donkirkby.vograbulary.ultraghost.WordListMatchTest" todir="${junit.output.dir}"/>
+            <test name="com.github.donkirkby.vograbulary.ultraghost.WordListSolutionTest" todir="${junit.output.dir}"/>
+            <test name="com.github.donkirkby.vograbulary.ultraghost.WordListTest" todir="${junit.output.dir}"/>
+            <classpath refid="vograbulary-test.classpath"/>
+        </junit>
+    </target>
+    <target name="AssetPacker">
+        <java classname="com.github.donkirkby.vograbulary.AssetPacker" failonerror="true" fork="yes">
+            <classpath refid="vograbulary-test.classpath"/>
+        </java>
+    </target>
+    <target name="UltraghostSuite">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="com.github.donkirkby.vograbulary.ultraghost.UltraghostSuite" todir="${junit.output.dir}"/>
+            <classpath refid="vograbulary-test.classpath"/>
+        </junit>
+    </target>
+    <target name="WordListSolutionTest.getParameters">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="com.github.donkirkby.vograbulary.ultraghost.WordListSolutionTest" todir="${junit.output.dir}"/>
+            <classpath refid="vograbulary-test.classpath"/>
+        </junit>
+    </target>
+    <target name="WordListSolutionTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="com.github.donkirkby.vograbulary.ultraghost.WordListSolutionTest" todir="${junit.output.dir}"/>
+            <classpath refid="vograbulary-test.classpath"/>
+        </junit>
+    </target>
+    <target name="AllTests (1)">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="com.github.donkirkby.vograbulary.AllTests" todir="${junit.output.dir}"/>
+            <classpath refid="vograbulary-test.classpath"/>
+        </junit>
+    </target>
+    <target name="ControllerTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="com.github.donkirkby.vograbulary.ultraghost.ControllerTest" todir="${junit.output.dir}"/>
+            <classpath refid="vograbulary-test.classpath"/>
+        </junit>
+    </target>
+    <target name="WordListTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="com.github.donkirkby.vograbulary.ultraghost.WordListTest" todir="${junit.output.dir}"/>
+            <classpath refid="vograbulary-test.classpath"/>
+        </junit>
+    </target>
+    <target name="junitreport">
+        <junitreport todir="${junit.output.dir}">
+            <fileset dir="${junit.output.dir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="frames" todir="${junit.output.dir}"/>
+        </junitreport>
+    </target>
+</project>
