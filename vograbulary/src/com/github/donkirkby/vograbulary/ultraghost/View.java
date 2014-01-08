@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 
 public class View {
+    //stopJesting
     private Label letters;
     private Label studentName;
     private TextField solution;
@@ -70,7 +71,7 @@ public class View {
     /**
      * Display the active player.
      */
-    public void setActivePlayer(String name) {
+    public void setActiveStudent(String name) {
         studentName.setText(name);
     }
     
@@ -147,3 +148,4 @@ public class View {
         solution.getOnscreenKeyboard().show(false);
     }
 }
+//resumeJesting

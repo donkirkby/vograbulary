@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.github.donkirkby.vograbulary.ultraghost.Controller;
 import com.github.donkirkby.vograbulary.ultraghost.View;
 
+//stopJesting
 public class VograbularyGame implements ApplicationListener {
 	private Stage stage;
 	private Controller ultraghostController = 
@@ -58,3 +59,4 @@ public class VograbularyGame implements ApplicationListener {
 	public void resume() {
 	}
 }
+//resumeJesting

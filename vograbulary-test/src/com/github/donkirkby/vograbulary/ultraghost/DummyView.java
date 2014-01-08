@@ -4,6 +4,7 @@ import com.badlogic.gdx.utils.Timer.Task;
 
 public class DummyView extends View {
     private String puzzle = "";
+    private String activeStudent = "";
     private String solution = "";
     private String challenge = "";
     private String result = "";
@@ -30,7 +31,12 @@ public class DummyView extends View {
     }
 
     @Override
-    public void setActivePlayer(String name) {
+    public void setActiveStudent(String name) {
+        activeStudent = name;
+    }
+    
+    public String getActiveStudent() {
+        return activeStudent;
     }
 
     @Override

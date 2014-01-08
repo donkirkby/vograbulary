@@ -226,7 +226,7 @@ public class Controller {
             else {
                 studentIndex = (studentIndex+1) % playerCount;
             }
-            view.setActivePlayer(playerNames[studentIndex]);
+            view.setActiveStudent(playerNames[studentIndex]);
             if (playerNames[studentIndex].equals("Computer")) {
                 view.focusNextButton();
             }

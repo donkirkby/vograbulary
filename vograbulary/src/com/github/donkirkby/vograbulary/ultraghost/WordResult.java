@@ -1,6 +1,7 @@
 package com.github.donkirkby.vograbulary.ultraghost;
 
 public enum WordResult {
+    //stopJesting
     NOT_A_WORD, 
     VALID, 
     NOT_A_MATCH, 
@@ -11,6 +12,7 @@ public enum WordResult {
     SKIPPED(1), 
     CHALLENGE_NOT_A_WORD(3, "not a word"), 
     CHALLENGED_SKIP_NOT_A_WORD(1, "not a word");
+    //resumeJesting
     
     private int score;
     private String name;

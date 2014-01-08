@@ -392,6 +392,22 @@ public class ControllerTest {
         assertThat("puzzle 2", puzzle2, is(expectedPuzzle2));
     }
     
+    @Test
+    public void humanThenComputer() {
+        setUpWordList("PIPE\nPIECE");
+        random.setPuzzles("PIE", "PEE");
+        random.setStartingPlayer(Controller.HUMAN_PLAYER_INDEX);
+        DummyView dummyView = new DummyView();
+        controller.setView(dummyView);
+        
+        controller.next(); // display puzzle for human
+        controller.next(); // display computer challenge and result
+        controller.next(); // display puzzle 2 for computer
+        String activeStudent = dummyView.getActiveStudent();
+        
+        assertThat("active student", activeStudent, is("Computer"));
+    }
+    
     /** If it can't improve the solution, the computer will not display a 
      * challenge. 
      */
@@ -619,7 +635,7 @@ public class ControllerTest {
         random.setStartingPlayer(Controller.HUMAN_PLAYER_INDEX);
         controller.next(); // display puzzle
         
-        verify(view).setActivePlayer("Player");
+        verify(view).setActiveStudent("Player");
         verify(view).focusSolution();
     }
     
@@ -629,7 +645,7 @@ public class ControllerTest {
         random.setStartingPlayer(Controller.COMPUTER_PLAYER_INDEX);
         controller.next(); // display puzzle
         
-        verify(view).setActivePlayer("Computer");
+        verify(view).setActiveStudent("Computer");
         verify(view).focusNextButton();
     }
     
@@ -643,7 +659,7 @@ public class ControllerTest {
 
         controller.next(); // display second puzzle
         
-        verify(view).setActivePlayer("Player");
+        verify(view).setActiveStudent("Player");
     }
     
     @Test
