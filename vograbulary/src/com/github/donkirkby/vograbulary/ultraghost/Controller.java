@@ -84,13 +84,6 @@ public class Controller {
      * @return a task for searching the word list.
      */
     private Task createSearchTask() {
-        if (searchTask != null) {
-            throw new IllegalStateException(
-                    "A search task has already been created for this puzzle.");
-        }
-        if (currentPuzzle == null) {
-            throw new IllegalStateException("No puzzle to search.");
-        }
         searchTask = new SearchTask();
         return searchTask;
     }
@@ -148,11 +141,8 @@ public class Controller {
 
         @Override
         public State next() {
-            if (searchTask != null)
-            {
-                searchTask.cancel();
-                searchTask = null;
-            }
+            searchTask.cancel();
+            searchTask = null;
             String computerSolution = bestSolution;
             if (computerSolution == null) {
                 computerSolution = NO_MATCH_MESSAGE;

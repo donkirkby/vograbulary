@@ -316,6 +316,31 @@ public class ControllerTest {
     }
     
     @Test
+    public void createSearchTaskForTwoWordsEachRunAndCheckCancel() {
+        Gdx.app = mock(Application.class);
+        String expectedLetters = "PIE";
+        random.setPuzzles(expectedLetters);
+        setUpWordList("AIRBAG\nPICKLE\nPIPE");
+        controller.setSearchBatchSize(2);
+        
+        controller.next(); // get puzzle
+        captureSearchTask();
+        searchTask.run();
+        boolean isScheduledBeforeLastWord = searchTask.isScheduled();
+        searchTask.run();
+        boolean isScheduledAfterLastWord = searchTask.isScheduled();
+        
+        assertThat(
+                "scheduled before last word", 
+                isScheduledBeforeLastWord, 
+                is(true));
+        assertThat(
+                "scheduled after last word", 
+                isScheduledAfterLastWord, 
+                is(false));
+    }
+    
+    @Test
     public void createSearchTaskForSecondPuzzleWithSolution() {
         setUpWordList("PIPE\nPIECE");
         String expectedSolution1 = "PIPE";
@@ -365,6 +390,26 @@ public class ControllerTest {
         String puzzle2 = dummyView.getPuzzle();
         
         assertThat("puzzle 2", puzzle2, is(expectedPuzzle2));
+    }
+    
+    /** If it can't improve the solution, the computer will not display a 
+     * challenge. 
+     */
+    @Test
+    public void computerDoesNotChallenge() {
+        setUpWordList("PIPE\nPIECE");
+        random.setPuzzles("PIE");
+        random.setStartingPlayer(Controller.HUMAN_PLAYER_INDEX);
+        DummyView dummyView = new DummyView();
+        controller.setView(dummyView);
+        
+        controller.next(); // display puzzle
+        dummyView.getSearchTask().run(); // find computer challenge
+        dummyView.setSolution("PIPE"); // enter human solution
+        controller.next(); // display computer challenge and result
+        String challenge = dummyView.getChallenge();
+        
+        assertThat("challenge", challenge, is(Controller.NO_MATCH_MESSAGE));
     }
     
     @Test
