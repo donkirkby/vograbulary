@@ -79,6 +79,7 @@
             <test name="com.github.donkirkby.vograbulary.ultraghost.WordListMatchTest" todir="${junit.output.dir}"/>
             <test name="com.github.donkirkby.vograbulary.ultraghost.WordListSolutionTest" todir="${junit.output.dir}"/>
             <test name="com.github.donkirkby.vograbulary.ultraghost.WordListTest" todir="${junit.output.dir}"/>
+            <test name="com.github.donkirkby.vograbulary.ultraghost.WordResultTest" todir="${junit.output.dir}"/>
             <classpath refid="vograbulary-test.classpath"/>
         </junit>
     </target>
@@ -103,19 +104,19 @@
             <classpath refid="vograbulary-test.classpath"/>
         </junit>
     </target>
+    <target name="WordListChallengeTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="com.github.donkirkby.vograbulary.ultraghost.WordListChallengeTest" todir="${junit.output.dir}"/>
+            <classpath refid="vograbulary-test.classpath"/>
+        </junit>
+    </target>
     <target name="WordListSolutionTest">
         <mkdir dir="${junit.output.dir}"/>
         <junit fork="yes" printsummary="withOutAndErr">
             <formatter type="xml"/>
             <test name="com.github.donkirkby.vograbulary.ultraghost.WordListSolutionTest" todir="${junit.output.dir}"/>
-            <classpath refid="vograbulary-test.classpath"/>
-        </junit>
-    </target>
-    <target name="AllTests (1)">
-        <mkdir dir="${junit.output.dir}"/>
-        <junit fork="yes" printsummary="withOutAndErr">
-            <formatter type="xml"/>
-            <test name="com.github.donkirkby.vograbulary.AllTests" todir="${junit.output.dir}"/>
             <classpath refid="vograbulary-test.classpath"/>
         </junit>
     </target>
@@ -132,6 +133,14 @@
         <junit fork="yes" printsummary="withOutAndErr">
             <formatter type="xml"/>
             <test name="com.github.donkirkby.vograbulary.ultraghost.WordListTest" todir="${junit.output.dir}"/>
+            <classpath refid="vograbulary-test.classpath"/>
+        </junit>
+    </target>
+    <target name="UltraghostRandomTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="com.github.donkirkby.vograbulary.ultraghost.UltraghostRandomTest" todir="${junit.output.dir}"/>
             <classpath refid="vograbulary-test.classpath"/>
         </junit>
     </target>

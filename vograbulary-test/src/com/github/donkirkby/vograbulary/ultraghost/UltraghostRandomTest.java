@@ -38,7 +38,7 @@ public class UltraghostRandomTest {
         return Arrays.asList(new Object[][] {
                 {0.1, 0.0, 0.0, "AXXX BXXX CXXX DXXX EXXX", "AXX"},
                 {0.3, 0.0, 0.0, "AXXX BXXX CXXX DXXX EXXX", "BXX"},
-                {0.0, 0.0, 0.1, "XXXE XXXD XXXC XXXB XXXA", "XXA"},
+                {0.0, 0.0, 0.3, "XXXE XXXD XXXC XXXB XXXA", "XXB"},
                 {0.0, 0.15, 0.0, "XAXX XBXX XCXX XDXX XEXX", "XBX"}
         });
     }

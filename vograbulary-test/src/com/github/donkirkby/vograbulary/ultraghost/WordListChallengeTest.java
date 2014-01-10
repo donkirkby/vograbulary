@@ -33,6 +33,7 @@ public class WordListChallengeTest {
        return Arrays.asList(new Object[][] { 
                {"PIE", "PIECE", "", WordResult.NOT_IMPROVED},
                {"PIE", "piece", "", WordResult.NOT_IMPROVED},
+               {"PIE", "piece", null, WordResult.NOT_IMPROVED},
                {"PIE", "piece", "piece", WordResult.NOT_IMPROVED},
                {"PIE", "piece", "pipe", WordResult.IMPROVED},
                {"PIE", "piece", "pize", WordResult.CHALLENGE_NOT_A_WORD},
