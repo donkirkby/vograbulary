@@ -82,9 +82,11 @@ public class WordList implements Iterable<String> {
                 : challenge.length() == solution.length()
                 && challengeUpper.compareTo(solutionUpper) > 0
                 ? WordResult.LATER
+                : challenge.length() < solution.length()
+                ? WordResult.SHORTER
                 : challengeUpper.equals(solutionUpper)
                 ? WordResult.NOT_IMPROVED
-                : WordResult.IMPROVED;
+                : WordResult.EARLIER;
     }
 
     @Override

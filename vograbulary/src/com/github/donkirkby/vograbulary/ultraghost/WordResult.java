@@ -5,10 +5,12 @@ public enum WordResult {
     NOT_A_WORD, 
     VALID, 
     NOT_A_MATCH, 
-    NOT_IMPROVED(3), 
     IMPROVED(1), 
+    SHORTER(1),
+    EARLIER(2),
     LONGER(3), 
     LATER(3), 
+    NOT_IMPROVED(3), 
     SKIPPED(1), 
     CHALLENGE_NOT_A_WORD(3, "not a word"), 
     CHALLENGED_SKIP_NOT_A_WORD(1, "not a word");

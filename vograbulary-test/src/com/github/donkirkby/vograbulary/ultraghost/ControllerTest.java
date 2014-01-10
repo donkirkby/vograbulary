@@ -429,26 +429,6 @@ public class ControllerTest {
     }
     
     @Test
-    public void humanChallenge() {
-        setUpWordList("PIECE\nPIPE");
-        random.setPuzzles("PIE");
-        random.setStartingPlayer(Controller.COMPUTER_PLAYER_INDEX);
-        DummyView dummyView = new DummyView();
-        controller.setView(dummyView);
-        
-        controller.next(); // display puzzle
-        dummyView.getSearchTask().run(); // find computer solution
-        controller.next(); // display computer solution
-        dummyView.setChallenge("pipe"); // enter human challenge
-        controller.next(); // display result
-        String focus = dummyView.getCurrentFocus();
-        String result = dummyView.getResult();
-        
-        assertThat("focus", focus, is("next"));
-        assertThat("result", result, is("improved"));
-    }
-    
-    @Test
     public void humanChallengeNotAWord() {
         setUpWordList("PIECE\nPIPE");
         random.setPuzzles("PIE");
@@ -565,30 +545,6 @@ public class ControllerTest {
         
         assertThat("result", result, is("not a match"));
         assertThat("challenge", challenge, is(""));
-    }
-    
-    @Test
-    public void humanSolutionImproved() {
-        setUpWordList("PIECE\nPIPE");
-        random.setPuzzles("PIE", "RPE");
-        random.setStartingPlayer(Controller.HUMAN_PLAYER_INDEX);
-        DummyView dummyView = new DummyView();
-        controller.setView(dummyView);
-        
-        controller.next(); // display puzzle
-        dummyView.getSearchTask().run(); // find computer solution
-        dummyView.getSearchTask().run(); // find computer solution
-        dummyView.setSolution("piece"); // enter human challenge
-        controller.next(); // display result
-        String focus = dummyView.getCurrentFocus();
-        String result = dummyView.getResult();
-        String challenge = dummyView.getChallenge();
-        String scores = dummyView.getScores();
-
-        assertThat("focus", focus, is("next"));
-        assertThat("result", result, is("improved"));
-        assertThat("challenge", challenge, is("PIPE"));
-        assertThat("scores", scores, is("Student 1\nComputer 0"));
     }
     
     @Test
