@@ -11,8 +11,9 @@ public class Controller {
     public static final String NO_MATCH_MESSAGE = "None";
     public static final int HUMAN_PLAYER_INDEX = 0;
     public static final int COMPUTER_PLAYER_INDEX = 1;
+    private static final int PLAYER_COUNT = 2;
     
-    private State state = new ResultState();
+    private State state = new StartState();
     private UltraghostRandom random = new UltraghostRandom();
     private View view;
     private String currentPuzzle;
@@ -25,7 +26,7 @@ public class Controller {
             new Student("Student"),
             new Student("Computer")
     };
-    private int startingStudent = -1;
+    private int startingStudent;
     private int studentIndex;
 
     public void next() {
@@ -218,14 +219,7 @@ public class Controller {
         public State next() {
             currentPuzzle = random.generatePuzzle();
             view.setPuzzle(currentPuzzle);
-            int playerCount = 2;
-            if (startingStudent < 0) {
-                studentIndex = startingStudent =
-                        random.chooseStartingPlayer(playerCount);
-            }
-            else {
-                studentIndex = (studentIndex+1) % playerCount;
-            }
+            nextStudent();
             view.setActiveStudent(playerNames[studentIndex]);
             if (playerNames[studentIndex].equals("Computer")) {
                 view.focusNextButton();
@@ -242,6 +236,19 @@ public class Controller {
             view.schedule(createSearchTask(), delaySeconds, intervalSeconds);
             return new SolvingState();
         }
+
+        protected void nextStudent() {
+            studentIndex = (studentIndex+1) % PLAYER_COUNT;
+        }
         
+    }
+    
+    /** The challenge has just started. */
+    private class StartState extends ResultState {
+        @Override
+        protected void nextStudent() {
+            studentIndex = startingStudent =
+                    random.chooseStartingPlayer(PLAYER_COUNT);
+        }
     }
 }
