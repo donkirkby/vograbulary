@@ -71,12 +71,12 @@ public class WordList implements Iterable<String> {
         String challengeUpper = challenge.toUpperCase();
         if ( ! wordList.contains(challengeUpper)) {
             return solution.length() == 0
-                    ? WordResult.CHALLENGED_SKIP_NOT_A_WORD
-                    : WordResult.CHALLENGE_NOT_A_WORD;
+                    ? WordResult.IMPROVED_SKIP_NOT_A_WORD
+                    : WordResult.IMPROVEMENT_NOT_A_WORD;
         }
         String solutionUpper = solution.toUpperCase();
         return solution.length() == 0
-                ? WordResult.IMPROVED
+                ? WordResult.WORD_FOUND
                 : challenge.length() > solution.length()
                 ? WordResult.LONGER
                 : challenge.length() == solution.length()

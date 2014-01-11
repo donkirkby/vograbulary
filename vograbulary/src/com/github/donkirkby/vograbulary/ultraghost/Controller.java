@@ -164,7 +164,7 @@ public class Controller {
                             currentPuzzle, 
                             humanSolution, 
                             challenge);
-                    if (challengeResult == WordResult.IMPROVED) {
+                    if (challengeResult.getScore() < WordResult.LONGER.getScore()) {
                         view.setChallenge(challenge);
                     }
                     else {

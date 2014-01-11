@@ -386,9 +386,11 @@ public class ControllerTest {
         dummyView.getSearchTask().run(); // find computer challenge
         dummyView.setSolution("PIECE"); // enter human solution
         controller.next(); // display computer challenge and result
+        String result = dummyView.getResult();
         controller.next(); // display puzzle 2
         String puzzle2 = dummyView.getPuzzle();
         
+        assertThat("result", result, is("shorter (+1)"));
         assertThat("puzzle 2", puzzle2, is(expectedPuzzle2));
     }
     
@@ -446,7 +448,7 @@ public class ControllerTest {
         String scores = dummyView.getScores();
         
         assertThat("focus", focus, is("next"));
-        assertThat("result", result, is("not a word"));
+        assertThat("result", result, is("not a word (+3)"));
         assertThat("scores", scores, is("Computer 3\nStudent 0"));
     }
     
@@ -465,7 +467,7 @@ public class ControllerTest {
         controller.next(); // display result
         String result = dummyView.getResult();
         
-        assertThat("result", result, is("longer"));
+        assertThat("result", result, is("longer (+3)"));
     }
     
     @Test
@@ -483,7 +485,7 @@ public class ControllerTest {
         controller.next(); // display result
         String result = dummyView.getResult();
         
-        assertThat("result", result, is("later"));
+        assertThat("result", result, is("later (+3)"));
     }
     
     @Test
@@ -502,7 +504,7 @@ public class ControllerTest {
         String result = dummyView.getResult();
         
         assertThat("focus", focus, is("next"));
-        assertThat("result", result, is("not improved"));
+        assertThat("result", result, is("not improved (+3)"));
     }
     
     @Test

@@ -37,11 +37,11 @@ public class WordListChallengeTest {
                {"PIE", "piece", "piece", WordResult.NOT_IMPROVED},
                {"PIE", "piece", "pipe", WordResult.SHORTER},
                {"PIE", "price", "piece", WordResult.EARLIER},
-               {"PIE", "piece", "pize", WordResult.CHALLENGE_NOT_A_WORD},
+               {"PIE", "piece", "pize", WordResult.IMPROVEMENT_NOT_A_WORD},
                {"PIE", "pine", "piece", WordResult.LONGER},
                {"MIE", "mime", "mine", WordResult.LATER},
-               {"PIE", "", "pipe", WordResult.IMPROVED},
-               {"PIE", "", "pize", WordResult.CHALLENGED_SKIP_NOT_A_WORD} });
+               {"PIE", "", "pipe", WordResult.WORD_FOUND},
+               {"PIE", "", "pize", WordResult.IMPROVED_SKIP_NOT_A_WORD} });
    }
    
    private WordList wordList;
