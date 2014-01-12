@@ -18,9 +18,14 @@ public class WordResultTest {
     }
 
     @Test
-    public void challengeNotAWord() {
+    public void improvementNotAWord() {
         assertThat(
                 WordResult.IMPROVEMENT_NOT_A_WORD.toString(), 
                 is("not a word (+3)"));
+    }
+
+    @Test
+    public void wordFound() {
+        assertThat(WordResult.WORD_FOUND.toString(), is("word found (-1)"));
     }
 }
