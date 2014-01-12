@@ -31,7 +31,7 @@ public enum WordResult {
 
     private void addScore(int score) {
         if (score != 0) {
-            String sign = score > 0 ? "+" : "-";
+            String sign = score > 0 ? "+" : "";
             this.name += " (" + sign + Integer.toString(score) + ")";
         }
     }

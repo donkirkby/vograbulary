@@ -66,7 +66,9 @@ public class WordList implements Iterable<String> {
             String solution,
             String challenge) {
         if (challenge == null || challenge.length() == 0) {
-            return WordResult.NOT_IMPROVED;
+            return solution.length() == 0
+                    ? WordResult.SKIPPED
+                    : WordResult.NOT_IMPROVED;
         }
         String challengeUpper = challenge.toUpperCase();
         if ( ! wordList.contains(challengeUpper)) {
