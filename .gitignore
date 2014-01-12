@@ -8,12 +8,16 @@
 # Java class files
 *.class
 
+# Compiled Python
+*.pyc
+
 # generated files
 bin/
 gen/
 .gwt
 vograbulary-html/gwt-unitCache
 vograbulary-html/war/WEB-INF/deploy
+vograbulary-html/war/WEB-INF/classes/com
 vograbulary-html/war/assets
 vograbulary-html/war/com.github.donkirkby.vograbulary.GwtDefinition
 

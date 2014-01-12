@@ -38,11 +38,11 @@ public class UltraghostRandom {
     }
     
     /**
-     * Choose the index of the starting player.
-     * @param playerCount the total number of players.
+     * Choose the index of the starting student.
+     * @param studentCount the total number of students.
      */
-    public int chooseStartingPlayer(int playerCount) {
-        return random.nextInt(playerCount);
+    public int chooseStartingStudent(int studentCount) {
+        return random.nextInt(studentCount);
     }
 
     private char generateLetter(double[] letterOdds) {

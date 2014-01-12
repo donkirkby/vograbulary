@@ -34,7 +34,7 @@ public class ControllerTest {
     public void setUp() {
         searchTask = null;
         random = new DummyRandom();
-        random.setStartingPlayer(Controller.COMPUTER_PLAYER_INDEX);
+        random.setStartingStudent(Controller.COMPUTER_STUDENT_INDEX);
         view = mock(View.class);
         controller = new Controller();
         controller.setRandom(random);
@@ -378,7 +378,7 @@ public class ControllerTest {
         setUpWordList("PIPE\nPIECE");
         String expectedPuzzle2 = "PEE";
         random.setPuzzles("PIE", expectedPuzzle2);
-        random.setStartingPlayer(Controller.HUMAN_PLAYER_INDEX);
+        random.setStartingStudent(Controller.HUMAN_STUDENT_INDEX);
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
         
@@ -398,7 +398,7 @@ public class ControllerTest {
     public void humanThenComputer() {
         setUpWordList("PIPE\nPIECE");
         random.setPuzzles("PIE", "PEE");
-        random.setStartingPlayer(Controller.HUMAN_PLAYER_INDEX);
+        random.setStartingStudent(Controller.HUMAN_STUDENT_INDEX);
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
         
@@ -417,7 +417,7 @@ public class ControllerTest {
     public void computerDoesNotChallenge() {
         setUpWordList("PIPE\nPIECE");
         random.setPuzzles("PIE");
-        random.setStartingPlayer(Controller.HUMAN_PLAYER_INDEX);
+        random.setStartingStudent(Controller.HUMAN_STUDENT_INDEX);
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
         
@@ -434,7 +434,7 @@ public class ControllerTest {
     public void humanChallengeNotAWord() {
         setUpWordList("PIECE\nPIPE");
         random.setPuzzles("PIE");
-        random.setStartingPlayer(Controller.COMPUTER_PLAYER_INDEX);
+        random.setStartingStudent(Controller.COMPUTER_STUDENT_INDEX);
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
         
@@ -456,7 +456,7 @@ public class ControllerTest {
     public void humanChallengeLonger() {
         setUpWordList("PIPE\nPIECE");
         random.setPuzzles("PIE");
-        random.setStartingPlayer(Controller.COMPUTER_PLAYER_INDEX);
+        random.setStartingStudent(Controller.COMPUTER_STUDENT_INDEX);
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
         
@@ -474,7 +474,7 @@ public class ControllerTest {
     public void humanChallengeLater() {
         setUpWordList("PINE\nPIPE");
         random.setPuzzles("PIE");
-        random.setStartingPlayer(Controller.COMPUTER_PLAYER_INDEX);
+        random.setStartingStudent(Controller.COMPUTER_STUDENT_INDEX);
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
         
@@ -492,7 +492,7 @@ public class ControllerTest {
     public void computerSolutionNotChallenged() {
         setUpWordList("PIECE\nPIPE");
         random.setPuzzles("PIE");
-        random.setStartingPlayer(Controller.COMPUTER_PLAYER_INDEX);
+        random.setStartingStudent(Controller.COMPUTER_STUDENT_INDEX);
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
         
@@ -511,7 +511,7 @@ public class ControllerTest {
     public void humanSolutionNotAWord() {
         setUpWordList("PIECE\nPIPE");
         random.setPuzzles("PIE", "RPE");
-        random.setStartingPlayer(Controller.HUMAN_PLAYER_INDEX);
+        random.setStartingStudent(Controller.HUMAN_STUDENT_INDEX);
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
         
@@ -534,7 +534,7 @@ public class ControllerTest {
     public void humanSolutionNoMatch() {
         setUpWordList("ROPE\nPIECE\nPIPE");
         random.setPuzzles("RPE");
-        random.setStartingPlayer(Controller.HUMAN_PLAYER_INDEX);
+        random.setStartingStudent(Controller.HUMAN_STUDENT_INDEX);
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
         
@@ -554,7 +554,7 @@ public class ControllerTest {
         setUpWordList("PIPE\nPIECE");
         String expectedSolution = "PIPE";
         random.setPuzzles("PIE");
-        random.setStartingPlayer(Controller.COMPUTER_PLAYER_INDEX);
+        random.setStartingStudent(Controller.COMPUTER_STUDENT_INDEX);
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
         
@@ -574,7 +574,7 @@ public class ControllerTest {
         setUpWordList("PIPE\nPIECE");
         String expectedChallenge = "PIPE";
         random.setPuzzles("PIE");
-        random.setStartingPlayer(Controller.HUMAN_PLAYER_INDEX);
+        random.setStartingStudent(Controller.HUMAN_STUDENT_INDEX);
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
         
@@ -590,17 +590,17 @@ public class ControllerTest {
     @Test
     public void displayPlayerForFirstPuzzle() {
         random.setPuzzles("ABC");
-        random.setStartingPlayer(Controller.HUMAN_PLAYER_INDEX);
+        random.setStartingStudent(Controller.HUMAN_STUDENT_INDEX);
         controller.next(); // display puzzle
         
-        verify(view).setActiveStudent("Player");
+        verify(view).setActiveStudent("Student");
         verify(view).focusSolution();
     }
     
     @Test
     public void displayComputerForFirstPuzzle() {
         random.setPuzzles("ABC");
-        random.setStartingPlayer(Controller.COMPUTER_PLAYER_INDEX);
+        random.setStartingStudent(Controller.COMPUTER_STUDENT_INDEX);
         controller.next(); // display puzzle
         
         verify(view).setActiveStudent("Computer");
@@ -610,14 +610,14 @@ public class ControllerTest {
     @Test
     public void displayPlayerForSecondPuzzle() {
         random.setPuzzles("ABC", "XYZ");
-        random.setStartingPlayer(Controller.COMPUTER_PLAYER_INDEX);
+        random.setStartingStudent(Controller.COMPUTER_STUDENT_INDEX);
         controller.next(); // display puzzle
         controller.next(); // display solution
         controller.next(); // display challenge
 
         controller.next(); // display second puzzle
         
-        verify(view).setActiveStudent("Player");
+        verify(view).setActiveStudent("Student");
     }
     
     @Test

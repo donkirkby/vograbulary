@@ -9,9 +9,9 @@ import com.badlogic.gdx.utils.Timer.Task;
 
 public class Controller {
     public static final String NO_MATCH_MESSAGE = "None";
-    public static final int HUMAN_PLAYER_INDEX = 0;
-    public static final int COMPUTER_PLAYER_INDEX = 1;
-    private static final int PLAYER_COUNT = 2;
+    public static final int HUMAN_STUDENT_INDEX = 0;
+    public static final int COMPUTER_STUDENT_INDEX = 1;
+    private static final int STUDENT_COUNT = 2;
     
     private State state = new StartState();
     private UltraghostRandom random = new UltraghostRandom();
@@ -21,10 +21,9 @@ public class Controller {
     private int searchBatchSize = 1;
     private Task searchTask;
     private String bestSolution;
-    private String[] playerNames = new String[] {"Player", "Computer"};
     private Student[] students = new Student[] {
             new Student("Student"),
-            new Student("Computer")
+            new Student("Computer", true)
     };
     private int startingStudent;
     private int studentIndex;
@@ -137,7 +136,7 @@ public class Controller {
         public abstract State next();
     }
     
-    /** The puzzle is displayed, and the player is thinking of a solution. */
+    /** The puzzle is displayed, and the student is thinking of a solution. */
     private class SolvingState extends State {
 
         @Override
@@ -149,7 +148,7 @@ public class Controller {
                 computerSolution = NO_MATCH_MESSAGE;
             }
             State nextState = new ImprovingState();
-            if (studentIndex == HUMAN_PLAYER_INDEX) {
+            if (studentIndex == HUMAN_STUDENT_INDEX) {
                 String humanSolution = view.getSolution();
                 WordResult solutionResult = 
                         wordList.checkSolution(currentPuzzle, humanSolution);
@@ -189,7 +188,7 @@ public class Controller {
         }
     }
     
-    /** A solution, skip, or challenge is displayed, and the player is thinking
+    /** A solution, skip, or challenge is displayed, and the student is thinking
      * of a better solution.
      */
     private class ImprovingState extends State {
@@ -219,9 +218,9 @@ public class Controller {
         public State next() {
             currentPuzzle = random.generatePuzzle();
             view.setPuzzle(currentPuzzle);
-            nextStudent();
-            view.setActiveStudent(playerNames[studentIndex]);
-            if (playerNames[studentIndex].equals("Computer")) {
+            Student student = nextStudent();
+            view.setActiveStudent(student.getName());
+            if (student.isComputer()) {
                 view.focusNextButton();
             }
             else {
@@ -237,8 +236,9 @@ public class Controller {
             return new SolvingState();
         }
 
-        protected void nextStudent() {
-            studentIndex = (studentIndex+1) % PLAYER_COUNT;
+        protected Student nextStudent() {
+            studentIndex = (studentIndex+1) % STUDENT_COUNT;
+            return students[studentIndex];
         }
         
     }
@@ -246,9 +246,10 @@ public class Controller {
     /** The challenge has just started. */
     private class StartState extends ResultState {
         @Override
-        protected void nextStudent() {
+        protected Student nextStudent() {
             studentIndex = startingStudent =
-                    random.chooseStartingPlayer(PLAYER_COUNT);
+                    random.chooseStartingStudent(STUDENT_COUNT);
+            return students[studentIndex];
         }
     }
 }

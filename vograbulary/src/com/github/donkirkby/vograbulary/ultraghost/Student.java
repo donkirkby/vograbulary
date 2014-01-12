@@ -3,9 +3,15 @@ package com.github.donkirkby.vograbulary.ultraghost;
 public class Student {
     private String name;
     private int score;
+    private boolean isComputer;
     
     public Student(String name) {
+        this(name, false);
+    }
+    
+    public Student(String name, boolean isComputer) {
         this.name = name;
+        this.isComputer = isComputer;
     }
     
     public int getScore() {
@@ -18,6 +24,10 @@ public class Student {
     
     public String getName() {
         return name;
+    }
+    
+    public boolean isComputer() {
+        return isComputer;
     }
     
     @Override

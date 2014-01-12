@@ -69,7 +69,7 @@ public class View {
     }
 
     /**
-     * Display the active player.
+     * Display the active student.
      */
     public void setActiveStudent(String name) {
         studentName.setText(name);

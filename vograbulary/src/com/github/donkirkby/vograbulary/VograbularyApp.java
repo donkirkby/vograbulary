@@ -10,7 +10,7 @@ import com.github.donkirkby.vograbulary.ultraghost.Controller;
 import com.github.donkirkby.vograbulary.ultraghost.View;
 
 //stopJesting
-public class VograbularyGame implements ApplicationListener {
+public class VograbularyApp implements ApplicationListener {
 	private Stage stage;
 	private Controller ultraghostController = 
 	        new Controller();

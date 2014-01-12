@@ -29,14 +29,14 @@ public class DummyRandom extends UltraghostRandom {
     }
     
     @Override
-    public int chooseStartingPlayer(int playerCount) {
+    public int chooseStartingStudent(int playerCount) {
         return startingPlayer;
     }
     
     /**
      * Set which player will be chosen. Defaults to zero.
      */
-    public void setStartingPlayer(int playerIndex) {
+    public void setStartingStudent(int playerIndex) {
         startingPlayer = playerIndex;
     }
 
