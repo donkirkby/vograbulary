@@ -9,9 +9,20 @@ import java.util.Iterator;
 public class WordList implements Iterable<String> {
     private ArrayList<String> wordList = new ArrayList<String>();
 
+    /** Read all the words from a reader and add them to the list.
+     * 
+     * @param reader an open reader. This method will close it.
+     */
     public void read(Reader reader) {
+        read(new BufferedReader(reader));
+    }
+
+    /** Read all the words from a reader and add them to the list.
+     * 
+     * @param reader an open reader. This method will close it.
+     */
+    public void read(BufferedReader lineReader) {
         try {
-            BufferedReader lineReader = new BufferedReader(reader);
             try {
                 String line;
                 while ((line = lineReader.readLine()) != null) {

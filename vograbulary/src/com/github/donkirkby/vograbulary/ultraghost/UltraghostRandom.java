@@ -47,14 +47,18 @@ public class UltraghostRandom {
 
     private char generateLetter(double[] letterOdds) {
         double remaining = random.nextDouble();
-        for (int i = 0; i < letterOdds.length; i++) {
+        int i = 0;
+        boolean isDone = false;
+        while ( ! isDone) {
             remaining -= letterOdds[i];
-            if (remaining < 0) {
-                return (char) ('A' + i);
+            if (i < letterOdds.length-1 && remaining >= 0) {
+                i++;
+            }
+            else {
+                isDone = true;
             }
         }
-        // Should never get here.
-        throw new RuntimeException("Invalid odds for letters.");
+        return (char) ('A' + i);
     }
 
     /**
