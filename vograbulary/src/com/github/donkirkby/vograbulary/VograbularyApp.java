@@ -31,6 +31,7 @@ public class VograbularyApp implements ApplicationListener {
         ultraghostController.readWordList(
                 Gdx.files.internal("data/wordlist.txt").reader());
         ultraghostController.setSearchBatchSize(100);
+        ultraghostController.setMaxSearchBatchForComputer(1000); // 10s
 	}
 
 	@Override

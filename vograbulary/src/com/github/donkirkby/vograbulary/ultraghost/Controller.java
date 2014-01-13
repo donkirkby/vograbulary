@@ -19,6 +19,8 @@ public class Controller {
     private String currentPuzzle;
     private WordList wordList = new WordList();
     private int searchBatchSize = 1;
+    private int maxSearchBatchForComputer = Integer.MAX_VALUE;
+    private int searchBatchCount;
     private Task searchTask;
     private String bestSolution;
     private Student[] students = new Student[] {
@@ -54,6 +56,18 @@ public class Controller {
     public void setView(View view) {
         this.view = view;
     }
+    
+    public int getMaxSearchBatchForComputer() {
+        return maxSearchBatchForComputer;
+    }
+    
+    /**
+     * Set the number of search batches that will run before a computer student
+     * displays its best solution.
+     */
+    public void setMaxSearchBatchForComputer(int maxSearchBatchForComputer) {
+        this.maxSearchBatchForComputer = maxSearchBatchForComputer;
+    }
 
     /**
      * Read a list of words from a reader.
@@ -84,6 +98,7 @@ public class Controller {
      * @return a task for searching the word list.
      */
     private Task createSearchTask() {
+        searchBatchCount = 0;
         searchTask = new SearchTask();
         return searchTask;
     }
@@ -92,7 +107,9 @@ public class Controller {
         if (wordList.isMatch(currentPuzzle, word)) {
             String previousSolution = bestSolution;
             if (previousSolution == null 
-                    || word.length() < previousSolution.length()) {
+                    || word.length() < previousSolution.length()
+                    || (word.length() == previousSolution.length()
+                        && word.compareTo(previousSolution) < 0)) {
                 bestSolution = word;
             }
         }
@@ -103,6 +120,7 @@ public class Controller {
 
         @Override
         public void run() {
+            searchBatchCount++;
             int wordCount = getSearchBatchSize();
             for (int i = 0; i < wordCount && itr.hasNext(); i++) {
                 String word = itr.next();
@@ -111,8 +129,12 @@ public class Controller {
             if ( ! itr.hasNext()) {
                 cancel();
             }
+            if (searchBatchCount >= maxSearchBatchForComputer || ! itr.hasNext()) {
+                if (students[studentIndex].isComputer()) {
+                    next();
+                }
+            }
         }
-        
     }
 
     private void addScore(WordResult result) {

@@ -342,7 +342,7 @@ public class ControllerTest {
     
     @Test
     public void createSearchTaskForSecondPuzzleWithSolution() {
-        setUpWordList("PIPE\nPIECE");
+        setUpWordList("PIPE\nPIECE\nLOOP");
         String expectedSolution1 = "PIPE";
         String expectedSolution2 = "PIECE";
         random.setPuzzles("PIE", "PEE");
@@ -636,6 +636,41 @@ public class ControllerTest {
         setUpWordList("ARBITRARY\nWORDS");
         
         assertThat("word list", generator.getWordList(), hasItem("ARBITRARY"));
+    }
+    
+    @Test
+    public void computerTimerCount() {
+        setUpWordList("PRIDE\nPIECE\nPIPE");
+        random.setPuzzles("PIE");
+        random.setStartingStudent(Controller.COMPUTER_STUDENT_INDEX);
+        controller.setMaxSearchBatchForComputer(2);
+        DummyView dummyView = new DummyView();
+        controller.setView(dummyView);
+        
+        controller.next(); // display puzzle
+        searchTask = dummyView.getSearchTask();
+        searchTask.run();
+        searchTask.run(); // display solution
+        String solution = dummyView.getSolution();
+        
+        assertThat("solution", solution, is("PIECE"));
+    }
+    
+    @Test
+    public void computerTimerEndOfWordList() {
+        setUpWordList("PRIDE\nPIECE");
+        random.setPuzzles("PIE");
+        random.setStartingStudent(Controller.COMPUTER_STUDENT_INDEX);
+        DummyView dummyView = new DummyView();
+        controller.setView(dummyView);
+        
+        controller.next(); // display puzzle
+        searchTask = dummyView.getSearchTask();
+        searchTask.run();
+        searchTask.run(); // display solution
+        String solution = dummyView.getSolution();
+        
+        assertThat("solution", solution, is("PIECE"));
     }
     
     private void setUpWordList(String words) {
