@@ -9,8 +9,6 @@ import com.badlogic.gdx.utils.Timer.Task;
 
 public class Controller {
     public static final String NO_MATCH_MESSAGE = "None";
-    public static final int HUMAN_STUDENT_INDEX = 0;
-    public static final int COMPUTER_STUDENT_INDEX = 1;
     private static final int STUDENT_COUNT = 2;
     
     private State state = new StartState();
@@ -170,7 +168,13 @@ public class Controller {
                 computerSolution = NO_MATCH_MESSAGE;
             }
             State nextState = new ImprovingState();
-            if (studentIndex == HUMAN_STUDENT_INDEX) {
+            Student student = students[studentIndex];
+            if (student.isComputer()) {
+                view.setSolution(computerSolution);
+                view.setChallenge("");
+                view.focusChallenge();
+            }
+            else {
                 String humanSolution = view.getSolution();
                 WordResult solutionResult = 
                         wordList.checkSolution(currentPuzzle, humanSolution);
@@ -199,11 +203,6 @@ public class Controller {
                 // When computer challenges, we immediately switch to the
                 // results state.
                 nextState = nextState.next();
-            }
-            else {
-                view.setSolution(computerSolution);
-                view.setChallenge("");
-                view.focusChallenge();
             }
             currentPuzzle = null;
             return nextState;

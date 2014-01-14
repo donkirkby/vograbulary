@@ -1,6 +1,10 @@
 package com.github.donkirkby.vograbulary.ultraghost;
 
 public class Student {
+    public interface StudentListener {
+        void submitSolution(String solution);
+    }
+    
     private String name;
     private int score;
     private boolean isComputer;

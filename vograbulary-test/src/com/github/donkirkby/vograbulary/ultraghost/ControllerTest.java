@@ -18,14 +18,14 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
-import com.github.donkirkby.vograbulary.ultraghost.Controller;
-import com.github.donkirkby.vograbulary.ultraghost.View;
 
 public class ControllerTest {
     private Controller controller;
     private DummyRandom random;
     private View view;
     private Task searchTask;
+    private static final int HUMAN_STUDENT_INDEX = 0;
+    private static final int COMPUTER_STUDENT_INDEX = 1;
     
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -34,7 +34,7 @@ public class ControllerTest {
     public void setUp() {
         searchTask = null;
         random = new DummyRandom();
-        random.setStartingStudent(Controller.COMPUTER_STUDENT_INDEX);
+        random.setStartingStudent(COMPUTER_STUDENT_INDEX);
         view = mock(View.class);
         controller = new Controller();
         controller.setRandom(random);
@@ -378,7 +378,7 @@ public class ControllerTest {
         setUpWordList("PIPE\nPIECE");
         String expectedPuzzle2 = "PEE";
         random.setPuzzles("PIE", expectedPuzzle2);
-        random.setStartingStudent(Controller.HUMAN_STUDENT_INDEX);
+        random.setStartingStudent(HUMAN_STUDENT_INDEX);
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
         
@@ -398,7 +398,7 @@ public class ControllerTest {
     public void humanThenComputer() {
         setUpWordList("PIPE\nPIECE");
         random.setPuzzles("PIE", "PEE");
-        random.setStartingStudent(Controller.HUMAN_STUDENT_INDEX);
+        random.setStartingStudent(HUMAN_STUDENT_INDEX);
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
         
@@ -417,7 +417,7 @@ public class ControllerTest {
     public void computerDoesNotChallenge() {
         setUpWordList("PIPE\nPIECE");
         random.setPuzzles("PIE");
-        random.setStartingStudent(Controller.HUMAN_STUDENT_INDEX);
+        random.setStartingStudent(HUMAN_STUDENT_INDEX);
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
         
@@ -434,7 +434,7 @@ public class ControllerTest {
     public void humanChallengeNotAWord() {
         setUpWordList("PIECE\nPIPE");
         random.setPuzzles("PIE");
-        random.setStartingStudent(Controller.COMPUTER_STUDENT_INDEX);
+        random.setStartingStudent(COMPUTER_STUDENT_INDEX);
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
         
@@ -456,7 +456,7 @@ public class ControllerTest {
     public void humanChallengeLonger() {
         setUpWordList("PIPE\nPIECE");
         random.setPuzzles("PIE");
-        random.setStartingStudent(Controller.COMPUTER_STUDENT_INDEX);
+        random.setStartingStudent(COMPUTER_STUDENT_INDEX);
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
         
@@ -474,7 +474,7 @@ public class ControllerTest {
     public void humanChallengeLater() {
         setUpWordList("PINE\nPIPE");
         random.setPuzzles("PIE");
-        random.setStartingStudent(Controller.COMPUTER_STUDENT_INDEX);
+        random.setStartingStudent(COMPUTER_STUDENT_INDEX);
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
         
@@ -492,7 +492,7 @@ public class ControllerTest {
     public void computerSolutionNotChallenged() {
         setUpWordList("PIECE\nPIPE");
         random.setPuzzles("PIE");
-        random.setStartingStudent(Controller.COMPUTER_STUDENT_INDEX);
+        random.setStartingStudent(COMPUTER_STUDENT_INDEX);
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
         
@@ -511,7 +511,7 @@ public class ControllerTest {
     public void humanSolutionNotAWord() {
         setUpWordList("PIECE\nPIPE");
         random.setPuzzles("PIE", "RPE");
-        random.setStartingStudent(Controller.HUMAN_STUDENT_INDEX);
+        random.setStartingStudent(HUMAN_STUDENT_INDEX);
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
         
@@ -534,7 +534,7 @@ public class ControllerTest {
     public void humanSolutionNoMatch() {
         setUpWordList("ROPE\nPIECE\nPIPE");
         random.setPuzzles("RPE");
-        random.setStartingStudent(Controller.HUMAN_STUDENT_INDEX);
+        random.setStartingStudent(HUMAN_STUDENT_INDEX);
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
         
@@ -554,7 +554,7 @@ public class ControllerTest {
         setUpWordList("PIPE\nPIECE");
         String expectedSolution = "PIPE";
         random.setPuzzles("PIE");
-        random.setStartingStudent(Controller.COMPUTER_STUDENT_INDEX);
+        random.setStartingStudent(COMPUTER_STUDENT_INDEX);
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
         
@@ -574,7 +574,7 @@ public class ControllerTest {
         setUpWordList("PIPE\nPIECE");
         String expectedChallenge = "PIPE";
         random.setPuzzles("PIE");
-        random.setStartingStudent(Controller.HUMAN_STUDENT_INDEX);
+        random.setStartingStudent(HUMAN_STUDENT_INDEX);
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
         
@@ -590,7 +590,7 @@ public class ControllerTest {
     @Test
     public void displayPlayerForFirstPuzzle() {
         random.setPuzzles("ABC");
-        random.setStartingStudent(Controller.HUMAN_STUDENT_INDEX);
+        random.setStartingStudent(HUMAN_STUDENT_INDEX);
         controller.next(); // display puzzle
         
         verify(view).setActiveStudent("Student");
@@ -600,7 +600,7 @@ public class ControllerTest {
     @Test
     public void displayComputerForFirstPuzzle() {
         random.setPuzzles("ABC");
-        random.setStartingStudent(Controller.COMPUTER_STUDENT_INDEX);
+        random.setStartingStudent(COMPUTER_STUDENT_INDEX);
         controller.next(); // display puzzle
         
         verify(view).setActiveStudent("Computer");
@@ -610,7 +610,7 @@ public class ControllerTest {
     @Test
     public void displayPlayerForSecondPuzzle() {
         random.setPuzzles("ABC", "XYZ");
-        random.setStartingStudent(Controller.COMPUTER_STUDENT_INDEX);
+        random.setStartingStudent(COMPUTER_STUDENT_INDEX);
         controller.next(); // display puzzle
         controller.next(); // display solution
         controller.next(); // display challenge
@@ -642,7 +642,7 @@ public class ControllerTest {
     public void computerTimerCount() {
         setUpWordList("PRIDE\nPIECE\nPIPE");
         random.setPuzzles("PIE");
-        random.setStartingStudent(Controller.COMPUTER_STUDENT_INDEX);
+        random.setStartingStudent(COMPUTER_STUDENT_INDEX);
         controller.setMaxSearchBatchForComputer(2);
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
@@ -660,7 +660,7 @@ public class ControllerTest {
     public void computerTimerEndOfWordList() {
         setUpWordList("PRIDE\nPIECE");
         random.setPuzzles("PIE");
-        random.setStartingStudent(Controller.COMPUTER_STUDENT_INDEX);
+        random.setStartingStudent(COMPUTER_STUDENT_INDEX);
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
         
