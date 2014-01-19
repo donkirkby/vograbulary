@@ -32,6 +32,7 @@ public class ControllerTest {
     
     @Before
     public void setUp() {
+        Gdx.app = mock(Application.class);
         searchTask = null;
         random = new DummyRandom();
         random.setStartingStudent(COMPUTER_STUDENT_INDEX);
@@ -408,6 +409,22 @@ public class ControllerTest {
         String activeStudent = dummyView.getActiveStudent();
         
         assertThat("active student", activeStudent, is("Computer"));
+    }
+    
+    @Test
+    public void humanSkip() {
+        setUpWordList("PIPE\nPIECE");
+        random.setPuzzles("DNX");
+        random.setStartingStudent(HUMAN_STUDENT_INDEX);
+        DummyView dummyView = new DummyView();
+        controller.setView(dummyView);
+        
+        controller.next(); // display puzzle for human
+        // skip
+        controller.next(); // display computer challenge (none)
+        String challenge = dummyView.getChallenge();
+        
+        assertThat("challenge", challenge, is(Controller.NO_MATCH_MESSAGE));
     }
     
     /** If it can't improve the solution, the computer will not display a 

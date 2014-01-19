@@ -115,9 +115,15 @@ public class Controller {
 
     private class SearchTask extends Task {
         private Iterator<String> itr = wordList.iterator();
+        private boolean isCanceled;
 
         @Override
         public void run() {
+            if ( isCanceled) {
+                // Some bug where calling cancel() lets timer run one more time.
+                return;
+            }
+            
             searchBatchCount++;
             int wordCount = getSearchBatchSize();
             for (int i = 0; i < wordCount && itr.hasNext(); i++) {
@@ -126,9 +132,12 @@ public class Controller {
             }
             if ( ! itr.hasNext()) {
                 cancel();
+                isCanceled = true;
             }
             if (searchBatchCount >= maxSearchBatchForComputer || ! itr.hasNext()) {
                 if (students[studentIndex].isComputer()) {
+                    cancel();
+                    isCanceled = true;
                     next();
                 }
             }
@@ -189,7 +198,11 @@ public class Controller {
                             currentPuzzle, 
                             humanSolution, 
                             challenge);
-                    if (challengeResult.getScore() < WordResult.LONGER.getScore()) {
+                    WordResult noChallengeResult = wordList.checkChallenge(
+                            currentPuzzle, 
+                            humanSolution, 
+                            null);
+                    if (challengeResult.getScore() < noChallengeResult.getScore()) {
                         view.setChallenge(challenge);
                     }
                     else {

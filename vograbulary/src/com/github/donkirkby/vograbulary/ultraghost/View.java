@@ -1,5 +1,6 @@
 package com.github.donkirkby.vograbulary.ultraghost;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -56,8 +57,8 @@ public class View {
         });
         table.addListener(new InputListener() {
             @Override
-            public boolean keyTyped(InputEvent event, char character) {
-                if (character == '\r') {
+            public boolean keyUp(InputEvent event, int keycode) {
+                if (keycode == Input.Keys.ENTER) {
                     controller.next();
                     return true;
                 }
