@@ -34,17 +34,9 @@ public class Controller implements StudentListener {
 //        }
 //    }
 
-    public UltraghostRandom getRandom() {
-        return random;
-    }
-
     public void setRandom(UltraghostRandom random) {
         this.random = random;
         random.loadWordList(wordList);
-    }
-
-    public View getView() {
-        return view;
     }
 
     public void setView(View view) {

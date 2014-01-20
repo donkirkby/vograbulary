@@ -16,16 +16,10 @@ public class Student {
     private StudentListener listener;
     private String name;
     private int score;
-    private boolean isComputer;
     private WordList wordList;
     
     public Student(String name) {
-        this(name, false);
-    }
-    
-    public Student(String name, boolean isComputer) {
         this.name = name;
-        this.isComputer = isComputer;
     }
     
     public void setListener(StudentListener listener) {
@@ -44,20 +38,12 @@ public class Student {
         return wordList;
     }
     
-    public int getScore() {
-        return score;
-    }
-    
     public void addScore(int points) {
         score += points;
     }
     
     public String getName() {
         return name;
-    }
-    
-    public boolean isComputer() {
-        return isComputer;
     }
     
     @Override

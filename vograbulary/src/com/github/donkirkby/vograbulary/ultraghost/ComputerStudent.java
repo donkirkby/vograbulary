@@ -13,7 +13,7 @@ public class ComputerStudent extends Student {
     
     
     public ComputerStudent() {
-        super("Computer", true);
+        super("Computer");
     }
     
     public void setSearchBatchSize(int searchBatchSize) {
@@ -46,6 +46,7 @@ public class ComputerStudent extends Student {
         if (searchBatchCount >= maxSearchBatchCount || ! itr.hasNext()) {
             if (isActiveStudent) {
                 getListener().submitSolution(bestSolution);
+                getListener().askForChallenge();
             }
         }
         return ! itr.hasNext();
