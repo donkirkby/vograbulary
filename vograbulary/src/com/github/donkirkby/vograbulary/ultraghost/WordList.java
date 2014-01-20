@@ -60,7 +60,7 @@ public class WordList implements Iterable<String> {
 
     
     public WordResult checkSolution(String puzzle, String solution) {
-        if (solution.length() == 0) {
+        if (solution == null || solution.length() == 0) {
             return WordResult.SKIPPED;
         }
         String solutionUpper = solution.toUpperCase();

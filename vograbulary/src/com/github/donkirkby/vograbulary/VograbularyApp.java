@@ -6,7 +6,9 @@ import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.github.donkirkby.vograbulary.ultraghost.ComputerStudent;
 import com.github.donkirkby.vograbulary.ultraghost.Controller;
+import com.github.donkirkby.vograbulary.ultraghost.Student;
 import com.github.donkirkby.vograbulary.ultraghost.View;
 
 //stopJesting
@@ -30,8 +32,11 @@ public class VograbularyApp implements ApplicationListener {
         view.create(table, skin, ultraghostController);
         ultraghostController.readWordList(
                 Gdx.files.internal("data/wordlist.txt").reader());
-        ultraghostController.setSearchBatchSize(100);
-        ultraghostController.setMaxSearchBatchForComputer(1000); // 10s
+        ComputerStudent computerStudent = new ComputerStudent();
+        computerStudent.setSearchBatchSize(50);
+        computerStudent.setMaxSearchBatchCount(1000); // 10s
+        ultraghostController.addStudent(new Student("Student"));
+        ultraghostController.addStudent(computerStudent);
 	}
 
 	@Override

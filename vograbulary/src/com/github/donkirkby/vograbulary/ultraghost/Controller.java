@@ -3,11 +3,14 @@ package com.github.donkirkby.vograbulary.ultraghost;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import com.badlogic.gdx.utils.Timer.Task;
+import com.github.donkirkby.vograbulary.ultraghost.Student.StudentListener;
 
-public class Controller {
+public class Controller implements StudentListener {
     public static final String NO_MATCH_MESSAGE = "None";
     private static final int STUDENT_COUNT = 2;
     
@@ -16,27 +19,20 @@ public class Controller {
     private View view;
     private String currentPuzzle;
     private WordList wordList = new WordList();
-    private int searchBatchSize = 1;
-    private int maxSearchBatchForComputer = Integer.MAX_VALUE;
-    private int searchBatchCount;
     private Task searchTask;
-    private String bestSolution;
-    private Student[] students = new Student[] {
-            new Student("Student"),
-            new Student("Computer", true)
-    };
+    private List<Student> students = new ArrayList<Student>();
     private int startingStudent;
-    private int studentIndex;
+    private int activeStudentIndex;
 
     public void next() {
         state = state.next();
     }
 
-    public void checkAllWords() {
-        for (String word : wordList) {
-            checkWord(word);
-        }
-    }
+//    public void checkAllWords() {
+//        for (String word : wordList) {
+//            checkWord(word);
+//        }
+//    }
 
     public UltraghostRandom getRandom() {
         return random;
@@ -55,18 +51,16 @@ public class Controller {
         this.view = view;
     }
     
-    public int getMaxSearchBatchForComputer() {
-        return maxSearchBatchForComputer;
+    public void addStudent(Student student) {
+        students.add(student);
+        student.setListener(this);
+        student.setWordList(wordList);
     }
     
-    /**
-     * Set the number of search batches that will run before a computer student
-     * displays its best solution.
-     */
-    public void setMaxSearchBatchForComputer(int maxSearchBatchForComputer) {
-        this.maxSearchBatchForComputer = maxSearchBatchForComputer;
+    public void clearStudents() {
+        students.clear();
     }
-
+    
     /**
      * Read a list of words from a reader.
      * @param reader contains the list of words, one per line. The reader will
@@ -75,18 +69,9 @@ public class Controller {
     public void readWordList(Reader reader) {
         wordList.read(reader);
         random.loadWordList(wordList);
-    }
-
-    public int getSearchBatchSize() {
-        return searchBatchSize;
-    }
-
-    /**
-     * Set the number of words to check each time the search task is triggered.
-     * @param searchBatchSize
-     */
-    public void setSearchBatchSize(int searchBatchSize) {
-        this.searchBatchSize = searchBatchSize;
+        for (Student student : students) {
+            student.setWordList(wordList);
+        }
     }
 
     /**
@@ -96,61 +81,39 @@ public class Controller {
      * @return a task for searching the word list.
      */
     private Task createSearchTask() {
-        searchBatchCount = 0;
         searchTask = new SearchTask();
+        int studentIndex = 0;
+        for (Student student : students) {
+            student.startSolving(currentPuzzle, studentIndex == activeStudentIndex);
+            studentIndex++;
+        }
         return searchTask;
     }
     
-    private void checkWord(String word) {
-        if (wordList.isMatch(currentPuzzle, word)) {
-            String previousSolution = bestSolution;
-            if (previousSolution == null 
-                    || word.length() < previousSolution.length()
-                    || (word.length() == previousSolution.length()
-                        && word.compareTo(previousSolution) < 0)) {
-                bestSolution = word;
-            }
-        }
-    }
-
     private class SearchTask extends Task {
-        private Iterator<String> itr = wordList.iterator();
-        private boolean isCanceled;
+        private List<Student> searchingStudents = new ArrayList<Student>(students);
 
         @Override
         public void run() {
-            if ( isCanceled) {
-                // Some bug where calling cancel() lets timer run one more time.
-                return;
-            }
-            
-            searchBatchCount++;
-            int wordCount = getSearchBatchSize();
-            for (int i = 0; i < wordCount && itr.hasNext(); i++) {
-                String word = itr.next();
-                checkWord(word);
-            }
-            if ( ! itr.hasNext()) {
-                cancel();
-                isCanceled = true;
-            }
-            if (searchBatchCount >= maxSearchBatchForComputer || ! itr.hasNext()) {
-                if (students[studentIndex].isComputer()) {
-                    cancel();
-                    isCanceled = true;
-                    next();
+            Iterator<Student> itr = searchingStudents.iterator();
+            while(itr.hasNext()) {
+                if (itr.next().runSearchBatch()) {
+                    itr.remove();
                 }
+            }
+            if (searchingStudents.size() == 0) {
+                cancel();
             }
         }
     }
 
     private void addScore(WordResult result) {
-        students[studentIndex].addScore(result.getScore());
+        students.get(activeStudentIndex).addScore(result.getScore());
         StringWriter writer = new StringWriter();
         PrintWriter printer = new PrintWriter(writer);
-        for (int i = 0; i < students.length; i++) {
-            int scoreIndex = (startingStudent + i) % students.length;
-            Student student = students[scoreIndex];
+        for (int i = 0; i < students.size(); i++) {
+            int scoreIndex = (startingStudent + i) % students.size();
+            Student student = students.get(scoreIndex);
             if (i > 0) {
                 printer.println();
             }
@@ -172,47 +135,18 @@ public class Controller {
         public State next() {
             searchTask.cancel();
             searchTask = null;
-            String computerSolution = bestSolution;
-            if (computerSolution == null) {
-                computerSolution = NO_MATCH_MESSAGE;
-            }
             State nextState = new ImprovingState();
-            Student student = students[studentIndex];
-            if (student.isComputer()) {
-                view.setSolution(computerSolution);
-                view.setChallenge("");
-                view.focusChallenge();
+            Student inactiveStudent = students.get(1 - activeStudentIndex);
+            String solution = view.getSolution();
+            WordResult solutionResult = 
+                    wordList.checkSolution(currentPuzzle, solution);
+            if (solutionResult != WordResult.VALID 
+                    && solutionResult != WordResult.SKIPPED) {
+                
+                view.setResult(solutionResult.toString());
+                nextState = nextState.next();
             }
-            else {
-                String humanSolution = view.getSolution();
-                WordResult solutionResult = 
-                        wordList.checkSolution(currentPuzzle, humanSolution);
-                if (solutionResult != WordResult.VALID 
-                        && solutionResult != WordResult.SKIPPED) {
-                    
-                    view.setResult(solutionResult.toString());
-                }
-                else {
-                    String challenge = bestSolution;
-                    WordResult challengeResult = wordList.checkChallenge(
-                            currentPuzzle, 
-                            humanSolution, 
-                            challenge);
-                    WordResult noChallengeResult = wordList.checkChallenge(
-                            currentPuzzle, 
-                            humanSolution, 
-                            null);
-                    if (challengeResult.getScore() < noChallengeResult.getScore()) {
-                        view.setChallenge(challenge);
-                    }
-                    else {
-                        view.setChallenge(NO_MATCH_MESSAGE);
-                        challengeResult = WordResult.NOT_IMPROVED;
-                    }
-                    view.setResult(challengeResult.toString());
-                    addScore(challengeResult);
-                }
-                view.focusNextButton();
+            else if (inactiveStudent.prepareChallenge(solution)) {
                 // When computer challenges, we immediately switch to the
                 // results state.
                 nextState = nextState.next();
@@ -254,13 +188,6 @@ public class Controller {
             view.setPuzzle(currentPuzzle);
             Student student = nextStudent();
             view.setActiveStudent(student.getName());
-            if (student.isComputer()) {
-                view.focusNextButton();
-            }
-            else {
-                view.focusSolution();
-            }
-            bestSolution = null;
             view.setSolution("");
             view.setChallenge("");
             view.setResult("");
@@ -271,8 +198,8 @@ public class Controller {
         }
 
         protected Student nextStudent() {
-            studentIndex = (studentIndex+1) % STUDENT_COUNT;
-            return students[studentIndex];
+            activeStudentIndex = (activeStudentIndex+1) % STUDENT_COUNT;
+            return students.get(activeStudentIndex);
         }
         
     }
@@ -281,9 +208,36 @@ public class Controller {
     private class StartState extends ResultState {
         @Override
         protected Student nextStudent() {
-            studentIndex = startingStudent =
+            activeStudentIndex = startingStudent =
                     random.chooseStartingStudent(STUDENT_COUNT);
-            return students[studentIndex];
+            return students.get(activeStudentIndex);
         }
+    }
+
+    @Override
+    public void askForSolution() {
+        view.focusSolution();
+    }
+    
+    @Override
+    public void submitSolution(String solution) {
+        view.setSolution(solution == null ? NO_MATCH_MESSAGE : solution);
+    }
+
+    @Override
+    public void showThinking() {
+        view.focusNextButton();
+    }
+    
+    @Override
+    public void askForChallenge() {
+        view.focusChallenge();
+    }
+    
+    @Override
+    public void submitChallenge(String challenge, WordResult challengeResult) {
+        view.setChallenge(challenge);
+        addScore(challengeResult);
+        view.focusNextButton();
     }
 }
