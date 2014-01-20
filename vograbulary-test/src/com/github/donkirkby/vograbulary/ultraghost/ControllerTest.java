@@ -712,6 +712,23 @@ public class ControllerTest {
         assertThat("solution", solution, is("PIECE"));
     }
     
+    @Test
+    public void goBackToFirstStudent() {
+        setUpWordList("PRIDE");
+        random.setPuzzles("ABC", "DEF");
+        setUpStudents(computerStudent, student);
+        random.setStartingStudent(1);
+        DummyView dummyView = new DummyView();
+        controller.setView(dummyView);
+        
+        controller.next(); // display puzzle for human
+        controller.next(); // display challenge and result
+        controller.next(); // display next puzzle for computer
+        String activeStudent = dummyView.getActiveStudent();
+        
+        assertThat("active student", activeStudent, is("Computer"));
+    }
+    
     private void setUpWordList(String words) {
         controller.readWordList(new StringReader(words));
     }

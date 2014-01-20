@@ -12,7 +12,6 @@ import com.github.donkirkby.vograbulary.ultraghost.Student.StudentListener;
 
 public class Controller implements StudentListener {
     public static final String NO_MATCH_MESSAGE = "None";
-    private static final int STUDENT_COUNT = 2;
     
     private State state = new StartState();
     private UltraghostRandom random = new UltraghostRandom();
@@ -191,7 +190,7 @@ public class Controller implements StudentListener {
         }
 
         protected Student nextStudent() {
-            activeStudentIndex = (activeStudentIndex+1) % STUDENT_COUNT;
+            activeStudentIndex = (activeStudentIndex+1) % students.size();
             return students.get(activeStudentIndex);
         }
         
@@ -202,7 +201,7 @@ public class Controller implements StudentListener {
         @Override
         protected Student nextStudent() {
             activeStudentIndex = startingStudent =
-                    random.chooseStartingStudent(STUDENT_COUNT);
+                    random.chooseStartingStudent(students.size());
             return students.get(activeStudentIndex);
         }
     }
