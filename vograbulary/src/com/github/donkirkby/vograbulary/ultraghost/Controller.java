@@ -89,7 +89,8 @@ public class Controller implements StudentListener {
         public void run() {
             Iterator<Student> itr = searchingStudents.iterator();
             while(itr.hasNext()) {
-                if (itr.next().runSearchBatch()) {
+                boolean isStudentFinished = itr.next().runSearchBatch();
+                if (isStudentFinished) {
                     itr.remove();
                 }
             }
