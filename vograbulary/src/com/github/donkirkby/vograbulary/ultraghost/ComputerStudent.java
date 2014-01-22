@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 public class ComputerStudent extends Student {
     private int searchBatchSize = 1;
-    private int maxSearchBatchCount;
+    private int maxSearchBatchCount = Integer.MAX_VALUE;
     private int searchBatchCount;
     private boolean isActiveStudent;
     private String currentPuzzle;
@@ -46,7 +46,7 @@ public class ComputerStudent extends Student {
         if (searchBatchCount >= maxSearchBatchCount || ! itr.hasNext()) {
             if (isActiveStudent) {
                 getListener().submitSolution(bestSolution);
-                getListener().askForChallenge();
+                return true;
             }
         }
         return ! itr.hasNext();
@@ -55,10 +55,11 @@ public class ComputerStudent extends Student {
     private void checkWord(String word) {
         if (getWordList().isMatch(currentPuzzle, word)) {
             String previousSolution = bestSolution;
-            if (previousSolution == null 
-                    || word.length() < previousSolution.length()
-                    || (word.length() == previousSolution.length()
-                        && word.compareTo(previousSolution) < 0)) {
+            WordResult comparison = previousSolution == null
+                    ? WordResult.SHORTER
+                    : getWordList().challengeWord(previousSolution, word);
+            if (comparison == WordResult.SHORTER 
+                    || comparison == WordResult.EARLIER) {
                 bestSolution = word;
             }
         }

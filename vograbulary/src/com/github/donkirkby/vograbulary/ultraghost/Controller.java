@@ -24,7 +24,7 @@ public class Controller implements StudentListener {
     private int activeStudentIndex;
 
     public void next() {
-        state = state.next();
+        state.next();
     }
 
 //    public void checkAllWords() {
@@ -86,9 +86,15 @@ public class Controller implements StudentListener {
 
         @Override
         public void run() {
+            if (searchingStudents.size() == 0) {
+                // Fixes a bug where the task runs one extra time after it's
+                // cancelled.
+                return;
+            }
             Iterator<Student> itr = searchingStudents.iterator();
             while(itr.hasNext()) {
-                boolean isStudentFinished = itr.next().runSearchBatch();
+                Student student = itr.next();
+                boolean isStudentFinished = student.runSearchBatch();
                 if (isStudentFinished) {
                     itr.remove();
                 }
@@ -127,7 +133,7 @@ public class Controller implements StudentListener {
         public State next() {
             searchTask.cancel();
             searchTask = null;
-            State nextState = new ImprovingState();
+            state = new ImprovingState();
             Student inactiveStudent = students.get(1 - activeStudentIndex);
             String solution = view.getSolution();
             WordResult solutionResult = 
@@ -136,15 +142,15 @@ public class Controller implements StudentListener {
                     && solutionResult != WordResult.SKIPPED) {
                 
                 view.setResult(solutionResult.toString());
-                nextState = nextState.next();
+                state.next();
             }
             else if (inactiveStudent.prepareChallenge(solution)) {
                 // When computer challenges, we immediately switch to the
                 // results state.
-                nextState = nextState.next();
+//                nextState = nextState.next();
             }
             currentPuzzle = null;
-            return nextState;
+            return null;
         }
     }
     
@@ -165,7 +171,8 @@ public class Controller implements StudentListener {
                 view.setResult(result2.toString());
                 addScore(result2);
             }
-            return new ResultState();
+            state = new ResultState();
+            return null;
         }
     }
     
@@ -186,7 +193,8 @@ public class Controller implements StudentListener {
             float intervalSeconds = 0.01f;
             float delaySeconds = intervalSeconds;
             view.schedule(createSearchTask(), delaySeconds, intervalSeconds);
-            return new SolvingState();
+            state = new SolvingState();
+            return null;
         }
 
         protected Student nextStudent() {
@@ -214,6 +222,7 @@ public class Controller implements StudentListener {
     @Override
     public void submitSolution(String solution) {
         view.setSolution(solution == null ? NO_MATCH_MESSAGE : solution);
+        next();
     }
 
     @Override
@@ -231,5 +240,6 @@ public class Controller implements StudentListener {
         view.setChallenge(challenge);
         addScore(challengeResult);
         view.focusNextButton();
+        next();
     }
 }

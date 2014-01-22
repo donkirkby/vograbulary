@@ -69,7 +69,7 @@ public class Student {
      * @return true if the challenge has already been submitted.
      */
     public boolean prepareChallenge(String solution) {
-        listener.askForSolution();
+        listener.askForChallenge();
         return false;
     }
     

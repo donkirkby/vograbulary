@@ -77,27 +77,35 @@ public class WordList implements Iterable<String> {
             String solution,
             String challenge) {
         if (challenge == null || challenge.length() == 0) {
-            return solution.length() == 0
+            return solution == null || solution.length() == 0
                     ? WordResult.SKIPPED
                     : WordResult.NOT_IMPROVED;
         }
         String challengeUpper = challenge.toUpperCase();
         if ( ! wordList.contains(challengeUpper)) {
-            return solution.length() == 0
+            return solution == null || solution.length() == 0
                     ? WordResult.IMPROVED_SKIP_NOT_A_WORD
                     : WordResult.IMPROVEMENT_NOT_A_WORD;
         }
-        String solutionUpper = solution.toUpperCase();
-        return solution.length() == 0
-                ? WordResult.WORD_FOUND
-                : challenge.length() > solution.length()
+        if (solution == null || solution.length() == 0) {
+            return WordResult.WORD_FOUND;
+        }
+        return challengeWord(solution.toUpperCase(), challengeUpper);
+    }
+
+    /**
+     * Compare a new word with the current best solution. Both words must
+     * be all in upper case.
+     */
+    public WordResult challengeWord(String solution, String challenge) {
+        return challenge.length() > solution.length()
                 ? WordResult.LONGER
                 : challenge.length() == solution.length()
-                && challengeUpper.compareTo(solutionUpper) > 0
+                && challenge.compareTo(solution) > 0
                 ? WordResult.LATER
                 : challenge.length() < solution.length()
                 ? WordResult.SHORTER
-                : challengeUpper.equals(solutionUpper)
+                : challenge.equals(solution)
                 ? WordResult.NOT_IMPROVED
                 : WordResult.EARLIER;
     }

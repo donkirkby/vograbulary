@@ -244,31 +244,6 @@ public class ControllerTest {
 //        verify(view).setSolution(expectedSolution);
 //    }
     
-    @Test
-    public void createSearchTaskCancelsAfterNext() {
-        String expectedLetters = "PIE";
-        random.setPuzzles(expectedLetters);
-        String expectedSolution = "PICKLE";
-        setUpWordList("PICKLE\nPIPE");
-        
-        controller.next(); // get puzzle
-        captureSearchTask();
-        searchTask.run();
-        boolean isScheduledBeforeSolution = searchTask.isScheduled();
-        controller.next();
-        boolean isScheduledAfterSolution = searchTask.isScheduled();
-        
-        verify(view).setSolution(expectedSolution);
-        assertThat(
-                "is scheduled before solution", 
-                isScheduledBeforeSolution, 
-                is(true));
-        assertThat(
-                "is scheduled after solution",
-                isScheduledAfterSolution,
-                is(false));
-    }
-
     private void captureSearchTask() {
         float expectedIntervalSeconds = 0.01f;
         float expectedDelaySeconds = expectedIntervalSeconds;
@@ -298,9 +273,35 @@ public class ControllerTest {
         boolean isScheduledBeforeLastWord = searchTask.isScheduled();
         searchTask.run();
         boolean isScheduledAfterLastWord = searchTask.isScheduled();
-        controller.next();
         
         verify(view).setSolution(expectedSolution);
+        assertThat(
+                "is scheduled before last word", 
+                isScheduledBeforeLastWord, 
+                is(true));
+        assertThat(
+                "is scheduled after last word",
+                isScheduledAfterLastWord,
+                is(false));
+    }
+    
+    @Test
+    public void createSearchTaskCancelsAfterLastWordOnHumanTurn() {
+        String expectedLetters = "PIE";
+        setUpStudents(student, computerStudent);
+        random.setPuzzles(expectedLetters);
+        String expectedSolution = "PIPE";
+        setUpWordList("PICKLE\nPIPE");
+        
+        controller.next(); // get puzzle
+        captureSearchTask();
+        searchTask.run();
+        boolean isScheduledBeforeLastWord = searchTask.isScheduled();
+        searchTask.run();
+        boolean isScheduledAfterLastWord = searchTask.isScheduled();
+        controller.next();
+        
+        verify(view).setChallenge(expectedSolution);
         assertThat(
                 "is scheduled before last word", 
                 isScheduledBeforeLastWord, 
@@ -315,8 +316,9 @@ public class ControllerTest {
     public void createSearchTaskForTwoWordsEachRun() {
         Gdx.app = mock(Application.class);
         String expectedLetters = "PIE";
+        setUpStudents(student, computerStudent);
         random.setPuzzles(expectedLetters);
-        String expectedSolution = "PICKLE";
+        String expectedChallenge = "PICKLE";
         setUpWordList("AIRBAG\nPICKLE\nPIPE");
         computerStudent.setSearchBatchSize(2);
         
@@ -325,7 +327,7 @@ public class ControllerTest {
         searchTask.run();
         controller.next();
         
-        verify(view).setSolution(expectedSolution);
+        verify(view).setChallenge(expectedChallenge);
     }
     
     @Test
@@ -358,6 +360,7 @@ public class ControllerTest {
         setUpWordList("PIPE\nPIECE\nLOOP");
         String expectedSolution1 = "PIPE";
         String expectedSolution2 = "PIECE";
+        computerStudent.setMaxSearchBatchCount(2);
         random.setPuzzles("PIE", "PEE");
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
@@ -365,8 +368,7 @@ public class ControllerTest {
         controller.next(); // display puzzle for computer
         searchTask = dummyView.getSearchTask();
         searchTask.run();
-        searchTask.run();
-        controller.next(); // display solution by computer
+        searchTask.run(); // find and display solution by computer
         String solution1 = dummyView.getSolution();
         dummyView.setChallenge("xxxx");
         controller.next(); // check challenge and display result
@@ -461,14 +463,13 @@ public class ControllerTest {
     
     @Test
     public void humanChallengeNotAWord() {
-        setUpWordList("PIECE\nPIPE");
+        setUpWordList("PIECE");
         random.setPuzzles("PIE");
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
         
         controller.next(); // display puzzle
-        dummyView.getSearchTask().run(); // find computer solution
-        controller.next(); // display computer solution
+        dummyView.getSearchTask().run(); // find and display computer solution
         dummyView.setChallenge("PIXE"); // enter human challenge
         controller.next(); // display result
         String focus = dummyView.getCurrentFocus();
@@ -483,13 +484,13 @@ public class ControllerTest {
     @Test
     public void humanChallengeLonger() {
         setUpWordList("PIPE\nPIECE");
+        computerStudent.setMaxSearchBatchCount(1);
         random.setPuzzles("PIE");
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
         
         controller.next(); // display puzzle
-        dummyView.getSearchTask().run(); // find computer solution
-        controller.next(); // display computer solution
+        dummyView.getSearchTask().run(); // find and display computer solution
         dummyView.setChallenge("piece"); // enter human challenge
         controller.next(); // display result
         String result = dummyView.getResult();
@@ -500,13 +501,13 @@ public class ControllerTest {
     @Test
     public void humanChallengeLater() {
         setUpWordList("PINE\nPIPE");
+        computerStudent.setMaxSearchBatchCount(1);
         random.setPuzzles("PIE");
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
         
         controller.next(); // display puzzle
-        dummyView.getSearchTask().run(); // find computer solution
-        controller.next(); // display computer solution
+        dummyView.getSearchTask().run(); // find and display computer solution
         dummyView.setChallenge("pipe"); // enter human challenge
         controller.next(); // display result
         String result = dummyView.getResult();
@@ -534,13 +535,13 @@ public class ControllerTest {
     @Test
     public void computerSolutionNotChallenged() {
         setUpWordList("PIECE\nPIPE");
+        computerStudent.setMaxSearchBatchCount(1);
         random.setPuzzles("PIE");
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
         
         controller.next(); // display puzzle
-        dummyView.getSearchTask().run(); // find computer solution
-        controller.next(); // display computer solution
+        dummyView.getSearchTask().run(); // find and display computer solution
         controller.next(); // display result (No human challenge)
         String focus = dummyView.getCurrentFocus();
         String result = dummyView.getResult();
@@ -592,8 +593,9 @@ public class ControllerTest {
     }
     
     @Test
-    public void displaySolutionForComputerPlayer() {
+    public void displaySolutionForComputerStudent() {
         setUpWordList("PIPE\nPIECE");
+        computerStudent.setMaxSearchBatchCount(1);
         String expectedSolution = "PIPE";
         random.setPuzzles("PIE");
         DummyView dummyView = new DummyView();
@@ -611,7 +613,7 @@ public class ControllerTest {
     }
     
     @Test
-    public void displayChallengeForHumanPlayer() {
+    public void displayChallengeForHumanStudent() {
         setUpWordList("PIPE\nPIECE");
         String expectedChallenge = "PIPE";
         random.setPuzzles("PIE");
@@ -629,7 +631,7 @@ public class ControllerTest {
     }
     
     @Test
-    public void displayPlayerForFirstPuzzle() {
+    public void displayStudentForFirstPuzzle() {
         random.setPuzzles("ABC");
         setUpStudents(student, computerStudent);
         controller.next(); // display puzzle
@@ -648,7 +650,7 @@ public class ControllerTest {
     }
     
     @Test
-    public void displayPlayerForSecondPuzzle() {
+    public void displayStudentForSecondPuzzle() {
         random.setPuzzles("ABC", "XYZ");
         controller.next(); // display puzzle
         controller.next(); // display solution
@@ -678,6 +680,21 @@ public class ControllerTest {
     }
     
     @Test
+    public void computerShowsNoSolutionYet() {
+        setUpWordList("PRIDE\nPIECE\nPIPE");
+        random.setPuzzles("PIE");
+        DummyView dummyView = new DummyView();
+        controller.setView(dummyView);
+        
+        controller.next(); // display puzzle
+        searchTask = dummyView.getSearchTask();
+        searchTask.run();
+        String solution = dummyView.getSolution();
+
+        assertThat("solution", solution, is(""));
+    }
+    
+    @Test
     public void computerTimerCount() {
         setUpWordList("PRIDE\nPIECE\nPIPE");
         random.setPuzzles("PIE");
@@ -694,6 +711,32 @@ public class ControllerTest {
         
         assertThat("solution", solution, is("PIECE"));
         assertThat("focus", focus, is("challenge"));
+    }
+    
+    @Test
+    public void computerTimerCountOnHumanTurn() {
+        setUpWordList("PIECE\nPRIDE\nPIPE");
+        random.setPuzzles("XRC", "PIE", "ABC");
+        computerStudent.setMaxSearchBatchCount(1);
+        DummyView dummyView = new DummyView();
+        controller.setView(dummyView);
+
+        controller.next(); // display puzzle for computer
+        searchTask = dummyView.getSearchTask();
+        searchTask.run(); // no solution, display result.
+        // I also want to test the transition from computer turn to human turn,
+        // which is why I didn't start with the human student.
+        
+        controller.next(); // display puzzle for human
+        searchTask = dummyView.getSearchTask();
+        searchTask.run(); // don't display solution
+        String solution = dummyView.getSolution();
+        dummyView.setSolution("PRIDE");
+        controller.next();
+        String challenge = dummyView.getChallenge();
+        
+        assertThat("solution", solution, is(""));
+        assertThat("challenge", challenge, is("PIECE"));
     }
     
     @Test
