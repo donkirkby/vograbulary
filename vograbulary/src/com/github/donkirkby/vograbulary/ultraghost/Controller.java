@@ -144,10 +144,8 @@ public class Controller implements StudentListener {
                 view.setResult(solutionResult.toString());
                 state.next();
             }
-            else if (inactiveStudent.prepareChallenge(solution)) {
-                // When computer challenges, we immediately switch to the
-                // results state.
-//                nextState = nextState.next();
+            else {
+                inactiveStudent.prepareChallenge(solution);
             }
             currentPuzzle = null;
             return null;

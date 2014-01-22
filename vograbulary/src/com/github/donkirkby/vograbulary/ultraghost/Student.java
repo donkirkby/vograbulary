@@ -65,12 +65,10 @@ public class Student {
     
     /** Get ready to submit a challenge. This is only called for the inactive
      * student.
-     * @param solution TODO
-     * @return true if the challenge has already been submitted.
+     * @param solution the solution to beat.
      */
-    public boolean prepareChallenge(String solution) {
+    public void prepareChallenge(String solution) {
         listener.askForChallenge();
-        return false;
     }
     
     /** Run a background search if needed, and return true if the search is

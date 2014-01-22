@@ -593,6 +593,20 @@ public class ControllerTest {
     }
     
     @Test
+    public void humanSolutionFocus() {
+        setUpWordList("ROPE\nPIECE\nPIPE");
+        random.setPuzzles("RPE");
+        setUpStudents(student, computerStudent);
+        DummyView dummyView = new DummyView();
+        controller.setView(dummyView);
+        
+        controller.next(); // display puzzle
+        String focus = dummyView.getCurrentFocus();
+        
+        assertThat("focus", focus, is("solution"));
+    }
+    
+    @Test
     public void displaySolutionForComputerStudent() {
         setUpWordList("PIPE\nPIECE");
         computerStudent.setMaxSearchBatchCount(1);

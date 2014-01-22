@@ -66,7 +66,7 @@ public class ComputerStudent extends Student {
     }
     
     @Override
-    public boolean prepareChallenge(String humanSolution) {
+    public void prepareChallenge(String humanSolution) {
         String challenge = bestSolution;
         String noChallenge = null;
         WordResult challengeResult = getWordList().checkChallenge(
@@ -83,6 +83,5 @@ public class ComputerStudent extends Student {
         else {
             getListener().submitChallenge(Controller.NO_MATCH_MESSAGE, WordResult.NOT_IMPROVED);
         }
-        return true;
     }
 }
