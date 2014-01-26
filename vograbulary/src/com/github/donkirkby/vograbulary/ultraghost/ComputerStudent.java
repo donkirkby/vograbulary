@@ -28,6 +28,7 @@ public class ComputerStudent extends Student {
     public void startSolving(String puzzle, boolean isActiveStudent) {
         currentPuzzle = puzzle;
         bestSolution = null;
+        searchBatchCount = 0;
         this.isActiveStudent = isActiveStudent;
         if (isActiveStudent) {
             getListener().showThinking();

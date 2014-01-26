@@ -70,20 +70,6 @@ public class ControllerTest {
         verify(view).setPuzzle(expectedLetters);
     }
     
-//    @Test
-//    public void nextSolution() {
-//        random.setPuzzles("PIE");
-//        String expectedSolution = "PICKLE";
-//        setUpWordList(expectedSolution);
-//        
-//        controller.next(); // get puzzle
-//        controller.checkAllWords();
-//        controller.next(); // display solution
-//        
-//        verify(view).setSolution(expectedSolution);
-//        verify(view).focusChallenge();
-//    }
-    
     @Test
     public void nextSolutionThenChallengeAndPuzzle() {
         String expectedPuzzle1 = "PIE";
@@ -101,104 +87,6 @@ public class ControllerTest {
         verify(view).setPuzzle(expectedPuzzle2);
     }
     
-//    @Test
-//    public void nextSolutionMatchesLastLetter() {
-//        String expectedLetters = "PIE";
-//        random.setPuzzles(expectedLetters);
-//        String expectedSolution = "PICKLE";
-//        setUpWordList("PINT\nPICKLE");
-//        
-//        controller.next(); // get puzzle
-//        controller.checkAllWords();
-//        controller.next();
-//        
-//        verify(view).setSolution(expectedSolution);
-//    }
-//    
-//    @Test
-//    public void nextSolutionMatchesFirstLetter() {
-//        String expectedLetters = "PIE";
-//        random.setPuzzles(expectedLetters);
-//        String expectedSolution = "PICKLE";
-//        setUpWordList("LIME\nPICKLE");
-//        
-//        controller.next(); // get puzzle
-//        controller.checkAllWords();
-//        controller.next();
-//        
-//        verify(view).setSolution(expectedSolution);
-//    }
-//    
-//    @Test
-//    public void nextSolutionMatchesInteriorLetter() {
-//        String expectedLetters = "PIE";
-//        random.setPuzzles(expectedLetters);
-//        String expectedSolution = "PICKLE";
-//        setUpWordList("PASTE\nPICKLE");
-//        
-//        controller.next(); // get puzzle
-//        controller.checkAllWords();
-//        controller.next();
-//        
-//        verify(view).setSolution(expectedSolution);
-//    }
-//    
-//    @Test
-//    public void nextSolutionMatchesInteriorLetterNotLast() {
-//        String expectedLetters = "PEE";
-//        random.setPuzzles(expectedLetters);
-//        String expectedSolution = "PEACE";
-//        setUpWordList("PASTE\nPEACE");
-//        
-//        controller.next(); // get puzzle
-//        controller.checkAllWords();
-//        controller.next();
-//        
-//        verify(view).setSolution(expectedSolution);
-//    }
-//    
-//    @Test
-//    public void nextSolutionShortest() {
-//        String expectedLetters = "PIE";
-//        random.setPuzzles(expectedLetters);
-//        String expectedSolution = "PIPE";
-//        setUpWordList("PICKLE\nPIPE");
-//        
-//        controller.next(); // get puzzle
-//        controller.checkAllWords();
-//        controller.next();
-//        
-//        verify(view).setSolution(expectedSolution);
-//    }
-//    
-//    @Test
-//    public void nextSolutionEarliest() {
-//        String expectedLetters = "PIE";
-//        random.setPuzzles(expectedLetters);
-//        String expectedSolution = "PILE";
-//        setUpWordList("PILE\nPIPE");
-//        
-//        controller.next(); // get puzzle
-//        controller.checkAllWords();
-//        controller.next();
-//        
-//        verify(view).setSolution(expectedSolution);
-//    }
-//    
-//    @Test
-//    public void nextSolutionAtLeastFourLetters() {
-//        String expectedLetters = "PIE";
-//        random.setPuzzles(expectedLetters);
-//        String expectedSolution = "PILE";
-//        setUpWordList("PIE\nPILE");
-//        
-//        controller.next(); // get puzzle
-//        controller.checkAllWords();
-//        controller.next();
-//        
-//        verify(view).setSolution(expectedSolution);
-//    }
-    
     @Test
     public void nextSolutionNoneFound() {
         random.setPuzzles("AFR");
@@ -214,35 +102,6 @@ public class ControllerTest {
         
         assertThat("solution", solution, is(expectedSolution));
     }
-//    
-//    @Test
-//    public void wordListLowerCase() {
-//        String expectedLetters = "PIE";
-//        random.setPuzzles(expectedLetters);
-//        String expectedSolution = "PICKLE";
-//        setUpWordList("pickle");
-//        
-//        controller.next(); // get puzzle
-//        controller.checkAllWords();
-//        controller.next();
-//        
-//        verify(view).setSolution(expectedSolution);
-//    }
-//    
-//    @Test
-//    public void createSearchTaskWithNoCalls() {
-//        String expectedLetters = "PIE";
-//        random.setPuzzles(expectedLetters);
-//        String expectedSolution = Controller.NO_MATCH_MESSAGE;
-//        setUpWordList("PICKLE\nPIPE");
-//        
-//        controller.next(); // get puzzle
-//        
-//        // Search task never triggered, so no solution found.
-//        controller.next();
-//        
-//        verify(view).setSolution(expectedSolution);
-//    }
     
     private void captureSearchTask() {
         float expectedIntervalSeconds = 0.01f;
