@@ -19,6 +19,7 @@ public class VograbularyGame implements ApplicationListener {
     private TextField text2;
     private TextField text3;
 	private TextButton button;
+	private boolean isFocusMovedAutomatically;
 	
 	@Override
 	public void create() {		
@@ -100,6 +101,12 @@ public class VograbularyGame implements ApplicationListener {
                 ? text3
                 : text1;
         nextField.setText("");
-        stage.setKeyboardFocus(nextField);
+        if ( ! isFocusMovedAutomatically) {
+            stage.setKeyboardFocus(nextField);
+        }
+    }
+    
+    public void setFocusMovedAutomatically(boolean isFocusMovedAutomatically) {
+        this.isFocusMovedAutomatically = isFocusMovedAutomatically;
     }
 }
