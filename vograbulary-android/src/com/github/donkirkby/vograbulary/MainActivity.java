@@ -13,6 +13,8 @@ public class MainActivity extends AndroidApplication {
         AndroidApplicationConfiguration cfg = new AndroidApplicationConfiguration();
         cfg.useGL20 = false;
         
-        initialize(new VograbularyApp(), cfg);
+        VograbularyApp vograbularyApp = new VograbularyApp();
+        vograbularyApp.setFocusMovedAutomatically(true);
+        initialize(vograbularyApp, cfg);
     }
 }

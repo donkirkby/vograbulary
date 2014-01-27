@@ -23,6 +23,7 @@ public class View {
     private Label result;
     private Label scores;
     private TextButton button;
+    private boolean isFocusMovedAutomatically;
     
     public void create(
             final Table table, 
@@ -150,7 +151,8 @@ public class View {
      * Set the display's focus in the challenge field.
      */
     public void focusChallenge() {
-        challenge.getStage().setKeyboardFocus(challenge);
+        challenge.getStage().setKeyboardFocus(
+                isFocusMovedAutomatically ? solution: challenge);
         challenge.getOnscreenKeyboard().show(true);
     }
     
@@ -160,6 +162,10 @@ public class View {
     public void focusNextButton() {
         button.getStage().setKeyboardFocus(button);
         solution.getOnscreenKeyboard().show(false);
+    }
+    
+    public void setFocusMovedAutomatically(boolean isFocusMovedAutomatically) {
+        this.isFocusMovedAutomatically = isFocusMovedAutomatically;
     }
 }
 //resumeJesting

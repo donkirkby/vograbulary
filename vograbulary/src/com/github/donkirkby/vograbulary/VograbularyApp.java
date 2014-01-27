@@ -16,6 +16,7 @@ public class VograbularyApp implements ApplicationListener {
 	private Stage stage;
 	private Controller ultraghostController = 
 	        new Controller();
+	private boolean isFocusMovedAutomatically;
 	
 	@Override
 	public void create() {		
@@ -29,15 +30,20 @@ public class VograbularyApp implements ApplicationListener {
         stage.addActor(table);
         
         View view = new View();
+        view.setFocusMovedAutomatically(isFocusMovedAutomatically);
         view.create(table, skin, ultraghostController);
         ultraghostController.readWordList(
                 Gdx.files.internal("data/wordlist.txt").reader());
         ComputerStudent computerStudent = new ComputerStudent();
         computerStudent.setSearchBatchSize(50);
         computerStudent.setMaxSearchBatchCount(1000); // 10s
-        ultraghostController.addStudent(new Student("Student"));
-        ultraghostController.addStudent(computerStudent);
+        ultraghostController.addStudent(new Student("Don"));
+        ultraghostController.addStudent(new Student("Sheila"));
 	}
+	
+	public void setFocusMovedAutomatically(boolean isFocusMovedAutomatically) {
+        this.isFocusMovedAutomatically = isFocusMovedAutomatically;
+    }
 
 	@Override
 	public void dispose() {
