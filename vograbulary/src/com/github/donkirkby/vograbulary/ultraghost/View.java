@@ -9,10 +9,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
+import com.github.donkirkby.vograbulary.VograbularyApp;
 
 public class View {
     //stopJesting
@@ -27,10 +27,11 @@ public class View {
     
     public void create(
             final Table table, 
-            final Skin skin, 
+            final VograbularyApp app, 
             final Controller controller) {
         controller.setView(this);
-        table.align(Align.top);
+        Skin skin = app.getSkin();
+        table.top();
         studentName = new Label(" ", skin);
         table.add(studentName);
         table.row();
@@ -47,6 +48,8 @@ public class View {
         table.row();
         result = new Label(" ", skin);
         table.add(result).fillX();
+        TextButton menuButton = new TextButton("Menu", skin);
+        table.add(menuButton);
         table.row();
         scores = new Label(" \n ", skin);
         table.add(scores).fillX();
@@ -54,6 +57,12 @@ public class View {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 controller.next();
+            }
+        });
+        menuButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                app.showMenu();
             }
         });
         table.addListener(new InputListener() {

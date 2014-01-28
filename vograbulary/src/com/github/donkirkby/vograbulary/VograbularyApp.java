@@ -1,74 +1,50 @@
 package com.github.donkirkby.vograbulary;
 
-import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.github.donkirkby.vograbulary.ultraghost.ComputerStudent;
-import com.github.donkirkby.vograbulary.ultraghost.Controller;
-import com.github.donkirkby.vograbulary.ultraghost.Student;
-import com.github.donkirkby.vograbulary.ultraghost.View;
+import com.github.donkirkby.vograbulary.ultraghost.UltraghostScreen;
 
 //stopJesting
-public class VograbularyApp implements ApplicationListener {
-	private Stage stage;
-	private Controller ultraghostController = 
-	        new Controller();
+public class VograbularyApp extends Game {
+    private UltraghostScreen ultraghostScreen;
+    private MenuScreen menuScreen;
 	private boolean isFocusMovedAutomatically;
+	private Skin skin;
 	
 	@Override
-	public void create() {		
-        Skin skin = new Skin(Gdx.files.internal("data/ui/uiskin.json"));
-        
-        stage = new Stage();
-        Gdx.input.setInputProcessor(stage);
-        
-        Table table = new Table();
-        table.setFillParent(true);
-        stage.addActor(table);
-        
-        View view = new View();
-        view.setFocusMovedAutomatically(isFocusMovedAutomatically);
-        view.create(table, skin, ultraghostController);
-        ultraghostController.readWordList(
-                Gdx.files.internal("data/wordlist.txt").reader());
-        ComputerStudent computerStudent = new ComputerStudent();
-        computerStudent.setSearchBatchSize(50);
-        computerStudent.setMaxSearchBatchCount(1000); // 10s
-        ultraghostController.addStudent(new Student("Don"));
-        ultraghostController.addStudent(new Student("Sheila"));
+	public void create() {
+	    skin = new Skin(Gdx.files.internal("data/ui/uiskin.json"));
+	    menuScreen = new MenuScreen(this);
+	    ultraghostScreen = new UltraghostScreen(this);
+	    setScreen(menuScreen);
+	}
+	
+	public Skin getSkin() {
+        return skin;
+    }
+	
+	public void startUltraghost(boolean isComputerOpponent) {
+	    ultraghostScreen.setComputerOpponent(isComputerOpponent);
+	    setScreen(ultraghostScreen);
+	}
+	
+	public void showMenu() {
+	    setScreen(menuScreen);
 	}
 	
 	public void setFocusMovedAutomatically(boolean isFocusMovedAutomatically) {
         this.isFocusMovedAutomatically = isFocusMovedAutomatically;
     }
-
+	
+	public boolean isFocusMovedAutomatically() {
+        return isFocusMovedAutomatically;
+    }
+	
 	@Override
 	public void dispose() {
-	    stage.dispose();
-	}
-
-	@Override
-	public void render() {
-		Gdx.gl.glClearColor(1, 1, 1, 1);
-		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-		
-        stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
-        stage.draw();
-	}
-
-	@Override
-	public void resize(int width, int height) {
-	}
-
-	@Override
-	public void pause() {
-	}
-
-	@Override
-	public void resume() {
+	    menuScreen.dispose();
+	    ultraghostScreen.dispose();
 	}
 }
 //resumeJesting
