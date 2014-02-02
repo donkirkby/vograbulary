@@ -13,6 +13,7 @@ public class UltraghostScreen implements Screen {
     private Controller ultraghostController = 
             new Controller();
     private boolean isComputerOpponent;
+    private View view;
 
     public UltraghostScreen(VograbularyApp vograbularyApp) {
         app = vograbularyApp;
@@ -22,7 +23,7 @@ public class UltraghostScreen implements Screen {
         table.setFillParent(true);
         stage.addActor(table);
         
-        View view = new View();
+        view = new View();
         view.setFocusMovedAutomatically(app.isFocusMovedAutomatically());
         view.create(table, app, ultraghostController);
         ultraghostController.readWordList(
@@ -48,6 +49,7 @@ public class UltraghostScreen implements Screen {
 
     @Override
     public void show() {
+        view.clear();
         ComputerStudent computerStudent = new ComputerStudent();
         computerStudent.setSearchBatchSize(50);
         computerStudent.setMaxSearchBatchCount(1000); // 10s

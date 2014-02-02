@@ -42,6 +42,10 @@ public class Student {
         score += points;
     }
     
+    public int getScore() {
+        return score;
+    }
+    
     public String getName() {
         return name;
     }

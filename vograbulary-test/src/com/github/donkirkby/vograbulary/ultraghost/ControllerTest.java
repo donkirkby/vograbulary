@@ -90,7 +90,7 @@ public class ControllerTest {
     @Test
     public void nextSolutionNoneFound() {
         random.setPuzzles("AFR");
-        String expectedSolution = Controller.NO_MATCH_MESSAGE;
+        String expectedSolution = null;
         setUpWordList("ABDICATE");
         DummyView dummyView = new DummyView();
         controller.setView(dummyView);
@@ -297,7 +297,25 @@ public class ControllerTest {
         controller.next(); // display computer challenge (none)
         String challenge = dummyView.getChallenge();
         
-        assertThat("challenge", challenge, is(Controller.NO_MATCH_MESSAGE));
+        assertThat("challenge", challenge, nullValue());
+    }
+    
+    @Test
+    public void score() {
+        setUpWordList("PIPE\nPIECE");
+        random.setPuzzles("PIE");
+        setUpStudents(student, computerStudent);
+        DummyView dummyView = new DummyView();
+        controller.setView(dummyView);
+        
+        controller.next(); // display puzzle for human
+        dummyView.setSolution("PIPE");
+        controller.next(); // display computer challenge (none)
+        
+        assertThat(
+                "score", 
+                student.getScore(), 
+                is(WordResult.NOT_IMPROVED.getScore()));
     }
     
     /** If it can't improve the solution, the computer will not display a 
@@ -317,7 +335,7 @@ public class ControllerTest {
         controller.next(); // display computer challenge and result
         String challenge = dummyView.getChallenge();
         
-        assertThat("challenge", challenge, is(Controller.NO_MATCH_MESSAGE));
+        assertThat("challenge", challenge, nullValue());
     }
     
     @Test
@@ -596,7 +614,8 @@ public class ControllerTest {
 
         controller.next(); // display puzzle for computer
         searchTask = dummyView.getSearchTask();
-        searchTask.run(); // no solution, display result.
+        searchTask.run(); // no solution, so skip.
+        controller.next(); // display result
         // I also want to test the transition from computer turn to human turn,
         // which is why I didn't start with the human student.
         

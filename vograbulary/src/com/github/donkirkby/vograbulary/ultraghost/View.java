@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
@@ -16,10 +17,13 @@ import com.github.donkirkby.vograbulary.VograbularyApp;
 
 public class View {
     //stopJesting
+    private static final String NO_ANSWER = "None";
     private Label letters;
     private Label studentName;
     private TextField solution;
+    private String solutionWord;
     private TextField challenge;
+    private String challengeWord;
     private Label result;
     private Label scores;
     private TextButton button;
@@ -75,7 +79,27 @@ public class View {
                 return false;
             }
         });
+        solution.setTextFieldListener(new TextFieldListener() {
+            @Override
+            public void keyTyped(TextField textField, char key) {
+                solutionWord = solution.getText();
+            }
+        });
+        challenge.setTextFieldListener(new TextFieldListener() {
+            @Override
+            public void keyTyped(TextField textField, char key) {
+                challengeWord = challenge.getText();
+            }
+        });
         focusNextButton();
+    }
+    
+    public void clear() {
+        setPuzzle(" ");
+        setSolution(" ");
+        setChallenge("");
+        setResult("");
+        setScores("");
     }
 
     /**
@@ -103,28 +127,30 @@ public class View {
      * Display a solution to the puzzle.
      */
     public void setSolution(String solution) {
-        this.solution.setText(solution);
+        solutionWord = solution;
+        this.solution.setText(solution != null ? solution : NO_ANSWER);
     }
     
     /**
      * Get the entered solution to the puzzle.
      */
     public String getSolution() {
-        return solution.getText();
+        return solutionWord;
     }
     
     /**
      * Display a challenge to the solution.
      */
     public void setChallenge(String challenge) {
-        this.challenge.setText(challenge);
+        challengeWord = challenge;
+        this.challenge.setText(challenge != null ? challenge : NO_ANSWER);
     }
  
     /**
      * Get the entered challenge.
      */
     public String getChallenge() {
-        return challenge.getText();
+        return challengeWord;
     }
     
     /**

@@ -82,7 +82,7 @@ public class ComputerStudent extends Student {
             getListener().submitChallenge(challenge, challengeResult);
         }
         else {
-            getListener().submitChallenge(Controller.NO_MATCH_MESSAGE, WordResult.NOT_IMPROVED);
+            getListener().submitChallenge(null, WordResult.NOT_IMPROVED);
         }
     }
 }

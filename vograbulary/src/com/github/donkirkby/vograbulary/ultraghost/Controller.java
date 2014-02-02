@@ -11,8 +11,6 @@ import com.badlogic.gdx.utils.Timer.Task;
 import com.github.donkirkby.vograbulary.ultraghost.Student.StudentListener;
 
 public class Controller implements StudentListener {
-    public static final String NO_MATCH_MESSAGE = "None";
-    
     private State state = new StartState();
     private UltraghostRandom random = new UltraghostRandom();
     private View view;
@@ -26,12 +24,6 @@ public class Controller implements StudentListener {
     public void next() {
         state.next();
     }
-
-//    public void checkAllWords() {
-//        for (String word : wordList) {
-//            checkWord(word);
-//        }
-//    }
 
     public void setRandom(UltraghostRandom random) {
         this.random = random;
@@ -219,7 +211,7 @@ public class Controller implements StudentListener {
     
     @Override
     public void submitSolution(String solution) {
-        view.setSolution(solution == null ? NO_MATCH_MESSAGE : solution);
+        view.setSolution(solution);
         next();
     }
 
@@ -236,7 +228,6 @@ public class Controller implements StudentListener {
     @Override
     public void submitChallenge(String challenge, WordResult challengeResult) {
         view.setChallenge(challenge);
-        addScore(challengeResult);
         view.focusNextButton();
         next();
     }
