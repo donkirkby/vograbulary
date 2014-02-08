@@ -1,8 +1,6 @@
 package com.github.donkirkby.vograbulary.ultraghost;
 
-import java.io.PrintWriter;
 import java.io.Reader;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -102,18 +100,16 @@ public class Controller implements StudentListener {
 
     private void addScore(WordResult result) {
         students.get(activeStudentIndex).addScore(result.getScore());
-        StringWriter writer = new StringWriter();
-        PrintWriter printer = new PrintWriter(writer);
+        StringBuilder writer = new StringBuilder();
         for (int i = 0; i < students.size(); i++) {
             int scoreIndex = (startingStudent + i) % students.size();
             Student student = students.get(scoreIndex);
             if (i > 0) {
-                printer.println();
+                writer.append("\n");
             }
-            printer.print(student);
+            writer.append(student.toString());
         }
         view.setScores(writer.toString());
-        printer.close();
     }
     
     /** An abstract base class for all controller states to implement. */

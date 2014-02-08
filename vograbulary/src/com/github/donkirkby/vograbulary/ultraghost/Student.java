@@ -52,7 +52,7 @@ public class Student {
     
     @Override
     public String toString() {
-        return String.format("%s %d", name, score);
+        return name + " " + score;
     }
 
     /**
