@@ -664,6 +664,46 @@ public class ControllerTest {
         assertThat("active student", activeStudent, is("Computer"));
     }
     
+    @Test
+    public void clearStudents() {
+        setUpWordList("PRIDE");
+        random.setPuzzles("PIE", "PRE");
+        setUpStudents(student, new Student("Bob"));
+        DummyView dummyView = new DummyView();
+        controller.setView(dummyView);
+        
+        controller.next(); // display puzzle
+        
+        controller.clearStudents();
+        controller.addStudent(student);
+        controller.addStudent(computerStudent);
+        
+        String activeStudent = dummyView.getActiveStudent();
+        String focus = dummyView.getCurrentFocus();
+        assertThat("active student", activeStudent, is(" "));
+        assertThat("focus", focus, is("next"));
+    }
+    
+    @Test
+    public void clearAndNext() {
+        setUpWordList("PRIDE");
+        random.setPuzzles("PIE", "PRE");
+        setUpStudents(student, new Student("Bob"));
+        DummyView dummyView = new DummyView();
+        controller.setView(dummyView);
+        
+        controller.next(); // display puzzle
+        
+        controller.clearStudents();
+        controller.addStudent(student);
+        controller.addStudent(computerStudent);
+        
+        controller.next();
+        
+        String currentFocus = dummyView.getCurrentFocus();
+        assertThat("current focus", currentFocus, is("solution"));
+    }
+    
     private void setUpWordList(String words) {
         controller.readWordList(new StringReader(words));
     }

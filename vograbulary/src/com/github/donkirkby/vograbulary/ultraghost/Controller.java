@@ -42,6 +42,9 @@ public class Controller implements StudentListener {
     
     public void clearStudents() {
         students.clear();
+        view.setActiveStudent(" ");
+        view.focusNextButton();
+        state = new StartState();
     }
     
     /**
