@@ -27,6 +27,7 @@ public class View {
     private Label result;
     private Label scores;
     private TextButton button;
+    private boolean isEnterKeyComing;
     private boolean isFocusMovedAutomatically;
     
     public void create(
@@ -73,6 +74,7 @@ public class View {
             @Override
             public boolean keyUp(InputEvent event, int keycode) {
                 if (keycode == Input.Keys.ENTER) {
+                    isEnterKeyComing = true;
                     controller.next();
                     return true;
                 }
@@ -180,6 +182,7 @@ public class View {
     public void focusSolution() {
         solution.getStage().setKeyboardFocus(solution);
         solution.getOnscreenKeyboard().show(true);
+        isEnterKeyComing = false;
     }
     
     /**
@@ -187,8 +190,11 @@ public class View {
      */
     public void focusChallenge() {
         challenge.getStage().setKeyboardFocus(
-                isFocusMovedAutomatically ? solution: challenge);
+                isFocusMovedAutomatically && isEnterKeyComing 
+                ? solution
+                : challenge);
         challenge.getOnscreenKeyboard().show(true);
+        isEnterKeyComing = false;
     }
     
     /**
@@ -197,6 +203,7 @@ public class View {
     public void focusNextButton() {
         button.getStage().setKeyboardFocus(button);
         solution.getOnscreenKeyboard().show(false);
+        isEnterKeyComing = false;
     }
     
     public void setFocusMovedAutomatically(boolean isFocusMovedAutomatically) {
