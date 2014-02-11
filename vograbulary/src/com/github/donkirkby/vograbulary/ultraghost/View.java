@@ -27,8 +27,6 @@ public class View {
     private Label result;
     private Label scores;
     private TextButton button;
-    private boolean isEnterKeyComing;
-    private boolean isFocusMovedAutomatically;
     
     public void create(
             final Table table, 
@@ -74,13 +72,17 @@ public class View {
             @Override
             public boolean keyUp(InputEvent event, int keycode) {
                 if (keycode == Input.Keys.ENTER) {
-                    isEnterKeyComing = true;
                     controller.next();
                     return true;
                 }
                 return false;
             }
         });
+        // On some platforms, setting the focus in an enter key handler is
+        // not compatible with the default focus traversal. Disable it.
+        solution.setFocusTraversal(false);
+        challenge.setFocusTraversal(false);
+        
         solution.setTextFieldListener(new TextFieldListener() {
             @Override
             public void keyTyped(TextField textField, char key) {
@@ -182,19 +184,14 @@ public class View {
     public void focusSolution() {
         solution.getStage().setKeyboardFocus(solution);
         solution.getOnscreenKeyboard().show(true);
-        isEnterKeyComing = false;
     }
     
     /**
      * Set the display's focus in the challenge field.
      */
     public void focusChallenge() {
-        challenge.getStage().setKeyboardFocus(
-                isFocusMovedAutomatically && isEnterKeyComing 
-                ? solution
-                : challenge);
+        challenge.getStage().setKeyboardFocus(challenge);
         challenge.getOnscreenKeyboard().show(true);
-        isEnterKeyComing = false;
     }
     
     /**
@@ -203,11 +200,6 @@ public class View {
     public void focusNextButton() {
         button.getStage().setKeyboardFocus(button);
         solution.getOnscreenKeyboard().show(false);
-        isEnterKeyComing = false;
-    }
-    
-    public void setFocusMovedAutomatically(boolean isFocusMovedAutomatically) {
-        this.isFocusMovedAutomatically = isFocusMovedAutomatically;
     }
 }
 //resumeJesting

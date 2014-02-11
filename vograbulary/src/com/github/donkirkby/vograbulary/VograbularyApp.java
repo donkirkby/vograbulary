@@ -9,7 +9,6 @@ import com.github.donkirkby.vograbulary.ultraghost.UltraghostScreen;
 public class VograbularyApp extends Game {
     private UltraghostScreen ultraghostScreen;
     private MenuScreen menuScreen;
-	private boolean isFocusMovedAutomatically;
 	private Skin skin;
 	
 	@Override
@@ -32,14 +31,6 @@ public class VograbularyApp extends Game {
 	public void showMenu() {
 	    setScreen(menuScreen);
 	}
-	
-	public void setFocusMovedAutomatically(boolean isFocusMovedAutomatically) {
-        this.isFocusMovedAutomatically = isFocusMovedAutomatically;
-    }
-	
-	public boolean isFocusMovedAutomatically() {
-        return isFocusMovedAutomatically;
-    }
 	
 	@Override
 	public void dispose() {

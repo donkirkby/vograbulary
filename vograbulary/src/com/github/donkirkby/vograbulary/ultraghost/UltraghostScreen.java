@@ -24,7 +24,6 @@ public class UltraghostScreen implements Screen {
         stage.addActor(table);
         
         view = new View();
-        view.setFocusMovedAutomatically(app.isFocusMovedAutomatically());
         view.create(table, app, ultraghostController);
         ultraghostController.readWordList(
                 Gdx.files.internal("data/wordlist.txt").reader());

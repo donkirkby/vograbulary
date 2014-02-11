@@ -14,7 +14,6 @@ public class MainActivity extends AndroidApplication {
         cfg.useGL20 = false;
         
         VograbularyApp vograbularyApp = new VograbularyApp();
-        vograbularyApp.setFocusMovedAutomatically(true);
         initialize(vograbularyApp, cfg);
     }
 }
