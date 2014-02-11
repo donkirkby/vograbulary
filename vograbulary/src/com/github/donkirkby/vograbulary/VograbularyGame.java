@@ -28,6 +28,9 @@ public class VograbularyGame implements ApplicationListener {
         text1 = new TextField("", skin);
         text2 = new TextField("", skin);
         text3 = new TextField("", skin);
+        text1.setFocusTraversal(false);
+        text2.setFocusTraversal(false);
+        text3.setFocusTraversal(false);
         button = new TextButton("Click Me!", skin);
         stage.addActor(text1);
         stage.addActor(text2);
