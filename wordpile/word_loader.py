@@ -1,7 +1,6 @@
 from nltk.corpus import brown
 from nltk.corpus import gutenberg
 from nltk.probability import FreqDist
-from random import shuffle
 from re import match
 
 class WordLoader(object):
