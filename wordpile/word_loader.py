@@ -60,12 +60,18 @@ class WordLoader(object):
                 if pair_score == 0:
                     pair_score = freqdist.freq(outer) * freqdist.freq(inner)
                 words = [inner, outer]
-                shuffle(words)
+                words.sort()
                 score = combo_freq * pair_score
                 min_length = min(len(inner), len(outer))
+                if prefix in ('un', 'dis') and suffix == 'able':
+                    continue
+                if suffix in ('ing', 's', 'y'):
+                    continue
+                if suffix in ('d', 'ed') and combo.endswith('ed'):
+                    continue
                 if min_length >= 3:
                     print score, words[0], words[1]
-
+    
     def print_sandwiches(self, all_words):
         freqdist = self.find_frequent_words(all_words)
         unique_words = freqdist.keys()
@@ -82,6 +88,13 @@ class WordLoader(object):
             word in all_words if 
             word.lower() in self._valid_words)
         return freqdist
+    
+    def filter_sandwiches(self, lines, all_words):
+        freqdist = self.find_frequent_words(all_words)
+        for line in lines:
+            _, word1, word2 = line.split()
+            self.merge_words(word1, word2, freqdist)
+            self.merge_words(word2, word1, freqdist)
 
 if __name__ == '__main__':
     loader = WordLoader()
@@ -90,15 +103,23 @@ if __name__ == '__main__':
     all_words = brown.words() + gutenberg.words()
 
 #     loader.dump_words(all_words)
-    loader.print_sandwiches(all_words)
+#    loader.print_sandwiches(all_words)
+    f = open("/home/don/Documents/RussianDolls2.txt")
+    try:
+        loader.filter_sandwiches(f, all_words)
+    finally:
+        f.close()
 elif __name__ == '__live_coding__':
     loader = WordLoader()
     is_valid = loader.is_valid('potato')
     loader.load_valid_words('sample.txt')
     loader.load_valid_words('sample2.txt')
-    loader._valid_words = set("ten sentense sense oat".split())
+    loader._valid_words = set("plain coming complaining ten sentense sense oat".split())
 
-    all_words = "ten sentense sense oat This is it : a sample sentence . It isn't long , is it ?".split()
+    all_words = "plain coming complaining ten sentense sense oat ot This is it : a sample sentence . It isn't long , is it ?".split()
  
 #     loader.dump_words(all_words)
-    loader.print_sandwiches(all_words)
+#     loader.print_sandwiches(all_words)
+    lines = ['1e-5 plain coming\n',
+             '1e-6 ot a\n']
+    loader.filter_sandwiches(lines, all_words)
