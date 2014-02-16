@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.github.donkirkby.vograbulary.VograbularyApp;
 
 public class UltraghostScreen implements Screen {
+    //stopJesting
     private VograbularyApp app;
     private Stage stage;
     private Controller ultraghostController = 
@@ -78,5 +79,5 @@ public class UltraghostScreen implements Screen {
     public void dispose() {
         stage.dispose();
     }
-
+    //resumeJesting
 }

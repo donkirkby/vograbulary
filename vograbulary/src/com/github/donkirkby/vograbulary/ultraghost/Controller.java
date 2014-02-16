@@ -79,11 +79,6 @@ public class Controller implements StudentListener {
 
         @Override
         public void run() {
-            if (searchingStudents.size() == 0) {
-                // Fixes a bug where the task runs one extra time after it's
-                // cancelled.
-                return;
-            }
             Iterator<Student> itr = searchingStudents.iterator();
             while(itr.hasNext()) {
                 Student student = itr.next();

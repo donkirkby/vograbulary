@@ -201,5 +201,5 @@ public class View {
         button.getStage().setKeyboardFocus(button);
         solution.getOnscreenKeyboard().show(false);
     }
+    //resumeJesting
 }
-//resumeJesting
