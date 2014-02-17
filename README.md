@@ -16,11 +16,14 @@ License
 
 Vograbulary is released under the MIT license.
 
+[Hamcrest][hamcrest] is released under the BSD 3-Clause License.
+
 [Mockito][mockito] is released under the MIT license, and [libgdx][libgdx] is released under the Apache 2.0 license.
 
 [Natural Language Toolkit][nltk] is released by the NLTK project under the Apache 2.0 license.
 
 [tools]: https://github.com/libgdx/libgdx/wiki/Project-setup%2C-running-%26-debugging
+[hamcrest]: http://hamcrest.org/JavaHamcrest/
 [mockito]: https://code.google.com/p/mockito/
 [libgdx]: http://libgdx.badlogicgames.com/
 [nltk]: http://nltk.org/

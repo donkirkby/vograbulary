@@ -36,6 +36,7 @@ public class WordListTest {
         
         // skips the three-letter word, "two".
         assertThat("words", words, is(Arrays.asList("ONES", "THREE")));
+        assertThat("size", wordList.size(), is(2));
     }
     
     @Test

@@ -38,7 +38,9 @@ public class ControllerWithComputerFirstTest {
         computerStudent = new ComputerStudent();
         computerStudent.setMaxSearchBatchCount(2);
         controller = new Controller();
-        controller.readWordList(new StringReader("PIPE\nPIECE\nLOOP"));
+        WordList wordList = new WordList();
+        wordList.read(new StringReader("PIPE\nPIECE\nLOOP"));
+        controller.setWordList(wordList);
         controller.setRandom(random);
         controller.setView(view);
         controller.addStudent(computerStudent);

@@ -61,16 +61,6 @@ public class ControllerTest {
     }
     
     @Test
-    public void nextPuzzle() {
-        String expectedLetters = "AXQ";
-        random.setPuzzles(expectedLetters);
-        
-        controller.next();
-
-        verify(view).setPuzzle(expectedLetters);
-    }
-    
-    @Test
     public void nextSolutionThenChallengeAndPuzzle() {
         String expectedPuzzle1 = "PIE";
         String expectedPuzzle2 = "APE";
@@ -87,22 +77,6 @@ public class ControllerTest {
         verify(view).setPuzzle(expectedPuzzle2);
     }
     
-    @Test
-    public void nextSolutionNoneFound() {
-        random.setPuzzles("AFR");
-        String expectedSolution = null;
-        setUpWordList("ABDICATE");
-        DummyView dummyView = new DummyView();
-        controller.setView(dummyView);
-        
-        controller.next(); // display puzzle
-        searchTask = dummyView.getSearchTask();
-        searchTask.run(); // display solution
-        String solution = dummyView.getSolution();
-        
-        assertThat("solution", solution, is(expectedSolution));
-    }
-    
     private void captureSearchTask() {
         float expectedIntervalSeconds = 0.01f;
         float expectedDelaySeconds = expectedIntervalSeconds;
@@ -117,31 +91,6 @@ public class ControllerTest {
         Gdx.app = mock(Application.class);
         // Schedule it in the far future so we can check if it gets cancelled.
         Timer.schedule(searchTask, Float.MAX_VALUE, 1);
-    }
-    
-    @Test
-    public void createSearchTaskCancelsAfterLastWord() {
-        String expectedLetters = "PIE";
-        random.setPuzzles(expectedLetters);
-        String expectedSolution = "PIPE";
-        setUpWordList("PICKLE\nPIPE");
-        
-        controller.next(); // get puzzle
-        captureSearchTask();
-        searchTask.run();
-        boolean isScheduledBeforeLastWord = searchTask.isScheduled();
-        searchTask.run();
-        boolean isScheduledAfterLastWord = searchTask.isScheduled();
-        
-        verify(view).setSolution(expectedSolution);
-        assertThat(
-                "is scheduled before last word", 
-                isScheduledBeforeLastWord, 
-                is(true));
-        assertThat(
-                "is scheduled after last word",
-                isScheduledAfterLastWord,
-                is(false));
     }
     
     @Test
@@ -705,6 +654,8 @@ public class ControllerTest {
     }
     
     private void setUpWordList(String words) {
-        controller.readWordList(new StringReader(words));
+        WordList wordList = new WordList();
+        wordList.read(new StringReader(words));
+        controller.setWordList(wordList);
     }
 }

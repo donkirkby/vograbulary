@@ -10,8 +10,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-
-public class ControllerWithComputerSolvingTest {
+public class ControllerWithHumanStartingTest {
     private Controller controller;
     private DummyRandom random;
     private DummyView dummyView;
@@ -20,6 +19,7 @@ public class ControllerWithComputerSolvingTest {
     
     @Rule
     public ExpectedException thrown = ExpectedException.none();
+    private String firstPuzzle;
     
     @Before
     public void setUp() {
@@ -30,18 +30,19 @@ public class ControllerWithComputerSolvingTest {
         controller = new Controller();
         controller.setRandom(random);
         controller.setView(dummyView);
-        controller.addStudent(computerStudent);
         controller.addStudent(student);
+        controller.addStudent(computerStudent);
         WordList wordList = new WordList();
         wordList.read(new StringReader("PIPE\nPIECE\nLOOP"));
         controller.setWordList(wordList);
-        random.setPuzzles("PIE");
-        
-        controller.next(); // display puzzle for computer
+        firstPuzzle = "PIE";
+        random.setPuzzles(firstPuzzle);
     }
-
+    
     @Test
-    public void focus() {
-        assertThat("focus", dummyView.getCurrentFocus(), is("next"));
+    public void nextPuzzle() {
+        controller.next();
+
+        assertThat("puzzle", dummyView.getPuzzle(), is(firstPuzzle));
     }
 }

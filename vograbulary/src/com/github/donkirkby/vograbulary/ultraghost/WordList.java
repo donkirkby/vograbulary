@@ -114,5 +114,9 @@ public class WordList implements Iterable<String> {
     public Iterator<String> iterator() {
         return wordList.iterator();
     }
+
+    public int size() {
+        return wordList.size();
+    }
     
 }

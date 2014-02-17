@@ -26,8 +26,10 @@ public class UltraghostScreen implements Screen {
         
         view = new View();
         view.create(table, app, ultraghostController);
-        ultraghostController.readWordList(
+        WordList wordList = new WordList();
+        wordList.read(
                 Gdx.files.internal("data/wordlist.txt").reader());
+        ultraghostController.setWordList(wordList);
     }
     
     public void setComputerOpponent(boolean isComputerOpponent) {

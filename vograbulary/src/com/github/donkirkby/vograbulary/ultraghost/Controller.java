@@ -1,6 +1,5 @@
 package com.github.donkirkby.vograbulary.ultraghost;
 
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -50,8 +49,8 @@ public class Controller implements StudentListener {
      * @param reader contains the list of words, one per line. The reader will
      * be closed before the method returns.
      */
-    public void readWordList(Reader reader) {
-        wordList.read(reader);
+    public void setWordList(WordList wordList) {
+        this.wordList = wordList;
         random.loadWordList(wordList);
         for (Student student : students) {
             student.setWordList(wordList);
