@@ -14,6 +14,9 @@ public class ComputerStudentTest {
     private String solution;
     private ComputerStudent student;
     private WordList wordList;
+    private FocusField focus;
+    
+    private enum FocusField {Solution, Challenge};
     
     @Before
     public void setUp() {
@@ -35,14 +38,17 @@ public class ComputerStudentTest {
             
             @Override
             public void showThinking() {
+                focus = null;
             }
             
             @Override
             public void askForSolution() {
+                focus = FocusField.Solution;
             }
             
             @Override
             public void askForChallenge() {
+                focus = FocusField.Challenge;
             }
         });
     }
@@ -59,6 +65,30 @@ public class ComputerStudentTest {
         
         assertThat("is solution submitted", isSolutionSet, is(true));
         assertThat("solution", solution, nullValue());
+    }
+    
+    @Test
+    public void maxBatchCount() {
+        student.setMaxSearchBatchCount(1);
+        
+        boolean isActiveStudent = true;
+        student.startSolving("AXR", isActiveStudent);
+        
+        boolean isFinished = student.runSearchBatch();
+        
+        assertThat("finished", isFinished, is(true));
+    }
+    
+    @Test
+    public void maxBatchCountInactiveStudent() {
+        student.setMaxSearchBatchCount(1);
+        
+        boolean isActiveStudent = false;
+        student.startSolving("AXR", isActiveStudent);
+        
+        boolean isFinished = student.runSearchBatch();
+        
+        assertThat("finished", isFinished, is(false));
     }
     
     @Test
@@ -81,5 +111,23 @@ public class ComputerStudentTest {
                 isCompleteAfterLast,
                 is(true));
         assertThat("solution", solution, is(expectedSolution));
+    }
+    
+    @Test
+    public void startThinkingWhenActive() {
+        focus = FocusField.Solution;
+        boolean isActiveStudent = true;
+        student.startSolving("PIE", isActiveStudent);
+        
+        assertThat("focus", focus, nullValue());
+    }
+    
+    @Test
+    public void startThinkingWhenInactive() {
+        focus = FocusField.Solution;
+        boolean isActiveStudent = false;
+        student.startSolving("PIE", isActiveStudent);
+        
+        assertThat("focus", focus, is(FocusField.Solution));
     }
 }
