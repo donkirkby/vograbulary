@@ -9,20 +9,24 @@ import java.io.StringReader;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.github.donkirkby.vograbulary.Configuration;
+
 public class ComputerStudentTest {
     private boolean isSolutionSet = false;
     private String solution;
     private ComputerStudent student;
     private WordList wordList;
     private FocusField focus;
+    private Configuration configuration;
     
     private enum FocusField {Solution, Challenge};
     
     @Before
     public void setUp() {
+        configuration = new Configuration();
         wordList = new WordList();
         wordList.read(new StringReader("PRICE\nPIECE\nPIPE"));
-        student = new ComputerStudent();
+        student = new ComputerStudent(configuration);
         student.setWordList(wordList);
         student.setListener(new Student.StudentListener() {
             
@@ -70,6 +74,18 @@ public class ComputerStudentTest {
     @Test
     public void maxBatchCount() {
         student.setMaxSearchBatchCount(1);
+        
+        boolean isActiveStudent = true;
+        student.startSolving("AXR", isActiveStudent);
+        
+        boolean isFinished = student.runSearchBatch();
+        
+        assertThat("finished", isFinished, is(true));
+    }
+    
+    @Test
+    public void vocabularySize() {
+        configuration.setVocabularySize(1);
         
         boolean isActiveStudent = true;
         student.startSolving("AXR", isActiveStudent);

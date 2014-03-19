@@ -5,7 +5,9 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
@@ -15,6 +17,8 @@ public class MenuScreen implements Screen {
     //stopJesting
     private VograbularyApp app;
     private Stage stage;
+    private Label skillLabel;
+    private Slider vocabularySize;
 
     public MenuScreen(VograbularyApp vograbularyApp) {
         app = vograbularyApp;
@@ -25,11 +29,20 @@ public class MenuScreen implements Screen {
         stage.addActor(table);
         table.align(Align.top);
         Skin skin = app.getSkin();
-        TextButton computerButton = new TextButton("Human vs. Computer", skin);
-        table.add(computerButton);
-        table.row();
         TextButton humanButton = new TextButton("Human vs. Human", skin);
-        table.add(humanButton);
+        table.add(humanButton).colspan(3);
+        table.row();
+        TextButton computerButton = new TextButton("Human vs. Computer", skin);
+        table.add(computerButton).colspan(3);
+        table.row();
+        skillLabel = new Label("", skin);
+        int defaultVocabularySize = 5000;
+        setVocabularySize(defaultVocabularySize);
+        table.add(skillLabel).expandX();
+        boolean isVertical = false;
+        vocabularySize = new Slider(1, 65000, 100, isVertical, skin);
+        vocabularySize.setValue(defaultVocabularySize);
+        table.add(vocabularySize).right().fillX();
         
         computerButton.addListener(new ChangeListener() {
             @Override
@@ -44,6 +57,13 @@ public class MenuScreen implements Screen {
             public void changed(ChangeEvent event, Actor actor) {
                 boolean isComputerOpponent = false;
                 app.startUltraghost(isComputerOpponent);
+            }
+        });
+        
+        vocabularySize.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                setVocabularySize((int)vocabularySize.getValue());
             }
         });
     }
@@ -80,6 +100,11 @@ public class MenuScreen implements Screen {
 
     @Override
     public void dispose() {
+    }
+
+    private void setVocabularySize(int skill) {
+        skillLabel.setText("Skill " + skill);
+        app.getConfiguration().setVocabularySize(skill);
     }
     //resumeJesting
 }

@@ -2,18 +2,26 @@ package com.github.donkirkby.vograbulary.ultraghost;
 
 import java.util.Iterator;
 
+import com.github.donkirkby.vograbulary.Configuration;
+
 public class ComputerStudent extends Student {
     private int searchBatchSize = 1;
     private int maxSearchBatchCount = Integer.MAX_VALUE;
     private int searchBatchCount;
+    private int searchedWordsCount;
     private boolean isActiveStudent;
     private String currentPuzzle;
     private String bestSolution;
     private Iterator<String> itr;
-    
+    private Configuration configuration;
     
     public ComputerStudent() {
+        this(new Configuration());
+    }
+    
+    public ComputerStudent(Configuration configuration) {
         super("Computer");
+        this.configuration = configuration;
     }
     
     public void setSearchBatchSize(int searchBatchSize) {
@@ -29,6 +37,7 @@ public class ComputerStudent extends Student {
         currentPuzzle = puzzle;
         bestSolution = null;
         searchBatchCount = 0;
+        searchedWordsCount = 0;
         this.isActiveStudent = isActiveStudent;
         if (isActiveStudent) {
             getListener().showThinking();
@@ -39,12 +48,17 @@ public class ComputerStudent extends Student {
     @Override
     public boolean runSearchBatch() {
         searchBatchCount++;
-        int wordCount = searchBatchSize;
+        int wordCount = Math.min(
+                searchBatchSize, 
+                configuration.getVocabularySize() - searchedWordsCount);
         for (int i = 0; i < wordCount && itr.hasNext(); i++) {
             String word = itr.next();
             checkWord(word);
         }
-        if (searchBatchCount >= maxSearchBatchCount || ! itr.hasNext()) {
+        searchedWordsCount += wordCount;
+        if (searchBatchCount >= maxSearchBatchCount 
+                || ! itr.hasNext()
+                || searchedWordsCount >= configuration.getVocabularySize()) {
             if (isActiveStudent) {
                 getListener().submitSolution(bestSolution);
                 return true;

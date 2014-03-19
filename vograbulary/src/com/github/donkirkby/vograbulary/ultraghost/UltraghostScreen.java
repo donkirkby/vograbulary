@@ -52,7 +52,8 @@ public class UltraghostScreen implements Screen {
     @Override
     public void show() {
         view.clear();
-        ComputerStudent computerStudent = new ComputerStudent();
+        ComputerStudent computerStudent = 
+                new ComputerStudent(app.getConfiguration());
         computerStudent.setSearchBatchSize(30);
         computerStudent.setMaxSearchBatchCount(1000); // 10s
         ultraghostController.clearStudents();
