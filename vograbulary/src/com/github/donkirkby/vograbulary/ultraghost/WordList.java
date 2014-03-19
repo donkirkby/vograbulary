@@ -72,16 +72,16 @@ public class WordList implements Iterable<String> {
                 : WordResult.NOT_A_MATCH;
     }
 
-    public WordResult checkChallenge(
+    public WordResult checkResponse(
             String puzzle, 
             String solution,
-            String challenge) {
-        if (challenge == null || challenge.length() == 0) {
+            String response) {
+        if (response == null || response.length() == 0) {
             return solution == null || solution.length() == 0
                     ? WordResult.SKIPPED
                     : WordResult.NOT_IMPROVED;
         }
-        String challengeUpper = challenge.toUpperCase();
+        String challengeUpper = response.toUpperCase();
         if ( ! wordList.contains(challengeUpper)) {
             return solution == null || solution.length() == 0
                     ? WordResult.IMPROVED_SKIP_NOT_A_WORD

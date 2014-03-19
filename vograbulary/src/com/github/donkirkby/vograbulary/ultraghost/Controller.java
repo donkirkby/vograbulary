@@ -147,7 +147,7 @@ public class Controller implements StudentListener {
             view.focusNextButton();
             String result = view.getResult();
             if (result != null && result.length() == 0) {
-                WordResult result2 = wordList.checkChallenge(
+                WordResult result2 = wordList.checkResponse(
                         currentPuzzle, 
                         view.getSolution(), 
                         view.getChallenge());

@@ -2,6 +2,7 @@ package com.github.donkirkby.vograbulary.ultraghost;
 
 public enum WordResult {
     //stopJesting
+    UNKNOWN,
     NOT_A_WORD, 
     VALID, 
     NOT_A_MATCH, 

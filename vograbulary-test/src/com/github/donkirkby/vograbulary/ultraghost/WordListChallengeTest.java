@@ -57,7 +57,7 @@ public class WordListChallengeTest {
    
    @Test
    public void checkChallenge() {
-       WordResult result = wordList.checkChallenge(puzzle, solution, challenge);
+       WordResult result = wordList.checkResponse(puzzle, solution, challenge);
        assertThat("result", result, is(expectedResult));
    }
 }

@@ -84,11 +84,11 @@ public class ComputerStudent extends Student {
     public void prepareChallenge(String humanSolution) {
         String challenge = bestSolution;
         String noChallenge = null;
-        WordResult challengeResult = getWordList().checkChallenge(
+        WordResult challengeResult = getWordList().checkResponse(
                 currentPuzzle, 
                 humanSolution, 
                 challenge);
-        WordResult noChallengeResult = getWordList().checkChallenge(
+        WordResult noChallengeResult = getWordList().checkResponse(
                 currentPuzzle, 
                 humanSolution, 
                 noChallenge);

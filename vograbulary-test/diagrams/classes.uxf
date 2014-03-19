@@ -6,7 +6,7 @@
       <x>610</x>
       <y>60</y>
       <w>120</w>
-      <h>120</h>
+      <h>130</h>
     </coordinates>
     <panel_attributes>Puzzle
 --
@@ -14,6 +14,7 @@
 -solution
 -response
 -hint
+-result
 --</panel_attributes>
     <additional_attributes/>
   </element>
@@ -62,7 +63,7 @@
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>310</x>
+      <x>610</x>
       <y>260</y>
       <w>110</w>
       <h>70</h>
@@ -112,11 +113,11 @@ m2=*</panel_attributes>
     <coordinates>
       <x>190</x>
       <y>260</y>
-      <w>140</w>
+      <w>440</w>
       <h>50</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>30;30;120;30</additional_attributes>
+    <additional_attributes>30;30;420;30</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
@@ -129,5 +130,16 @@ m2=*</panel_attributes>
     <panel_attributes>lt=&lt;&lt;&lt;-
 owner</panel_attributes>
     <additional_attributes>460;50;30;50</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>640</x>
+      <y>160</y>
+      <w>50</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>30;30;30;100</additional_attributes>
   </element>
 </diagram>
