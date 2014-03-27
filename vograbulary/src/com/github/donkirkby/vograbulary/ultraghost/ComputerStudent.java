@@ -96,7 +96,11 @@ public class ComputerStudent extends Student {
             getListener().submitChallenge(challenge, challengeResult);
         }
         else {
-            getListener().submitChallenge(null, WordResult.NOT_IMPROVED);
+            getListener().submitChallenge("", WordResult.NOT_IMPROVED);
         }
+    }
+    
+    public String getCurrentPuzzle() {
+        return currentPuzzle;
     }
 }

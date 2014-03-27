@@ -15,7 +15,7 @@ public class Controller implements StudentListener {
     private WordList wordList = new WordList();
     private Task searchTask;
     private List<Student> students = new ArrayList<Student>();
-    private int startingStudent;
+    private int startingStudent = -1;
     private int activeStudentIndex;
 
     public void next() {
@@ -210,18 +210,53 @@ public class Controller implements StudentListener {
 
     @Override
     public void showThinking() {
-        view.focusNextButton();
+        view.showThinking();
     }
     
     @Override
     public void askForChallenge() {
-        view.focusChallenge();
+        view.focusResponse();
     }
     
     @Override
     public void submitChallenge(String challenge, WordResult challengeResult) {
-        view.setChallenge(challenge);
+        view.getPuzzle().setResponse(challenge);
+        view.refreshPuzzle();
         view.focusNextButton();
-        next();
+    }
+
+    public void start() {
+        if (startingStudent < 0) {
+            activeStudentIndex = 
+                    startingStudent = 
+                    random.chooseStartingStudent(students.size());
+        }
+        else {
+            activeStudentIndex = (activeStudentIndex + 1) % students.size();
+        }
+        String letters = random.generatePuzzle();
+        Student owner = students.get(activeStudentIndex);
+        view.setPuzzle(new Puzzle(letters, owner, wordList));
+        for (Student student : students) {
+            student.startSolving(letters, student == owner);
+        }
+        float intervalSeconds = 0.01f;
+        float delaySeconds = intervalSeconds;
+        searchTask = new SearchTask();
+        view.schedule(searchTask, delaySeconds, intervalSeconds);
+    }
+
+    public void solve() {
+        Puzzle puzzle = view.getPuzzle();
+        for (Student student : students) {
+            if (student != puzzle.getOwner()) {
+                student.prepareChallenge(puzzle.getSolution());
+            }
+        }
+    }
+
+    public void respond() {
+        view.focusNextButton();
+        view.refreshPuzzle();
     }
 }

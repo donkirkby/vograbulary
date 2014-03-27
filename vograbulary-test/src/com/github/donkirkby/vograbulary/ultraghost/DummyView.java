@@ -10,7 +10,8 @@ public class DummyView extends View {
     private String result = "";
     private String scores = "";
     private Task searchTask;
-    private String currentFocus = "";
+    private Focus currentFocus = Focus.Unknown;
+    private int refreshCount;
 
     @Override
     public void schedule(Task task, float delaySeconds, float intervalSeconds) {
@@ -26,7 +27,7 @@ public class DummyView extends View {
         puzzle = letters;
     }
     
-    public String getPuzzle() {
+    public String getPuzzleLetters() {
         return puzzle;
     }
 
@@ -80,20 +81,36 @@ public class DummyView extends View {
     
     @Override
     public void focusSolution() {
-        currentFocus = "solution";
+        currentFocus = Focus.Solution;
     }
     
     @Override
-    public void focusChallenge() {
-        currentFocus = "challenge";
+    public void focusResponse() {
+        currentFocus = Focus.Response;
     }
     
     @Override
     public void focusNextButton() {
-        currentFocus = "next";
+        currentFocus = Focus.Result;
     }
     
-    public String getCurrentFocus() {
+    @Override
+    public void showThinking() {
+        currentFocus = Focus.Thinking;
+    }
+    
+    @Override
+    public void refreshPuzzle() {
+        refreshCount++;
+    }
+    
+    public int getRefreshCount() {
+        return refreshCount;
+    }
+    
+    public Focus getCurrentFocus() {
         return currentFocus;
     }
+    
+    public enum Focus {Unknown, Thinking, Solution, Response, Result};
 }

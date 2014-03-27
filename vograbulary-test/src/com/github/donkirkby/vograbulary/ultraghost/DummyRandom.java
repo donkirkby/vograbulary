@@ -46,5 +46,6 @@ public class DummyRandom extends UltraghostRandom {
 
     public void setPuzzles(String...puzzles) {
         this.puzzles = Arrays.asList(puzzles);
+        puzzleIndex = 0;
     }
 }

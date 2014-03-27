@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 import com.github.donkirkby.vograbulary.VograbularyApp;
@@ -18,15 +19,19 @@ import com.github.donkirkby.vograbulary.VograbularyApp;
 public class View {
     //stopJesting
     private static final String NO_ANSWER = "None";
+    private Puzzle puzzle;
     private Label letters;
     private Label studentName;
     private TextField solution;
     private String solutionWord;
-    private TextField challenge;
-    private String challengeWord;
+    private TextField response;
+    private String responseWord;
     private Label result;
     private Label scores;
-    private TextButton button;
+    private TextButton solveButton;
+    private TextButton respondButton;
+    private TextButton nextButton;
+    private TextButton[] focusButtons;
     
     public void create(
             final Table table, 
@@ -38,28 +43,55 @@ public class View {
         studentName = new Label(" ", skin);
         table.add(studentName);
         table.row();
+        
         letters = new Label(" ", skin);
         table.add(letters);
+        TextButton menuButton = new TextButton("Menu", skin);
+        table.add(menuButton).left();
         table.row();
+        
         solution = new TextField("", skin);
         table.add(solution).expandX().fillX().pad(5);
-        button = new TextButton("Next", skin);
-        table.add(button);
+        solveButton = new TextButton("Solve", skin);
+        table.add(solveButton).left();
         table.row();
-        challenge = new TextField("", skin);
-        table.add(challenge).expandX().fillX().pad(5);
+        
+        response = new TextField("", skin);
+        table.add(response).expandX().fillX().pad(5);
+        respondButton = new TextButton("Respond", skin);
+        table.add(respondButton).left();
         table.row();
+        
         result = new Label(" ", skin);
         table.add(result).fillX();
-        TextButton menuButton = new TextButton("Menu", skin);
-        table.add(menuButton);
+        nextButton = new TextButton("Next", skin);
+        table.add(nextButton).left();
         table.row();
+        
         scores = new Label(" \n ", skin);
         table.add(scores).fillX();
-        button.addListener(new ChangeListener() {
+        
+        focusButtons = 
+                new TextButton[] {solveButton, respondButton, nextButton};
+        
+        nextButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                controller.next();
+                controller.start();
+            }
+        });
+        solveButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                puzzle.setSolution(solution.getText());
+                controller.solve();
+            }
+        });
+        respondButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                puzzle.setResponse(response.getText());
+                controller.respond();
             }
         });
         menuButton.addListener(new ChangeListener() {
@@ -68,20 +100,20 @@ public class View {
                 app.showMenu();
             }
         });
-        table.addListener(new InputListener() {
-            @Override
-            public boolean keyUp(InputEvent event, int keycode) {
-                if (keycode == Input.Keys.ENTER) {
-                    controller.next();
-                    return true;
-                }
-                return false;
-            }
-        });
+//        table.addListener(new InputListener() {
+//            @Override
+//            public boolean keyUp(InputEvent event, int keycode) {
+//                if (keycode == Input.Keys.ENTER) {
+//                    controller.next();
+//                    return true;
+//                }
+//                return false;
+//            }
+//        });
         // On some platforms, setting the focus in an enter key handler is
         // not compatible with the default focus traversal. Disable it.
         solution.setFocusTraversal(false);
-        challenge.setFocusTraversal(false);
+        response.setFocusTraversal(false);
         
         solution.setTextFieldListener(new TextFieldListener() {
             @Override
@@ -89,10 +121,10 @@ public class View {
                 solutionWord = solution.getText();
             }
         });
-        challenge.setTextFieldListener(new TextFieldListener() {
+        response.setTextFieldListener(new TextFieldListener() {
             @Override
             public void keyTyped(TextField textField, char key) {
-                challengeWord = challenge.getText();
+                responseWord = response.getText();
             }
         });
         focusNextButton();
@@ -146,15 +178,15 @@ public class View {
      * Display a challenge to the solution.
      */
     public void setChallenge(String challenge) {
-        challengeWord = challenge;
-        this.challenge.setText(challenge != null ? challenge : NO_ANSWER);
+        responseWord = challenge;
+        this.response.setText(challenge != null ? challenge : NO_ANSWER);
     }
  
     /**
      * Get the entered challenge.
      */
     public String getChallenge() {
-        return challengeWord;
+        return responseWord;
     }
     
     /**
@@ -182,24 +214,77 @@ public class View {
      * Set the display's focus in the solution field.
      */
     public void focusSolution() {
+        focusButton(solveButton);
         solution.getStage().setKeyboardFocus(solution);
         solution.getOnscreenKeyboard().show(true);
     }
     
     /**
-     * Set the display's focus in the challenge field.
+     * Set the display's focus in the response field.
      */
-    public void focusChallenge() {
-        challenge.getStage().setKeyboardFocus(challenge);
-        challenge.getOnscreenKeyboard().show(true);
+    public void focusResponse() {
+        focusButton(respondButton);
+        response.getStage().setKeyboardFocus(response);
+        response.getOnscreenKeyboard().show(true);
+    }
+    
+    private void focusButton(TextButton target) {
+        for (TextButton button : focusButtons) {
+            button.setVisible(button == target);
+        }
     }
     
     /**
      * Set the display's focus on the Next button.
      */
     public void focusNextButton() {
-        button.getStage().setKeyboardFocus(button);
+        focusButton(nextButton);
+        nextButton.getStage().setKeyboardFocus(nextButton);
         solution.getOnscreenKeyboard().show(false);
+    }
+    
+    /**
+     * Disable all the buttons, except menu, while the computer student is
+     * thinking of a solution.
+     */
+    public void showThinking() {
+        focusButton(null);
+    }
+    
+    public Puzzle getPuzzle() {
+        return puzzle;
+    }
+
+    /**
+     * Set the puzzle state for display. This will update several fields.
+     */
+    public void setPuzzle(Puzzle puzzle) {
+        this.puzzle = puzzle;
+        refreshPuzzle();
+    }
+    
+    /**
+     * Update the display to show all parts of the puzzle.
+     */
+    public void refreshPuzzle() {
+        if (letters == null) {
+            // must be in unit tests, nothing to do.
+            return;
+        }
+        Student owner = puzzle.getOwner();
+        studentName.setText(owner == null ? "" : owner.getName());
+        letters.setText(blankForNull(puzzle.getLetters()));
+        solution.setText(blankForNull(puzzle.getSolution()));
+        response.setText(blankForNull(puzzle.getResponse()));
+        WordResult puzzleResult = puzzle.getResult();
+        result.setText(
+                puzzleResult.getScore() == 0 
+                ? "" 
+                : puzzleResult.toString());
+    }
+    
+    private String blankForNull(Object o) {
+        return o == null ? "" : o.toString();
     }
     //resumeJesting
 }
