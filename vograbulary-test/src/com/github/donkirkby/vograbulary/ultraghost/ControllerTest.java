@@ -2,6 +2,7 @@ package com.github.donkirkby.vograbulary.ultraghost;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import java.io.StringReader;
 
@@ -10,6 +11,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import com.badlogic.gdx.Application;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Timer.Task;
 import com.github.donkirkby.vograbulary.ultraghost.DummyView.Focus;
 
@@ -27,6 +30,7 @@ public class ControllerTest {
     
     @Before
     public void setUp() {
+        Gdx.app = mock(Application.class);
         random = new DummyRandom();
         random.setPuzzles("AAA", "AAA", "AAA");
         view = new DummyView();
@@ -116,6 +120,31 @@ public class ControllerTest {
     }
     
     @Test
+    public void computerStudentSolve() {
+        random.setPuzzles("RPE");
+        computerStudent.setMaxSearchBatchCount(1);
+        controller.clearStudents();
+        controller.addStudent(computerStudent);
+        controller.addStudent(student);
+        random.setStartingStudent(0);
+        controller.start();
+        Task searchTask = view.getSearchTask();
+        int previousRefreshCount = view.getRefreshCount();
+
+        searchTask.run();
+        
+        Puzzle puzzle = view.getPuzzle();
+        assertThat("solution", puzzle.getSolution(), is("ROPE"));
+        Focus focus = view.getCurrentFocus();
+        assertThat("focus", focus, is(Focus.Response));
+        assertThat(
+                "refresh count", 
+                view.getRefreshCount(), 
+                is(previousRefreshCount+1));
+        assertThat("isScheduled", searchTask.isScheduled(), is(false));
+    }
+    
+    @Test
     public void startSecondPuzzle() {
         random.setStartingStudent(0);
         Student expectedStudent = student2;
@@ -152,17 +181,25 @@ public class ControllerTest {
     @Test
     public void solveWithHumanOwnerAgainstComputer() {
         controller.clearStudents();
-        controller.addStudent(computerStudent);
         controller.addStudent(student);
+        controller.addStudent(computerStudent);
+        random.setPuzzles("RPE");
+        controller.start();
+        Puzzle puzzle = view.getPuzzle();
+        int startRefreshCount = view.getRefreshCount();
         
-        startPuzzle.setSolution("");
+        puzzle.setSolution("");
 
         controller.solve();
         
         Focus focus = view.getCurrentFocus();
         assertThat("focus", focus, is(Focus.Result));
-        assertThat("response", startPuzzle.getResponse(), is(""));
-        assertThat("refresh count", view.getRefreshCount(), is(2));
+        assertThat("response", puzzle.getResponse(), is(""));
+        assertThat(
+                "refresh count", 
+                view.getRefreshCount(), 
+                is(startRefreshCount+1));
+        assertThat("isScheduled", view.getSearchTask().isScheduled(), is(false));
     }
     
     @Test

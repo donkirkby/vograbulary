@@ -32,15 +32,15 @@ public class MenuScreen implements Screen {
         TextButton humanButton = new TextButton("Human vs. Human", skin);
         table.add(humanButton).row();
         TextButton computerButton = new TextButton("Human vs. Computer", skin);
-//        table.add(computerButton).row();
+        table.add(computerButton).row();
         skillLabel = new Label("", skin);
         int defaultVocabularySize = 5000;
         setVocabularySize(defaultVocabularySize);
-//        table.add(skillLabel).row();
+        table.add(skillLabel).row();
         boolean isVertical = false;
         vocabularySize = new Slider(1, 65000, 100, isVertical, skin);
         vocabularySize.setValue(defaultVocabularySize);
-//        table.add(vocabularySize).fillX();
+        table.add(vocabularySize).fillX();
         
         computerButton.addListener(new ChangeListener() {
             @Override

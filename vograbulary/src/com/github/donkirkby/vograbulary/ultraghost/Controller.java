@@ -204,8 +204,9 @@ public class Controller implements StudentListener {
     
     @Override
     public void submitSolution(String solution) {
-        view.setSolution(solution);
-        next();
+        view.getPuzzle().setSolution(solution);
+        view.refreshPuzzle();
+        view.focusResponse();
     }
 
     @Override
@@ -252,6 +253,9 @@ public class Controller implements StudentListener {
             if (student != puzzle.getOwner()) {
                 student.prepareChallenge(puzzle.getSolution());
             }
+        }
+        if (searchTask != null) {
+            searchTask.cancel();
         }
     }
 

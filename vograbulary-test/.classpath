@@ -8,5 +8,6 @@
 	<classpathentry kind="lib" path="/vograbulary/libs/gdx-tools.jar" sourcepath="/vograbulary/libs/gdx-tools-sources.jar"/>
 	<classpathentry kind="lib" path="libs/hamcrest-library-1.3.jar"/>
 	<classpathentry kind="lib" path="libs/hamcrest-core-1.3.jar"/>
+	<classpathentry kind="lib" path="/vograbulary/libs/gdx.jar" sourcepath="/vograbulary/libs/gdx-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

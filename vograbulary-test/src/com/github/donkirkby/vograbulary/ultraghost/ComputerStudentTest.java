@@ -96,7 +96,21 @@ public class ComputerStudentTest {
     }
     
     @Test
+    public void batchSize() {
+        int vocabularySize = 100;
+        int maxSearchBatchCount = 20;
+        int expectedBatchSize = vocabularySize / maxSearchBatchCount;
+        
+        configuration.setVocabularySize(vocabularySize);
+        student.setMaxSearchBatchCount(maxSearchBatchCount);
+        
+        int batchSize = student.getSearchBatchSize();
+        assertThat("batch size", batchSize, is(expectedBatchSize));
+    }
+    
+    @Test
     public void maxBatchCountInactiveStudent() {
+        configuration.setVocabularySize(2);
         student.setMaxSearchBatchCount(1);
         
         boolean isActiveStudent = false;

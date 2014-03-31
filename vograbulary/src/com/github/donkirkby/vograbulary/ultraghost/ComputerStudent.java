@@ -28,8 +28,14 @@ public class ComputerStudent extends Student {
         this.searchBatchSize = searchBatchSize;
     }
     
+    public int getSearchBatchSize() {
+        return searchBatchSize;
+    }
+    
     public void setMaxSearchBatchCount(int maxSearchBatchCount) {
         this.maxSearchBatchCount = maxSearchBatchCount;
+        searchBatchSize = 
+                configuration.getVocabularySize() / maxSearchBatchCount;
     }
     
     @Override

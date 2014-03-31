@@ -1,5 +1,6 @@
 package com.github.donkirkby.vograbulary.ultraghost;
 
+import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 
 public class DummyView extends View {
@@ -12,10 +13,16 @@ public class DummyView extends View {
     private Task searchTask;
     private Focus currentFocus = Focus.Unknown;
     private int refreshCount;
+    private Timer timer;
 
     @Override
     public void schedule(Task task, float delaySeconds, float intervalSeconds) {
         this.searchTask = task;
+        
+        if (timer == null) {
+            timer = new Timer();
+        }
+        timer.scheduleTask(task, Float.MAX_VALUE);
     }
     
     public Task getSearchTask() {
