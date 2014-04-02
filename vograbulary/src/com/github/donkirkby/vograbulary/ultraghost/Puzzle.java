@@ -96,4 +96,9 @@ public class Puzzle {
     public WordList getWordList() {
         return wordList;
     }
+    
+    @Override
+    public String toString() {
+        return String.format("Puzzle(%1$s, %2$s)", letters, owner.getName());
+    }
 }

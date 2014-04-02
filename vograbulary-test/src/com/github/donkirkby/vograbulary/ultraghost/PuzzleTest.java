@@ -101,4 +101,11 @@ public class PuzzleTest {
         thrown.expectMessage("Puzzle word list was null.");
         new Puzzle(letters, owner, wordList);
     }
+    
+    @Test
+    public void string() {
+        String string = puzzle.toString();
+        
+        assertThat("string", string, is("Puzzle(PIE, Student)"));
+    }
 }

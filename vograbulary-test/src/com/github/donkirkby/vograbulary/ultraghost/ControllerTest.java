@@ -46,7 +46,9 @@ public class ControllerTest {
         controller.addStudent(student);
         controller.addStudent(student2);
         startPuzzle = new Puzzle("RPE", student, wordList);
-        view.setPuzzle(startPuzzle);
+        Match match = new Match(10, student, student2);
+        match.setPuzzle(startPuzzle);
+        view.setMatch(match);
     }
     
     @Test
@@ -183,22 +185,34 @@ public class ControllerTest {
         controller.clearStudents();
         controller.addStudent(student);
         controller.addStudent(computerStudent);
-        random.setPuzzles("RPE");
-        controller.start();
-        Puzzle puzzle = view.getPuzzle();
         int startRefreshCount = view.getRefreshCount();
         
-        puzzle.setSolution("");
+        startPuzzle.setSolution("");
 
         controller.solve();
         
         Focus focus = view.getCurrentFocus();
         assertThat("focus", focus, is(Focus.Result));
-        assertThat("response", puzzle.getResponse(), is(""));
+        assertThat("response", startPuzzle.getResponse(), is(""));
         assertThat(
                 "refresh count", 
                 view.getRefreshCount(), 
                 is(startRefreshCount+1));
+    }
+    
+    @Test
+    public void cancelSearchTask() {
+        controller.clearStudents();
+        controller.addStudent(student);
+        controller.addStudent(computerStudent);
+        random.setPuzzles("RPE");
+        controller.start();
+        Puzzle puzzle = view.getPuzzle();
+        
+        puzzle.setSolution("");
+
+        controller.solve();
+        
         assertThat("isScheduled", view.getSearchTask().isScheduled(), is(false));
     }
     
@@ -213,5 +227,15 @@ public class ControllerTest {
         assertThat("focus", focus, is(Focus.Result));
         assertThat("result", startPuzzle.getResult(), is(WordResult.WORD_FOUND));
         assertThat("refresh count", view.getRefreshCount(), is(2));
+    }
+    
+    @Test
+    public void summary() {
+        startPuzzle.setSolution("");
+        startPuzzle.setResponse("rope");
+        
+        controller.respond();
+        
+        assertThat("score", student.getScore(), is(-1));
     }
 }

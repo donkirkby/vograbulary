@@ -1,9 +1,6 @@
 package com.github.donkirkby.vograbulary.ultraghost;
 
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -11,7 +8,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 import com.github.donkirkby.vograbulary.VograbularyApp;
@@ -19,7 +15,7 @@ import com.github.donkirkby.vograbulary.VograbularyApp;
 public class View {
     //stopJesting
     private static final String NO_ANSWER = "None";
-    private Puzzle puzzle;
+    private Match match;
     private Label letters;
     private Label studentName;
     private TextField solution;
@@ -83,14 +79,14 @@ public class View {
         solveButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                puzzle.setSolution(solution.getText());
+                match.getPuzzle().setSolution(solution.getText());
                 controller.solve();
             }
         });
         respondButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                puzzle.setResponse(response.getText());
+                match.getPuzzle().setResponse(response.getText());
                 controller.respond();
             }
         });
@@ -252,14 +248,14 @@ public class View {
     }
     
     public Puzzle getPuzzle() {
-        return puzzle;
+        return match.getPuzzle();
     }
 
     /**
-     * Set the puzzle state for display. This will update several fields.
+     * Set the match state for display. This will update several fields.
      */
-    public void setPuzzle(Puzzle puzzle) {
-        this.puzzle = puzzle;
+    public void setMatch(Match match) {
+        this.match = match;
         refreshPuzzle();
     }
     
@@ -271,6 +267,7 @@ public class View {
             // must be in unit tests, nothing to do.
             return;
         }
+        Puzzle puzzle = match.getPuzzle();
         Student owner = puzzle.getOwner();
         studentName.setText(owner == null ? "" : owner.getName());
         letters.setText(blankForNull(puzzle.getLetters()));
@@ -281,6 +278,7 @@ public class View {
                 puzzleResult.getScore() == 0 
                 ? "" 
                 : puzzleResult.toString());
+        scores.setText(match.getSummary());
     }
     
     private String blankForNull(Object o) {

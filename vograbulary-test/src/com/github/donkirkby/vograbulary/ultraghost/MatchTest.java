@@ -35,8 +35,9 @@ public class MatchTest {
         
         Puzzle puzzle = match.createPuzzle(wordList);
         
-        assertThat("puzzle", puzzle.getLetters(), is(expectedLetters));
+        assertThat("letters", puzzle.getLetters(), is(expectedLetters));
         assertThat("student", puzzle.getOwner(), is(student));
+        assertThat("puzzle", match.getPuzzle(), is(puzzle));
     }
     
     @Test
@@ -64,5 +65,26 @@ public class MatchTest {
         
         assertThat("puzzle", puzzle.getLetters(), is(expectedLetters));
         assertThat("student", puzzle.getOwner(), is(expectedStudent));
+    }
+    
+    @Test
+    public void summary() {
+        student.addScore(5);
+        computer.addScore(9);
+        String expectedSummary = "Student 5\nComputer 9\n";
+        
+        String summary = match.getSummary();
+        
+        assertThat("summary", summary, is(expectedSummary));
+    }
+    
+    @Test
+    public void summaryOrder() {
+        random.setStartingStudent(1);
+        String expectedSummary = "Computer 0\nStudent 0\n";
+        
+        String summary = match.getSummary();
+        
+        assertThat("summary", summary, is(expectedSummary));
     }
 }

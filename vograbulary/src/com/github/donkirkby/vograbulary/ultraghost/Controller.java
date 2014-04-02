@@ -17,6 +17,7 @@ public class Controller implements StudentListener {
     private List<Student> students = new ArrayList<Student>();
     private int startingStudent = -1;
     private int activeStudentIndex;
+    private Match match;
 
     public void next() {
         state.next();
@@ -227,19 +228,18 @@ public class Controller implements StudentListener {
     }
 
     public void start() {
-        if (startingStudent < 0) {
-            activeStudentIndex = 
-                    startingStudent = 
-                    random.chooseStartingStudent(students.size());
+        if (match == null) {
+            match = new Match(
+                    21, 
+                    students.toArray(new Student[students.size()]));
+            match.setRandom(random);
         }
-        else {
-            activeStudentIndex = (activeStudentIndex + 1) % students.size();
-        }
-        String letters = random.generatePuzzle();
-        Student owner = students.get(activeStudentIndex);
-        view.setPuzzle(new Puzzle(letters, owner, wordList));
+        Puzzle puzzle = match.createPuzzle(wordList);
+        view.setMatch(match);
         for (Student student : students) {
-            student.startSolving(letters, student == owner);
+            student.startSolving(
+                    puzzle.getLetters(), 
+                    student == puzzle.getOwner());
         }
         float intervalSeconds = 0.01f;
         float delaySeconds = intervalSeconds;
@@ -260,6 +260,8 @@ public class Controller implements StudentListener {
     }
 
     public void respond() {
+        Puzzle puzzle = view.getPuzzle();
+        puzzle.getOwner().addScore(puzzle.getResult().getScore());
         view.focusNextButton();
         view.refreshPuzzle();
     }
