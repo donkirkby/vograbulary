@@ -198,6 +198,7 @@ public class ControllerTest {
                 "refresh count", 
                 view.getRefreshCount(), 
                 is(startRefreshCount+1));
+        assertThat("score", student.getScore(), is(1));
     }
     
     @Test
@@ -237,5 +238,21 @@ public class ControllerTest {
         controller.respond();
         
         assertThat("score", student.getScore(), is(-1));
+    }
+    
+    @Test
+    public void newMatch() {
+        controller.start();
+        Match match1 = controller.getMatch();
+        
+        controller.clearStudents();
+        controller.addStudent(student);
+        controller.addStudent(student2);
+        controller.start();
+        
+        Match match2 = controller.getMatch();
+        
+        assertThat("match1", match1, notNullValue());
+        assertThat("match2", match2, allOf(notNullValue(), not(match1)));
     }
 }

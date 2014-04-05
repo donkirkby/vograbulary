@@ -66,7 +66,10 @@ public class ComputerStudent extends Student {
                 || ! itr.hasNext()
                 || searchedWordsCount >= configuration.getVocabularySize()) {
             if (isActiveStudent) {
-                getListener().submitSolution(bestSolution);
+                getListener().submitSolution(
+                        bestSolution == null
+                        ? ""
+                        : bestSolution);
                 return true;
             }
         }

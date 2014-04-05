@@ -68,7 +68,7 @@ public class ComputerStudentTest {
         student.runSearchBatch();
         
         assertThat("is solution submitted", isSolutionSet, is(true));
-        assertThat("solution", solution, nullValue());
+        assertThat("solution", solution, is(""));
     }
     
     @Test

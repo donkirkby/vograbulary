@@ -40,6 +40,7 @@ public class Controller implements StudentListener {
     
     public void clearStudents() {
         students.clear();
+        match = null;
         view.setActiveStudent(" ");
         view.focusNextButton();
         state = new StartState();
@@ -223,8 +224,7 @@ public class Controller implements StudentListener {
     @Override
     public void submitChallenge(String challenge, WordResult challengeResult) {
         view.getPuzzle().setResponse(challenge);
-        view.refreshPuzzle();
-        view.focusNextButton();
+        respond();
     }
 
     public void start() {
@@ -264,5 +264,9 @@ public class Controller implements StudentListener {
         puzzle.getOwner().addScore(puzzle.getResult().getScore());
         view.focusNextButton();
         view.refreshPuzzle();
+    }
+    
+    public Match getMatch() {
+        return match;
     }
 }
