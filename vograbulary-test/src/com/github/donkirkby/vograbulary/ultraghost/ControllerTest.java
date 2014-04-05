@@ -255,4 +255,14 @@ public class ControllerTest {
         assertThat("match1", match1, notNullValue());
         assertThat("match2", match2, allOf(notNullValue(), not(match1)));
     }
+    
+    @Test
+    public void changeWordList() {
+        WordList newWordList = new WordList();
+        newWordList.read(new StringReader("NEW\nWORD\nLIST"));
+        
+        controller.setWordList(newWordList);
+        
+        assertThat("student's word list", student.getWordList(), is(newWordList));
+    }
 }

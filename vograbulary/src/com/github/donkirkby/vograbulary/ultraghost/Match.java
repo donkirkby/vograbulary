@@ -13,16 +13,18 @@ public class Match {
         this.students = students;
     }
     
-    private void shuffleStudents() {
-        for (int i = 0; i < students.length - 1; i++) {
-            int source = random.chooseStartingStudent(students.length - i);
-            Student student = students[i + source];
-            students[i + source] = students[i];
-            students[i] = student;
+    private void checkStudentOrder() {
+        if (studentIndex < 0) {
+            for (int i = 0; i < students.length - 1; i++) {
+                int source = random.chooseStartingStudent(students.length - i);
+                Student student = students[i + source];
+                students[i + source] = students[i];
+                students[i] = student;
+            }
+            studentIndex = students.length - 1;
         }
-        studentIndex = students.length - 1;
     }
-
+    
     /**
      * Replace the default implementation of the random generator. Useful for
      * testing.
@@ -32,9 +34,7 @@ public class Match {
     }
 
     public Puzzle createPuzzle(WordList wordList) {
-        if (studentIndex < 0) {
-            shuffleStudents();
-        }
+        checkStudentOrder();
         studentIndex = (studentIndex + 1) % students.length;
         puzzle = new Puzzle(
                 random.generatePuzzle(), 
@@ -44,9 +44,7 @@ public class Match {
     }
 
     public String getSummary() {
-        if (studentIndex < 0) {
-            shuffleStudents();
-        }
+        checkStudentOrder();
         StringWriter writer = new StringWriter();
         try(PrintWriter printer = new PrintWriter(writer)) {
             for (Student student : students) {
@@ -55,7 +53,7 @@ public class Match {
             return writer.toString();
         }
     }
-    
+
     public Puzzle getPuzzle() {
         return puzzle;
     }
