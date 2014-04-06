@@ -111,7 +111,9 @@ public class Controller implements StudentListener {
                     puzzle.getLetters(), 
                     student == puzzle.getOwner());
         }
+        //stopJesting
         float intervalSeconds = 0.01f;
+        //resumeJesting
         float delaySeconds = intervalSeconds;
         searchTask = new SearchTask();
         view.schedule(searchTask, delaySeconds, intervalSeconds);

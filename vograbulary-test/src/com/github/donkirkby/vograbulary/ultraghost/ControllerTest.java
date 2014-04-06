@@ -14,6 +14,7 @@ import org.junit.rules.ExpectedException;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Timer.Task;
+import com.github.donkirkby.vograbulary.Configuration;
 import com.github.donkirkby.vograbulary.ultraghost.DummyView.Focus;
 
 public class ControllerTest {
@@ -24,6 +25,7 @@ public class ControllerTest {
     private Student student;
     private Student student2;
     private ComputerStudent computerStudent;
+    private Configuration configuration;
     
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -34,12 +36,14 @@ public class ControllerTest {
         random = new DummyRandom();
         random.setPuzzles("AAA", "AAA", "AAA");
         view = new DummyView();
-        student = new Student("Student");
-        student2 = new Student("Student 2");
-        computerStudent = new ComputerStudent();
-        controller = new Controller();
         WordList wordList = new WordList();
         wordList.read(new StringReader("ROPE\nPIECE\nPIPE"));
+        configuration = new Configuration();
+        configuration.setVocabularySize(wordList.size());
+        student = new Student("Student");
+        student2 = new Student("Student 2");
+        computerStudent = new ComputerStudent(configuration);
+        controller = new Controller();
         controller.setWordList(wordList);
         controller.setRandom(random);
         controller.setView(view);
@@ -147,6 +151,31 @@ public class ControllerTest {
     }
     
     @Test
+    public void computerStudentSolveAfter2Batches() {
+        random.setPuzzles("PIE");
+        computerStudent.setMaxSearchBatchCount(2);
+        controller.clearStudents();
+        controller.addStudent(computerStudent);
+        controller.addStudent(student);
+        random.setStartingStudent(0);
+        controller.start();
+        Task searchTask = view.getSearchTask();
+        Puzzle puzzle = view.getPuzzle();
+
+        searchTask.run();
+        String solutionAfterSearch1 = puzzle.getSolution();
+        boolean isScheduledAfterSearch1 = searchTask.isScheduled();
+        searchTask.run();
+        String solutionAfterSearch2 = puzzle.getSolution();
+        boolean isScheduledAfterSearch2 = searchTask.isScheduled();
+        
+        assertThat("solution1", solutionAfterSearch1, nullValue());
+        assertThat("solution2", solutionAfterSearch2, is("PIECE"));
+        assertThat("is scheduled 1", isScheduledAfterSearch1, is(true));
+        assertThat("is scheduled 2", isScheduledAfterSearch2, is(false));
+    }
+    
+    @Test
     public void startSecondPuzzle() {
         random.setStartingStudent(0);
         Student expectedStudent = student2;
@@ -199,6 +228,20 @@ public class ControllerTest {
                 view.getRefreshCount(), 
                 is(startRefreshCount+1));
         assertThat("score", student.getScore(), is(1));
+    }
+    
+    @Test
+    public void noResponseFromActiveStudent() {
+        controller.clearStudents();
+        controller.addStudent(computerStudent);
+        controller.addStudent(student);
+        random.setStartingStudent(1);
+        startPuzzle.setSolution("");
+
+        controller.solve();
+        
+        Focus focus = view.getCurrentFocus();
+        assertThat("focus", focus, is(Focus.Result));
     }
     
     @Test
