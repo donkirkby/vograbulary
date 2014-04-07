@@ -13,8 +13,8 @@ public class WordResultTest {
     }
 
     @Test
-    public void earlier() {
-        assertThat(WordResult.EARLIER.toString(), is("earlier (+2)"));
+    public void skipped() {
+        assertThat(WordResult.SKIPPED.toString(), is("skipped (+1)"));
     }
 
     @Test

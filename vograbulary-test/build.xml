@@ -73,7 +73,9 @@
         <mkdir dir="${junit.output.dir}"/>
         <junit fork="yes" printsummary="withOutAndErr" haltonfailure="on">
             <formatter type="xml"/>
+            <test name="com.github.donkirkby.vograbulary.ultraghost.ComputerStudentTest" todir="${junit.output.dir}"/>
             <test name="com.github.donkirkby.vograbulary.ultraghost.ControllerTest" todir="${junit.output.dir}"/>
+            <test name="com.github.donkirkby.vograbulary.ultraghost.PuzzleTest" todir="${junit.output.dir}"/>
             <test name="com.github.donkirkby.vograbulary.ultraghost.UltraghostRandomTest" todir="${junit.output.dir}"/>
             <test name="com.github.donkirkby.vograbulary.ultraghost.WordListChallengeTest" todir="${junit.output.dir}"/>
             <test name="com.github.donkirkby.vograbulary.ultraghost.WordListMatchTest" todir="${junit.output.dir}"/>
