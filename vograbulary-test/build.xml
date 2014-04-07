@@ -25,6 +25,9 @@
         <path refid="vograbulary.classpath"/>
         <pathelement location="libs/mockito-all-1.9.5.jar"/>
         <pathelement location="${vograbulary.location}/libs/gdx-tools.jar"/>
+        <pathelement location="libs/hamcrest-library-1.3.jar"/>
+        <pathelement location="libs/hamcrest-core-1.3.jar"/>
+        <pathelement location="${vograbulary.location}/libs/gdx.jar"/>
     </path>
     <target name="init">
         <mkdir dir="bin"/>
@@ -75,6 +78,7 @@
             <formatter type="xml"/>
             <test name="com.github.donkirkby.vograbulary.ultraghost.ComputerStudentTest" todir="${junit.output.dir}"/>
             <test name="com.github.donkirkby.vograbulary.ultraghost.ControllerTest" todir="${junit.output.dir}"/>
+            <test name="com.github.donkirkby.vograbulary.ultraghost.MatchTest" todir="${junit.output.dir}"/>
             <test name="com.github.donkirkby.vograbulary.ultraghost.PuzzleTest" todir="${junit.output.dir}"/>
             <test name="com.github.donkirkby.vograbulary.ultraghost.UltraghostRandomTest" todir="${junit.output.dir}"/>
             <test name="com.github.donkirkby.vograbulary.ultraghost.WordListChallengeTest" todir="${junit.output.dir}"/>
@@ -90,39 +94,55 @@
             <classpath refid="vograbulary-test.classpath"/>
         </java>
     </target>
-    <target name="UltraghostSuite">
+    <target name="Controller2Test">
         <mkdir dir="${junit.output.dir}"/>
         <junit fork="yes" printsummary="withOutAndErr">
             <formatter type="xml"/>
-            <test name="com.github.donkirkby.vograbulary.ultraghost.UltraghostSuite" todir="${junit.output.dir}"/>
+            <test name="com.github.donkirkby.vograbulary.ultraghost.ControllerTest" todir="${junit.output.dir}"/>
             <classpath refid="vograbulary-test.classpath"/>
         </junit>
     </target>
-    <target name="WordListSolutionTest.getParameters">
+    <target name="ControllerTest.humanSkip">
         <mkdir dir="${junit.output.dir}"/>
         <junit fork="yes" printsummary="withOutAndErr">
             <formatter type="xml"/>
-            <test name="com.github.donkirkby.vograbulary.ultraghost.WordListSolutionTest" todir="${junit.output.dir}"/>
+            <test name="com.github.donkirkby.vograbulary.ultraghost.ControllerTest" todir="${junit.output.dir}"/>
             <classpath refid="vograbulary-test.classpath"/>
         </junit>
     </target>
-    <target name="WordListChallengeTest">
+    <target name="ControllerTest.createSearchTaskCancelsAfterLastWord">
         <mkdir dir="${junit.output.dir}"/>
         <junit fork="yes" printsummary="withOutAndErr">
             <formatter type="xml"/>
-            <test name="com.github.donkirkby.vograbulary.ultraghost.WordListChallengeTest" todir="${junit.output.dir}"/>
+            <test name="com.github.donkirkby.vograbulary.ultraghost.ControllerTest" todir="${junit.output.dir}"/>
             <classpath refid="vograbulary-test.classpath"/>
         </junit>
     </target>
-    <target name="WordListSolutionTest">
+    <target name="MatchTest">
         <mkdir dir="${junit.output.dir}"/>
         <junit fork="yes" printsummary="withOutAndErr">
             <formatter type="xml"/>
-            <test name="com.github.donkirkby.vograbulary.ultraghost.WordListSolutionTest" todir="${junit.output.dir}"/>
+            <test name="com.github.donkirkby.vograbulary.ultraghost.MatchTest" todir="${junit.output.dir}"/>
+            <classpath refid="vograbulary-test.classpath"/>
+        </junit>
+    </target>
+    <target name="ControllerTest.solveWithHumanOwnerAgainstComputer">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="com.github.donkirkby.vograbulary.ultraghost.ControllerTest" todir="${junit.output.dir}"/>
             <classpath refid="vograbulary-test.classpath"/>
         </junit>
     </target>
     <target name="ControllerTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="com.github.donkirkby.vograbulary.ultraghost.ControllerTest" todir="${junit.output.dir}"/>
+            <classpath refid="vograbulary-test.classpath"/>
+        </junit>
+    </target>
+    <target name="ControllerTest.start">
         <mkdir dir="${junit.output.dir}"/>
         <junit fork="yes" printsummary="withOutAndErr">
             <formatter type="xml"/>
@@ -138,11 +158,19 @@
             <classpath refid="vograbulary-test.classpath"/>
         </junit>
     </target>
-    <target name="UltraghostRandomTest">
+    <target name="ComputerStudentTest">
         <mkdir dir="${junit.output.dir}"/>
         <junit fork="yes" printsummary="withOutAndErr">
             <formatter type="xml"/>
-            <test name="com.github.donkirkby.vograbulary.ultraghost.UltraghostRandomTest" todir="${junit.output.dir}"/>
+            <test name="com.github.donkirkby.vograbulary.ultraghost.ComputerStudentTest" todir="${junit.output.dir}"/>
+            <classpath refid="vograbulary-test.classpath"/>
+        </junit>
+    </target>
+    <target name="PuzzleTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="com.github.donkirkby.vograbulary.ultraghost.PuzzleTest" todir="${junit.output.dir}"/>
             <classpath refid="vograbulary-test.classpath"/>
         </junit>
     </target>

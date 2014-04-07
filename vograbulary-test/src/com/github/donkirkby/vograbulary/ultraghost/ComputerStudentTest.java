@@ -84,7 +84,22 @@ public class ComputerStudentTest {
     }
     
     @Test
-    public void vocabularySize() {
+    public void ignoreWorseWord() {
+        wordList = new WordList();
+        wordList.read(new StringReader("PIECE\nPRICE"));
+        student.setWordList(wordList);
+        student.setMaxSearchBatchCount(1);
+        
+        boolean isActiveStudent = true;
+        student.startSolving("PIE", isActiveStudent);
+        
+        student.runSearchBatch();
+        
+        assertThat("solution", solution, is("PIECE"));
+    }
+    
+    @Test
+    public void vocabularySizeNoMatch() {
         configuration.setVocabularySize(1);
         
         boolean isActiveStudent = true;
@@ -93,6 +108,18 @@ public class ComputerStudentTest {
         boolean isFinished = student.runSearchBatch();
         
         assertThat("finished", isFinished, is(true));
+    }
+    
+    @Test
+    public void vocabularySizeMatch() {
+        configuration.setVocabularySize(1);
+        
+        boolean isActiveStudent = true;
+        student.startSolving("PIE", isActiveStudent);
+        
+        student.runSearchBatch();
+        
+        assertThat("solution", solution, is("PRICE"));
     }
     
     @Test

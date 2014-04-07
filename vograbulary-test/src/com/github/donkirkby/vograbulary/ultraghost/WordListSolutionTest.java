@@ -33,6 +33,7 @@ public class WordListSolutionTest {
                {"PIE", "PIECE", WordResult.VALID},
                {"PIE", "piece", WordResult.VALID},
                {"PIE", "ripe", WordResult.NOT_A_MATCH},
+               {"PIE", null, WordResult.SKIPPED},
                {"PIE", "", WordResult.SKIPPED} });
    }
    

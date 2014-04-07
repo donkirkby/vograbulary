@@ -6,7 +6,7 @@ import java.io.StringWriter;
 public class Match {
     private UltraghostRandom random = new UltraghostRandom();
     private Student[] students;
-    private int studentIndex = -1;
+    private int studentIndex = Integer.MIN_VALUE;
     private Puzzle puzzle;
 
     public Match(int matchScore, Student... students) {

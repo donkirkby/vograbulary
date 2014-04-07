@@ -98,9 +98,13 @@ public class Controller implements StudentListener {
     }
 
     public void start() {
+        //stopJesting
+        float intervalSeconds = 0.01f;
+        int matchScore = 21;
+        //resumeJesting
         if (match == null) {
             match = new Match(
-                    21, 
+                    matchScore, 
                     students.toArray(new Student[students.size()]));
             match.setRandom(random);
         }
@@ -111,9 +115,6 @@ public class Controller implements StudentListener {
                     puzzle.getLetters(), 
                     student == puzzle.getOwner());
         }
-        //stopJesting
-        float intervalSeconds = 0.01f;
-        //resumeJesting
         float delaySeconds = intervalSeconds;
         searchTask = new SearchTask();
         view.schedule(searchTask, delaySeconds, intervalSeconds);
