@@ -1,6 +1,9 @@
 package com.github.donkirkby.vograbulary.ultraghost;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -96,16 +99,22 @@ public class View {
                 app.showMenu();
             }
         });
-//        table.addListener(new InputListener() {
-//            @Override
-//            public boolean keyUp(InputEvent event, int keycode) {
-//                if (keycode == Input.Keys.ENTER) {
-//                    controller.next();
-//                    return true;
-//                }
-//                return false;
-//            }
-//        });
+        table.addListener(new InputListener() {
+            @Override
+            public boolean keyUp(InputEvent event, int keycode) {
+                if (keycode == Input.Keys.ENTER) {
+                    ChangeListener.ChangeEvent changeEvent = 
+                            new ChangeListener.ChangeEvent();
+                    for (TextButton button : focusButtons) {
+                        if (button.isVisible()) {
+                            button.fire(changeEvent);
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+        });
         // On some platforms, setting the focus in an enter key handler is
         // not compatible with the default focus traversal. Disable it.
         solution.setFocusTraversal(false);
