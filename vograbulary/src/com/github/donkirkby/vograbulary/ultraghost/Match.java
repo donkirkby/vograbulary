@@ -5,11 +5,13 @@ import java.io.StringWriter;
 
 public class Match {
     private UltraghostRandom random = new UltraghostRandom();
+    private int matchScore;
     private Student[] students;
     private int studentIndex = Integer.MIN_VALUE;
     private Puzzle puzzle;
 
     public Match(int matchScore, Student... students) {
+        this.matchScore = matchScore;
         this.students = students;
     }
     
@@ -60,5 +62,28 @@ public class Match {
     
     public void setPuzzle(Puzzle puzzle) {
         this.puzzle = puzzle;
+    }
+
+    public Student getWinner() {
+        Student bestStudent = null;
+        int bestScore = Integer.MIN_VALUE;
+        int scoreCount = 0;
+        boolean isTie = false;
+        for (Student student : students) {
+            if (bestStudent == null) {
+                scoreCount = student.getScoreCount();
+            }
+            else if (student.getScoreCount() != scoreCount) {
+                return null;
+            }
+            if (student.getScore() > bestScore) {
+                bestStudent = student;
+                bestScore = student.getScore();
+            }
+            else {
+                isTie = student.getScore() == bestScore;
+            }
+        }
+        return !isTie && bestScore >= matchScore ? bestStudent : null;
     }
 }

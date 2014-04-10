@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class MatchTest {
-    private static final int MATCH_SCORE = 1;
+    private static final int MATCH_SCORE = 3;
     private Match match;
     private Student student;
     private ComputerStudent computer;
@@ -86,5 +86,54 @@ public class MatchTest {
         String summary = match.getSummary();
         
         assertThat("summary", summary, is(expectedSummary));
+    }
+    
+    @Test
+    public void winnerNotSetForLowScores() {
+        student.addScore(MATCH_SCORE - 1);
+        computer.addScore(MATCH_SCORE - 2);
+        
+        Student winner = match.getWinner();
+        
+        assertThat("winner", winner, nullValue());
+    }
+    
+    @Test
+    public void winnerSet() {
+        student.addScore(MATCH_SCORE);
+        computer.addScore(MATCH_SCORE - 1);
+        
+        Student winner = match.getWinner();
+        
+        assertThat("winner", winner, is(student));
+    }
+    
+    @Test
+    public void winnerSecondStudent() {
+        student.addScore(MATCH_SCORE - 1);
+        computer.addScore(MATCH_SCORE);
+        
+        Student winner = match.getWinner();
+        
+        assertThat("winner", winner, is((Student)computer));
+    }
+    
+    @Test
+    public void winnerNotSetOnUnevenTurnCount() {
+        student.addScore(MATCH_SCORE);
+        
+        Student winner = match.getWinner();
+        
+        assertThat("winner", winner, nullValue());
+    }
+    
+    @Test
+    public void winnerNotSetOnTie() {
+        student.addScore(MATCH_SCORE);
+        computer.addScore(MATCH_SCORE);
+        
+        Student winner = match.getWinner();
+        
+        assertThat("winner", winner, nullValue());
     }
 }

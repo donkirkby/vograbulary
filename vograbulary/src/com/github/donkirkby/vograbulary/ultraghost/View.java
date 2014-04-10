@@ -276,6 +276,19 @@ public class View {
             // must be in unit tests, nothing to do.
             return;
         }
+        Student winner = match.getWinner();
+        scores.setText(match.getSummary());
+        if (winner != null) {
+            result.setText(winner.getName() + " wins");
+            studentName.setText(" ");
+            letters.setText(" ");
+            solution.setText(" ");
+            response.setText(" ");
+            for (TextButton button : focusButtons) {
+                button.setVisible(false);
+            }
+            return;
+        }
         Puzzle puzzle = match.getPuzzle();
         Student owner = puzzle.getOwner();
         studentName.setText(owner == null ? "" : owner.getName());
@@ -287,7 +300,6 @@ public class View {
                 puzzleResult.getScore() == 0 
                 ? "" 
                 : puzzleResult.toString());
-        scores.setText(match.getSummary());
     }
     
     private String blankForNull(Object o) {

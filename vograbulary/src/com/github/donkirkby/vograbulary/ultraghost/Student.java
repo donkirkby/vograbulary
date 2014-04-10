@@ -16,6 +16,7 @@ public class Student {
     private StudentListener listener;
     private String name;
     private int score;
+    private int scoreCount;
     private WordList wordList;
     
     public Student(String name) {
@@ -40,6 +41,7 @@ public class Student {
     
     public void addScore(int points) {
         score += points;
+        scoreCount++;
     }
     
     public int getScore() {
@@ -80,5 +82,9 @@ public class Student {
      */
     public boolean runSearchBatch() {
         return true;
+    }
+    
+    public int getScoreCount() {
+        return scoreCount;
     }
 }

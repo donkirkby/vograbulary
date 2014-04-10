@@ -18,6 +18,7 @@ import com.github.donkirkby.vograbulary.Configuration;
 import com.github.donkirkby.vograbulary.ultraghost.DummyView.Focus;
 
 public class ControllerTest {
+    private static final int MATCH_SCORE = 10;
     private Controller controller;
     private DummyRandom random;
     private Puzzle startPuzzle;
@@ -50,7 +51,7 @@ public class ControllerTest {
         controller.addStudent(student);
         controller.addStudent(student2);
         startPuzzle = new Puzzle("RPE", student, wordList);
-        Match match = new Match(10, student, student2);
+        Match match = new Match(MATCH_SCORE, student, student2);
         match.setPuzzle(startPuzzle);
         view.setMatch(match);
     }
