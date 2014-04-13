@@ -72,7 +72,7 @@ public class View {
         scores = new Label(" \n ", skin);
         table.add(scores).fillX();
         TextButton menuButton = new TextButton("Menu", skin);
-        table.add(menuButton).left();
+        table.add(menuButton).left().top();
         
         focusButtons = 
                 new TextButton[] {solveButton, respondButton, nextButton};
@@ -212,8 +212,13 @@ public class View {
      */
     public void focusSolution() {
         focusButton(solveButton);
-        solution.getStage().setKeyboardFocus(solution);
-        solution.getOnscreenKeyboard().show(true);
+        focusField(solution);
+    }
+
+    private void focusField(TextField field) {
+        field.getStage().setKeyboardFocus(field);
+        field.getOnscreenKeyboard().show(true);
+        field.selectAll();
     }
     
     /**
@@ -221,8 +226,7 @@ public class View {
      */
     public void focusResponse() {
         focusButton(respondButton);
-        response.getStage().setKeyboardFocus(response);
-        response.getOnscreenKeyboard().show(true);
+        focusField(response);
     }
     
     private void focusButton(TextButton target) {
@@ -286,18 +290,26 @@ public class View {
         Student owner = puzzle.getOwner();
         studentName.setText(owner == null ? "" : owner.getName());
         letters.setText(blankForNull(puzzle.getLetters()));
-        solution.setText(blankForNull(puzzle.getSolution()));
-        response.setText(blankForNull(puzzle.getResponse()));
-        hint.setText(blankForNull(puzzle.getHint()));
+        setFieldContents(solution, puzzle.getSolution());
+        setFieldContents(response, puzzle.getResponse());
+        hint.setText(blankForNull(puzzle.getHint()) + " ");
         WordResult puzzleResult = puzzle.getResult();
         result.setText(
-                puzzleResult.getScore() == 0 
+                puzzleResult == WordResult.UNKNOWN 
                 ? "" 
                 : puzzleResult.toString());
     }
+
+    private void setFieldContents(TextField field, String contents) {
+        if (field.getText() != contents) {
+            // Only set it when the value changes, otherwise the selection
+            // gets lost.
+            field.setText(blankForNull(contents));
+        }
+    }
     
     private String blankForNull(Object o) {
-        return o == null ? " " : o.toString();
+        return o == null ? "" : o.toString();
     }
     //resumeJesting
 }

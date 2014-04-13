@@ -122,13 +122,23 @@ public class Controller implements StudentListener {
 
     public void solve() {
         Puzzle puzzle = view.getPuzzle();
-        for (Student student : students) {
-            if (student != puzzle.getOwner()) {
-                student.prepareChallenge(puzzle.getSolution());
+        WordResult result = puzzle.getResult();
+        if (result == WordResult.NOT_A_MATCH || 
+                result == WordResult.NOT_A_WORD) {
+            view.focusSolution();
+        }
+        else {
+            for (Student student : students) {
+                if (student != puzzle.getOwner()) {
+                    student.prepareChallenge(puzzle.getSolution());
+                }
+            }
+            if (searchTask != null) {
+                searchTask.cancel();
             }
         }
-        if (searchTask != null) {
-            searchTask.cancel();
+        if (puzzle.getResponse() == null) {
+            view.refreshPuzzle();
         }
     }
 

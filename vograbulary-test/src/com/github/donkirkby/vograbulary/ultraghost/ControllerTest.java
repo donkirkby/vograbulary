@@ -211,6 +211,33 @@ public class ControllerTest {
     }
     
     @Test
+    public void solutionNotAMatch() {
+        startPuzzle.setSolution("pipe");
+        int startRefreshCount = view.getRefreshCount();
+
+        controller.solve();
+        
+        WordResult result = startPuzzle.getResult();
+        assertThat("result", result, is(WordResult.NOT_A_MATCH));
+        assertThat(
+                "refresh count", 
+                view.getRefreshCount(), 
+                is(startRefreshCount+1));
+        Focus focus = view.getCurrentFocus();
+        assertThat("focus", focus, is(Focus.Solution));
+    }
+    
+    @Test
+    public void solutionNotAWord() {
+        startPuzzle.setSolution("pixe");
+
+        controller.solve();
+        
+        Focus focus = view.getCurrentFocus();
+        assertThat("focus", focus, is(Focus.Solution));
+    }
+    
+    @Test
     public void solveWithHumanOwnerAgainstComputer() {
         controller.clearStudents();
         controller.addStudent(student);
