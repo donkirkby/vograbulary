@@ -135,6 +135,11 @@ public class Controller implements StudentListener {
     public void respond() {
         Puzzle puzzle = view.getPuzzle();
         puzzle.getOwner().addScore(puzzle.getResult().getScore());
+        String hint = wordList.findNextBetter(
+                puzzle.getLetters(), 
+                puzzle.getSolution(), 
+                puzzle.getResponse());
+        puzzle.setHint(hint == null ? null : "hint: " + hint);
         view.focusNextButton();
         view.refreshPuzzle();
     }

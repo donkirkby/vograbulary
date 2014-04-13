@@ -14,7 +14,9 @@ public enum WordResult {
     SKIPPED(1),
     WORD_FOUND(-1), // Failed skip
     IMPROVEMENT_NOT_A_WORD(3, "not a word"), 
-    IMPROVED_SKIP_NOT_A_WORD(1, "not a word");
+    IMPROVEMENT_NOT_A_MATCH(3, "not a match"),
+    IMPROVED_SKIP_NOT_A_WORD(1, "not a word"),
+    IMPROVED_SKIP_NOT_A_MATCH(1, "not a match");
     //resumeJesting
     
     private int score;

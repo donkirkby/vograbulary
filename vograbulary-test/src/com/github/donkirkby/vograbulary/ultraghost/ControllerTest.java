@@ -309,4 +309,24 @@ public class ControllerTest {
         
         assertThat("student's word list", student.getWordList(), is(newWordList));
     }
+    
+    @Test
+    public void hint() {
+        startPuzzle.setSolution("");
+        startPuzzle.setResponse("");
+        
+        controller.respond();
+        
+        assertThat("hint", startPuzzle.getHint(), is("hint: ROPE"));
+    }
+    
+    @Test
+    public void noHint() {
+        startPuzzle.setSolution("rope");
+        startPuzzle.setResponse("");
+        
+        controller.respond();
+        
+        assertThat("hint", startPuzzle.getHint(), nullValue());
+    }
 }

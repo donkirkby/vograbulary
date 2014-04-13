@@ -10,6 +10,7 @@ Contributing
 ============
 
 Vograbulary is built using Eclipse. Install the tools listed under [libgdx prerequisites][tools], clone this project from git, and then import the project files into Eclipse.
+To edit the graphics files, edit the contents of vograbulary-test/assets-raw, and then run vograbulary-test/src/com.github.donkirkby.vograbulary.AssetPacker. To change the font, follow the instructions for running [Hiero][hiero]. Launch Hiero, open the vograbulary-test/assets-raw/default.hiero settings file, and then save the font file over vograbulary-android/assets/data/ui/default.fnt. That will also generate default.png, which you need to move back to vograbulary-test/assets-raw/skin/default.png. Finally, run the AssetPacker again.
 
 License
 =======
@@ -27,3 +28,4 @@ Vograbulary is released under the MIT license.
 [mockito]: https://code.google.com/p/mockito/
 [libgdx]: http://libgdx.badlogicgames.com/
 [nltk]: http://nltk.org/
+[hiero]: https://github.com/libgdx/libgdx/wiki/Hiero

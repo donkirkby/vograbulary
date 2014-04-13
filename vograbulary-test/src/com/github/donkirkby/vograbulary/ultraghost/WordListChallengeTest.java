@@ -38,12 +38,15 @@ public class WordListChallengeTest {
                {"PIE", "piece", "pipe", WordResult.SHORTER},
                {"PIE", "price", "piece", WordResult.EARLIER},
                {"PIE", "piece", "pize", WordResult.IMPROVEMENT_NOT_A_WORD},
+               {"PIE", "piece", "rope", WordResult.IMPROVEMENT_NOT_A_MATCH},
                {"PIE", "pine", "piece", WordResult.LONGER},
                {"MIE", "mime", "mine", WordResult.LATER},
                {"PIE", null, "pipe", WordResult.WORD_FOUND},
                {"PIE", "", "pipe", WordResult.WORD_FOUND},
                {"PIE", null, "pize", WordResult.IMPROVED_SKIP_NOT_A_WORD},
                {"PIE", "", "pize", WordResult.IMPROVED_SKIP_NOT_A_WORD},
+               {"PIE", null, "rope", WordResult.IMPROVED_SKIP_NOT_A_MATCH},
+               {"PIE", "", "rope", WordResult.IMPROVED_SKIP_NOT_A_MATCH},
                {"PIE", "", "", WordResult.SKIPPED} });
    }
    

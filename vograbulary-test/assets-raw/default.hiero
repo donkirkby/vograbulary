@@ -1,4 +1,5 @@
-font.size=64
+font.name=Monospaced
+font.size=50
 font.bold=false
 font.italic=false
 
@@ -12,4 +13,13 @@ pad.advance.y=0
 glyph.native.rendering=false
 glyph.page.width=512
 glyph.page.height=512
+glyph.text=ABCDEFGHIJKLMNOPQRSTUVWXYZ\nabcdefghijklmnopqrstuvwxyz\n1234567890\n"!`?'.,;:()[]{}<>|/@\^$-%+=#_&~*
+
+effect.class=com.badlogic.gdx.tools.hiero.unicodefont.effects.ColorEffect
+effect.Color=cccccc
+
+effect.class=com.badlogic.gdx.tools.hiero.unicodefont.effects.OutlineEffect
+effect.Color=000000
+effect.Width=2.0
+effect.Join=2
 

@@ -9,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
@@ -25,6 +24,7 @@ public class View {
     private String solutionWord;
     private TextField response;
     private String responseWord;
+    private Label hint;
     private Label result;
     private Label scores;
     private TextButton solveButton;
@@ -45,8 +45,6 @@ public class View {
         
         letters = new Label(" ", skin);
         table.add(letters);
-        TextButton menuButton = new TextButton("Menu", skin);
-        table.add(menuButton).left();
         table.row();
         
         solution = new TextField("", skin);
@@ -67,8 +65,14 @@ public class View {
         table.add(nextButton).left();
         table.row();
         
+        hint = new Label(" ", skin);
+        table.add(hint).fillX();
+        table.row();
+        
         scores = new Label(" \n ", skin);
         table.add(scores).fillX();
+        TextButton menuButton = new TextButton("Menu", skin);
+        table.add(menuButton).left();
         
         focusButtons = 
                 new TextButton[] {solveButton, respondButton, nextButton};
@@ -120,18 +124,6 @@ public class View {
         solution.setFocusTraversal(false);
         response.setFocusTraversal(false);
         
-        solution.setTextFieldListener(new TextFieldListener() {
-            @Override
-            public void keyTyped(TextField textField, char key) {
-                solutionWord = solution.getText();
-            }
-        });
-        response.setTextFieldListener(new TextFieldListener() {
-            @Override
-            public void keyTyped(TextField textField, char key) {
-                responseWord = response.getText();
-            }
-        });
         focusNextButton();
     }
     
@@ -284,6 +276,7 @@ public class View {
             letters.setText(" ");
             solution.setText(" ");
             response.setText(" ");
+            hint.setText(" ");
             for (TextButton button : focusButtons) {
                 button.setVisible(false);
             }
@@ -295,6 +288,7 @@ public class View {
         letters.setText(blankForNull(puzzle.getLetters()));
         solution.setText(blankForNull(puzzle.getSolution()));
         response.setText(blankForNull(puzzle.getResponse()));
+        hint.setText(blankForNull(puzzle.getHint()));
         WordResult puzzleResult = puzzle.getResult();
         result.setText(
                 puzzleResult.getScore() == 0 
@@ -303,7 +297,7 @@ public class View {
     }
     
     private String blankForNull(Object o) {
-        return o == null ? "" : o.toString();
+        return o == null ? " " : o.toString();
     }
     //resumeJesting
 }
