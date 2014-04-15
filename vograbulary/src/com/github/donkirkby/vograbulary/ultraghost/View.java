@@ -16,14 +16,11 @@ import com.github.donkirkby.vograbulary.VograbularyApp;
 
 public class View {
     //stopJesting
-    private static final String NO_ANSWER = "None";
     private Match match;
     private Label letters;
     private Label studentName;
     private TextField solution;
-    private String solutionWord;
     private TextField response;
-    private String responseWord;
     private Label hint;
     private Label result;
     private Label scores;
@@ -128,11 +125,13 @@ public class View {
     }
     
     public void clear() {
-        setPuzzle(" ");
-        setSolution(" ");
-        setChallenge("");
-        setResult("");
-        setScores("");
+        studentName.setText(" ");
+        letters.setText(" ");
+        solution.setText("");
+        response.setText("");
+        hint.setText(" ");
+        result.setText("");
+        scores.setText("");
     }
 
     /**
@@ -142,71 +141,6 @@ public class View {
         Timer.schedule(task, delaySeconds, intervalSeconds);
     }
 
-    /**
-     * Display the puzzle letters.
-     */
-    public void setPuzzle(String letters) {
-        this.letters.setText(letters);
-    }
-
-    /**
-     * Display the active student.
-     */
-    public void setActiveStudent(String name) {
-        studentName.setText(name);
-    }
-    
-    /**
-     * Display a solution to the puzzle.
-     */
-    public void setSolution(String solution) {
-        solutionWord = solution;
-        this.solution.setText(solution != null ? solution : NO_ANSWER);
-    }
-    
-    /**
-     * Get the entered solution to the puzzle.
-     */
-    public String getSolution() {
-        return solutionWord;
-    }
-    
-    /**
-     * Display a challenge to the solution.
-     */
-    public void setChallenge(String challenge) {
-        responseWord = challenge;
-        this.response.setText(challenge != null ? challenge : NO_ANSWER);
-    }
- 
-    /**
-     * Get the entered challenge.
-     */
-    public String getChallenge() {
-        return responseWord;
-    }
-    
-    /**
-     * Display the result of a solution or challenge.
-     */
-    public void setResult(String result) {
-        this.result.setText(result);
-    }
-    
-    /**
-     * Get the displayed result.
-     */
-    public String getResult() {
-        return result.getText().toString();
-    }
-    
-    /**
-     * Display a list of scores, on multiple lines.
-     */
-    public void setScores(String scores) {
-        this.scores.setText(scores);
-    }
-    
     /**
      * Set the display's focus in the solution field.
      */

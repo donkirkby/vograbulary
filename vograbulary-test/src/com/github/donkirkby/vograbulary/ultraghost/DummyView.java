@@ -4,12 +4,6 @@ import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 
 public class DummyView extends View {
-    private String puzzle = "";
-    private String activeStudent = "";
-    private String solution = "";
-    private String challenge = "";
-    private String result = "";
-    private String scores = "";
     private Task searchTask;
     private Focus currentFocus = Focus.Unknown;
     private int refreshCount;
@@ -27,63 +21,6 @@ public class DummyView extends View {
     
     public Task getSearchTask() {
         return searchTask;
-    }
-
-    @Override
-    public void setPuzzle(String letters) {
-        puzzle = letters;
-    }
-    
-    public String getPuzzleLetters() {
-        return puzzle;
-    }
-
-    @Override
-    public void setActiveStudent(String name) {
-        activeStudent = name;
-    }
-    
-    public String getActiveStudent() {
-        return activeStudent;
-    }
-
-    @Override
-    public void setSolution(String solution) {
-        this.solution = solution;
-    }
-
-    @Override
-    public String getSolution() {
-        return solution;
-    }
-    
-    @Override
-    public void setChallenge(String challenge) {
-        this.challenge = challenge;
-    }
-    
-    @Override
-    public String getChallenge() {
-        return challenge;
-    }
-
-    @Override
-    public void setResult(String result) {
-        this.result = result;
-    }
-    
-    @Override
-    public String getResult() {
-        return result;
-    }
-    
-    @Override
-    public void setScores(String scores) {
-        this.scores = scores;
-    }
-    
-    public String getScores() {
-        return scores;
     }
     
     @Override

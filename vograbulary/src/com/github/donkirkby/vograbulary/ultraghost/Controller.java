@@ -33,7 +33,6 @@ public class Controller implements StudentListener {
     public void clearStudents() {
         students.clear();
         match = null;
-        view.setActiveStudent(" ");
         view.focusNextButton();
     }
     
