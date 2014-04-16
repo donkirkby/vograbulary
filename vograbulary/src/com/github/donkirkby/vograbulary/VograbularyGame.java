@@ -1,60 +1,47 @@
 package com.github.donkirkby.vograbulary;
 
-import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
-public class VograbularyGame implements ApplicationListener {
-	private Stage stage;
-	private TextButton button;
-	
+public class VograbularyGame extends Game {
+    private MainScreen mainScreen;
+    private PreferencesScreen preferencesScreen;
+    private VograbularyPreferences preferences;
+    private Skin skin;
+    
 	@Override
-	public void create() {		
-        Skin skin = new Skin(Gdx.files.internal("data/ui/uiskin.json"));
-        
-        stage = new Stage();
-        button = new TextButton("Click Me!", skin);
-        stage.addActor(button);
-        button.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                button.setText("Clicked!");
-            }
-        });
-        Gdx.input.setInputProcessor(stage);
+	public void create() {
+        skin = new Skin(Gdx.files.internal("data/ui/uiskin.json"));
+	    mainScreen = new MainScreen(this);
+	    preferencesScreen = new PreferencesScreen(this);
+	    setScreen(mainScreen);
+	}
+	
+	public Skin getSkin() {
+        return skin;
+    }
+	
+	public void showPreferences() {
+	    setScreen(preferencesScreen);
+	}
+	
+	public VograbularyPreferences getPreferences() {
+	    if (preferences == null) {
+            preferences = new VograbularyPreferences(
+                    Gdx.app.getPreferences("vograbulary"));
+        }
+        return preferences;
+    }
+	
+	public void showMain() {
+	    setScreen(mainScreen);
 	}
 
 	@Override
 	public void dispose() {
-	    stage.dispose();
-	}
-
-	@Override
-	public void render() {		
-		Gdx.gl.glClearColor(1, 1, 1, 1);
-		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-		
-        stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
-        stage.draw();
-	}
-
-	@Override
-	public void resize(int width, int height) {
-        button.setPosition(
-                (width-button.getWidth())/2, 
-                (height-button.getHeight())/2);
-	}
-
-	@Override
-	public void pause() {
-	}
-
-	@Override
-	public void resume() {
+	    skin.dispose();
+	    mainScreen.dispose();
+	    preferencesScreen.dispose();
 	}
 }
