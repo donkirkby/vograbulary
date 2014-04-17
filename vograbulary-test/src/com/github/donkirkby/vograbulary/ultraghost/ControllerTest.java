@@ -14,7 +14,7 @@ import org.junit.rules.ExpectedException;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Timer.Task;
-import com.github.donkirkby.vograbulary.Configuration;
+import com.github.donkirkby.vograbulary.VograbularyPreferences;
 import com.github.donkirkby.vograbulary.ultraghost.DummyView.Focus;
 
 public class ControllerTest {
@@ -26,7 +26,7 @@ public class ControllerTest {
     private Student student;
     private Student student2;
     private ComputerStudent computerStudent;
-    private Configuration configuration;
+    private VograbularyPreferences preferences;
     
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -39,11 +39,13 @@ public class ControllerTest {
         view = new DummyView();
         WordList wordList = new WordList();
         wordList.read(new StringReader("ROPE\nPIECE\nPIPE"));
-        configuration = new Configuration();
-        configuration.setVocabularySize(wordList.size());
+        
+        preferences = mock(VograbularyPreferences.class);
+        when(preferences.getComputerStudentVocabularySize()).thenReturn(
+                wordList.size());
         student = new Student("Student");
         student2 = new Student("Student 2");
-        computerStudent = new ComputerStudent(configuration);
+        computerStudent = new ComputerStudent(preferences);
         controller = new Controller();
         controller.setWordList(wordList);
         controller.setRandom(random);

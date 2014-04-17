@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
@@ -17,6 +18,8 @@ public class MenuScreen implements Screen {
     //stopJesting
     private VograbularyApp app;
     private Stage stage;
+    private TextField student1Field;
+    private TextField student2Field;
     private Label skillLabel;
     private Slider vocabularySize;
 
@@ -30,21 +33,27 @@ public class MenuScreen implements Screen {
         table.align(Align.top);
         Skin skin = app.getSkin();
         TextButton humanButton = new TextButton("Human vs. Human", skin);
-        table.add(humanButton).row();
+        table.add(humanButton).colspan(2).row();
         TextButton computerButton = new TextButton("Human vs. Computer", skin);
-        table.add(computerButton).row();
+        table.add(computerButton).colspan(2).row();
+        
+        table.add(new Label("Student 1:", skin));
+        String blankName = "          ";
+        student1Field = new TextField(blankName, skin);
+        table.add(student1Field).fillX().row();
+        table.add(new Label("Student 2:", skin));
+        student2Field = new TextField(blankName, skin);
+        table.add(student2Field).fillX().row();
         skillLabel = new Label("", skin);
-        int defaultVocabularySize = 5000;
-        setVocabularySize(defaultVocabularySize);
-        table.add(skillLabel).row();
+        table.add(skillLabel).colspan(2).row();
         boolean isVertical = false;
         vocabularySize = new Slider(1, 65000, 100, isVertical, skin);
-        vocabularySize.setValue(defaultVocabularySize);
-        table.add(vocabularySize).fillX();
+        table.add(vocabularySize).colspan(2).fillX();
         
         computerButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                savePreferences();
                 boolean isComputerOpponent = true;
                 app.startUltraghost(isComputerOpponent);
             }
@@ -53,6 +62,7 @@ public class MenuScreen implements Screen {
         humanButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                savePreferences();
                 boolean isComputerOpponent = false;
                 app.startUltraghost(isComputerOpponent);
             }
@@ -81,6 +91,13 @@ public class MenuScreen implements Screen {
 
     @Override
     public void show() {
+        VograbularyPreferences preferences = app.getPreferences();
+        student1Field.setText(preferences.getStudent1Name());
+        student2Field.setText(preferences.getStudent2Name());
+        int currentVocabularySize = 
+                preferences.getComputerStudentVocabularySize();
+        vocabularySize.setValue(currentVocabularySize);
+        setVocabularySize(currentVocabularySize);
         Gdx.input.setInputProcessor(stage);
     }
 
@@ -102,7 +119,14 @@ public class MenuScreen implements Screen {
 
     private void setVocabularySize(int skill) {
         skillLabel.setText("Skill " + skill);
-        app.getConfiguration().setVocabularySize(skill);
+    }
+
+    private void savePreferences() {
+        VograbularyPreferences preferences = app.getPreferences();
+        preferences.setStudent1Name(student1Field.getText());
+        preferences.setStudent2Name(student2Field.getText());
+        preferences.setComputerStudentVocabularySize(
+                (int)vocabularySize.getValue());
     }
     //resumeJesting
 }

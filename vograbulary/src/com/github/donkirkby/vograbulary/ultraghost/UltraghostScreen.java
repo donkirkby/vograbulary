@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.github.donkirkby.vograbulary.VograbularyApp;
+import com.github.donkirkby.vograbulary.VograbularyPreferences;
 
 public class UltraghostScreen implements Screen {
     //stopJesting
@@ -53,15 +54,20 @@ public class UltraghostScreen implements Screen {
     public void show() {
         view.clear();
         ComputerStudent computerStudent = 
-                new ComputerStudent(app.getConfiguration());
+                new ComputerStudent(app.getPreferences());
         computerStudent.setSearchBatchSize(30);
         computerStudent.setMaxSearchBatchCount(1000); // 10s
+        VograbularyPreferences preferences = app.getPreferences();
+        String student1Name = 
+                isComputerOpponent 
+                ? "You"
+                : preferences.getStudent1Name();
         ultraghostController.clearStudents();
-        ultraghostController.addStudent(new Student("Don"));
+        ultraghostController.addStudent(new Student(student1Name));
         ultraghostController.addStudent(
                 isComputerOpponent
                 ? computerStudent
-                : new Student("Sheila"));
+                : new Student(preferences.getStudent2Name()));
 
         Gdx.input.setInputProcessor(stage);
     }

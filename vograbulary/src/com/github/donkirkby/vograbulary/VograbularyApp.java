@@ -9,7 +9,7 @@ import com.github.donkirkby.vograbulary.ultraghost.UltraghostScreen;
 public class VograbularyApp extends Game {
     private UltraghostScreen ultraghostScreen;
     private MenuScreen menuScreen;
-    private Configuration configuration = new Configuration();
+    private VograbularyPreferences preferences;
 	private Skin skin;
 	
 	@Override
@@ -33,14 +33,18 @@ public class VograbularyApp extends Game {
 	    setScreen(menuScreen);
 	}
 	
-	@Override
+    public VograbularyPreferences getPreferences() {
+        if (preferences == null) {
+            preferences = new VograbularyPreferences(
+                    Gdx.app.getPreferences("vograbulary"));
+        }
+        return preferences;
+    }
+
+    @Override
 	public void dispose() {
 	    menuScreen.dispose();
 	    ultraghostScreen.dispose();
 	}
-
-	public Configuration getConfiguration() {
-        return configuration;
-    }
 }
 //resumeJesting

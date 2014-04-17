@@ -2,7 +2,7 @@ package com.github.donkirkby.vograbulary.ultraghost;
 
 import java.util.Iterator;
 
-import com.github.donkirkby.vograbulary.Configuration;
+import com.github.donkirkby.vograbulary.VograbularyPreferences;
 
 public class ComputerStudent extends Student {
     private int searchBatchSize = 1;
@@ -13,15 +13,11 @@ public class ComputerStudent extends Student {
     private String currentPuzzle;
     private String bestSolution;
     private Iterator<String> itr;
-    private Configuration configuration;
+    private VograbularyPreferences preferences;
     
-    public ComputerStudent() {
-        this(new Configuration());
-    }
-    
-    public ComputerStudent(Configuration configuration) {
+    public ComputerStudent(VograbularyPreferences preferences) {
         super("Computer");
-        this.configuration = configuration;
+        this.preferences = preferences;
     }
     
     public void setSearchBatchSize(int searchBatchSize) {
@@ -35,7 +31,8 @@ public class ComputerStudent extends Student {
     public void setMaxSearchBatchCount(int maxSearchBatchCount) {
         this.maxSearchBatchCount = maxSearchBatchCount;
         searchBatchSize = 
-                configuration.getVocabularySize() / maxSearchBatchCount;
+                preferences.getComputerStudentVocabularySize() 
+                / maxSearchBatchCount;
     }
     
     @Override
@@ -54,9 +51,11 @@ public class ComputerStudent extends Student {
     @Override
     public boolean runSearchBatch() {
         searchBatchCount++;
+        int vocabularySize = preferences.getComputerStudentVocabularySize();
         int wordCount = Math.min(
                 searchBatchSize, 
-                configuration.getVocabularySize() - searchedWordsCount);
+                vocabularySize 
+                - searchedWordsCount);
         for (int i = 0; i < wordCount && itr.hasNext(); i++) {
             String word = itr.next();
             checkWord(word);
@@ -64,7 +63,7 @@ public class ComputerStudent extends Student {
         searchedWordsCount += wordCount;
         if (searchBatchCount >= maxSearchBatchCount 
                 || ! itr.hasNext()
-                || searchedWordsCount >= configuration.getVocabularySize()) {
+                || searchedWordsCount >= vocabularySize) {
             if (isActiveStudent) {
                 getListener().submitSolution(
                         bestSolution == null

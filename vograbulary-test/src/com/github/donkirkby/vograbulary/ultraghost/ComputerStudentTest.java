@@ -3,13 +3,14 @@ package com.github.donkirkby.vograbulary.ultraghost;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.number.OrderingComparison.*;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import java.io.StringReader;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import com.github.donkirkby.vograbulary.Configuration;
+import com.github.donkirkby.vograbulary.VograbularyPreferences;
 
 public class ComputerStudentTest {
     private boolean isSolutionSet = false;
@@ -17,16 +18,18 @@ public class ComputerStudentTest {
     private ComputerStudent student;
     private WordList wordList;
     private FocusField focus;
-    private Configuration configuration;
+    private VograbularyPreferences preferences;
     
     private enum FocusField {Solution, Challenge};
     
     @Before
     public void setUp() {
-        configuration = new Configuration();
         wordList = new WordList();
         wordList.read(new StringReader("PRICE\nPIECE\nPIPE"));
-        student = new ComputerStudent(configuration);
+        preferences = mock(VograbularyPreferences.class);
+        when(preferences.getComputerStudentVocabularySize()).thenReturn(
+                Integer.MAX_VALUE);
+        student = new ComputerStudent(preferences);
         student.setWordList(wordList);
         student.setListener(new Student.StudentListener() {
             
@@ -100,7 +103,7 @@ public class ComputerStudentTest {
     
     @Test
     public void vocabularySizeNoMatch() {
-        configuration.setVocabularySize(1);
+        when(preferences.getComputerStudentVocabularySize()).thenReturn(1);
         
         boolean isActiveStudent = true;
         student.startSolving("AXR", isActiveStudent);
@@ -112,7 +115,7 @@ public class ComputerStudentTest {
     
     @Test
     public void vocabularySizeMatch() {
-        configuration.setVocabularySize(1);
+        when(preferences.getComputerStudentVocabularySize()).thenReturn(1);
         
         boolean isActiveStudent = true;
         student.startSolving("PIE", isActiveStudent);
@@ -128,7 +131,8 @@ public class ComputerStudentTest {
         int maxSearchBatchCount = 20;
         int expectedBatchSize = vocabularySize / maxSearchBatchCount;
         
-        configuration.setVocabularySize(vocabularySize);
+        when(preferences.getComputerStudentVocabularySize()).thenReturn(
+                vocabularySize);
         student.setMaxSearchBatchCount(maxSearchBatchCount);
         
         int batchSize = student.getSearchBatchSize();
@@ -137,7 +141,7 @@ public class ComputerStudentTest {
     
     @Test
     public void maxBatchCountInactiveStudent() {
-        configuration.setVocabularySize(2);
+        when(preferences.getComputerStudentVocabularySize()).thenReturn(2);
         student.setMaxSearchBatchCount(1);
         
         boolean isActiveStudent = false;

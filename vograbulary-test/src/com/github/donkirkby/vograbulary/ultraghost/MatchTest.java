@@ -2,11 +2,14 @@ package com.github.donkirkby.vograbulary.ultraghost;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import java.io.StringReader;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import com.github.donkirkby.vograbulary.VograbularyPreferences;
 
 public class MatchTest {
     private static final int MATCH_SCORE = 3;
@@ -19,7 +22,7 @@ public class MatchTest {
     @Before
     public void setUp() {
         student = new Student("Student");
-        computer = new ComputerStudent();
+        computer = new ComputerStudent(mock(VograbularyPreferences.class));
         wordList = new WordList();
         wordList.read(new StringReader("PIECE\nPIPE"));
         match = new Match(MATCH_SCORE, student, computer);
