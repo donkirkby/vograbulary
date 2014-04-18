@@ -97,6 +97,7 @@ public class View {
         menuButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                controller.cancelMatch();
                 app.showMenu();
             }
         });

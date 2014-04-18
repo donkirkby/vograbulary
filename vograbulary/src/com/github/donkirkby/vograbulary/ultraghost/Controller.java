@@ -156,4 +156,8 @@ public class Controller implements StudentListener {
     public Match getMatch() {
         return match;
     }
+
+    public void cancelMatch() {
+        searchTask.cancel();
+    }
 }

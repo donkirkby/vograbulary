@@ -75,13 +75,23 @@ public class ControllerTest {
     
     @Test
     public void searchTask() {
-        String expectedPuzzle = "PIE";
-        random.setPuzzles(expectedPuzzle);
-        
         controller.start();
         
         Task searchTask = view.getSearchTask();
         assertThat("search task", searchTask, notNullValue());
+    }
+    
+    @Test
+    public void cancelMatch() {
+        controller.start();
+        Task searchTask = view.getSearchTask();
+        
+        boolean isScheduledBefore = searchTask.isScheduled();
+        controller.cancelMatch();
+        boolean isScheduledAfter = searchTask.isScheduled();
+        
+        assertThat("is scheduled before cancel", isScheduledBefore, is(true));
+        assertThat("is scheduled after cancel", isScheduledAfter, is(false));
     }
     
     @Test
