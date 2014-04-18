@@ -47,7 +47,8 @@ public class WordListChallengeTest {
                {"PIE", "", "pize", WordResult.IMPROVED_SKIP_NOT_A_WORD},
                {"PIE", null, "rope", WordResult.IMPROVED_SKIP_NOT_A_MATCH},
                {"PIE", "", "rope", WordResult.IMPROVED_SKIP_NOT_A_MATCH},
-               {"PIE", "", "", WordResult.SKIPPED} });
+               {"PIE", "", "", WordResult.SKIPPED},
+               {"PIE", null, null, WordResult.SKIPPED} });
    }
    
    private WordList wordList;

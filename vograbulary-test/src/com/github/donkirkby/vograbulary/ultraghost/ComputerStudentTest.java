@@ -15,6 +15,7 @@ import com.github.donkirkby.vograbulary.VograbularyPreferences;
 public class ComputerStudentTest {
     private boolean isSolutionSet = false;
     private String solution;
+    private String challenge;
     private ComputerStudent student;
     private WordList wordList;
     private FocusField focus;
@@ -31,6 +32,7 @@ public class ComputerStudentTest {
                 Integer.MAX_VALUE);
         student = new ComputerStudent(preferences);
         student.setWordList(wordList);
+        solution = challenge = null;
         student.setListener(new Student.StudentListener() {
             
             @Override
@@ -41,6 +43,7 @@ public class ComputerStudentTest {
             
             @Override
             public void submitChallenge(String challenge, WordResult challengeResult) {
+                ComputerStudentTest.this.challenge = challenge;
             }
             
             @Override
@@ -72,6 +75,20 @@ public class ComputerStudentTest {
         
         assertThat("is solution submitted", isSolutionSet, is(true));
         assertThat("solution", solution, is(""));
+    }
+    
+    @Test
+    public void noSolutionFoundWhenNotActiveStudent() {
+        int batchSize = 100;
+        assertThat("word count", wordList.size(), lessThan(batchSize));
+        student.setSearchBatchSize(batchSize);
+        boolean isActiveStudent = false;
+        student.startSolving("AXR", isActiveStudent);
+        
+        boolean isFinished = student.runSearchBatch();
+        
+        assertThat("is solution submitted", isSolutionSet, is(false));
+        assertThat("is finished", isFinished, is(true));
     }
     
     @Test
@@ -111,6 +128,19 @@ public class ComputerStudentTest {
         boolean isFinished = student.runSearchBatch();
         
         assertThat("finished", isFinished, is(true));
+    }
+    
+    @Test
+    public void prepareChallenge() {
+        when(preferences.getComputerStudentVocabularySize()).thenReturn(1);
+        boolean isActiveStudent = false;
+        student.startSolving("PIE", isActiveStudent);
+        student.runSearchBatch();
+        String humanSolution = "";
+        
+        student.prepareChallenge(humanSolution);
+        
+        assertThat("challenge", challenge, is("PRICE"));
     }
     
     @Test

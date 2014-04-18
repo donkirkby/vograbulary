@@ -31,7 +31,8 @@ public class WordListMatchTest {
                {"PIE", "PASTIE", true},
                {"PIE", "RIPE", false},
                {"PIE", "POPE", false} ,
-               {"PIE", "PIPS", false} });
+               {"PIE", "PIPS", false} ,
+               {"PEE", "PIPE", false} });
    }
    
    private WordList wordList;
