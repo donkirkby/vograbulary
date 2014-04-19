@@ -92,6 +92,6 @@ public class Puzzle {
     
     @Override
     public String toString() {
-        return String.format("Puzzle(%1$s, %2$s)", letters, owner.getName());
+        return "Puzzle(" + letters + ", " + owner.getName() + ")";
     }
 }

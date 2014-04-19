@@ -47,13 +47,11 @@ public class Match {
 
     public String getSummary() {
         checkStudentOrder();
-        StringWriter writer = new StringWriter();
-        try(PrintWriter printer = new PrintWriter(writer)) {
-            for (Student student : students) {
-                printer.println(student);
-            }
-            return writer.toString();
+        StringBuilder writer = new StringBuilder();
+        for (Student student : students) {
+            writer.append(student).append('\n');
         }
+        return writer.toString();
     }
 
     public Puzzle getPuzzle() {
