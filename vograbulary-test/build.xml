@@ -83,6 +83,7 @@
             <test name="com.github.donkirkby.vograbulary.ultraghost.UltraghostRandomTest" todir="${junit.output.dir}"/>
             <test name="com.github.donkirkby.vograbulary.ultraghost.WordListChallengeTest" todir="${junit.output.dir}"/>
             <test name="com.github.donkirkby.vograbulary.ultraghost.WordListMatchTest" todir="${junit.output.dir}"/>
+            <test name="com.github.donkirkby.vograbulary.ultraghost.WordListNextBetterTest" todir="${junit.output.dir}"/>
             <test name="com.github.donkirkby.vograbulary.ultraghost.WordListSolutionTest" todir="${junit.output.dir}"/>
             <test name="com.github.donkirkby.vograbulary.ultraghost.WordListTest" todir="${junit.output.dir}"/>
             <test name="com.github.donkirkby.vograbulary.ultraghost.WordResultTest" todir="${junit.output.dir}"/>

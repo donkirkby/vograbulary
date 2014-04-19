@@ -67,7 +67,7 @@ public class Match {
     public Student getWinner() {
         Student bestStudent = null;
         int bestScore = Integer.MIN_VALUE;
-        int scoreCount = 0;
+        int scoreCount = Integer.MIN_VALUE;
         boolean isTie = false;
         for (Student student : students) {
             if (bestStudent == null) {
