@@ -210,7 +210,11 @@ public class View {
         Student winner = match.getWinner();
         scores.setText(match.getSummary());
         if (winner != null) {
-            result.setText(winner.getName() + " wins");
+            String resultText = winner.getName() + " win";
+            if (winner.getName() != "You") {
+                resultText += "s";
+            }
+            result.setText(resultText);
             studentName.setText(" ");
             letters.setText(" ");
             solution.setText(" ");
