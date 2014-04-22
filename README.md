@@ -14,9 +14,9 @@ Once approximate vocabulary size is known, it can be expanded by drilling new wo
 Vograbulary will include definitions for the words, brief readings from public domain works, plus links to the complete works for further reading. 
 
 My answers from good, to better, to best:
-GHS - ghosts, gushes, gashes
-ORG - ordering, offering, orating
-EOS - errors, eons, egos﻿
+ * GHS - ghosts, gushes, gashes
+ * ORG - ordering, offering, orating
+ * EOS - errors, eons, egos﻿
 
 Contributing
 ============
