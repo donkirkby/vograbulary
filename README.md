@@ -7,7 +7,7 @@ Students can complete these challenges alone or with a timer, against other stud
 You can try the app in a few ways:
  * in [a browser][browser] (requires [WebGL][webgl])
  * as an Android app, if you join my [beta testers community][testers]
- * as a Java application: you can download the Java jar from my [releases page][releases] and then run it from a command line: `java - jar vograbulary.jar`
+ * as a Java application: you can download the Java jar from my [releases page][releases] and then run it from a command line: `java -jar vograbulary.jar`
 
 As well as the word challenges, the app will include tools to measure current vocabulary size by testing sample words in an exponential distribution from a word list sorted by usage frequency. For more accurate measurement, the testing can zoom in on the estimated upper limit of the student's vocabulary. 
 Once approximate vocabulary size is known, it can be expanded by drilling new words with spaced-repetition flashcards. 
