@@ -4,7 +4,7 @@
   <head>
     <meta charset='utf-8' />
     <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Vograbulary : Add new words to a student's vocabulary and make the words stick (grab them)." />
+    <meta name="description" content="Vograbulary : Add new words to a student&#39;s vocabulary and make the words stick (grab them)." />
 
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
@@ -19,7 +19,7 @@
           <a id="forkme_banner" href="https://github.com/donkirkby/vograbulary">View on GitHub</a>
 
           <h1 id="project_title">Vograbulary</h1>
-          <h2 id="project_tagline">Add new words to a student's vocabulary and make the words stick (grab them).</h2>
+          <h2 id="project_tagline">Add new words to a student&#39;s vocabulary and make the words stick (grab them).</h2>
 
             <section id="downloads">
               <a class="zip_download_link" href="https://github.com/donkirkby/vograbulary/zipball/master">Download this project as a .zip file</a>
@@ -31,17 +31,46 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <p>This will include tools to measure current vocabulary size by testing sample words in an exponential distribution from a word list sorted by usage frequency. For more accurate measurement, the testing can zoom in on the estimated upper limit of the student's vocabulary. 
+        <p>Add new words to a student's vocabulary and make the words stick (grab them).</p>
+
+<p>This app will eventually have several word challenges like anagrams, word ladders, and Quizl, but so far it just has the first word challenge: Ultraghost. On each turn, you are given a three letter puzzle, like CIP. You have to find a word that starts with the first letter, contains the middle letter, and ends with the last letter. For example, CRISP starts with C, contains I, and ends with P. Once you enter your answer, your opponent has a few seconds to enter a better one. An answer is better if it is shorter, or if it is the same length and comes earlier in the dictionary. For example CLIP is shorter than CRISP. The app will then give you a hint if there are any better words that you didn't think of. For example, CHIP is earlier than CLIP in the dictionary.
+If you'd like a few practice puzzles, try GHS, ORG, EOS. Scroll down for my answers.
+Students can complete these challenges alone or with a timer, against other students, or against an artificial intelligence.</p>
+
+<p>You can try the app in a few ways:</p>
+
+<ul>
+<li>in <a href="http://donkirkby.github.io/vograbulary/run/">a browser</a> (requires <a href="http://get.webgl.org/">WebGL</a>)</li>
+<li>as an Android app, if you join my <a href="https://plus.google.com/u/0/communities/103264778621024783530">beta testers community</a>
+</li>
+<li>as a Java application: you can download the Java jar from my <a href="https://github.com/donkirkby/vograbulary/releases">releases page</a> and then run it from a command line: <code>java -jar vograbulary.jar</code>
+</li>
+</ul><p>As well as the word challenges, the app will include tools to measure current vocabulary size by testing sample words in an exponential distribution from a word list sorted by usage frequency. For more accurate measurement, the testing can zoom in on the estimated upper limit of the student's vocabulary. 
 Once approximate vocabulary size is known, it can be expanded by drilling new words with spaced-repetition flashcards. 
-In order to exercise the new vocabulary, there will be several word challenges. A student can use their new vocabulary to make anagrams, find rhyming pairs, and match other word patterns. 
-Students can complete these challenges alone or with a timer, against other students, or against an artificial intelligence. 
 Vograbulary will include definitions for the words, brief readings from public domain works, plus links to the complete works for further reading. </p>
-<p>You can run it <a href="run">in your browser</a>, if it supports WebGL.</p>
+
+<p>My answers from good, to better, to best:</p>
+
+<ul>
+<li>GHS - ghosts, gushes, gashes</li>
+<li>ORG - ordering, offering, orating</li>
+<li>EOS - errors, eons, egos﻿</li>
+</ul><h1>
+<a name="contributing" class="anchor" href="#contributing"><span class="octicon octicon-link"></span></a>Contributing</h1>
+
+<p>Vograbulary is built using Eclipse. Install the tools listed under <a href="https://github.com/libgdx/libgdx/wiki/Project-setup%2C-running-%26-debugging">libgdx prerequisites</a>, clone this project from git, and then import the project files into Eclipse.
+To edit the graphics files, edit the contents of vograbulary-test/assets-raw, and then run vograbulary-test/src/com.github.donkirkby.vograbulary.AssetPacker. To change the font, follow the instructions for running <a href="https://github.com/libgdx/libgdx/wiki/Hiero">Hiero</a>. Launch Hiero, open the vograbulary-test/assets-raw/default.hiero settings file, and then save the font file over vograbulary-android/assets/data/ui/default.fnt. That will also generate default.png, which you need to move back to vograbulary-test/assets-raw/skin/default.png. Finally, run the AssetPacker again.</p>
 
 <h1>
-<a id="contributing" class="anchor" href="#contributing"><span class="octicon octicon-link"></span></a>Contributing</h1>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h1>
 
-<p>Vograbulary is built using Eclipse. Install the tools listed under <a href="https://github.com/libgdx/libgdx/wiki/Project-setup%2C-running-%26-debugging">libgdx prerequisites</a>, clone this project from git, and then import the project files into Eclipse.</p>
+<p>Vograbulary is released under the MIT license.</p>
+
+<p><a href="http://hamcrest.org/JavaHamcrest/">Hamcrest</a> is released under the BSD 3-Clause License.</p>
+
+<p><a href="https://code.google.com/p/mockito/">Mockito</a> is released under the MIT license, and <a href="http://libgdx.badlogicgames.com/">libgdx</a> is released under the Apache 2.0 license.</p>
+
+<p><a href="http://nltk.org/">Natural Language Toolkit</a> is released by the NLTK project under the Apache 2.0 license.</p>
       </section>
     </div>
 
