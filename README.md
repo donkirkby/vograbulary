@@ -24,6 +24,8 @@ Contributing
 Vograbulary is built using Eclipse. Install the tools listed under [libgdx prerequisites][tools], clone this project from git, and then import the project files into Eclipse.
 To edit the graphics files, edit the contents of vograbulary-test/assets-raw, and then run vograbulary-test/src/com.github.donkirkby.vograbulary.AssetPacker. To change the font, follow the instructions for running [Hiero][hiero]. Launch Hiero, open the vograbulary-test/assets-raw/default.hiero settings file, and then save the font file over vograbulary-android/assets/data/ui/default.fnt. That will also generate default.png, which you need to move back to vograbulary-test/assets-raw/skin/default.png. Finally, run the AssetPacker again.
 
+If you have the tools for building iOS apps, I'm looking for someone to package the iOS version. It sounds like it's [supported by libgdx][iOS], but [not trivial][iOStrouble].
+
 License
 =======
 
@@ -40,8 +42,11 @@ Vograbulary is released under the MIT license.
 [testers]: https://plus.google.com/u/0/communities/103264778621024783530
 [releases]: https://github.com/donkirkby/vograbulary/releases
 [tools]: https://github.com/libgdx/libgdx/wiki/Project-setup%2C-running-%26-debugging
+[iOS]: http://www.badlogicgames.com/wordpress/?p=3156
+[iOStrouble]: https://github.com/libgdx/libgdx/wiki/Robovm-notes
 [hamcrest]: http://hamcrest.org/JavaHamcrest/
 [mockito]: https://code.google.com/p/mockito/
 [libgdx]: http://libgdx.badlogicgames.com/
 [nltk]: http://nltk.org/
 [hiero]: https://github.com/libgdx/libgdx/wiki/Hiero
+
