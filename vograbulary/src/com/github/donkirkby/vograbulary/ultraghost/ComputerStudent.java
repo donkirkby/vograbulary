@@ -76,11 +76,13 @@ public class ComputerStudent extends Student {
     }
     
     private void checkWord(String word) {
-        if (getWordList().isMatch(currentPuzzle, word)) {
+        WordList wordList = getWordList();
+        if (wordList.isMatch(currentPuzzle, word) 
+                && word.length() >= wordList.getMinimumWordLength()) {
             String previousSolution = bestSolution;
             WordResult comparison = previousSolution == null
                     ? WordResult.SHORTER
-                    : getWordList().challengeWord(previousSolution, word);
+                    : wordList.challengeWord(previousSolution, word);
             if (comparison == WordResult.SHORTER 
                     || comparison == WordResult.EARLIER) {
                 bestSolution = word;

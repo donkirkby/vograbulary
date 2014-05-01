@@ -20,6 +20,8 @@ public class MenuScreen implements Screen {
     private Stage stage;
     private TextField student1Field;
     private TextField student2Field;
+    private Label wordLengthLabel;
+    private Slider wordLength;
     private Label skillLabel;
     private Slider vocabularySize;
 
@@ -44,9 +46,13 @@ public class MenuScreen implements Screen {
         table.add(new Label("Student 2:", skin));
         student2Field = new TextField(blankName, skin);
         table.add(student2Field).fillX().row();
+        wordLengthLabel = new Label("", skin);
+        table.add(wordLengthLabel).colspan(2).row();
+        boolean isVertical = false;
+        wordLength = new Slider(4, 10, 1, isVertical, skin);
+        table.add(wordLength).colspan(2).fillX().row();
         skillLabel = new Label("", skin);
         table.add(skillLabel).colspan(2).row();
-        boolean isVertical = false;
         vocabularySize = new Slider(1, 65000, 100, isVertical, skin);
         table.add(vocabularySize).colspan(2).fillX();
         
@@ -74,6 +80,13 @@ public class MenuScreen implements Screen {
                 setVocabularySize((int)vocabularySize.getValue());
             }
         });
+        
+        wordLength.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                setWordLength((int)wordLength.getValue());
+            }
+        });
     }
     
     @Override
@@ -94,6 +107,10 @@ public class MenuScreen implements Screen {
         VograbularyPreferences preferences = app.getPreferences();
         student1Field.setText(preferences.getStudent1Name());
         student2Field.setText(preferences.getStudent2Name());
+        int currentWordLength =
+                preferences.getUltraghostMinimumWordLength();
+        wordLength.setValue(currentWordLength);
+        setWordLength(currentWordLength);
         int currentVocabularySize = 
                 preferences.getComputerStudentVocabularySize();
         vocabularySize.setValue(currentVocabularySize);
@@ -121,12 +138,18 @@ public class MenuScreen implements Screen {
         skillLabel.setText("Skill " + skill);
     }
 
+    private void setWordLength(int wordLength) {
+        wordLengthLabel.setText("Minimum " + wordLength + " letters");
+    }
+
     private void savePreferences() {
         VograbularyPreferences preferences = app.getPreferences();
         preferences.setStudent1Name(student1Field.getText());
         preferences.setStudent2Name(student2Field.getText());
         preferences.setComputerStudentVocabularySize(
                 (int)vocabularySize.getValue());
+        preferences.setUltraghostMinimumWordLength(
+                (int)wordLength.getValue());
     }
     //resumeJesting
 }

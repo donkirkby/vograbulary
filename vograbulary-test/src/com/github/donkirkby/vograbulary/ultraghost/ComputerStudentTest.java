@@ -119,6 +119,22 @@ public class ComputerStudentTest {
     }
     
     @Test
+    public void ignoreShortWord() {
+        wordList = new WordList();
+        wordList.read(new StringReader("PIECE\nPIPE"));
+        student.setWordList(wordList);
+        student.setMaxSearchBatchCount(1);
+        wordList.setMinimumWordLength(5);
+        
+        boolean isActiveStudent = true;
+        student.startSolving("PIE", isActiveStudent);
+        
+        student.runSearchBatch();
+        
+        assertThat("solution", solution, is("PIECE"));
+    }
+    
+    @Test
     public void vocabularySizeNoMatch() {
         when(preferences.getComputerStudentVocabularySize()).thenReturn(1);
         

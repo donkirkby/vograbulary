@@ -20,21 +20,27 @@ public class WordListSolutionTest {
    public String puzzle;
    
    @Parameter(value=1)
-   public String solution;
+   public int minimumLength;
    
    @Parameter(value=2)
+   public String solution;
+   
+   @Parameter(value=3)
    public WordResult expectedResult;
    
-   @Parameters(name="{0}: {1} => {2}")
+   @Parameters(name="{0} at least {1}: {2} => {3}")
    public static List<Object[]> getParameters() {
        return Arrays.asList(new Object[][] { 
-               {"PIE", "PIZE", WordResult.NOT_A_WORD},
-               {"PIE", "PIZS", WordResult.NOT_A_WORD}, // user probably wants to know
-               {"PIE", "PIECE", WordResult.VALID},
-               {"PIE", "piece", WordResult.VALID},
-               {"PIE", "ripe", WordResult.NOT_A_MATCH},
-               {"PIE", null, WordResult.SKIPPED},
-               {"PIE", "", WordResult.SKIPPED} });
+               {"PIE", 4, "PIZE", WordResult.NOT_A_WORD},
+               {"PIE", 4, "PIZS", WordResult.NOT_A_WORD}, // user probably wants to know
+               {"PIE", 4, "PIECE", WordResult.VALID},
+               {"PIE", 4, "piece", WordResult.VALID},
+               {"PIE", 4, "ripe", WordResult.NOT_A_MATCH},
+               {"PIE", 4, "pipe", WordResult.VALID},
+               {"PIE", 5, "pipe", WordResult.TOO_SHORT},
+               {"PIE", 5, "piece", WordResult.VALID},
+               {"PIE", 4, null, WordResult.SKIPPED},
+               {"PIE", 4, "", WordResult.SKIPPED} });
    }
    
    private WordList wordList;
@@ -42,7 +48,8 @@ public class WordListSolutionTest {
    @Before
    public void setUp() {
        wordList = new WordList();
-       wordList.read(new StringReader("piece\nripe"));
+       wordList.setMinimumWordLength(minimumLength);
+       wordList.read(new StringReader("piece\nripe\npipe"));
    }
    
    @Test

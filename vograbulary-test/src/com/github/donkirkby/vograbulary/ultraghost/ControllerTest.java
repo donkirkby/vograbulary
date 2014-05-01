@@ -95,6 +95,13 @@ public class ControllerTest {
     }
     
     @Test
+    public void cancelMatchBeforeStart() {
+        // This does nothing, but we should check that it doesn't throw an
+        // exception.
+        controller.cancelMatch();
+    }
+    
+    @Test
     public void startFirstStudent() {
         random.setStartingStudent(0);
         Student expectedStudent = student;
@@ -242,6 +249,17 @@ public class ControllerTest {
     @Test
     public void solutionNotAWord() {
         startPuzzle.setSolution("pixe");
+
+        controller.solve();
+        
+        Focus focus = view.getCurrentFocus();
+        assertThat("focus", focus, is(Focus.Solution));
+    }
+    
+    @Test
+    public void solutionTooShort() {
+        controller.getWordList().setMinimumWordLength(5);
+        startPuzzle.setSolution("rope");
 
         controller.solve();
         

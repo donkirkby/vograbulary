@@ -4,6 +4,7 @@ public enum WordResult {
     //stopJesting
     UNKNOWN,
     NOT_A_WORD, 
+    TOO_SHORT,
     VALID, 
     NOT_A_MATCH, 
     SHORTER(1),
@@ -15,8 +16,10 @@ public enum WordResult {
     WORD_FOUND(-1), // Failed skip
     IMPROVEMENT_NOT_A_WORD(3, "not a word"), 
     IMPROVEMENT_NOT_A_MATCH(3, "not a match"),
+    IMPROVEMENT_TOO_SHORT(3, "too short"),
     IMPROVED_SKIP_NOT_A_WORD(1, "not a word"),
-    IMPROVED_SKIP_NOT_A_MATCH(1, "not a match");
+    IMPROVED_SKIP_NOT_A_MATCH(1, "not a match"),
+    IMPROVED_SKIP_TOO_SHORT(1, "too short");
     //resumeJesting
     
     private int score;

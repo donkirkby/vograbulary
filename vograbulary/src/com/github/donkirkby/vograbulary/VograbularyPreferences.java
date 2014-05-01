@@ -7,12 +7,14 @@ public class VograbularyPreferences {
     private static final String DEFAULT_STUDENT1_NAME = "Alice";
     private static final String DEFAULT_STUDENT2_NAME = "Bob";
     private static final int DEFAULT_VOCABULARY_SIZE = 5000;
+    private static final int DEFAULT_ULTRAGHOST_MINIMUM_WORD_LENGTH = 4;
     // resumeJesting
 
     private enum Fields { 
         STUDENT1_NAME, 
         STUDENT2_NAME, 
-        COMPUTER_STUDENT_VOCABULARY_SIZE 
+        COMPUTER_STUDENT_VOCABULARY_SIZE,
+        ULTRAGHOST_MINIMUM_WORD_LENGTH
     };
     
     private Preferences preferences;
@@ -46,6 +48,18 @@ public class VograbularyPreferences {
         preferences.putInteger(
                 Fields.COMPUTER_STUDENT_VOCABULARY_SIZE.name(), 
                 vocabularySize);
+        preferences.flush();
+    }
+    
+    public int getUltraghostMinimumWordLength() {
+        return preferences.getInteger(
+                Fields.ULTRAGHOST_MINIMUM_WORD_LENGTH.name(), 
+                DEFAULT_ULTRAGHOST_MINIMUM_WORD_LENGTH);
+    }
+    public void setUltraghostMinimumWordLength(int wordLength) {
+        preferences.putInteger(
+                Fields.ULTRAGHOST_MINIMUM_WORD_LENGTH.name(), 
+                wordLength);
         preferences.flush();
     }
 }

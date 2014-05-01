@@ -48,6 +48,10 @@ public class Controller implements StudentListener {
             student.setWordList(wordList);
         }
     }
+    
+    public WordList getWordList() {
+        return wordList;
+    }
 
     private class SearchTask extends Task {
         private List<Student> searchingStudents = new ArrayList<Student>(students);
@@ -123,7 +127,8 @@ public class Controller implements StudentListener {
         Puzzle puzzle = view.getPuzzle();
         WordResult result = puzzle.getResult();
         if (result == WordResult.NOT_A_MATCH || 
-                result == WordResult.NOT_A_WORD) {
+                result == WordResult.NOT_A_WORD ||
+                result == WordResult.TOO_SHORT) {
             view.focusSolution();
         }
         else {
@@ -158,6 +163,8 @@ public class Controller implements StudentListener {
     }
 
     public void cancelMatch() {
-        searchTask.cancel();
+        if (searchTask != null) {
+            searchTask.cancel();
+        }
     }
 }

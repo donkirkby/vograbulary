@@ -20,31 +20,35 @@ public class WordListNextBetterTest {
    public String letters;
    
    @Parameter(value=1)
-   public String solution;
+   public int minimumLength;
    
    @Parameter(value=2)
-   public String improvedSolution;
+   public String solution;
    
    @Parameter(value=3)
+   public String improvedSolution;
+   
+   @Parameter(value=4)
    public String expectedNextBetter;
    
-   @Parameters(name="{0}: {1},{2} => {3}")
+   @Parameters(name="{0} at least {1}: {2},{3} => {4}")
    public static List<Object[]> getParameters() {
        return Arrays.asList(new Object[][] { 
-               {"PIE", "PRICE", "", "PIECE"},
-               {"PIE", "PIECE", "", "PIPE"},
-               {"PIE", "piece", "", "PIPE"},
-               {"PIE", "PIECE", null, "PIPE"},
-               {"PIE", "", "PRICE", "PIECE"},
-               {"PIE", null, "PRICE", "PIECE"},
-               {"PIE", "PIECE", "PIPE", "PINE"},
-               {"PIE", "PIECE", "pipe", "PINE"},
-               {"PIE", "PIPE", "PIECE", "PINE"},
-               {"PIE", "ASKS", "", "PIERCE"},
-               {"PIE", "PAIE", "", "PIERCE"},
-               {"PIE", "", "ASKS", "PIERCE"},
-               {"PIE", "", "PAIE", "PIERCE"},
-               {"PIE", "PINE", "", null}});
+               {"PIE", 4, "PRIDE", "", "PRICE"},
+               {"PIE", 4, "PRICE", "", "PIPE"},
+               {"PIE", 4, "price", "", "PIPE"},
+               {"PIE", 5, "price", "", "PIECE"},
+               {"PIE", 4, "PRICE", null, "PIPE"},
+               {"PIE", 4, "", "PRIDE", "PRICE"},
+               {"PIE", 4, null, "PRIDE", "PRICE"},
+               {"PIE", 4, "PRICE", "PIPE", "PINE"},
+               {"PIE", 4, "PRICE", "pipe", "PINE"},
+               {"PIE", 4, "PIPE", "PRICE", "PINE"},
+               {"PIE", 4, "ASKS", "", "PIERCE"},
+               {"PIE", 4, "PAIE", "", "PIERCE"},
+               {"PIE", 4, "", "ASKS", "PIERCE"},
+               {"PIE", 4, "", "PAIE", "PIERCE"},
+               {"PIE", 4, "PINE", "", null}});
    }
    
    private WordList wordList;
@@ -52,7 +56,9 @@ public class WordListNextBetterTest {
    @Before
    public void setUp() {
        wordList = new WordList();
-       wordList.read(new StringReader("pierce\nprice\npiece\npipe\npine\nasks"));
+       wordList.setMinimumWordLength(minimumLength);
+       wordList.read(new StringReader(
+               "pierce\npride\nprice\npipe\npine\nasks\npiece"));
    }
    
    @Test

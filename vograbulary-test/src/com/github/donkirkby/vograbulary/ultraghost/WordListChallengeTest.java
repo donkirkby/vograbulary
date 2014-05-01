@@ -20,35 +20,41 @@ public class WordListChallengeTest {
    public String puzzle;
    
    @Parameter(value=1)
-   public String solution;
+   public int minimumLength;
    
    @Parameter(value=2)
-   public String challenge;
+   public String solution;
    
    @Parameter(value=3)
+   public String challenge;
+   
+   @Parameter(value=4)
    public WordResult expectedResult;
    
-   @Parameters(name="{0}: {1}/{2} => {3}")
+   @Parameters(name="{0} at least {1}: {2}/{3} => {4}")
    public static List<Object[]> getParameters() {
        return Arrays.asList(new Object[][] { 
-               {"PIE", "PIECE", "", WordResult.NOT_IMPROVED},
-               {"PIE", "piece", "", WordResult.NOT_IMPROVED},
-               {"PIE", "piece", null, WordResult.NOT_IMPROVED},
-               {"PIE", "piece", "piece", WordResult.NOT_IMPROVED},
-               {"PIE", "piece", "pipe", WordResult.SHORTER},
-               {"PIE", "price", "piece", WordResult.EARLIER},
-               {"PIE", "piece", "pize", WordResult.IMPROVEMENT_NOT_A_WORD},
-               {"PIE", "piece", "rope", WordResult.IMPROVEMENT_NOT_A_MATCH},
-               {"PIE", "pine", "piece", WordResult.LONGER},
-               {"MIE", "mime", "mine", WordResult.LATER},
-               {"PIE", null, "pipe", WordResult.WORD_FOUND},
-               {"PIE", "", "pipe", WordResult.WORD_FOUND},
-               {"PIE", null, "pize", WordResult.IMPROVED_SKIP_NOT_A_WORD},
-               {"PIE", "", "pize", WordResult.IMPROVED_SKIP_NOT_A_WORD},
-               {"PIE", null, "rope", WordResult.IMPROVED_SKIP_NOT_A_MATCH},
-               {"PIE", "", "rope", WordResult.IMPROVED_SKIP_NOT_A_MATCH},
-               {"PIE", "", "", WordResult.SKIPPED},
-               {"PIE", null, null, WordResult.SKIPPED} });
+               {"PIE", 4, "PIECE", "", WordResult.NOT_IMPROVED},
+               {"PIE", 4, "piece", "", WordResult.NOT_IMPROVED},
+               {"PIE", 4, "piece", null, WordResult.NOT_IMPROVED},
+               {"PIE", 4, "piece", "piece", WordResult.NOT_IMPROVED},
+               {"PIE", 4, "piece", "pipe", WordResult.SHORTER},
+               {"PIE", 5, "piece", "pipe", WordResult.IMPROVEMENT_TOO_SHORT},
+               {"PIE", 4, "price", "piece", WordResult.EARLIER},
+               {"PIE", 4, "piece", "pize", WordResult.IMPROVEMENT_NOT_A_WORD},
+               {"PIE", 4, "piece", "rope", WordResult.IMPROVEMENT_NOT_A_MATCH},
+               {"PIE", 4, "pine", "piece", WordResult.LONGER},
+               {"MIE", 4, "mime", "mine", WordResult.LATER},
+               {"PIE", 4, null, "pipe", WordResult.WORD_FOUND},
+               {"PIE", 4, "", "pipe", WordResult.WORD_FOUND},
+               {"PIE", 5, null, "pipe", WordResult.IMPROVED_SKIP_TOO_SHORT},
+               {"PIE", 5, "", "pipe", WordResult.IMPROVED_SKIP_TOO_SHORT},
+               {"PIE", 4, null, "pize", WordResult.IMPROVED_SKIP_NOT_A_WORD},
+               {"PIE", 4, "", "pize", WordResult.IMPROVED_SKIP_NOT_A_WORD},
+               {"PIE", 4, null, "rope", WordResult.IMPROVED_SKIP_NOT_A_MATCH},
+               {"PIE", 4, "", "rope", WordResult.IMPROVED_SKIP_NOT_A_MATCH},
+               {"PIE", 4, "", "", WordResult.SKIPPED},
+               {"PIE", 4, null, null, WordResult.SKIPPED} });
    }
    
    private WordList wordList;
@@ -56,6 +62,7 @@ public class WordListChallengeTest {
    @Before
    public void setUp() {
        wordList = new WordList();
+       wordList.setMinimumWordLength(minimumLength);
        wordList.read(new StringReader("piece\npipe\npine\nrope\nmime\nmine"));
    }
    

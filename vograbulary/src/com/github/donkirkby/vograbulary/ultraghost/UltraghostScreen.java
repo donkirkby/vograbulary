@@ -68,6 +68,8 @@ public class UltraghostScreen implements Screen {
                 isComputerOpponent
                 ? computerStudent
                 : new Student(preferences.getStudent2Name()));
+        ultraghostController.getWordList().setMinimumWordLength(
+                preferences.getUltraghostMinimumWordLength());
 
         Gdx.input.setInputProcessor(stage);
     }

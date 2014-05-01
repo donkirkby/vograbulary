@@ -8,7 +8,20 @@ import java.util.Iterator;
 
 public class WordList implements Iterable<String> {
     private ArrayList<String> wordList = new ArrayList<String>();
+    
+    private int minimumWordLength = 4;
 
+    /**
+     * Set a limit for how long a word must be to solve the puzzle.
+     * @param minimumWordLength
+     */
+    public void setMinimumWordLength(int minimumWordLength) {
+        this.minimumWordLength = minimumWordLength;
+    }
+    public int getMinimumWordLength() {
+        return minimumWordLength;
+    }
+    
     /** Read all the words from a reader and add them to the list.
      * 
      * @param reader an open reader. This method will close it.
@@ -74,9 +87,11 @@ public class WordList implements Iterable<String> {
         if ( ! wordList.contains(solutionUpper)) {
             return WordResult.NOT_A_WORD;
         }
-        return isMatch(letters, solutionUpper)
-                ? WordResult.VALID 
-                : WordResult.NOT_A_MATCH;
+        return ! isMatch(letters, solutionUpper)
+                ? WordResult.NOT_A_MATCH
+                : solution.length() < minimumWordLength
+                ? WordResult.TOO_SHORT
+                : WordResult.VALID;
     }
 
     /**
@@ -106,6 +121,11 @@ public class WordList implements Iterable<String> {
             return solution == null || solution.length() == 0
                     ? WordResult.IMPROVED_SKIP_NOT_A_WORD
                     : WordResult.IMPROVEMENT_NOT_A_WORD;
+        }
+        if (challengeUpper.length() < minimumWordLength) {
+            return solution == null || solution.length() == 0
+                    ? WordResult.IMPROVED_SKIP_TOO_SHORT
+                    : WordResult.IMPROVEMENT_TOO_SHORT;
         }
         if (solution == null || solution.length() == 0) {
             return WordResult.WORD_FOUND;
@@ -165,7 +185,9 @@ public class WordList implements Iterable<String> {
                 ? responseUpper 
                 : solutionUpper;
         for (String word : wordList) {
-            if (isMatch(letters, word) && isImproved(bestSoFar, word)) {
+            if (word.length() >= minimumWordLength 
+                    && isMatch(letters, word) 
+                    && isImproved(bestSoFar, word)) {
                 return word;
             }
         }
@@ -175,8 +197,8 @@ public class WordList implements Iterable<String> {
     /**
      * Compare two solutions to see if the second one actually improves on
      * the first one.
-     * @param solution must be blank or all in upper case
-     * @param response
+     * @param solution must be blank or a valid solution all in upper case
+     * @param response must be blank or a valid solution all in upper case
      * @return
      */
     private boolean isImproved(String solution, String response) {
