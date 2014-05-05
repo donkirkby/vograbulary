@@ -37,7 +37,6 @@ public class RussianDollsScreen extends VograbularyScreen {
         puzzleLabel = new Label("", skin);
         puzzleLabel.setWrap(true);
         puzzleCell = table.add(puzzleLabel).colspan(3);
-        // TODO: remove width() when resize() is working.
         puzzleCell.width(Gdx.graphics.getWidth());
         puzzleCell.row();
         backButton = new TextButton("Back", skin);
@@ -74,11 +73,6 @@ public class RussianDollsScreen extends VograbularyScreen {
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
-//        puzzleCell.width(width);
-//        table.setSize(width, height);
-//        table.invalidate();
-//        table.invalidateHierarchy();
-//        table.layout();
-//        Gdx.app.log("russian dolls screen", "Resizing");
+        puzzleCell.width(width);
     }
 }

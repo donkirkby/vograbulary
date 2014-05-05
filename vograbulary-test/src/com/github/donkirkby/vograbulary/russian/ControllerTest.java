@@ -1,7 +1,5 @@
 package com.github.donkirkby.vograbulary.russian;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.io.IOException;

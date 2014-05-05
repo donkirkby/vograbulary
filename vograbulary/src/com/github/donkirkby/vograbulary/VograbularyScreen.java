@@ -47,6 +47,7 @@ public abstract class VograbularyScreen implements Screen {
     
     @Override
     public void resize(int width, int height) {
+        stage.setViewport(width, height);
     }
     
     public VograbularyApp getApp() {
