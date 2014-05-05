@@ -1,25 +1,22 @@
 package com.github.donkirkby.vograbulary.ultraghost;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.github.donkirkby.vograbulary.VograbularyApp;
 import com.github.donkirkby.vograbulary.VograbularyPreferences;
+import com.github.donkirkby.vograbulary.VograbularyScreen;
 
-public class UltraghostScreen implements Screen {
+public class UltraghostScreen extends VograbularyScreen {
     //stopJesting
-    private VograbularyApp app;
-    private Stage stage;
     private Controller ultraghostController = 
             new Controller();
     private boolean isComputerOpponent;
     private View view;
 
-    public UltraghostScreen(VograbularyApp vograbularyApp) {
-        app = vograbularyApp;
-        stage = new Stage();
+    public UltraghostScreen(final VograbularyApp app) {
+        super(app);
+        Stage stage = getStage();
         
         Table table = new Table();
         table.setFillParent(true);
@@ -38,26 +35,12 @@ public class UltraghostScreen implements Screen {
     }
 
     @Override
-    public void render(float delta) {
-        Gdx.gl.glClearColor(1, 1, 1, 1);
-        Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-        
-        stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
-        stage.draw();
-    }
-
-    @Override
-    public void resize(int width, int height) {
-    }
-
-    @Override
     public void show() {
         view.clear();
-        ComputerStudent computerStudent = 
-                new ComputerStudent(app.getPreferences());
+        VograbularyPreferences preferences = getApp().getPreferences();
+        ComputerStudent computerStudent = new ComputerStudent(preferences);
         computerStudent.setSearchBatchSize(30);
         computerStudent.setMaxSearchBatchCount(1000); // 10s
-        VograbularyPreferences preferences = app.getPreferences();
         String student1Name = 
                 isComputerOpponent 
                 ? "You"
@@ -71,24 +54,7 @@ public class UltraghostScreen implements Screen {
         ultraghostController.getWordList().setMinimumWordLength(
                 preferences.getUltraghostMinimumWordLength());
 
-        Gdx.input.setInputProcessor(stage);
-    }
-
-    @Override
-    public void hide() {
-    }
-
-    @Override
-    public void pause() {
-    }
-
-    @Override
-    public void resume() {
-    }
-
-    @Override
-    public void dispose() {
-        stage.dispose();
+        super.show();
     }
     //resumeJesting
 }

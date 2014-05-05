@@ -3,11 +3,13 @@ package com.github.donkirkby.vograbulary;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.github.donkirkby.vograbulary.russian.RussianDollsScreen;
 import com.github.donkirkby.vograbulary.ultraghost.UltraghostScreen;
 
 //stopJesting
 public class VograbularyApp extends Game {
     private UltraghostScreen ultraghostScreen;
+    private RussianDollsScreen russianDollsScreen;
     private MenuScreen menuScreen;
     private VograbularyPreferences preferences;
 	private Skin skin;
@@ -17,6 +19,7 @@ public class VograbularyApp extends Game {
 	    skin = new Skin(Gdx.files.internal("data/ui/uiskin.json"));
 	    menuScreen = new MenuScreen(this);
 	    ultraghostScreen = new UltraghostScreen(this);
+	    russianDollsScreen = new RussianDollsScreen(this);
 	    setScreen(menuScreen);
 	}
 	
@@ -27,6 +30,10 @@ public class VograbularyApp extends Game {
 	public void startUltraghost(boolean isComputerOpponent) {
 	    ultraghostScreen.setComputerOpponent(isComputerOpponent);
 	    setScreen(ultraghostScreen);
+	}
+	
+	public void startRussianDolls() {
+	    setScreen(russianDollsScreen);
 	}
 	
 	public void showMenu() {

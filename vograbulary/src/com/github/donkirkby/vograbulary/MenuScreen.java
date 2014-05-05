@@ -1,8 +1,5 @@
 package com.github.donkirkby.vograbulary;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -14,10 +11,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
-public class MenuScreen implements Screen {
+public class MenuScreen extends VograbularyScreen {
     //stopJesting
-    private VograbularyApp app;
-    private Stage stage;
     private TextField student1Field;
     private TextField student2Field;
     private Label wordLengthLabel;
@@ -25,31 +20,33 @@ public class MenuScreen implements Screen {
     private Label skillLabel;
     private Slider vocabularySize;
 
-    public MenuScreen(VograbularyApp vograbularyApp) {
-        app = vograbularyApp;
-        stage = new Stage();
+    public MenuScreen(final VograbularyApp app) {
+        super(app);
+        Stage stage = getStage();
         
-        Table table = new Table();
+        Skin skin = app.getSkin();
+        Table table = new Table(skin);
         table.setFillParent(true);
         stage.addActor(table);
         table.align(Align.top);
-        Skin skin = app.getSkin();
         TextButton humanButton = new TextButton("Human vs. Human", skin);
         table.add(humanButton).colspan(2).row();
         TextButton computerButton = new TextButton("Human vs. Computer", skin);
         table.add(computerButton).colspan(2).row();
+        TextButton russianDollsButton = new TextButton("Russian Dolls", skin);
+        table.add(russianDollsButton).colspan(2).row();
         
-        table.add(new Label("Student 1:", skin));
+        table.add("Student 1:");
         String blankName = "          ";
         student1Field = new TextField(blankName, skin);
         table.add(student1Field).fillX().row();
-        table.add(new Label("Student 2:", skin));
+        table.add("Student 2:");
         student2Field = new TextField(blankName, skin);
         table.add(student2Field).fillX().row();
         wordLengthLabel = new Label("", skin);
         table.add(wordLengthLabel).colspan(2).row();
         boolean isVertical = false;
-        wordLength = new Slider(4, 10, 1, isVertical, skin);
+        wordLength = new Slider(4, 9, 1, isVertical, skin);
         table.add(wordLength).colspan(2).fillX().row();
         skillLabel = new Label("", skin);
         table.add(skillLabel).colspan(2).row();
@@ -74,6 +71,14 @@ public class MenuScreen implements Screen {
             }
         });
         
+        russianDollsButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                savePreferences();
+                app.startRussianDolls();
+            }
+        });
+        
         vocabularySize.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -90,21 +95,12 @@ public class MenuScreen implements Screen {
     }
     
     @Override
-    public void render(float delta) {
-        Gdx.gl.glClearColor(1, 1, 1, 1);
-        Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-        
-        stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
-        stage.draw();
-    }
-
-    @Override
     public void resize(int width, int height) {
     }
 
     @Override
     public void show() {
-        VograbularyPreferences preferences = app.getPreferences();
+        VograbularyPreferences preferences = getApp().getPreferences();
         student1Field.setText(preferences.getStudent1Name());
         student2Field.setText(preferences.getStudent2Name());
         int currentWordLength =
@@ -115,23 +111,7 @@ public class MenuScreen implements Screen {
                 preferences.getComputerStudentVocabularySize();
         vocabularySize.setValue(currentVocabularySize);
         setVocabularySize(currentVocabularySize);
-        Gdx.input.setInputProcessor(stage);
-    }
-
-    @Override
-    public void hide() {
-    }
-
-    @Override
-    public void pause() {
-    }
-
-    @Override
-    public void resume() {
-    }
-
-    @Override
-    public void dispose() {
+        super.show();
     }
 
     private void setVocabularySize(int skill) {
@@ -143,7 +123,7 @@ public class MenuScreen implements Screen {
     }
 
     private void savePreferences() {
-        VograbularyPreferences preferences = app.getPreferences();
+        VograbularyPreferences preferences = getApp().getPreferences();
         preferences.setStudent1Name(student1Field.getText());
         preferences.setStudent2Name(student2Field.getText());
         preferences.setComputerStudentVocabularySize(
