@@ -17,6 +17,8 @@ import com.github.donkirkby.vograbulary.VograbularyScreen;
 public class RussianDollsScreen extends VograbularyScreen {
     private Label puzzleLabel;
     private Cell<Label> puzzleCell;
+    private Label target1Label;
+    private Label target2Label;
     private TextButton backButton;
     private TextButton nextButton;
     private TextButton menuButton;
@@ -36,15 +38,19 @@ public class RussianDollsScreen extends VograbularyScreen {
         
         puzzleLabel = new Label("", skin);
         puzzleLabel.setWrap(true);
-        puzzleCell = table.add(puzzleLabel).colspan(3);
+        puzzleCell = table.add(puzzleLabel).colspan(6);
         puzzleCell.width(Gdx.graphics.getWidth());
         puzzleCell.row();
+        target1Label = new Label("", skin);
+        target2Label = new Label("", skin);
+        table.add(target1Label).colspan(3);
+        table.add(target2Label).colspan(3).row();
         backButton = new TextButton("Back", skin);
         nextButton = new TextButton("Next", skin);
         menuButton = new TextButton("Menu", skin);
-        table.add(backButton);
-        table.add(nextButton);
-        table.add(menuButton).row();
+        table.add(backButton).colspan(2);
+        table.add(nextButton).colspan(2);
+        table.add(menuButton).colspan(2).row();
         
         menuButton.addListener(new ChangeListener() {
             @Override
@@ -66,8 +72,10 @@ public class RussianDollsScreen extends VograbularyScreen {
         controller.loadPuzzles(reader); // closes the reader
     }
 
-    public void setPuzzle(String puzzle) {
-        puzzleLabel.setText(puzzle);
+    public void setPuzzle(Puzzle puzzle) {
+        puzzleLabel.setText(puzzle.getClue());
+        target1Label.setText(puzzle.getTarget1());
+        target2Label.setText(puzzle.getTarget2());
     }
     
     @Override

@@ -1,15 +1,19 @@
 package com.github.donkirkby.vograbulary.russian;
 
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.mockito.ArgumentCaptor;
 
 public class ControllerTest {
     private Controller controller;
@@ -27,26 +31,31 @@ public class ControllerTest {
     
     @Test
     public void loadSinglePuzzle() {
-        String expectedPuzzle = "Puzzle number one.";
-        Reader reader = new StringReader(expectedPuzzle);
+        String expectedClue = "Puzzle number one.";
+        Reader reader = new StringReader(expectedClue);
         
         controller.loadPuzzles(reader);
 
-        verify(screen).setPuzzle(expectedPuzzle);
+        Puzzle puzzle = capturePuzzle();
+        assertThat("puzzle", puzzle.getClue(), is(expectedClue));
     }
     
     @Test
     public void loadMultiplePuzzles() {
-        String expectedPuzzle1 = "Puzzle number one.";
-        String expectedPuzzle2 = "Second puzzle.";
-        String input = expectedPuzzle1 + "\n" + expectedPuzzle2;
+        String expectedClue1 = "Puzzle number one.";
+        String expectedClue2 = "Second puzzle.";
+        String input = expectedClue1 + "\n" + expectedClue2;
         Reader reader = new StringReader(input);
         
         controller.loadPuzzles(reader);
-        verify(screen).setPuzzle(expectedPuzzle1);
+        Puzzle puzzle1 = capturePuzzle();
         verifyNoMoreInteractions(screen);
         controller.next();
-        verify(screen).setPuzzle(expectedPuzzle2);
+        List<Puzzle> allPuzzles = captureAllPuzzles();
+        
+        assertThat("puzzle 1", puzzle1.getClue(), is(expectedClue1));
+        assertThat("puzzle count", allPuzzles.size(), is(2));
+        assertThat("puzzle 2", allPuzzles.get(1).getClue(), is(expectedClue2));
     }
     
     @Test
@@ -60,5 +69,16 @@ public class ControllerTest {
         thrown.expectMessage("Stream closed");
         reader.read();
     }
-    
+
+    private Puzzle capturePuzzle() {
+        ArgumentCaptor<Puzzle> captor = ArgumentCaptor.forClass(Puzzle.class);
+        verify(screen).setPuzzle(captor.capture());
+        return captor.getValue();
+    }
+
+    private List<Puzzle> captureAllPuzzles() {
+        ArgumentCaptor<Puzzle> captor = ArgumentCaptor.forClass(Puzzle.class);
+        verify(screen, atLeastOnce()).setPuzzle(captor.capture());
+        return captor.getAllValues();
+    }
 }
