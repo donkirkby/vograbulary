@@ -15,6 +15,7 @@ import com.github.donkirkby.vograbulary.VograbularyApp;
 import com.github.donkirkby.vograbulary.VograbularyScreen;
 
 public class RussianDollsScreen extends VograbularyScreen {
+    //stopJesting
     private Label puzzleLabel;
     private Cell<Label> puzzleCell;
     private Label target1Label;
@@ -83,4 +84,5 @@ public class RussianDollsScreen extends VograbularyScreen {
         super.resize(width, height);
         puzzleCell.width(width);
     }
+    //resumeJesting
 }

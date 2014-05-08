@@ -43,7 +43,7 @@ public class ControllerTest {
     @Test
     public void loadMultiplePuzzles() {
         String expectedClue1 = "Puzzle number one.";
-        String expectedClue2 = "Second puzzle.";
+        String expectedClue2 = "Another nice puzzle.";
         String input = expectedClue1 + "\n" + expectedClue2;
         Reader reader = new StringReader(input);
         

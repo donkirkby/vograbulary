@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 public abstract class VograbularyScreen implements Screen {
+    //stopJesting
     private VograbularyApp app;
     private Stage stage;
     
@@ -56,4 +57,5 @@ public abstract class VograbularyScreen implements Screen {
     public Stage getStage() {
         return stage;
     }
+    //resumeJesting
 }

@@ -18,6 +18,9 @@ public class Puzzle {
         }
         target1 = words[0].toUpperCase();
         target2 = words[1].toUpperCase();
+        if (words.length == 2) {
+            this.clue = "";
+        }
     }
     
     public String getClue() {

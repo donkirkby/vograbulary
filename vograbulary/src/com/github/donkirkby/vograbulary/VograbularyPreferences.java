@@ -3,12 +3,12 @@ package com.github.donkirkby.vograbulary;
 import com.badlogic.gdx.Preferences;
 
 public class VograbularyPreferences {
-    // stopJesting
+    //stopJesting
     private static final String DEFAULT_STUDENT1_NAME = "Alice";
     private static final String DEFAULT_STUDENT2_NAME = "Bob";
     private static final int DEFAULT_VOCABULARY_SIZE = 5000;
     private static final int DEFAULT_ULTRAGHOST_MINIMUM_WORD_LENGTH = 4;
-    // resumeJesting
+    //resumeJesting
 
     private enum Fields { 
         STUDENT1_NAME, 

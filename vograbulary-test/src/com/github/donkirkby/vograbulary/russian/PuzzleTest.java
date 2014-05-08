@@ -8,8 +8,8 @@ import org.junit.Test;
 public class PuzzleTest {
     @Test
     public void twoWordClue() {
-        String expectedClue = "two words";
-        Puzzle puzzle = new Puzzle(expectedClue);
+        String expectedClue = "";
+        Puzzle puzzle = new Puzzle("two words");
         
         String clue = puzzle.getClue();
         assertThat("clue", clue, is(expectedClue));
@@ -46,11 +46,11 @@ public class PuzzleTest {
 
     @Test
     public void targetsWithPunctuation() {
-        Puzzle puzzle = new Puzzle("targets *sometimes* have *punctuation*!");
+        Puzzle puzzle = new Puzzle("*targets* sometimes have *punctuation*!");
         
         String target1 = puzzle.getTarget1();
         String target2 = puzzle.getTarget2();
-        assertThat("target 1", target1, is("SOMETIMES"));
+        assertThat("target 1", target1, is("TARGETS"));
         assertThat("target 2", target2, is("PUNCTUATION"));
     }
 }
