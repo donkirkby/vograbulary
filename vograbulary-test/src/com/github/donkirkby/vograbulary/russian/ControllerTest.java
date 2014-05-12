@@ -59,6 +59,22 @@ public class ControllerTest {
     }
     
     @Test
+    public void goBack() {
+        String expectedClue1 = "Puzzle number one.";
+        String expectedClue2 = "Another nice puzzle.";
+        String input = expectedClue1 + "\n" + expectedClue2;
+        Reader reader = new StringReader(input);
+        controller.loadPuzzles(reader);
+        controller.next();
+        
+        controller.back();
+        List<Puzzle> allPuzzles = captureAllPuzzles();
+        
+        assertThat("puzzle count", allPuzzles.size(), is(3));
+        assertThat("puzzle 2", allPuzzles.get(2).getClue(), is(expectedClue1));
+    }
+    
+    @Test
     public void readerIsClosed() throws Exception {
         String expectedPuzzle = "Puzzle number one.";
         Reader reader = new StringReader(expectedPuzzle);

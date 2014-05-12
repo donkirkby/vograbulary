@@ -41,6 +41,8 @@ Vograbulary is released under the MIT license.
 
 [Natural Language Toolkit][nltk] is released by the NLTK project under the Apache 2.0 license.
 
+Icons by [PixelKit][icons] are released under a [CC-BY license][cc].
+
 [browser]: http://donkirkby.github.io/vograbulary/run/
 [webgl]: http://get.webgl.org/
 [testers]: https://plus.google.com/u/0/communities/103264778621024783530
@@ -53,4 +55,5 @@ Vograbulary is released under the MIT license.
 [libgdx]: http://libgdx.badlogicgames.com/
 [nltk]: http://nltk.org/
 [hiero]: https://github.com/libgdx/libgdx/wiki/Hiero
-
+[icons]: https://www.iconfinder.com/PixelKit
+[cc]: http://creativecommons.org/licenses/by/3.0/

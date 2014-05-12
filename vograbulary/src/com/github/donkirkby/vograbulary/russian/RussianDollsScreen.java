@@ -4,12 +4,15 @@ import java.io.Reader;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.esotericsoftware.tablelayout.Cell;
 import com.github.donkirkby.vograbulary.VograbularyApp;
 import com.github.donkirkby.vograbulary.VograbularyScreen;
@@ -18,6 +21,7 @@ public class RussianDollsScreen extends VograbularyScreen {
     //stopJesting
     private Label puzzleLabel;
     private Cell<Label> puzzleCell;
+    private ImageButton insertButton;
     private Label target1Label;
     private Label target2Label;
     private TextButton backButton;
@@ -42,6 +46,8 @@ public class RussianDollsScreen extends VograbularyScreen {
         puzzleCell = table.add(puzzleLabel).colspan(6);
         puzzleCell.width(Gdx.graphics.getWidth());
         puzzleCell.row();
+        insertButton = new ImageButton(skin.getDrawable("insert"));
+        table.add(insertButton).colspan(6).row();
         target1Label = new Label("", skin);
         target2Label = new Label("", skin);
         table.add(target1Label).colspan(3);
@@ -67,6 +73,33 @@ public class RussianDollsScreen extends VograbularyScreen {
             }
         });
         
+        backButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                controller.back();
+            }
+        });
+        
+        DragListener dragListener = new DragListener() {
+            private float startDragX;
+            
+            @Override
+            public void dragStart(
+                    InputEvent event, 
+                    float x, 
+                    float y,
+                    int pointer) {
+                startDragX = x;
+            }
+            
+            @Override
+            public void drag(InputEvent event, float x, float y, int pointer) {
+                insertButton.translate(x - startDragX, 0);
+            }
+        };
+        dragListener.setTapSquareSize(2);
+        insertButton.addListener(dragListener);
+        
         controller = new Controller();
         controller.setScreen(this);
         Reader reader = Gdx.files.internal("data/russianDolls.txt").reader();
@@ -75,8 +108,8 @@ public class RussianDollsScreen extends VograbularyScreen {
 
     public void setPuzzle(Puzzle puzzle) {
         puzzleLabel.setText(puzzle.getClue());
-        target1Label.setText(puzzle.getTarget1());
-        target2Label.setText(puzzle.getTarget2());
+        target1Label.setText(puzzle.getTarget(0));
+        target2Label.setText(puzzle.getTarget(1));
     }
     
     @Override

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class Controller {
     private RussianDollsScreen screen;
     private ArrayList<String> clues = new ArrayList<String>();
-    private int clueNumber;
+    private int clueNumber = -1;
 
     /**
      * Load puzzles in from the source file, one puzzle per line.
@@ -36,7 +36,12 @@ public class Controller {
     }
 
     public void next() {
-        String clue = clues.get(clueNumber++);
+        String clue = clues.get(++clueNumber);
+        screen.setPuzzle(new Puzzle(clue));
+    }
+
+    public void back() {
+        String clue = clues.get(--clueNumber);
         screen.setPuzzle(new Puzzle(clue));
     }
 
