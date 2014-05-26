@@ -81,6 +81,7 @@ public class RussianDollsScreen extends VograbularyScreen {
                     target1Cell.colspan(3);
                     target2Label.setVisible(true);
                     insertButton.setVisible(true);
+                    solveButton.setText("Solve");
                     controller.next();
                     return;
                 }
@@ -107,6 +108,7 @@ public class RussianDollsScreen extends VograbularyScreen {
                     target1Cell.colspan(6);
                     target2Label.setVisible(false);
                     insertButton.setVisible(false);
+                    solveButton.setText("Next");
                 }
             }
         });

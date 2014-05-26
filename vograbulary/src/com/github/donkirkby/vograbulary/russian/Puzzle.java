@@ -2,7 +2,7 @@ package com.github.donkirkby.vograbulary.russian;
 
 public class Puzzle {
     private String clue;
-    private String[] targets = new String[2];
+    private String[] targets;
     private int targetWord;
     private int targetCharacter;
     private boolean isSolved;
@@ -18,8 +18,10 @@ public class Puzzle {
                 words[targetPosition++] = word.replaceAll("\\W*", "");
             }
         }
-        targets[0] = words[0].toUpperCase();
-        targets[1] = words[1].toUpperCase();
+        targets = new String[] {
+                words[0].toUpperCase(),
+                words[1].toUpperCase()
+        };
         if (words.length == 2) {
             this.clue = "";
         }
