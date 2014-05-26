@@ -5,6 +5,7 @@ public class Puzzle {
     private String[] targets = new String[2];
     private int targetWord;
     private int targetCharacter;
+    private boolean isSolved;
     
     public Puzzle(String clue) {
         this.clue = clue;
@@ -50,6 +51,12 @@ public class Puzzle {
     }
     public String getTarget(int wordIndex) {
         return targets[wordIndex];
+    }
+    public boolean isSolved() {
+        return isSolved;
+    }
+    public void setSolved(boolean isSolved) {
+        this.isSolved = isSolved;
     }
 
     public String getCombination() {

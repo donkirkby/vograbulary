@@ -70,6 +70,10 @@ public class WordList implements Iterable<String> {
         int foundAt = word.indexOf(letters.charAt(1), 1);
         return 0 < foundAt && foundAt < word.length() - 1;
     }
+    
+    public boolean contains(String word) {
+        return wordList.contains(word);
+    }
 
     /**
      * Check to see if a word is in the word list and a match for the puzzle

@@ -5,10 +5,13 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 
+import com.github.donkirkby.vograbulary.ultraghost.WordList;
+
 public class Controller {
     private RussianDollsScreen screen;
     private ArrayList<String> clues = new ArrayList<String>();
     private int clueNumber = -1;
+    private WordList wordList;
 
     /**
      * Load puzzles in from the source file, one puzzle per line.
@@ -31,6 +34,10 @@ public class Controller {
         
     }
     
+    public void setWordList(WordList wordList) {
+        this.wordList = wordList;
+    }
+    
     public void setScreen(RussianDollsScreen screen) {
         this.screen = screen;
     }
@@ -43,6 +50,11 @@ public class Controller {
     public void back() {
         String clue = clues.get(--clueNumber);
         screen.setPuzzle(new Puzzle(clue));
+    }
+
+    public void solve() {
+        Puzzle puzzle = screen.getPuzzle();
+        puzzle.setSolved(wordList.contains(puzzle.getCombination()));
     }
 
 }

@@ -15,6 +15,8 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.ArgumentCaptor;
 
+import com.github.donkirkby.vograbulary.ultraghost.WordList;
+
 public class ControllerTest {
     private Controller controller;
     private RussianDollsScreen screen;
@@ -25,8 +27,11 @@ public class ControllerTest {
     @Before
     public void setUp() {
         screen = mock(RussianDollsScreen.class);
+        WordList wordList = new WordList();
+        wordList.read(new StringReader("uncomfortable"));
         controller = new Controller();
         controller.setScreen(screen);
+        controller.setWordList(wordList);
     }
     
     @Test
@@ -84,6 +89,31 @@ public class ControllerTest {
         thrown.expect(IOException.class);
         thrown.expectMessage("Stream closed");
         reader.read();
+    }
+    
+    @Test
+    public void solve() {
+        Puzzle puzzle = new Puzzle("unable comfort");
+        when(screen.getPuzzle()).thenReturn(puzzle);
+        puzzle.setTargetWord(0);
+        puzzle.setTargetCharacter(2);
+        assertThat("is solved before", puzzle.isSolved(), is(false));
+        
+        controller.solve();
+        
+        assertThat("is solved", puzzle.isSolved(), is(true));
+    }
+    
+    @Test
+    public void solveIncorrectly() {
+        Puzzle puzzle = new Puzzle("unable comfort");
+        when(screen.getPuzzle()).thenReturn(puzzle);
+        puzzle.setTargetWord(1);
+        puzzle.setTargetCharacter(2);
+        
+        controller.solve();
+        
+        assertThat("is solved", puzzle.isSolved(), is(false));
     }
 
     private Puzzle capturePuzzle() {
