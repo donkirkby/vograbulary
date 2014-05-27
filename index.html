@@ -33,9 +33,45 @@
       <section id="main_content" class="inner">
         <p>Add new words to a student's vocabulary and make the words stick (grab them).</p>
 
-<p>This app will eventually have several word challenges like anagrams, word ladders, and Quizl, but so far it just has the first word challenge: Ultraghost. On each turn, you are given a three letter puzzle, like CIP. You have to find a word that starts with the first letter, contains the middle letter, and ends with the last letter. For example, CRISP starts with C, contains I, and ends with P. Once you enter your answer, your opponent has a few seconds to enter a better one. An answer is better if it is shorter, or if it is the same length and comes earlier in the dictionary. For example CLIP is shorter than CRISP. The app will then give you a hint if there are any better words that you didn't think of. For example, CHIP is earlier than CLIP in the dictionary.
-If you'd like a few practice puzzles, try GHS, ORG, EOS. Scroll down for my answers.
-Students can complete these challenges alone or with a timer, against other students, or against an artificial intelligence.</p>
+<h1>
+<a name="word-challenges" class="anchor" href="#word-challenges"><span class="octicon octicon-link"></span></a>Word Challenges</h1>
+
+<p>This app will eventually have several word challenges like anagrams, word ladders, and Quizl, but so far it only has the first two word challenges: Ultraghost and Russian Dolls.
+Students will be able to complete these challenges alone or with a timer, against other students, or against an artificial intelligence.</p>
+
+<h2>
+<a name="ultraghost" class="anchor" href="#ultraghost"><span class="octicon octicon-link"></span></a>Ultraghost</h2>
+
+<p>On each turn, you are given a three letter puzzle, like CIP. You have to find a word that starts with the first letter, contains the middle letter, and ends with the last letter. For example, CRISP starts with C, contains I, and ends with P. Once you enter your answer, your opponent has a few seconds to enter a better one. An answer is better if it is shorter, or if it is the same length and comes earlier in the dictionary. For example CLIP is shorter than CRISP. The app will then give you a hint if there are any better words that you didn't think of. For example, CHIP is earlier than CLIP in the dictionary.</p>
+
+<p>If you'd like a few practice puzzles, try GHS, ORG, EOS. Scroll down for my answers.</p>
+
+<h2>
+<a name="russian-dolls" class="anchor" href="#russian-dolls"><span class="octicon octicon-link"></span></a>Russian Dolls</h2>
+
+<p>So far, this is a solitaire challenge. Each puzzle gives a clue with two words highlighted. One of those words gets put completely inside the other to make the solution word. The letters in each word don't get rearranged, one complete word gets nested inside the other like two Russian dolls. Here's an example puzzle:</p>
+
+<blockquote>
+<p>When you are <em>unable</em> to find <em>comfort</em>.</p>
+</blockquote>
+
+<p>The two words are "unable" and "comfort". Scroll down for the answer.</p>
+
+<p>When you think you've solved the puzzle, drag the pointer over the place where one word should be inserted into the other. Press the Solve button to check your answer. If you got it right, it will display the combined word. Press the Next button to see the next puzzle.</p>
+
+<h2>
+<a name="answers" class="anchor" href="#answers"><span class="octicon octicon-link"></span></a>Answers</h2>
+
+<p>My answers for the Ultraghost puzzles from good, to better, to best:</p>
+
+<ul>
+<li>GHS - gushes, ghosts, gashes</li>
+<li>ORG - ordering, offering, orating</li>
+<li>EOS - errors, eons, egos﻿</li>
+</ul><p>The answer to the Russian Dolls puzzle is "uncomfortable", "comfort" nests inside "unable" to form "uncomfortable".</p>
+
+<h1>
+<a name="running-vograbulary" class="anchor" href="#running-vograbulary"><span class="octicon octicon-link"></span></a>Running Vograbulary</h1>
 
 <p>You can try the app in a few ways:</p>
 
@@ -45,21 +81,20 @@ Students can complete these challenges alone or with a timer, against other stud
 </li>
 <li>as a Java application: you can download the Java jar from my <a href="https://github.com/donkirkby/vograbulary/releases">releases page</a> and then run it from a command line: <code>java -jar vograbulary.jar</code>
 </li>
-</ul><p>As well as the word challenges, the app will include tools to measure current vocabulary size by testing sample words in an exponential distribution from a word list sorted by usage frequency. For more accurate measurement, the testing can zoom in on the estimated upper limit of the student's vocabulary. 
-Once approximate vocabulary size is known, it can be expanded by drilling new words with spaced-repetition flashcards. 
-Vograbulary will include definitions for the words, brief readings from public domain works, plus links to the complete works for further reading. </p>
+</ul><p>As well as the word challenges, the app will include tools to measure current vocabulary size by testing sample words in an exponential distribution from a word list sorted by usage frequency. For more accurate measurement, the testing will zoom in on the estimated upper limit of the student's vocabulary. </p>
 
-<p>My answers from good, to better, to best:</p>
+<p>Once approximate vocabulary size is known, it can be expanded by drilling new words with spaced-repetition flashcards. </p>
 
-<ul>
-<li>GHS - ghosts, gushes, gashes</li>
-<li>ORG - ordering, offering, orating</li>
-<li>EOS - errors, eons, egos﻿</li>
-</ul><h1>
+<p>Vograbulary will include definitions for the words, brief readings from public domain works, plus links to the complete works for further reading.</p>
+
+<h1>
 <a name="contributing" class="anchor" href="#contributing"><span class="octicon octicon-link"></span></a>Contributing</h1>
 
-<p>Vograbulary is built using Eclipse. Install the tools listed under <a href="https://github.com/libgdx/libgdx/wiki/Project-setup%2C-running-%26-debugging">libgdx prerequisites</a>, clone this project from git, and then import the project files into Eclipse.
-To edit the graphics files, edit the contents of vograbulary-test/assets-raw, and then run vograbulary-test/src/com.github.donkirkby.vograbulary.AssetPacker. To change the font, follow the instructions for running <a href="https://github.com/libgdx/libgdx/wiki/Hiero">Hiero</a>. Launch Hiero, open the vograbulary-test/assets-raw/default.hiero settings file, and then save the font file over vograbulary-android/assets/data/ui/default.fnt. That will also generate default.png, which you need to move back to vograbulary-test/assets-raw/skin/default.png. Finally, run the AssetPacker again.</p>
+<p>Vograbulary is built using Eclipse. Install the tools listed under <a href="https://github.com/libgdx/libgdx/wiki/Project-setup%2C-running-%26-debugging">libgdx prerequisites</a>, clone this project from git, and then import the project files into Eclipse.</p>
+
+<p>To edit the graphics files, edit the contents of vograbulary-test/assets-raw, and then run vograbulary-test/src/com.github.donkirkby.vograbulary.AssetPacker. To change the font, follow the instructions for running <a href="https://github.com/libgdx/libgdx/wiki/Hiero">Hiero</a>. Launch Hiero, open the vograbulary-test/assets-raw/default.hiero settings file, and then save the font file over vograbulary-android/assets/data/ui/default.fnt. That will also generate default.png, which you need to move back to vograbulary-test/assets-raw/skin/default.png. Finally, run the AssetPacker again.</p>
+
+<p>If you have the tools for building iOS apps, I'm looking for someone to package the iOS version. It sounds like it's <a href="http://www.badlogicgames.com/wordpress/?p=3156">supported by libgdx</a>, but <a href="https://github.com/libgdx/libgdx/wiki/Robovm-notes">not trivial</a>.</p>
 
 <h1>
 <a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h1>
@@ -71,6 +106,8 @@ To edit the graphics files, edit the contents of vograbulary-test/assets-raw, an
 <p><a href="https://code.google.com/p/mockito/">Mockito</a> is released under the MIT license, and <a href="http://libgdx.badlogicgames.com/">libgdx</a> is released under the Apache 2.0 license.</p>
 
 <p><a href="http://nltk.org/">Natural Language Toolkit</a> is released by the NLTK project under the Apache 2.0 license.</p>
+
+<p>Icons by <a href="https://www.iconfinder.com/PixelKit">PixelKit</a> are released under a <a href="http://creativecommons.org/licenses/by/3.0/">CC-BY license</a>.</p>
       </section>
     </div>
 
