@@ -16,7 +16,7 @@ If you'd like a few practice puzzles, try GHS, ORG, EOS. Scroll down for my answ
 Russian Dolls
 -------------
 
-So far, this is a solitaire challenge. Each puzzle gives a clue with two words highlighted. One of those words gets put completely inside the other to make the solution word. The letters in each word don't get rearranged, one complete word gets nested inside the other like two Russian dolls. Here's an example puzzle:
+So far, this is a solitaire challenge based on an episode of [Ask Me Another][ama]. Each puzzle gives a clue with two words highlighted. One of those words gets put completely inside the other to make the solution word. The letters in each word don't get rearranged, one complete word gets nested inside the other like two Russian dolls. Here's an example puzzle:
 
 >When you are *unable* to find *comfort*.
 
@@ -84,3 +84,5 @@ Icons by [PixelKit][icons] are released under a [CC-BY license][cc].
 [hiero]: https://github.com/libgdx/libgdx/wiki/Hiero
 [icons]: https://www.iconfinder.com/PixelKit
 [cc]: http://creativecommons.org/licenses/by/3.0/
+[ama]: http://www.npr.org/2014/01/30/268462155/russian-dolls
+
