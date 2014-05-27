@@ -1,25 +1,52 @@
 Add new words to a student's vocabulary and make the words stick (grab them).
 
-This app will eventually have several word challenges like anagrams, word ladders, and Quizl, but so far it just has the first word challenge: Ultraghost. On each turn, you are given a three letter puzzle, like CIP. You have to find a word that starts with the first letter, contains the middle letter, and ends with the last letter. For example, CRISP starts with C, contains I, and ends with P. Once you enter your answer, your opponent has a few seconds to enter a better one. An answer is better if it is shorter, or if it is the same length and comes earlier in the dictionary. For example CLIP is shorter than CRISP. The app will then give you a hint if there are any better words that you didn't think of. For example, CHIP is earlier than CLIP in the dictionary.
+Word Challenges
+===============
+
+This app will eventually have several word challenges like anagrams, word ladders, and Quizl, but so far it only has the first two word challenges: Ultraghost and Russian Dolls.
+Students will be able to complete these challenges alone or with a timer, against other students, or against an artificial intelligence.
+
+Ultraghost
+----------
+
+On each turn, you are given a three letter puzzle, like CIP. You have to find a word that starts with the first letter, contains the middle letter, and ends with the last letter. For example, CRISP starts with C, contains I, and ends with P. Once you enter your answer, your opponent has a few seconds to enter a better one. An answer is better if it is shorter, or if it is the same length and comes earlier in the dictionary. For example CLIP is shorter than CRISP. The app will then give you a hint if there are any better words that you didn't think of. For example, CHIP is earlier than CLIP in the dictionary.
 
 If you'd like a few practice puzzles, try GHS, ORG, EOS. Scroll down for my answers.
-Students can complete these challenges alone or with a timer, against other students, or against an artificial intelligence.
+
+Russian Dolls
+-------------
+
+So far, this is a solitaire challenge. Each puzzle gives a clue with two words highlighted. One of those words gets put completely inside the other to make the solution word. The letters in each word don't get rearranged, one complete word gets nested inside the other like two Russian dolls. Here's an example puzzle:
+
+>When you are *unable* to find *comfort*.
+
+The two words are "unable" and "comfort". Scroll down for the answer.
+
+When you think you've solved the puzzle, drag the pointer over the place where one word should be inserted into the other. Press the Solve button to check your answer. If you got it right, it will display the combined word. Press the Next button to see the next puzzle.
+
+Answers
+-------
+
+My answers for the Ultraghost puzzles from good, to better, to best:
+ * GHS - gushes, ghosts, gashes
+ * ORG - ordering, offering, orating
+ * EOS - errors, eons, egos﻿
+
+The answer to the Russian Dolls puzzle is "uncomfortable", "comfort" nests inside "unable" to form "uncomfortable".
+
+Running Vograbulary
+===================
 
 You can try the app in a few ways:
  * in [a browser][browser] (requires [WebGL][webgl])
  * as an Android app, if you join my [beta testers community][testers]
  * as a Java application: you can download the Java jar from my [releases page][releases] and then run it from a command line: `java -jar vograbulary.jar`
 
-As well as the word challenges, the app will include tools to measure current vocabulary size by testing sample words in an exponential distribution from a word list sorted by usage frequency. For more accurate measurement, the testing can zoom in on the estimated upper limit of the student's vocabulary. 
+As well as the word challenges, the app will include tools to measure current vocabulary size by testing sample words in an exponential distribution from a word list sorted by usage frequency. For more accurate measurement, the testing will zoom in on the estimated upper limit of the student's vocabulary. 
 
 Once approximate vocabulary size is known, it can be expanded by drilling new words with spaced-repetition flashcards. 
 
-Vograbulary will include definitions for the words, brief readings from public domain works, plus links to the complete works for further reading. 
-
-My answers from good, to better, to best:
- * GHS - ghosts, gushes, gashes
- * ORG - ordering, offering, orating
- * EOS - errors, eons, egos﻿
+Vograbulary will include definitions for the words, brief readings from public domain works, plus links to the complete works for further reading.
 
 Contributing
 ============
