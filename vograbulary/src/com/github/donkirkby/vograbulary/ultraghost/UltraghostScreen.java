@@ -38,19 +38,23 @@ public class UltraghostScreen extends VograbularyScreen {
     public void show() {
         view.clear();
         VograbularyPreferences preferences = getApp().getPreferences();
-        ComputerStudent computerStudent = new ComputerStudent(preferences);
-        computerStudent.setSearchBatchSize(30);
-        computerStudent.setMaxSearchBatchCount(1000); // 10s
-        String student1Name = 
-                isComputerOpponent 
-                ? "You"
-                : preferences.getStudent1Name();
         ultraghostController.clearStudents();
-        ultraghostController.addStudent(new Student(student1Name));
-        ultraghostController.addStudent(
-                isComputerOpponent
-                ? computerStudent
-                : new Student(preferences.getStudent2Name()));
+        if (isComputerOpponent) {
+            ComputerStudent computerStudent = new ComputerStudent(preferences);
+            computerStudent.setSearchBatchSize(30);
+            computerStudent.setMaxSearchBatchCount(1000); // 10s
+            ultraghostController.addStudent(computerStudent);
+            ultraghostController.addStudent(new Student("You"));
+        }
+        else {
+            String studentSelections = preferences.getStudentSelections();
+            int i = 0;
+            for (String studentName : preferences.getStudentNames()) {
+                if (studentSelections.charAt(i++) == 'Y') {
+                    ultraghostController.addStudent(new Student(studentName));
+                }
+            }
+        }
         ultraghostController.getWordList().setMinimumWordLength(
                 preferences.getUltraghostMinimumWordLength());
 

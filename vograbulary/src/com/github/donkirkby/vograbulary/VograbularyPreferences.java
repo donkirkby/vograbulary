@@ -1,18 +1,21 @@
 package com.github.donkirkby.vograbulary;
 
+import java.util.Arrays;
+import java.util.List;
+
 import com.badlogic.gdx.Preferences;
 
 public class VograbularyPreferences {
     //stopJesting
-    private static final String DEFAULT_STUDENT1_NAME = "Alice";
-    private static final String DEFAULT_STUDENT2_NAME = "Bob";
+    private static final String DEFAULT_STUDENT_NAMES = "Alice|Bob";
+    private static final String DEFAULT_STUDENT_SELECTIONS = "YY";
     private static final int DEFAULT_VOCABULARY_SIZE = 5000;
     private static final int DEFAULT_ULTRAGHOST_MINIMUM_WORD_LENGTH = 4;
     //resumeJesting
 
     private enum Fields { 
-        STUDENT1_NAME, 
-        STUDENT2_NAME, 
+        STUDENT_NAMES,
+        STUDENT_SELECTIONS,
         COMPUTER_STUDENT_VOCABULARY_SIZE,
         ULTRAGHOST_MINIMUM_WORD_LENGTH
     };
@@ -23,19 +26,35 @@ public class VograbularyPreferences {
         this.preferences = preferences;
     }
 
-    public String getStudent1Name() {
-        return preferences.getString(Fields.STUDENT1_NAME.name(), DEFAULT_STUDENT1_NAME);
+    public List<String> getStudentNames() {
+        String studentNames = preferences.getString(
+                Fields.STUDENT_NAMES.name(), 
+                DEFAULT_STUDENT_NAMES);
+        List<String> nameList = Arrays.asList(studentNames.split("\\|"));
+        return nameList;
     }
-    public void setStudent1Name(String student1Name) {
-        preferences.putString(Fields.STUDENT1_NAME.name(), student1Name);
+    
+    public void setStudentNames(String... studentNames) {
+        StringBuilder builder = new StringBuilder();
+        for (String name : studentNames) {
+            if (builder.length() > 0) {
+                builder.append("|");
+            }
+            builder.append(name.replace('|', '/'));
+        }
+        preferences.putString(Fields.STUDENT_NAMES.name(), builder.toString());
         preferences.flush();
     }
     
-    public String getStudent2Name() {
-        return preferences.getString(Fields.STUDENT2_NAME.name(), DEFAULT_STUDENT2_NAME);
+    public String getStudentSelections() {
+        return preferences.getString(
+                Fields.STUDENT_SELECTIONS.name(),
+                DEFAULT_STUDENT_SELECTIONS);
     }
-    public void setStudent2Name(String student2Name) {
-        preferences.putString(Fields.STUDENT2_NAME.name(), student2Name);
+    public void setStudentSelections(String studentSelections) {
+        preferences.putString(
+                Fields.STUDENT_SELECTIONS.name(), 
+                studentSelections);
         preferences.flush();
     }
     

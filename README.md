@@ -57,6 +57,28 @@ To edit the graphics files, edit the contents of vograbulary-test/assets-raw, an
 
 If you have the tools for building iOS apps, I'm looking for someone to package the iOS version. It sounds like it's [supported by libgdx][iOS], but [not trivial][iOStrouble].
 
+Building a Release
+------------------
+
+Each release is tagged and published in four places: the Android app on Google Play, the Android app on the releases page, the web page, and the Java jar file on the releases page.
+
+Before publishing a release, check the following:
+
+* The unit tests not only pass, but cover the code enough to keep Jester happy. Use the `jester.sh` script in the vograbulary-test project.
+* All the instructions are up to date in the README file.
+* The version numbers have been incremented in the Android manifest file.
+
+To publish a release:
+
+* Right click the vograbulary-html project, and choose Google: GWT Compile. That takes several minutes, and sometimes complains about some classes or methods that aren't supported by the GWT compiler.
+* If the compile is successful, run the `deploy.sh` script in the vograbulary-html project to copy all the files to the web site project. If you checked out the master branch as `~/git/vograbulary`, then the script assumes that you have checked out the `gh-pages` branch as `~/git/vograbulary-gh-pages`.
+* Commit the `gh-pages` branch and check that the new version works on the web site.
+* Check if the `master` branch has anything to commit. It usually doesn't.
+* Open the Android manifest file, scroll down, and click on the Export Wizard link.
+* Compile the jar file using the Ant build script in the vograbulary-desktop project.
+* Go to the [Google Play page][google], and upload the new version. Also check that the description is up to date, particularly the list of word challenges.
+* Go to the GitHub releases page, create a new release using a tag like `v0.x.0-alpha`. Attach the apk and the jar files.
+
 License
 =======
 
@@ -85,4 +107,5 @@ Icons by [PixelKit][icons] are released under a [CC-BY license][cc].
 [icons]: https://www.iconfinder.com/PixelKit
 [cc]: http://creativecommons.org/licenses/by/3.0/
 [ama]: http://www.npr.org/2014/01/30/268462155/russian-dolls
+[google]: https://play.google.com/apps/publish
 

@@ -42,8 +42,8 @@ public class VograbularyApp extends Game {
 	
     public VograbularyPreferences getPreferences() {
         if (preferences == null) {
-            preferences = new VograbularyPreferences(
-                    Gdx.app.getPreferences("vograbulary"));
+            preferences = new VograbularyPreferences(Gdx.app.getPreferences(
+                    "com.github.donkirkby.vograbulary.settings"));
         }
         return preferences;
     }

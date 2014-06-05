@@ -1,72 +1,70 @@
 package com.github.donkirkby.vograbulary;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.esotericsoftware.tablelayout.BaseTableLayout;
 
 public class MenuScreen extends VograbularyScreen {
     //stopJesting
-    private TextField student1Field;
-    private TextField student2Field;
+    private Table studentTable;
+    private List<CheckBox> studentCheckBoxes;
+    private List<TextField> studentFields;
     private Label wordLengthLabel;
     private Slider wordLength;
     private Label skillLabel;
     private Slider vocabularySize;
+    private final float PADDING = 5;
 
     public MenuScreen(final VograbularyApp app) {
         super(app);
         Stage stage = getStage();
         
         Skin skin = app.getSkin();
-        Table table = new Table(skin);
-        table.setFillParent(true);
-        stage.addActor(table);
-        table.align(Align.top);
-        TextButton humanButton = new TextButton("Human vs. Human", skin);
-        table.add(humanButton).colspan(2).row();
-        TextButton computerButton = new TextButton("Human vs. Computer", skin);
-        table.add(computerButton).colspan(2).row();
-        TextButton russianDollsButton = new TextButton("Russian Dolls", skin);
-        table.add(russianDollsButton).colspan(2).row();
+        Table mainTable = new Table(skin);
+        mainTable.setFillParent(true);
+        stage.addActor(mainTable);
+        mainTable.align(Align.top);
+        studentTable = new Table(skin);
+        mainTable.add(studentTable).align(BaseTableLayout.TOP).fillX();
+        studentFields = new ArrayList<TextField>();
+        studentCheckBoxes = new ArrayList<CheckBox>();
         
-        table.add("Student 1:");
-        String blankName = "          ";
-        student1Field = new TextField(blankName, skin);
-        table.add(student1Field).fillX().row();
-        table.add("Student 2:");
-        student2Field = new TextField(blankName, skin);
-        table.add(student2Field).fillX().row();
+        Table challengeTable = new Table(skin);
+        mainTable.add(challengeTable).align(BaseTableLayout.TOP);
+        TextButton ultraghostButton = new TextButton("Ultraghost", skin);
+        challengeTable.add(ultraghostButton).colspan(2).pad(PADDING).row();
+        TextButton russianDollsButton = new TextButton("Russian Dolls", skin);
+        challengeTable.add(russianDollsButton).colspan(2).pad(PADDING).row();
+        
         wordLengthLabel = new Label("", skin);
-        table.add(wordLengthLabel).colspan(2).row();
+        challengeTable.add(wordLengthLabel).colspan(2).row();
         boolean isVertical = false;
         wordLength = new Slider(4, 9, 1, isVertical, skin);
-        table.add(wordLength).colspan(2).fillX().row();
+        challengeTable.add(wordLength).colspan(2).fillX().row();
         skillLabel = new Label("", skin);
-        table.add(skillLabel).colspan(2).row();
+        challengeTable.add(skillLabel).colspan(2).row();
         vocabularySize = new Slider(1, 65000, 100, isVertical, skin);
-        table.add(vocabularySize).colspan(2).fillX();
+        challengeTable.add(vocabularySize).colspan(2).fillX();
         
-        computerButton.addListener(new ChangeListener() {
+        ultraghostButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 savePreferences();
-                boolean isComputerOpponent = true;
-                app.startUltraghost(isComputerOpponent);
-            }
-        });
-        
-        humanButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                savePreferences();
-                boolean isComputerOpponent = false;
+                boolean isComputerOpponent = 
+                        studentCheckBoxes.get(0).isChecked();
                 app.startUltraghost(isComputerOpponent);
             }
         });
@@ -96,9 +94,21 @@ public class MenuScreen extends VograbularyScreen {
 
     @Override
     public void show() {
+        Skin skin = getApp().getSkin();
         VograbularyPreferences preferences = getApp().getPreferences();
-        student1Field.setText(preferences.getStudent1Name());
-        student2Field.setText(preferences.getStudent2Name());
+        studentTable.clear();
+        studentFields.clear();
+        studentCheckBoxes.clear();
+        addStudentCheckBox(false, skin);
+        studentTable.add("Computer").pad(PADDING).row();
+
+        String studentSelections = preferences.getStudentSelections();
+        int i = 0;
+        for (String name : preferences.getStudentNames()) {
+            boolean isSelected = studentSelections.charAt(i++) == 'Y';
+            addStudentField(name, skin, isSelected);
+        }
+        addStudentField("", skin, true);
         int currentWordLength =
                 preferences.getUltraghostMinimumWordLength();
         wordLength.setValue(currentWordLength);
@@ -110,18 +120,61 @@ public class MenuScreen extends VograbularyScreen {
         super.show();
     }
 
+    private void addStudentField(
+            final String name, 
+            final Skin skin, 
+            final boolean isSelected) {
+        final CheckBox checkBox = addStudentCheckBox(isSelected, skin);
+        TextField studentField = new TextField(name, skin);
+        studentField.setMessageText("New...");
+        studentTable.add(studentField).fillX().pad(PADDING).row();
+        studentFields.add(studentField);
+        checkBox.setVisible(studentField.getText().length() > 0);
+        
+        studentField.setTextFieldListener(new TextFieldListener() {
+            @Override
+            public void keyTyped(TextField textField, char key) {
+                if (key == 0 || key == '\t') {
+                    // Ignore keys like shift, ctrl, and tab.
+                    return;
+                }
+                if (textField == studentFields.get(studentFields.size() - 1)) {
+                    addStudentField("", skin, true);
+                }
+                checkBox.setVisible(textField.getText().length() > 0);
+            }
+        });
+    }
+
+    private CheckBox addStudentCheckBox(boolean isSelected, Skin skin) {
+        CheckBox checkBox = new CheckBox("", skin);
+        checkBox.setChecked(isSelected);
+        studentCheckBoxes.add(checkBox);
+        studentTable.add(checkBox).pad(PADDING);
+        return checkBox;
+    }
+
     private void setVocabularySize(int skill) {
         skillLabel.setText("Skill " + skill);
     }
 
     private void setWordLength(int wordLength) {
-        wordLengthLabel.setText("Minimum " + wordLength + " letters");
+        wordLengthLabel.setText("Min " + wordLength + "");
     }
 
     private void savePreferences() {
         VograbularyPreferences preferences = getApp().getPreferences();
-        preferences.setStudent1Name(student1Field.getText());
-        preferences.setStudent2Name(student2Field.getText());
+        StringBuilder selectionsBuilder = new StringBuilder();
+        String[] studentNames = new String[studentFields.size() - 1];
+        for (int i = 0; i < studentFields.size() - 1; i++) {
+            studentNames[i] = studentFields.get(i).getText();
+            selectionsBuilder.append(
+                    studentCheckBoxes.get(i + 1).isChecked()
+                    ? "Y"
+                    : "N");
+        }
+        preferences.setStudentNames(studentNames);
+        preferences.setStudentSelections(selectionsBuilder.toString());
         preferences.setComputerStudentVocabularySize(
                 (int)vocabularySize.getValue());
         preferences.setUltraghostMinimumWordLength(
