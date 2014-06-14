@@ -4,19 +4,18 @@ public class Student {
     public interface StudentListener {
         void askForSolution();
         
-        void submitSolution(String solution);
-        
         void askForChallenge();
         
-        void submitChallenge(String challenge, WordResult challengeResult);
-        
         void showThinking();
+        
+        void refreshPuzzle();
     }
     
     private StudentListener listener;
     private String name;
     private int score;
     private int scoreCount;
+    private Match match;
     private WordList wordList;
     
     public Student(String name) {
@@ -63,17 +62,16 @@ public class Student {
      * @param puzzle the puzzle to find answers for
      * @param isActiveStudent true if this student is the active one
      */
-    public void startSolving(String puzzle, boolean isActiveStudent) {
-        if (isActiveStudent) {
+    public void startSolving(Puzzle puzzle) {
+        if (puzzle.getOwner() == this) {
             listener.askForSolution();
         }
     }
     
     /** Get ready to submit a challenge. This is only called for the inactive
-     * student.
-     * @param solution the solution to beat.
+     * students.
      */
-    public void prepareChallenge(String solution) {
+    public void prepareChallenge() {
         listener.askForChallenge();
     }
     
@@ -86,5 +84,12 @@ public class Student {
     
     public int getScoreCount() {
         return scoreCount;
+    }
+    
+    public Match getMatch() {
+        return match;
+    }
+    public void setMatch(Match match) {
+        this.match = match;
     }
 }

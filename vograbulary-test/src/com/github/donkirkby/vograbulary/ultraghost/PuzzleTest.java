@@ -11,10 +11,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 public class PuzzleTest {
-    private static String INVALID_SOLUTION = "PITE";
-    private static String VALID_SOLUTION = "PIECE";
-    private static String SHORTER_RESPONSE = "PIPE";
-    
     @Rule
     public ExpectedException thrown = ExpectedException.none();
     
@@ -39,43 +35,6 @@ public class PuzzleTest {
     }
     
     @Test
-    public void validSolution() {
-        puzzle.setSolution(VALID_SOLUTION);
-        WordResult result = puzzle.getResult();
-        assertThat("result", result, is(WordResult.VALID));
-    }
-    
-    @Test
-    public void invalidSolution() {
-        puzzle.setSolution(INVALID_SOLUTION);
-        WordResult result = puzzle.getResult();
-        assertThat("result", result, is(WordResult.NOT_A_WORD));
-    }
-    
-    @Test
-    public void validResponse() {
-        puzzle.setSolution(VALID_SOLUTION);
-        puzzle.setResponse(SHORTER_RESPONSE);
-        WordResult result = puzzle.getResult();
-        assertThat("result", result, is(WordResult.SHORTER));
-    }
-    
-    @Test
-    public void skipped() {
-        puzzle.setSolution(Puzzle.NO_SOLUTION);
-        puzzle.setResponse(Puzzle.NO_SOLUTION);
-        WordResult result = puzzle.getResult();
-        assertThat("result", result, is(WordResult.SKIPPED));
-    }
-    
-    @Test
-    public void responseWithoutSolution() {
-        puzzle.setResponse(SHORTER_RESPONSE);
-        WordResult result = puzzle.getResult();
-        assertThat("result", result, is(WordResult.UNKNOWN));
-    }
-    
-    @Test
     public void nullLetters() {
         letters = null;
         
@@ -94,12 +53,20 @@ public class PuzzleTest {
     }
     
     @Test
-    public void nullWordList() {
-        wordList = null;
+    public void noWordListSolution() {
+        puzzle = new Puzzle(letters, owner);
+        puzzle.setSolution("PIXXE"); //Won't check that solution is a real word
         
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Puzzle word list was null.");
-        new Puzzle(letters, owner, wordList);
+        assertThat("result", puzzle.getResult(), is(WordResult.VALID));
+    }
+    
+    @Test
+    public void noWordListResponse() {
+        puzzle = new Puzzle(letters, owner);
+        puzzle.setSolution("PIXXE"); //Won't check that solution is a real word
+        puzzle.setResponse("PIXE"); //Won't check that solution is a real word
+        
+        assertThat("result", puzzle.getResult(), is(WordResult.SHORTER));
     }
     
     @Test

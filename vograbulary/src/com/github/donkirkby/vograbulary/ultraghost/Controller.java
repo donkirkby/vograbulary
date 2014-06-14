@@ -8,12 +8,16 @@ import com.badlogic.gdx.utils.Timer.Task;
 import com.github.donkirkby.vograbulary.ultraghost.Student.StudentListener;
 
 public class Controller implements StudentListener {
+    //stopJesting
+    private static final float INTERVAL_SECONDS = 0.01f;
+    private static final int MATCH_SCORE = 21;
+    //resumeJesting
+
     private UltraghostRandom random = new UltraghostRandom();
     private View view;
     private WordList wordList = new WordList();
     private Task searchTask;
     private List<Student> students = new ArrayList<Student>();
-    private Match match;
 
     public void setRandom(UltraghostRandom random) {
         this.random = random;
@@ -32,7 +36,7 @@ public class Controller implements StudentListener {
     
     public void clearStudents() {
         students.clear();
-        match = null;
+        view.setMatch(null);
         view.focusNextButton();
     }
     
@@ -78,13 +82,6 @@ public class Controller implements StudentListener {
     }
     
     @Override
-    public void submitSolution(String solution) {
-        view.getPuzzle().setSolution(solution);
-        view.refreshPuzzle();
-        view.focusResponse();
-    }
-
-    @Override
     public void showThinking() {
         view.showThinking();
     }
@@ -95,35 +92,44 @@ public class Controller implements StudentListener {
     }
     
     @Override
-    public void submitChallenge(String challenge, WordResult challengeResult) {
-        view.getPuzzle().setResponse(challenge);
-        respond();
+    public void refreshPuzzle() {
+        Puzzle puzzle = getMatch().getPuzzle();
+        if (puzzle.getResponse() != null && puzzle.getHint() == null) {
+            respond();
+        }
+        else {
+            view.refreshPuzzle();
+        }
+    }
+    
+    public void start() {
+        checkMatch();
+        Puzzle puzzle = view.getMatch().createPuzzle(wordList);
+        view.refreshPuzzle();
+        for (Student student : students) {
+            student.startSolving(puzzle);
+        }
+        float delaySeconds = INTERVAL_SECONDS;
+        searchTask = new SearchTask();
+        view.schedule(searchTask, delaySeconds, INTERVAL_SECONDS);
     }
 
-    public void start() {
-        //stopJesting
-        float intervalSeconds = 0.01f;
-        int matchScore = 21;
-        //resumeJesting
+    private void checkMatch() {
+        Match match = view.getMatch();
         if (match == null) {
             match = new Match(
-                    matchScore, 
+                    MATCH_SCORE, 
                     students.toArray(new Student[students.size()]));
             match.setRandom(random);
+            view.setMatch(match);
+            for (Student student : students) {
+                student.setMatch(match);
+            }
         }
-        Puzzle puzzle = match.createPuzzle(wordList);
-        view.setMatch(match);
-        for (Student student : students) {
-            student.startSolving(
-                    puzzle.getLetters(), 
-                    student == puzzle.getOwner());
-        }
-        float delaySeconds = intervalSeconds;
-        searchTask = new SearchTask();
-        view.schedule(searchTask, delaySeconds, intervalSeconds);
     }
 
     public void solve() {
+        checkMatch();
         Puzzle puzzle = view.getPuzzle();
         WordResult result = puzzle.getResult();
         if (result == WordResult.NOT_A_MATCH || 
@@ -134,7 +140,7 @@ public class Controller implements StudentListener {
         else {
             for (Student student : students) {
                 if (student != puzzle.getOwner()) {
-                    student.prepareChallenge(puzzle.getSolution());
+                    student.prepareChallenge();
                 }
             }
             if (searchTask != null) {
@@ -149,17 +155,14 @@ public class Controller implements StudentListener {
     public void respond() {
         Puzzle puzzle = view.getPuzzle();
         puzzle.getOwner().addScore(puzzle.getResult().getScore());
-        String hint = wordList.findNextBetter(
-                puzzle.getLetters(), 
-                puzzle.getSolution(), 
-                puzzle.getResponse());
+        String hint = puzzle.findNextBetter();
         puzzle.setHint(hint == null ? null : "hint: " + hint);
         view.focusNextButton();
         view.refreshPuzzle();
     }
     
     public Match getMatch() {
-        return match;
+        return view.getMatch();
     }
 
     public void cancelMatch() {

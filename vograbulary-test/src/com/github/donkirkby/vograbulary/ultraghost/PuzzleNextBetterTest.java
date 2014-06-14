@@ -15,7 +15,7 @@ import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
 @RunWith(Parameterized.class)
-public class WordListNextBetterTest {
+public class PuzzleNextBetterTest {
    @Parameter
    public String letters;
    
@@ -63,7 +63,10 @@ public class WordListNextBetterTest {
    
    @Test
    public void findNextBetter() {
-       String nextBetter = wordList.findNextBetter(letters, solution, improvedSolution);
+       Puzzle puzzle = new Puzzle(letters, new Student("Bob"), wordList);
+       puzzle.setSolution(solution);
+       puzzle.setResponse(improvedSolution);
+       String nextBetter = puzzle.findNextBetter();
        assertThat("next better", nextBetter, is(expectedNextBetter));
    }
 }

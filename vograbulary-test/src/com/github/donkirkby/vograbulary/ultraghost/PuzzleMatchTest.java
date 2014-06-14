@@ -14,9 +14,9 @@ import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
 @RunWith(Parameterized.class)
-public class WordListMatchTest {
+public class PuzzleMatchTest {
    @Parameter
-   public String puzzle;
+   public String letters;
    
    @Parameter(value=1)
    public String solution;
@@ -29,6 +29,7 @@ public class WordListMatchTest {
        return Arrays.asList(new Object[][] { 
                {"PIE", "PIECE", true},
                {"PIE", "PASTIE", true},
+               {"PIE", "pastie", true},
                {"PIE", "RIPE", false},
                {"PIE", "POPE", false} ,
                {"PIE", "PIPS", false} ,
@@ -44,7 +45,10 @@ public class WordListMatchTest {
    
    @Test
    public void isMatch() {
-       boolean isMatch = wordList.isMatch(puzzle, solution);
+       Student owner = new Student("Bob");
+       Puzzle puzzle = new Puzzle(letters, owner, wordList);
+       puzzle.setSolution(solution);
+       boolean isMatch = puzzle.isSolutionAMatch();
        assertThat("result", isMatch, is(expectedResult));
    }
 }

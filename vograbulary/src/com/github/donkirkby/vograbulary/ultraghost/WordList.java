@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class WordList implements Iterable<String> {
     private ArrayList<String> wordList = new ArrayList<String>();
@@ -88,7 +89,7 @@ public class WordList implements Iterable<String> {
             return WordResult.SKIPPED;
         }
         String solutionUpper = solution.toUpperCase();
-        if ( ! wordList.contains(solutionUpper)) {
+        if ( ! contains(solutionUpper)) {
             return WordResult.NOT_A_WORD;
         }
         return ! isMatch(letters, solutionUpper)
@@ -121,7 +122,7 @@ public class WordList implements Iterable<String> {
                     ? WordResult.IMPROVED_SKIP_NOT_A_MATCH
                     : WordResult.IMPROVEMENT_NOT_A_MATCH;
         }
-        if ( ! wordList.contains(challengeUpper)) {
+        if ( ! contains(challengeUpper)) {
             return solution == null || solution.length() == 0
                     ? WordResult.IMPROVED_SKIP_NOT_A_WORD
                     : WordResult.IMPROVEMENT_NOT_A_WORD;
@@ -154,17 +155,64 @@ public class WordList implements Iterable<String> {
                 : WordResult.EARLIER;
     }
 
+    /**
+     * Get an iterator that only iterates over the words that meet the minimum
+     * word length.
+     */
     @Override
     public Iterator<String> iterator() {
-        return wordList.iterator();
+        final Iterator<String> rawIterator = wordList.iterator();
+        return new Iterator<String>() {
+            private String next;
+            private boolean hasNext;
+            
+            {
+                findNext();
+            }
+            
+            @Override
+            public boolean hasNext() {
+                return hasNext;
+            }
+
+            @Override
+            public String next() {
+                if (hasNext) {
+                    String old = next;
+                    findNext();
+                    return old;
+                }
+                throw new NoSuchElementException();
+            }
+            
+            private void findNext() {
+                hasNext = false;
+                while(rawIterator.hasNext()) {
+                    next = rawIterator.next();
+                    hasNext = next.length() >= minimumWordLength;
+                    if (hasNext) {
+                        return;
+                    }
+                }
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+        };
     }
 
+    /**
+     * Get the size of the word list, including words that do not meet the
+     * minimum word length.
+     */
     public int size() {
         return wordList.size();
     }
 
     /**
-     * Find the most popular letter that beats both the solution and the 
+     * Find the most common word that beats both the solution and the 
      * response.
      * @param letters the three letters that valid solutions must match
      * @param solution one possible solution that may be invalid

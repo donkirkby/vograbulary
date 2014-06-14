@@ -9,9 +9,8 @@ public class ComputerStudent extends Student {
     private int maxSearchBatchCount = Integer.MAX_VALUE;
     private int searchBatchCount;
     private int searchedWordsCount;
-    private boolean isActiveStudent;
-    private String currentPuzzle;
-    private String bestSolution;
+    private Puzzle currentPuzzle;
+    private Puzzle searchPuzzle; // used to search for the best solution.
     private Iterator<String> itr;
     private VograbularyPreferences preferences;
     
@@ -36,13 +35,13 @@ public class ComputerStudent extends Student {
     }
     
     @Override
-    public void startSolving(String puzzle, boolean isActiveStudent) {
+    public void startSolving(Puzzle puzzle) {
         currentPuzzle = puzzle;
-        bestSolution = null;
+        searchPuzzle = new Puzzle(puzzle.getLetters(), this);
+        searchPuzzle.setSolution(Puzzle.NO_SOLUTION);
         searchBatchCount = 0;
         searchedWordsCount = 0;
-        this.isActiveStudent = isActiveStudent;
-        if (isActiveStudent) {
+        if (currentPuzzle.getOwner() == this) {
             getListener().showThinking();
         }
         itr = getWordList().iterator();
@@ -50,6 +49,7 @@ public class ComputerStudent extends Student {
     
     @Override
     public boolean runSearchBatch() {
+        checkCurrentPuzzle();
         searchBatchCount++;
         int vocabularySize = preferences.getComputerStudentVocabularySize();
         int wordCount = Math.min(
@@ -57,60 +57,47 @@ public class ComputerStudent extends Student {
                 vocabularySize 
                 - searchedWordsCount);
         for (int i = 0; i < wordCount && itr.hasNext(); i++) {
-            String word = itr.next();
-            checkWord(word);
+            searchPuzzle.setResponse(itr.next());
+            if (searchPuzzle.isImproved()) {
+                searchPuzzle.setSolution(searchPuzzle.getResponse());
+            }
         }
         searchedWordsCount += wordCount;
         if (searchBatchCount >= maxSearchBatchCount 
                 || ! itr.hasNext()
                 || searchedWordsCount >= vocabularySize) {
-            if (isActiveStudent) {
-                getListener().submitSolution(
-                        bestSolution == null
-                        ? ""
-                        : bestSolution);
+            if (currentPuzzle.getOwner() == this) {
+                currentPuzzle.setSolution(searchPuzzle.getSolution());
+                getListener().refreshPuzzle();
+                getListener().askForChallenge();
                 return true;
             }
         }
         return ! itr.hasNext();
     }
-    
-    private void checkWord(String word) {
-        WordList wordList = getWordList();
-        if (wordList.isMatch(currentPuzzle, word) 
-                && word.length() >= wordList.getMinimumWordLength()) {
-            String previousSolution = bestSolution;
-            WordResult comparison = previousSolution == null
-                    ? WordResult.SHORTER
-                    : wordList.challengeWord(previousSolution, word);
-            if (comparison == WordResult.SHORTER 
-                    || comparison == WordResult.EARLIER) {
-                bestSolution = word;
-            }
+
+    private void checkCurrentPuzzle() {
+        Match match = getMatch();
+        if (match != null && match.getPuzzle() != currentPuzzle) {
+            startSolving(match.getPuzzle());
         }
     }
     
     @Override
-    public void prepareChallenge(String humanSolution) {
-        String challenge = bestSolution;
-        String noChallenge = null;
-        WordResult challengeResult = getWordList().checkResponse(
-                currentPuzzle, 
-                humanSolution, 
-                challenge);
-        WordResult noChallengeResult = getWordList().checkResponse(
-                currentPuzzle, 
-                humanSolution, 
-                noChallenge);
-        if (challengeResult.getScore() < noChallengeResult.getScore()) {
-            getListener().submitChallenge(challenge, challengeResult);
+    public void prepareChallenge() {
+        checkCurrentPuzzle();
+        String challenge = 
+                searchPuzzle == null
+                ? ""
+                : searchPuzzle.getSolution();
+        currentPuzzle.setResponse(challenge);
+        if ( ! currentPuzzle.isImproved()) {
+            currentPuzzle.setResponse(Puzzle.NO_SOLUTION);
         }
-        else {
-            getListener().submitChallenge("", WordResult.NOT_IMPROVED);
-        }
+        getListener().refreshPuzzle();
     }
     
-    public String getCurrentPuzzle() {
+    public Puzzle getCurrentPuzzle() {
         return currentPuzzle;
     }
 }

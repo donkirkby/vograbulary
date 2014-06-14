@@ -18,14 +18,26 @@ public class Puzzle {
         if (owner == null) {
             throw new IllegalArgumentException("Puzzle owner was null.");
         }
-        if (wordList == null) {
-            throw new IllegalArgumentException("Puzzle word list was null.");
-        }
         this.letters = letters;
         this.owner = owner;
         this.wordList = wordList;
     }
     
+    public Puzzle(String letters, Student owner) {
+        this(letters, owner, new DummyWordList());
+    }
+    
+    /**
+     * A dummy word list that contains all words.
+     *
+     */
+    private static class DummyWordList extends WordList {
+        @Override
+        public boolean contains(String word) {
+            return true;
+        }
+    }
+
     /**
      * The three letters that must be matched in a valid solution.
      */
@@ -93,5 +105,24 @@ public class Puzzle {
     @Override
     public String toString() {
         return "Puzzle(" + letters + ", " + owner.getName() + ")";
+    }
+
+    /**
+     * Check if the solution is a match to the puzzle letters, but don't check 
+     * if it is in the word list.
+     */
+    public boolean isSolutionAMatch() {
+        return wordList.isMatch(letters, solution.toUpperCase());
+    }
+
+    public String findNextBetter() {
+        return wordList.findNextBetter(letters, solution, response);
+    }
+
+    public boolean isImproved() {
+        WordResult result = getResult();
+        return result == WordResult.SHORTER || 
+                result == WordResult.EARLIER || 
+                result == WordResult.WORD_FOUND;
     }
 }

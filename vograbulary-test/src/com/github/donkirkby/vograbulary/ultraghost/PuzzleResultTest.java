@@ -15,9 +15,9 @@ import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
 @RunWith(Parameterized.class)
-public class WordListSolutionTest {
+public class PuzzleResultTest {
    @Parameter
-   public String puzzle;
+   public String letters;
    
    @Parameter(value=1)
    public int minimumLength;
@@ -39,22 +39,26 @@ public class WordListSolutionTest {
                {"PIE", 4, "pipe", WordResult.VALID},
                {"PIE", 5, "pipe", WordResult.TOO_SHORT},
                {"PIE", 5, "piece", WordResult.VALID},
-               {"PIE", 4, null, WordResult.SKIPPED},
-               {"PIE", 4, "", WordResult.SKIPPED} });
+               {"PIE", 4, Puzzle.NOT_SET, WordResult.UNKNOWN},
+               {"PIE", 4, Puzzle.NO_SOLUTION, WordResult.SKIPPED} });
    }
    
    private WordList wordList;
+   private Puzzle puzzle;
    
    @Before
    public void setUp() {
        wordList = new WordList();
        wordList.setMinimumWordLength(minimumLength);
        wordList.read(new StringReader("piece\nripe\npipe"));
+       
+       puzzle = new Puzzle(letters, new Student("Bob"), wordList);
    }
    
    @Test
    public void checkSolution() {
-       WordResult result = wordList.checkSolution(puzzle, solution);
+       puzzle.setSolution(solution);
+       WordResult result = puzzle.getResult();
        assertThat("result", result, is(expectedResult));
    }
 }

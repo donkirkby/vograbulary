@@ -13,9 +13,6 @@ import org.junit.Test;
 import com.github.donkirkby.vograbulary.VograbularyPreferences;
 
 public class ComputerStudentTest {
-    private boolean isSolutionSet = false;
-    private String solution;
-    private String challenge;
     private ComputerStudent student;
     private WordList wordList;
     private FocusField focus;
@@ -32,20 +29,7 @@ public class ComputerStudentTest {
                 Integer.MAX_VALUE);
         student = new ComputerStudent(preferences);
         student.setWordList(wordList);
-        solution = challenge = null;
         student.setListener(new Student.StudentListener() {
-            
-            @Override
-            public void submitSolution(String solution) {
-                isSolutionSet = true;
-                ComputerStudentTest.this.solution = solution;
-            }
-            
-            @Override
-            public void submitChallenge(String challenge, WordResult challengeResult) {
-                ComputerStudentTest.this.challenge = challenge;
-            }
-            
             @Override
             public void showThinking() {
                 focus = null;
@@ -60,6 +44,10 @@ public class ComputerStudentTest {
             public void askForChallenge() {
                 focus = FocusField.Challenge;
             }
+            
+            @Override
+            public void refreshPuzzle() {
+            }
         });
     }
     
@@ -68,13 +56,12 @@ public class ComputerStudentTest {
         int batchSize = 100;
         assertThat("word count", wordList.size(), lessThan(batchSize));
         student.setSearchBatchSize(batchSize);
-        boolean isActiveStudent = true;
-        student.startSolving("AXR", isActiveStudent);
+        Puzzle puzzle = new Puzzle("AXR", student, wordList);
+        student.startSolving(puzzle);
         
         student.runSearchBatch();
         
-        assertThat("is solution submitted", isSolutionSet, is(true));
-        assertThat("solution", solution, is(""));
+        assertThat("solution", puzzle.getSolution(), is(""));
     }
     
     @Test
@@ -82,12 +69,12 @@ public class ComputerStudentTest {
         int batchSize = 100;
         assertThat("word count", wordList.size(), lessThan(batchSize));
         student.setSearchBatchSize(batchSize);
-        boolean isActiveStudent = false;
-        student.startSolving("AXR", isActiveStudent);
+        Puzzle puzzle = new Puzzle("AXR", new Student("Bob"), wordList);
+        student.startSolving(puzzle);
         
         boolean isFinished = student.runSearchBatch();
         
-        assertThat("is solution submitted", isSolutionSet, is(false));
+        assertThat("solution", puzzle.getSolution(), is(Puzzle.NOT_SET));
         assertThat("is finished", isFinished, is(true));
     }
     
@@ -95,8 +82,8 @@ public class ComputerStudentTest {
     public void maxBatchCount() {
         student.setMaxSearchBatchCount(1);
         
-        boolean isActiveStudent = true;
-        student.startSolving("AXR", isActiveStudent);
+        Puzzle puzzle = new Puzzle("AXR", student, wordList);
+        student.startSolving(puzzle);
         
         boolean isFinished = student.runSearchBatch();
         
@@ -110,12 +97,12 @@ public class ComputerStudentTest {
         student.setWordList(wordList);
         student.setMaxSearchBatchCount(1);
         
-        boolean isActiveStudent = true;
-        student.startSolving("PIE", isActiveStudent);
+        Puzzle puzzle = new Puzzle("PIE", student, wordList);
+        student.startSolving(puzzle);
         
         student.runSearchBatch();
         
-        assertThat("solution", solution, is("PIECE"));
+        assertThat("solution", puzzle.getSolution(), is("PIECE"));
     }
     
     @Test
@@ -126,20 +113,20 @@ public class ComputerStudentTest {
         student.setMaxSearchBatchCount(1);
         wordList.setMinimumWordLength(5);
         
-        boolean isActiveStudent = true;
-        student.startSolving("PIE", isActiveStudent);
+        Puzzle puzzle = new Puzzle("PIE", student, wordList);
+        student.startSolving(puzzle);
         
         student.runSearchBatch();
         
-        assertThat("solution", solution, is("PIECE"));
+        assertThat("solution", puzzle.getSolution(), is("PIECE"));
     }
     
     @Test
     public void vocabularySizeNoMatch() {
         when(preferences.getComputerStudentVocabularySize()).thenReturn(1);
         
-        boolean isActiveStudent = true;
-        student.startSolving("AXR", isActiveStudent);
+        Puzzle puzzle = new Puzzle("AXR", student, wordList);
+        student.startSolving(puzzle);
         
         boolean isFinished = student.runSearchBatch();
         
@@ -147,28 +134,28 @@ public class ComputerStudentTest {
     }
     
     @Test
-    public void prepareChallenge() {
+    public void prepareResponse() {
         when(preferences.getComputerStudentVocabularySize()).thenReturn(1);
-        boolean isActiveStudent = false;
-        student.startSolving("PIE", isActiveStudent);
+        Puzzle puzzle = new Puzzle("PIE", new Student("Bob"), wordList);
+        student.startSolving(puzzle);
         student.runSearchBatch();
-        String humanSolution = "";
+        puzzle.setSolution("");
         
-        student.prepareChallenge(humanSolution);
+        student.prepareChallenge();
         
-        assertThat("challenge", challenge, is("PRICE"));
+        assertThat("response", puzzle.getResponse(), is("PRICE"));
     }
     
     @Test
     public void vocabularySizeMatch() {
         when(preferences.getComputerStudentVocabularySize()).thenReturn(1);
         
-        boolean isActiveStudent = true;
-        student.startSolving("PIE", isActiveStudent);
+        Puzzle puzzle = new Puzzle("PIE", student, wordList);
+        student.startSolving(puzzle);
         
         student.runSearchBatch();
         
-        assertThat("solution", solution, is("PRICE"));
+        assertThat("solution", puzzle.getSolution(), is("PRICE"));
     }
     
     @Test
@@ -190,8 +177,8 @@ public class ComputerStudentTest {
         when(preferences.getComputerStudentVocabularySize()).thenReturn(2);
         student.setMaxSearchBatchCount(1);
         
-        boolean isActiveStudent = false;
-        student.startSolving("AXR", isActiveStudent);
+        Puzzle puzzle = new Puzzle("AXR", new Student("Bob"), wordList);
+        student.startSolving(puzzle);
         
         boolean isFinished = student.runSearchBatch();
         
@@ -201,8 +188,8 @@ public class ComputerStudentTest {
     @Test
     public void createSearchTaskCancelsAfterLastWord() {
         assertThat("word count", wordList.size(), is(3));
-        boolean isActiveStudent = true;
-        student.startSolving("PIE", isActiveStudent);
+        Puzzle puzzle = new Puzzle("PIE", student, wordList);
+        student.startSolving(puzzle);
         String expectedSolution = "PIPE";
 
         student.runSearchBatch();
@@ -217,14 +204,14 @@ public class ComputerStudentTest {
                 "is complete after last word",
                 isCompleteAfterLast,
                 is(true));
-        assertThat("solution", solution, is(expectedSolution));
+        assertThat("solution", puzzle.getSolution(), is(expectedSolution));
     }
     
     @Test
     public void startThinkingWhenActive() {
         focus = FocusField.Solution;
-        boolean isActiveStudent = true;
-        student.startSolving("PIE", isActiveStudent);
+        Puzzle puzzle = new Puzzle("PIE", student, wordList);
+        student.startSolving(puzzle);
         
         assertThat("focus", focus, nullValue());
     }
@@ -232,8 +219,8 @@ public class ComputerStudentTest {
     @Test
     public void startThinkingWhenInactive() {
         focus = FocusField.Solution;
-        boolean isActiveStudent = false;
-        student.startSolving("PIE", isActiveStudent);
+        Puzzle puzzle = new Puzzle("PIE", new Student("Bob"), wordList);
+        student.startSolving(puzzle);
         
         assertThat("focus", focus, is(FocusField.Solution));
     }

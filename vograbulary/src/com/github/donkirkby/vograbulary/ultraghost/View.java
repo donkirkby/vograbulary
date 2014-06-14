@@ -199,12 +199,19 @@ public class View {
         refreshPuzzle();
     }
     
+    public Match getMatch() {
+        return match;
+    }
+    
     /**
      * Update the display to show all parts of the puzzle.
      */
     public void refreshPuzzle() {
         if (letters == null) {
             // must be in unit tests, nothing to do.
+            return;
+        }
+        if (match == null) {
             return;
         }
         Student winner = match.getWinner();
@@ -226,17 +233,19 @@ public class View {
             return;
         }
         Puzzle puzzle = match.getPuzzle();
-        Student owner = puzzle.getOwner();
-        studentName.setText(owner == null ? "" : owner.getName());
-        letters.setText(blankForNull(puzzle.getLetters()));
-        setFieldContents(solution, puzzle.getSolution());
-        setFieldContents(response, puzzle.getResponse());
-        hint.setText(blankForNull(puzzle.getHint()) + " ");
-        WordResult puzzleResult = puzzle.getResult();
-        result.setText(
-                puzzleResult == WordResult.UNKNOWN 
-                ? "" 
-                : puzzleResult.toString());
+        if (puzzle != null) {
+            Student owner = puzzle.getOwner();
+            studentName.setText(owner == null ? "" : owner.getName());
+            letters.setText(blankForNull(puzzle.getLetters()));
+            setFieldContents(solution, puzzle.getSolution());
+            setFieldContents(response, puzzle.getResponse());
+            hint.setText(blankForNull(puzzle.getHint()) + " ");
+            WordResult puzzleResult = puzzle.getResult();
+            result.setText(
+                    puzzleResult == WordResult.UNKNOWN 
+                    ? "" 
+                    : puzzleResult.toString());
+        }
     }
 
     private void setFieldContents(TextField field, String contents) {

@@ -50,12 +50,20 @@ public class ControllerTest {
         controller.setWordList(wordList);
         controller.setRandom(random);
         controller.setView(view);
-        controller.addStudent(student);
-        controller.addStudent(student2);
         startPuzzle = new Puzzle("RPE", student, wordList);
-        Match match = new Match(MATCH_SCORE, student, student2);
+        createMatch(student, student2);
+    }
+
+    private void createMatch(Student... students) {
+        Match match = new Match(MATCH_SCORE, students);
         match.setPuzzle(startPuzzle);
+        match.setRandom(random);
+        controller.clearStudents();
         view.setMatch(match);
+        for (Student student : students) {
+            controller.addStudent(student);
+            student.setMatch(match);
+        }
     }
     
     @Test
@@ -129,9 +137,7 @@ public class ControllerTest {
     
     @Test
     public void startComputerStudent() {
-        controller.clearStudents();
-        controller.addStudent(computerStudent);
-        controller.addStudent(student);
+        createMatch(computerStudent, student);
         random.setStartingStudent(0);
         Student expectedStudent = computerStudent;
         
@@ -141,17 +147,14 @@ public class ControllerTest {
         assertThat("owner", puzzle.getOwner(), is(expectedStudent));
         Focus focus = view.getCurrentFocus();
         assertThat("focus", focus, is(Focus.Thinking));
-        String letters = computerStudent.getCurrentPuzzle();
-        assertThat("letters", letters, is(puzzle.getLetters()));
+        assertThat("letters", computerStudent.getCurrentPuzzle(), is(puzzle));
     }
     
     @Test
     public void computerStudentSolve() {
         random.setPuzzles("RPE");
         computerStudent.setMaxSearchBatchCount(1);
-        controller.clearStudents();
-        controller.addStudent(computerStudent);
-        controller.addStudent(student);
+        createMatch(computerStudent, student);
         random.setStartingStudent(0);
         controller.start();
         Task searchTask = view.getSearchTask();
@@ -174,9 +177,7 @@ public class ControllerTest {
     public void computerStudentSolveAfter2Batches() {
         random.setPuzzles("PIE");
         computerStudent.setMaxSearchBatchCount(2);
-        controller.clearStudents();
-        controller.addStudent(computerStudent);
-        controller.addStudent(student);
+        createMatch(computerStudent, student);
         random.setStartingStudent(0);
         controller.start();
         Task searchTask = view.getSearchTask();
@@ -269,9 +270,7 @@ public class ControllerTest {
     
     @Test
     public void solveWithHumanOwnerAgainstComputer() {
-        controller.clearStudents();
-        controller.addStudent(student);
-        controller.addStudent(computerStudent);
+        createMatch(student, computerStudent);
         int startRefreshCount = view.getRefreshCount();
         
         startPuzzle.setSolution("");
@@ -290,9 +289,7 @@ public class ControllerTest {
     
     @Test
     public void noResponseFromActiveStudent() {
-        controller.clearStudents();
-        controller.addStudent(computerStudent);
-        controller.addStudent(student);
+        createMatch(computerStudent, student);
         random.setStartingStudent(1);
         startPuzzle.setSolution("");
 
@@ -322,13 +319,14 @@ public class ControllerTest {
     public void respond() {
         startPuzzle.setSolution("");
         startPuzzle.setResponse("rope");
+        int startRefreshCount = view.getRefreshCount();
         
         controller.respond();
         
         Focus focus = view.getCurrentFocus();
         assertThat("focus", focus, is(Focus.Result));
         assertThat("result", startPuzzle.getResult(), is(WordResult.WORD_FOUND));
-        assertThat("refresh count", view.getRefreshCount(), is(2));
+        assertThat("refresh count", view.getRefreshCount(), is(startRefreshCount+1));
     }
     
     @Test
@@ -349,6 +347,7 @@ public class ControllerTest {
         controller.clearStudents();
         controller.addStudent(student);
         controller.addStudent(student2);
+
         controller.start();
         
         Match match2 = controller.getMatch();
@@ -385,5 +384,10 @@ public class ControllerTest {
         controller.respond();
         
         assertThat("hint", startPuzzle.getHint(), nullValue());
+    }
+    
+    @Test
+    public void clearStudents() {
+        
     }
 }
