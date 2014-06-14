@@ -7,7 +7,6 @@ import java.io.StringReader;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -43,20 +42,13 @@ public class PuzzleResultTest {
                {"PIE", 4, Puzzle.NO_SOLUTION, WordResult.SKIPPED} });
    }
    
-   private WordList wordList;
-   private Puzzle puzzle;
-   
-   @Before
-   public void setUp() {
-       wordList = new WordList();
-       wordList.setMinimumWordLength(minimumLength);
-       wordList.read(new StringReader("piece\nripe\npipe"));
-       
-       puzzle = new Puzzle(letters, new Student("Bob"), wordList);
-   }
-   
    @Test
    public void checkSolution() {
+       WordList wordList = new WordList();
+       wordList.read(new StringReader("piece\nripe\npipe"));
+       
+       Puzzle puzzle = new Puzzle(letters, new Student("Bob"), wordList);
+       puzzle.setMinimumWordLength(minimumLength);
        puzzle.setSolution(solution);
        WordResult result = puzzle.getResult();
        assertThat("result", result, is(expectedResult));

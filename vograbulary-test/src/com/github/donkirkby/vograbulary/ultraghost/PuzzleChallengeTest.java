@@ -62,9 +62,9 @@ public class PuzzleChallengeTest {
    @Before
    public void setUp() {
        wordList = new WordList();
-       wordList.setMinimumWordLength(minimumLength);
        wordList.read(new StringReader("piece\npipe\npine\nrope\nmime\nmine"));
        puzzle = new Puzzle(letters, new Student("Bob"), wordList);
+       puzzle.setMinimumWordLength(minimumLength);
        puzzle.setSolution(solution);
        puzzle.setResponse(challenge);
    }

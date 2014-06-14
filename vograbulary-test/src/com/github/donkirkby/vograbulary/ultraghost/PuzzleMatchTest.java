@@ -6,7 +6,6 @@ import static org.junit.Assert.*;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -19,7 +18,7 @@ public class PuzzleMatchTest {
    public String letters;
    
    @Parameter(value=1)
-   public String solution;
+   public String word;
    
    @Parameter(value=2)
    public boolean expectedResult;
@@ -36,19 +35,14 @@ public class PuzzleMatchTest {
                {"PEE", "PIPE", false} });
    }
    
-   private WordList wordList;
-   
-   @Before
-   public void setUp() {
-       wordList = new WordList();
-   }
-   
    @Test
    public void isMatch() {
+       WordList wordList = new WordList();
        Student owner = new Student("Bob");
        Puzzle puzzle = new Puzzle(letters, owner, wordList);
-       puzzle.setSolution(solution);
-       boolean isMatch = puzzle.isSolutionAMatch();
+       
+       boolean isMatch = puzzle.isMatch(word);
+       
        assertThat("result", isMatch, is(expectedResult));
    }
 }

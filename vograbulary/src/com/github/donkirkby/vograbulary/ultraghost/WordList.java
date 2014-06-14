@@ -5,23 +5,9 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 
 public class WordList implements Iterable<String> {
     private ArrayList<String> wordList = new ArrayList<String>();
-    
-    private int minimumWordLength = 4;
-
-    /**
-     * Set a limit for how long a word must be to solve the puzzle.
-     * @param minimumWordLength
-     */
-    public void setMinimumWordLength(int minimumWordLength) {
-        this.minimumWordLength = minimumWordLength;
-    }
-    public int getMinimumWordLength() {
-        return minimumWordLength;
-    }
     
     /** Read all the words from a reader and add them to the list.
      * 
@@ -54,105 +40,8 @@ public class WordList implements Iterable<String> {
         }
     }
     
-    /**
-     * Check if a word is a solution to the puzzle, but don't check if it is
-     * in the word list.
-     * @param letters three capital letters.
-     * @param word all capital letters
-     * @return true if the word matches the puzzle.
-     */
-    public boolean isMatch(String letters, String word) {
-        if (word.charAt(word.length()-1) != letters.charAt(2)) {
-            return false;
-        }
-        if (word.charAt(0) != letters.charAt(0)) {
-            return false;
-        }
-        int foundAt = word.indexOf(letters.charAt(1), 1);
-        return 0 < foundAt && foundAt < word.length() - 1;
-    }
-    
     public boolean contains(String word) {
         return wordList.contains(word);
-    }
-
-    /**
-     * Check to see if a word is in the word list and a match for the puzzle
-     * letters.
-     * @param letters three capital letters that the solution must match.
-     * @param solution a word to evaluate, case doesn't matter
-     * @return VALID if the solution is valid, otherwise the reason the solution
-     * was rejected.
-     */
-    public WordResult checkSolution(String letters, String solution) {
-        if (solution == null || solution.length() == 0) {
-            return WordResult.SKIPPED;
-        }
-        String solutionUpper = solution.toUpperCase();
-        if ( ! contains(solutionUpper)) {
-            return WordResult.NOT_A_WORD;
-        }
-        return ! isMatch(letters, solutionUpper)
-                ? WordResult.NOT_A_MATCH
-                : solution.length() < minimumWordLength
-                ? WordResult.TOO_SHORT
-                : WordResult.VALID;
-    }
-
-    /**
-     * Compare a solution and response.
-     * @param letters the puzzle letters to match
-     * @param solution a valid solution to the puzzle, or null, or blank.
-     * @param response an attempt to improve on the solution, case doesn't 
-     * matter
-     * @return the result of comparing the two solutions
-     */
-    public WordResult checkResponse(
-            String letters, 
-            String solution,
-            String response) {
-        if (response == null || response.length() == 0) {
-            return solution == null || solution.length() == 0
-                    ? WordResult.SKIPPED
-                    : WordResult.NOT_IMPROVED;
-        }
-        String challengeUpper = response.toUpperCase();
-        if ( ! isMatch(letters, challengeUpper)) {
-            return solution == null || solution.length() == 0
-                    ? WordResult.IMPROVED_SKIP_NOT_A_MATCH
-                    : WordResult.IMPROVEMENT_NOT_A_MATCH;
-        }
-        if ( ! contains(challengeUpper)) {
-            return solution == null || solution.length() == 0
-                    ? WordResult.IMPROVED_SKIP_NOT_A_WORD
-                    : WordResult.IMPROVEMENT_NOT_A_WORD;
-        }
-        if (challengeUpper.length() < minimumWordLength) {
-            return solution == null || solution.length() == 0
-                    ? WordResult.IMPROVED_SKIP_TOO_SHORT
-                    : WordResult.IMPROVEMENT_TOO_SHORT;
-        }
-        if (solution == null || solution.length() == 0) {
-            return WordResult.WORD_FOUND;
-        }
-        return challengeWord(solution.toUpperCase(), challengeUpper);
-    }
-
-    /**
-     * Compare a new word with the current best solution. Both words must
-     * be valid solutions all in upper case.
-     */
-    public WordResult challengeWord(String solution, String challenge) {
-        return challenge.length() > solution.length()
-                ? WordResult.LONGER
-                : challenge.length() == solution.length()
-                && challenge.compareTo(solution) > 0
-                ? WordResult.LATER
-                : challenge.length() < solution.length()
-                ? WordResult.SHORTER
-                : challenge.equals(solution)
-                ? WordResult.NOT_IMPROVED
-                : WordResult.EARLIER;
     }
 
     /**
@@ -161,46 +50,7 @@ public class WordList implements Iterable<String> {
      */
     @Override
     public Iterator<String> iterator() {
-        final Iterator<String> rawIterator = wordList.iterator();
-        return new Iterator<String>() {
-            private String next;
-            private boolean hasNext;
-            
-            {
-                findNext();
-            }
-            
-            @Override
-            public boolean hasNext() {
-                return hasNext;
-            }
-
-            @Override
-            public String next() {
-                if (hasNext) {
-                    String old = next;
-                    findNext();
-                    return old;
-                }
-                throw new NoSuchElementException();
-            }
-            
-            private void findNext() {
-                hasNext = false;
-                while(rawIterator.hasNext()) {
-                    next = rawIterator.next();
-                    hasNext = next.length() >= minimumWordLength;
-                    if (hasNext) {
-                        return;
-                    }
-                }
-            }
-
-            @Override
-            public void remove() {
-                throw new UnsupportedOperationException();
-            }
-        };
+        return wordList.iterator();
     }
 
     /**
@@ -209,58 +59,5 @@ public class WordList implements Iterable<String> {
      */
     public int size() {
         return wordList.size();
-    }
-
-    /**
-     * Find the most common word that beats both the solution and the 
-     * response.
-     * @param letters the three letters that valid solutions must match
-     * @param solution one possible solution that may be invalid
-     * @param response another possible solution that may be invalid
-     * @return a valid solution that beats both, or null if none found
-     */
-    public String findNextBetter(
-            String letters, 
-            String solution,
-            String response) {
-        
-        String solutionUpper = 
-                checkSolution(letters, solution) != WordResult.VALID 
-                ? "" 
-                : solution.toUpperCase();
-        String responseUpper = 
-                checkSolution(letters, response) != WordResult.VALID 
-                ? "" 
-                : response.toUpperCase();
-        String bestSoFar = 
-                isImproved(solutionUpper, responseUpper) 
-                ? responseUpper 
-                : solutionUpper;
-        for (String word : wordList) {
-            if (word.length() >= minimumWordLength 
-                    && isMatch(letters, word) 
-                    && isImproved(bestSoFar, word)) {
-                return word;
-            }
-        }
-        return null; // no improvement found.
-    }
-
-    /**
-     * Compare two solutions to see if the second one actually improves on
-     * the first one.
-     * @param solution must be blank or a valid solution all in upper case
-     * @param response must be blank or a valid solution all in upper case
-     * @return
-     */
-    private boolean isImproved(String solution, String response) {
-        if (response.length() == 0) {
-            return false;
-        }
-        if (solution.length() == 0) {
-            return true;
-        }
-        int maxScore = WordResult.NOT_IMPROVED.getScore();
-        return challengeWord(solution, response).getScore() < maxScore;
     }
 }

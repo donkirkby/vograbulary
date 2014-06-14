@@ -55,7 +55,7 @@ public class UltraghostScreen extends VograbularyScreen {
                 }
             }
         }
-        ultraghostController.getWordList().setMinimumWordLength(
+        ultraghostController.getMatch().setMinimumWordLength(
                 preferences.getUltraghostMinimumWordLength());
 
         super.show();

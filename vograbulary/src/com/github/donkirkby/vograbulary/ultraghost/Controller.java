@@ -162,6 +162,7 @@ public class Controller implements StudentListener {
     }
     
     public Match getMatch() {
+        checkMatch();
         return view.getMatch();
     }
 

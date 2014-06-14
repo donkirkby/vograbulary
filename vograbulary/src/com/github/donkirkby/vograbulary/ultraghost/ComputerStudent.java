@@ -38,6 +38,7 @@ public class ComputerStudent extends Student {
     public void startSolving(Puzzle puzzle) {
         currentPuzzle = puzzle;
         searchPuzzle = new Puzzle(puzzle.getLetters(), this);
+        searchPuzzle.setMinimumWordLength(puzzle.getMinimumWordLength());
         searchPuzzle.setSolution(Puzzle.NO_SOLUTION);
         searchBatchCount = 0;
         searchedWordsCount = 0;
@@ -57,7 +58,11 @@ public class ComputerStudent extends Student {
                 vocabularySize 
                 - searchedWordsCount);
         for (int i = 0; i < wordCount && itr.hasNext(); i++) {
-            searchPuzzle.setResponse(itr.next());
+            String word = itr.next();
+            if (word.length() < searchPuzzle.getMinimumWordLength()) {
+                continue;
+            }
+            searchPuzzle.setResponse(word);
             if (searchPuzzle.isImproved()) {
                 searchPuzzle.setSolution(searchPuzzle.getResponse());
             }

@@ -71,6 +71,17 @@ public class MatchTest {
     }
     
     @Test
+    public void wordLength() {
+        random.setPuzzles("PIE");
+        int expected = 5;
+        match.setMinimumWordLength(expected);
+        
+        Puzzle puzzle = match.createPuzzle(wordList);
+        
+        assertThat("word length", puzzle.getMinimumWordLength(), is(expected));
+    }
+    
+    @Test
     public void summary() {
         student.addScore(5);
         computer.addScore(9);

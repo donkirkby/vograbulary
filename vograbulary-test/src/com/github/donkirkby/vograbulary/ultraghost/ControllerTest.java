@@ -259,7 +259,7 @@ public class ControllerTest {
     
     @Test
     public void solutionTooShort() {
-        controller.getWordList().setMinimumWordLength(5);
+        startPuzzle.setMinimumWordLength(5);
         startPuzzle.setSolution("rope");
 
         controller.solve();

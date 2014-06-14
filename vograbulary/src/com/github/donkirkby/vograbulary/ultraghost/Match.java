@@ -7,6 +7,7 @@ public class Match {
     private Student[] students;
     private int studentIndex = Integer.MIN_VALUE;
     private Puzzle puzzle;
+    private int minimumWordLength = 4;
 
     public Match(int matchScore, Student... students) {
         this.matchScore = matchScore;
@@ -40,6 +41,7 @@ public class Match {
                 random.generatePuzzle(), 
                 students[studentIndex], 
                 wordList);
+        puzzle.setMinimumWordLength(minimumWordLength);
         return puzzle;
     }
 
@@ -81,5 +83,16 @@ public class Match {
             }
         }
         return !isTie && bestScore >= matchScore ? bestStudent : null;
+    }
+    
+    public int getMinimumWordLength() {
+        return minimumWordLength;
+    }
+    /**
+     * Set the minimum length for solutions in this match. Default is 4.
+     * @param minimumWordLength
+     */
+    public void setMinimumWordLength(int minimumWordLength) {
+        this.minimumWordLength = minimumWordLength;
     }
 }

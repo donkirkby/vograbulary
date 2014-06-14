@@ -111,9 +111,9 @@ public class ComputerStudentTest {
         wordList.read(new StringReader("PIECE\nPIPE"));
         student.setWordList(wordList);
         student.setMaxSearchBatchCount(1);
-        wordList.setMinimumWordLength(5);
         
         Puzzle puzzle = new Puzzle("PIE", student, wordList);
+        puzzle.setMinimumWordLength(5);
         student.startSolving(puzzle);
         
         student.runSearchBatch();

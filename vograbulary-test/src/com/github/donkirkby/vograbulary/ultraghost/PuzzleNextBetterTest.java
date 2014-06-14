@@ -7,7 +7,6 @@ import java.io.StringReader;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -40,33 +39,27 @@ public class PuzzleNextBetterTest {
                {"PIE", 5, "price", "", "PIECE"},
                {"PIE", 4, "PRICE", null, "PIPE"},
                {"PIE", 4, "", "PRIDE", "PRICE"},
-               {"PIE", 4, null, "PRIDE", "PRICE"},
                {"PIE", 4, "PRICE", "PIPE", "PINE"},
                {"PIE", 4, "PRICE", "pipe", "PINE"},
                {"PIE", 4, "PIPE", "PRICE", "PINE"},
-               {"PIE", 4, "ASKS", "", "PIERCE"},
-               {"PIE", 4, "PAIE", "", "PIERCE"},
                {"PIE", 4, "", "ASKS", "PIERCE"},
                {"PIE", 4, "", "PAIE", "PIERCE"},
                {"PIE", 4, "PINE", "", null}});
    }
    
-   private WordList wordList;
-   
-   @Before
-   public void setUp() {
-       wordList = new WordList();
-       wordList.setMinimumWordLength(minimumLength);
-       wordList.read(new StringReader(
-               "pierce\npride\nprice\npipe\npine\nasks\npiece"));
-   }
-   
    @Test
    public void findNextBetter() {
+       WordList wordList = new WordList();
+       wordList.read(new StringReader(
+               "pierce\npride\nprice\npipe\npine\nasks\npiece"));
+
        Puzzle puzzle = new Puzzle(letters, new Student("Bob"), wordList);
+       puzzle.setMinimumWordLength(minimumLength);
        puzzle.setSolution(solution);
        puzzle.setResponse(improvedSolution);
+       
        String nextBetter = puzzle.findNextBetter();
+       
        assertThat("next better", nextBetter, is(expectedNextBetter));
    }
 }

@@ -10,6 +10,7 @@ public class Puzzle {
     private String hint;
     private Student owner;
     private WordList wordList;
+    private int minimumWordLength = 4;
     
     public Puzzle(String letters, Student owner, WordList wordList) {
         if (letters == null) {
@@ -89,9 +90,62 @@ public class Puzzle {
             return WordResult.UNKNOWN;
         }
         if (response == NOT_SET) {
-            return wordList.checkSolution(letters, solution);
+            return checkSolution();
         }
-        return wordList.checkResponse(letters, solution, response);
+        return checkResponse();
+    }
+
+    /**
+     * Compare the solution and response.
+     * @return the result of comparing the two solutions
+     */
+    private WordResult checkResponse() {
+        if (response == null || response.length() == 0) {
+            return solution == null || solution.length() == 0
+                    ? WordResult.SKIPPED
+                    : WordResult.NOT_IMPROVED;
+        }
+        String challengeUpper = response.toUpperCase();
+        if ( ! isMatch(challengeUpper)) {
+            return solution == null || solution.length() == 0
+                    ? WordResult.IMPROVED_SKIP_NOT_A_MATCH
+                    : WordResult.IMPROVEMENT_NOT_A_MATCH;
+        }
+        if ( ! wordList.contains(challengeUpper)) {
+            return solution == null || solution.length() == 0
+                    ? WordResult.IMPROVED_SKIP_NOT_A_WORD
+                    : WordResult.IMPROVEMENT_NOT_A_WORD;
+        }
+        if (challengeUpper.length() < getMinimumWordLength()) {
+            return solution == null || solution.length() == 0
+                    ? WordResult.IMPROVED_SKIP_TOO_SHORT
+                    : WordResult.IMPROVEMENT_TOO_SHORT;
+        }
+        if (solution == null || solution.length() == 0) {
+            return WordResult.WORD_FOUND;
+        }
+        return challengeWord(solution.toUpperCase(), challengeUpper);
+    }
+
+    /**
+     * Check to see if the solution is in the word list and a match for the puzzle
+     * letters.
+     * @return VALID if the solution is valid, otherwise the reason the solution
+     * was rejected.
+     */
+    private WordResult checkSolution() {
+        if (solution == null || solution.length() == 0) {
+            return WordResult.SKIPPED;
+        }
+        String solutionUpper = solution.toUpperCase();
+        if ( ! wordList.contains(solutionUpper)) {
+            return WordResult.NOT_A_WORD;
+        }
+        return ! isMatch(solution)
+                ? WordResult.NOT_A_MATCH
+                : solution.length() < getMinimumWordLength()
+                ? WordResult.TOO_SHORT
+                : WordResult.VALID;
     }
     
     /**
@@ -108,15 +162,61 @@ public class Puzzle {
     }
 
     /**
-     * Check if the solution is a match to the puzzle letters, but don't check 
+     * Check if a word is a match to the puzzle letters, but don't check 
      * if it is in the word list.
+     * @param word the word to check, case insensitive
      */
-    public boolean isSolutionAMatch() {
-        return wordList.isMatch(letters, solution.toUpperCase());
+    public boolean isMatch(String word) {
+        String upper = word.toUpperCase();
+        if (upper.charAt(upper.length()-1) != letters.charAt(2)) {
+            return false;
+        }
+        if (upper.charAt(0) != letters.charAt(0)) {
+            return false;
+        }
+        int foundAt = upper.indexOf(letters.charAt(1), 1);
+        return 0 < foundAt && foundAt < upper.length() - 1;
     }
 
+    /**
+     * Compare a new word with the current best solution. Both words must
+     * be valid solutions all in upper case.
+     */
+    private WordResult challengeWord(String solution, String challenge) {
+        return challenge.length() > solution.length()
+                ? WordResult.LONGER
+                : challenge.length() == solution.length()
+                && challenge.compareTo(solution) > 0
+                ? WordResult.LATER
+                : challenge.length() < solution.length()
+                ? WordResult.SHORTER
+                : challenge.equals(solution)
+                ? WordResult.NOT_IMPROVED
+                : WordResult.EARLIER;
+    }
+
+    /**
+     * Find the most common word that beats both the solution and the 
+     * response.
+     * @return a valid solution that beats both, or null if none found
+     */
     public String findNextBetter() {
-        return wordList.findNextBetter(letters, solution, response);
+        String bestSoFar = 
+                isImproved() 
+                ? response == null ? "" : response.toUpperCase() 
+                : solution == null ? "" : solution.toUpperCase();
+        Puzzle searchPuzzle = new Puzzle(letters, owner);
+        searchPuzzle.setSolution(bestSoFar);
+        for (String word : wordList) {
+            if (word.length() < getMinimumWordLength()) {
+                continue;
+            }
+            searchPuzzle.setResponse(word);
+            if (searchPuzzle.isImproved()) {
+                return word;
+            }
+        }
+        return null; // no improvement found.
     }
 
     public boolean isImproved() {
@@ -124,5 +224,16 @@ public class Puzzle {
         return result == WordResult.SHORTER || 
                 result == WordResult.EARLIER || 
                 result == WordResult.WORD_FOUND;
+    }
+
+    /**
+     * Set a limit for how long a word must be to solve the puzzle. Default 4.
+     * @param minimumWordLength
+     */
+    public void setMinimumWordLength(int minimumWordLength) {
+        this.minimumWordLength = minimumWordLength;
+    }
+    public int getMinimumWordLength() {
+        return minimumWordLength;
     }
 }
