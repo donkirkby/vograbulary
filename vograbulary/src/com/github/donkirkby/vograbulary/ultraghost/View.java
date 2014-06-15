@@ -236,7 +236,7 @@ public class View {
         if (puzzle != null) {
             Student owner = puzzle.getOwner();
             studentName.setText(owner == null ? "" : owner.getName());
-            letters.setText(blankForNull(puzzle.getLetters()));
+            letters.setText(blankForNull(puzzle.getLettersDisplay()));
             setFieldContents(solution, puzzle.getSolution());
             setFieldContents(response, puzzle.getResponse());
             hint.setText(blankForNull(puzzle.getHint()) + " ");

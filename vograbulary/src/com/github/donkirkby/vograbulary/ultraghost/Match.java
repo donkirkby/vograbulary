@@ -2,6 +2,7 @@ package com.github.donkirkby.vograbulary.ultraghost;
 
 
 public class Match {
+    private boolean isHyperghost;
     private UltraghostRandom random = new UltraghostRandom();
     private int matchScore;
     private Student[] students;
@@ -37,10 +38,23 @@ public class Match {
     public Puzzle createPuzzle(WordList wordList) {
         checkStudentOrder();
         studentIndex = (studentIndex + 1) % students.length;
+        String letters;
+        String previousWord;
+        if (puzzle == null || 
+                ! isHyperghost || 
+                puzzle.getResult() == WordResult.SKIPPED) {
+            letters = random.generatePuzzle();
+            previousWord = null;
+        }
+        else {
+            letters = puzzle.getLetters();
+            previousWord = puzzle.getSolution();
+        }
         puzzle = new Puzzle(
-                random.generatePuzzle(), 
+                letters, 
                 students[studentIndex], 
                 wordList);
+        puzzle.setPreviousWord(previousWord);
         puzzle.setMinimumWordLength(minimumWordLength);
         return puzzle;
     }
@@ -94,5 +108,16 @@ public class Match {
      */
     public void setMinimumWordLength(int minimumWordLength) {
         this.minimumWordLength = minimumWordLength;
+    }
+
+    /**
+     * Set to true if new puzzles should use the same letters as previous
+     * puzzles until no player can think of any worse solutions.
+     */
+    public void setHyperghost(boolean isHyperghost) {
+        this.isHyperghost = isHyperghost;
+    }
+    public boolean isHyperghost() {
+        return isHyperghost;
     }
 }

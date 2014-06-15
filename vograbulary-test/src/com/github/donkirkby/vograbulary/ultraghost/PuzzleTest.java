@@ -75,4 +75,31 @@ public class PuzzleTest {
         
         assertThat("string", string, is("Puzzle(PIE, Student)"));
     }
+    
+    @Test
+    public void getLettersDisplaySimple() {
+        assertThat(
+                "letters display", 
+                puzzle.getLettersDisplay(), 
+                is("PIE"));
+    }
+    
+    @Test
+    public void getLettersDisplayPrevious() {
+        puzzle.setPreviousWord("PIPE");
+        
+        assertThat(
+                "letters display", 
+                puzzle.getLettersDisplay(), 
+                is("PIE after PIPE"));
+    }
+    
+    @Test
+    public void getNextBetterAfterPrevious() {
+        puzzle.setPreviousWord("PRICE");
+        puzzle.setSolution(Puzzle.NO_SOLUTION);
+        puzzle.setResponse(Puzzle.NO_SOLUTION);
+        
+        assertThat("hint", puzzle.findNextBetter(), nullValue());
+    }
 }

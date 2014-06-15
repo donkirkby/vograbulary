@@ -12,6 +12,7 @@ public class UltraghostScreen extends VograbularyScreen {
     private Controller ultraghostController = 
             new Controller();
     private boolean isComputerOpponent;
+    private boolean isHyperghost;
     private View view;
 
     public UltraghostScreen(final VograbularyApp app) {
@@ -32,6 +33,10 @@ public class UltraghostScreen extends VograbularyScreen {
     
     public void setComputerOpponent(boolean isComputerOpponent) {
         this.isComputerOpponent = isComputerOpponent;
+    }
+    
+    public void setHyperghost(boolean isHyperghost) {
+        this.isHyperghost = isHyperghost;
     }
 
     @Override
@@ -55,8 +60,10 @@ public class UltraghostScreen extends VograbularyScreen {
                 }
             }
         }
-        ultraghostController.getMatch().setMinimumWordLength(
+        Match match = ultraghostController.getMatch();
+        match.setMinimumWordLength(
                 preferences.getUltraghostMinimumWordLength());
+        match.setHyperghost(isHyperghost);
 
         super.show();
     }

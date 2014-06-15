@@ -269,6 +269,17 @@ public class ControllerTest {
     }
     
     @Test
+    public void solutionTooSoon() {
+        startPuzzle.setPreviousWord("ROPE");
+        startPuzzle.setSolution("rope");
+
+        controller.solve();
+        
+        Focus focus = view.getCurrentFocus();
+        assertThat("focus", focus, is(Focus.Solution));
+    }
+    
+    @Test
     public void solveWithHumanOwnerAgainstComputer() {
         createMatch(student, computerStudent);
         int startRefreshCount = view.getRefreshCount();

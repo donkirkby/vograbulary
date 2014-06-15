@@ -134,7 +134,8 @@ public class Controller implements StudentListener {
         WordResult result = puzzle.getResult();
         if (result == WordResult.NOT_A_MATCH || 
                 result == WordResult.NOT_A_WORD ||
-                result == WordResult.TOO_SHORT) {
+                result == WordResult.TOO_SHORT ||
+                result == WordResult.TOO_SOON) {
             view.focusSolution();
         }
         else {

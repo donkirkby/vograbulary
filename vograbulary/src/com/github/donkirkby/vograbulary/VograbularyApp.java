@@ -27,8 +27,11 @@ public class VograbularyApp extends Game {
         return skin;
     }
 	
-	public void startUltraghost(boolean isComputerOpponent) {
+	public void startUltraghost(
+	        boolean isComputerOpponent, 
+	        boolean isHyperghost) {
 	    ultraghostScreen.setComputerOpponent(isComputerOpponent);
+	    ultraghostScreen.setHyperghost(isHyperghost);
 	    setScreen(ultraghostScreen);
 	}
 	

@@ -11,6 +11,7 @@ public class Puzzle {
     private Student owner;
     private WordList wordList;
     private int minimumWordLength = 4;
+    private String previousWord;
     
     public Puzzle(String letters, Student owner, WordList wordList) {
         if (letters == null) {
@@ -45,7 +46,16 @@ public class Puzzle {
     public String getLetters() {
         return letters;
     }
-    
+
+    /**
+     * Get a display version of the three letters, plus any previous word.
+     */
+    public String getLettersDisplay() {
+        return previousWord == null
+                ? letters
+                : letters + " after " + previousWord;
+    }
+
     /**
      * A solution to the puzzle. If it matches the three letters, then it's 
      * valid. Null means it hasn't been set yet, and empty string means it
@@ -100,28 +110,34 @@ public class Puzzle {
      * @return the result of comparing the two solutions
      */
     private WordResult checkResponse() {
+        boolean isSkipped = solution == null || solution.length() == 0;
         if (response == null || response.length() == 0) {
-            return solution == null || solution.length() == 0
+            return isSkipped
                     ? WordResult.SKIPPED
                     : WordResult.NOT_IMPROVED;
         }
         String challengeUpper = response.toUpperCase();
         if ( ! isMatch(challengeUpper)) {
-            return solution == null || solution.length() == 0
+            return isSkipped
                     ? WordResult.IMPROVED_SKIP_NOT_A_MATCH
                     : WordResult.IMPROVEMENT_NOT_A_MATCH;
         }
         if ( ! wordList.contains(challengeUpper)) {
-            return solution == null || solution.length() == 0
+            return isSkipped
                     ? WordResult.IMPROVED_SKIP_NOT_A_WORD
                     : WordResult.IMPROVEMENT_NOT_A_WORD;
         }
         if (challengeUpper.length() < getMinimumWordLength()) {
-            return solution == null || solution.length() == 0
+            return isSkipped
                     ? WordResult.IMPROVED_SKIP_TOO_SHORT
                     : WordResult.IMPROVEMENT_TOO_SHORT;
         }
-        if (solution == null || solution.length() == 0) {
+        if (isTooSoon(challengeUpper)) {
+            return isSkipped
+                    ? WordResult.IMPROVED_SKIP_TOO_SOON
+                    : WordResult.IMPROVEMENT_TOO_SOON;
+        }
+        if (isSkipped) {
             return WordResult.WORD_FOUND;
         }
         return challengeWord(solution.toUpperCase(), challengeUpper);
@@ -141,11 +157,33 @@ public class Puzzle {
         if ( ! wordList.contains(solutionUpper)) {
             return WordResult.NOT_A_WORD;
         }
+        if (isTooSoon(solutionUpper)) {
+            return WordResult.TOO_SOON;
+        }
         return ! isMatch(solution)
                 ? WordResult.NOT_A_MATCH
                 : solution.length() < getMinimumWordLength()
                 ? WordResult.TOO_SHORT
                 : WordResult.VALID;
+    }
+
+    /**
+     * Check if a solution or response is too soon (not later or longer than
+     * the previous word).
+     * @param wordUpper the solution or response, all in upper case
+     * @return false if the word is later or longer than the previous word,
+     * otherwise true.
+     */
+    private boolean isTooSoon(String wordUpper) {
+        if (previousWord != null) {
+            WordResult solutionOverPrevious = 
+                    challengeWord(previousWord.toUpperCase(), wordUpper);
+            if (solutionOverPrevious != WordResult.LATER &&
+                    solutionOverPrevious != WordResult.LONGER) {
+                return true;
+            }
+        }
+        return false;
     }
     
     /**
@@ -206,6 +244,7 @@ public class Puzzle {
                 ? response == null ? "" : response.toUpperCase() 
                 : solution == null ? "" : solution.toUpperCase();
         Puzzle searchPuzzle = new Puzzle(letters, owner);
+        searchPuzzle.setPreviousWord(previousWord);
         searchPuzzle.setSolution(bestSoFar);
         for (String word : wordList) {
             if (word.length() < getMinimumWordLength()) {
@@ -235,5 +274,19 @@ public class Puzzle {
     }
     public int getMinimumWordLength() {
         return minimumWordLength;
+    }
+
+    /**
+     * Set the word from the previous puzzle. All solutions to this puzzle must
+     * be worse than the previous word. Either longer or the same length but
+     * later in the dictionary.
+     * @param previousWord must be a word from the dictionary that matches the
+     * three letters of this puzzle.
+     */
+    public void setPreviousWord(String previousWord) {
+        this.previousWord = previousWord;
+    }
+    public String getPreviousWord() {
+        return previousWord;
     }
 }

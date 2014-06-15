@@ -46,6 +46,8 @@ public class MenuScreen extends VograbularyScreen {
         mainTable.add(challengeTable).align(BaseTableLayout.TOP);
         TextButton ultraghostButton = new TextButton("Ultraghost", skin);
         challengeTable.add(ultraghostButton).colspan(2).pad(PADDING).row();
+        TextButton hyperghostButton = new TextButton("Hyperghost", skin);
+        challengeTable.add(hyperghostButton).colspan(2).pad(PADDING).row();
         TextButton russianDollsButton = new TextButton("Russian Dolls", skin);
         challengeTable.add(russianDollsButton).colspan(2).pad(PADDING).row();
         
@@ -62,10 +64,16 @@ public class MenuScreen extends VograbularyScreen {
         ultraghostButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                savePreferences();
-                boolean isComputerOpponent = 
-                        studentCheckBoxes.get(0).isChecked();
-                app.startUltraghost(isComputerOpponent);
+                boolean isHyperghost = false;
+                startUltraghost(isHyperghost);
+            }
+        });
+        
+        hyperghostButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                boolean isHyperghost = true;
+                startUltraghost(isHyperghost);
             }
         });
         
@@ -179,6 +187,13 @@ public class MenuScreen extends VograbularyScreen {
                 (int)vocabularySize.getValue());
         preferences.setUltraghostMinimumWordLength(
                 (int)wordLength.getValue());
+    }
+    
+    private void startUltraghost(boolean isHyperghost) {
+        savePreferences();
+        boolean isComputerOpponent = 
+                studentCheckBoxes.get(0).isChecked();
+        getApp().startUltraghost(isComputerOpponent, isHyperghost);
     }
     //resumeJesting
 }
