@@ -42,13 +42,22 @@ public class Match {
         String previousWord;
         if (puzzle == null || 
                 ! isHyperghost || 
-                puzzle.getResult() == WordResult.SKIPPED) {
+                puzzle.getResult() == WordResult.SKIPPED ||
+                puzzle.getResult() == WordResult.IMPROVED_SKIP_NOT_A_WORD ||
+                puzzle.getResult() == WordResult.IMPROVED_SKIP_TOO_SOON ||
+                puzzle.getResult() == WordResult.IMPROVED_SKIP_TOO_SHORT) {
             letters = random.generatePuzzle();
             previousWord = null;
         }
         else {
             letters = puzzle.getLetters();
-            previousWord = puzzle.getSolution();
+            WordResult result = puzzle.getResult();
+            previousWord = 
+                    result == WordResult.LONGER ||
+                    result == WordResult.LATER ||
+                    result.getScore() < 0 
+                    ? puzzle.getResponse() 
+                    : puzzle.getSolution();
         }
         puzzle = new Puzzle(
                 letters, 

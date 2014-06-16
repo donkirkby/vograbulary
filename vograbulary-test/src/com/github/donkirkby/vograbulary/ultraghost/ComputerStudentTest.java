@@ -122,6 +122,22 @@ public class ComputerStudentTest {
     }
     
     @Test
+    public void ignoreWordsBetterThanPrevious() {
+        wordList = new WordList();
+        wordList.read(new StringReader("PRICE\nPIECE\nPIPE"));
+        student.setWordList(wordList);
+        student.setMaxSearchBatchCount(1);
+        
+        Puzzle puzzle = new Puzzle("PIE", student, wordList);
+        puzzle.setPreviousWord("piece");
+        student.startSolving(puzzle);
+        
+        student.runSearchBatch();
+        
+        assertThat("solution", puzzle.getSolution(), is("PRICE"));
+    }
+    
+    @Test
     public void vocabularySizeNoMatch() {
         when(preferences.getComputerStudentVocabularySize()).thenReturn(1);
         

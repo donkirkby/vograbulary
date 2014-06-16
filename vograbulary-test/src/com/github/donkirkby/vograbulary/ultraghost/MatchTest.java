@@ -71,38 +71,6 @@ public class MatchTest {
     }
     
     @Test
-    public void hyperghost() {
-        String expectedLetters = "PIE";
-        random.setPuzzles(expectedLetters, "XRZ");
-        random.setStartingStudent(0);
-        String solution1 = "PIPE";
-        match.setHyperghost(true);
-        
-        Puzzle puzzle1 = match.createPuzzle(wordList);
-        puzzle1.setSolution(solution1);
-        Puzzle puzzle2 = match.createPuzzle(wordList);
-        
-        assertThat("letters", puzzle2.getLetters(), is(expectedLetters));
-        assertThat("previous", puzzle2.getPreviousWord(), is(solution1));
-    }
-    
-    @Test
-    public void hyperghostSkipped() {
-        String expectedLetters = "PIE";
-        random.setPuzzles("XRZ", expectedLetters);
-        random.setStartingStudent(0);
-        match.setHyperghost(true);
-        
-        Puzzle puzzle1 = match.createPuzzle(wordList);
-        puzzle1.setSolution(Puzzle.NO_SOLUTION);
-        puzzle1.setResponse(Puzzle.NO_SOLUTION);
-        Puzzle puzzle2 = match.createPuzzle(wordList);
-        
-        assertThat("letters", puzzle2.getLetters(), is(expectedLetters));
-        assertThat("previous", puzzle2.getPreviousWord(), nullValue());
-    }
-    
-    @Test
     public void wordLength() {
         random.setPuzzles("PIE");
         int expected = 5;

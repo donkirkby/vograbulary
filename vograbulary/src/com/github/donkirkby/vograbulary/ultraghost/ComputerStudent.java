@@ -39,6 +39,7 @@ public class ComputerStudent extends Student {
         currentPuzzle = puzzle;
         searchPuzzle = new Puzzle(puzzle.getLetters(), this);
         searchPuzzle.setMinimumWordLength(puzzle.getMinimumWordLength());
+        searchPuzzle.setPreviousWord(puzzle.getPreviousWord());
         searchPuzzle.setSolution(Puzzle.NO_SOLUTION);
         searchBatchCount = 0;
         searchedWordsCount = 0;
