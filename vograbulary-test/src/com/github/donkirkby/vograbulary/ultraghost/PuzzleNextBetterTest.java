@@ -43,6 +43,7 @@ public class PuzzleNextBetterTest {
                {"PIE", 4, "PRICE", "pipe", "PINE"},
                {"PIE", 4, "PIPE", "PRICE", "PINE"},
                {"PIE", 4, "", "ASKS", "PIERCE"},
+               {"PIE", 4, null, "ASKS", "PIERCE"},
                {"PIE", 4, "", "PAIE", "PIERCE"},
                {"PIE", 4, "PINE", "", null}});
    }

@@ -53,10 +53,6 @@ public class Controller implements StudentListener {
         }
     }
     
-    public WordList getWordList() {
-        return wordList;
-    }
-
     private class SearchTask extends Task {
         private List<Student> searchingStudents = new ArrayList<Student>(students);
 
@@ -87,7 +83,7 @@ public class Controller implements StudentListener {
     }
     
     @Override
-    public void askForChallenge() {
+    public void askForResponse() {
         view.focusResponse();
     }
     
@@ -152,7 +148,7 @@ public class Controller implements StudentListener {
         else {
             for (Student student : students) {
                 if (student != puzzle.getOwner()) {
-                    student.prepareChallenge();
+                    student.prepareResponse();
                 }
             }
             if (searchTask != null) {

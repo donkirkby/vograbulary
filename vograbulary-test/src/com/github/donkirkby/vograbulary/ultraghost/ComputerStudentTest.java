@@ -8,7 +8,9 @@ import static org.mockito.Mockito.*;
 import java.io.StringReader;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import com.github.donkirkby.vograbulary.VograbularyPreferences;
 
@@ -17,6 +19,9 @@ public class ComputerStudentTest {
     private WordList wordList;
     private FocusField focus;
     private VograbularyPreferences preferences;
+    
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
     
     private enum FocusField {Solution, Challenge};
     
@@ -41,7 +46,7 @@ public class ComputerStudentTest {
             }
             
             @Override
-            public void askForChallenge() {
+            public void askForResponse() {
                 focus = FocusField.Challenge;
             }
         });
@@ -153,7 +158,7 @@ public class ComputerStudentTest {
         student.runSearchBatch();
         puzzle.setSolution("");
         
-        student.prepareChallenge();
+        student.prepareResponse();
         
         assertThat("response", puzzle.getResponse(), is("PRICE"));
     }
@@ -166,9 +171,16 @@ public class ComputerStudentTest {
         student.runSearchBatch();
         puzzle.setSolution("PIPE");
         
-        student.prepareChallenge();
+        student.prepareResponse();
         
         assertThat("response", puzzle.getResponse(), is(Puzzle.NO_SOLUTION));
+    }
+    
+    @Test
+    public void prepareResponseNotReady() {
+        thrown.expect(IllegalStateException.class);
+        thrown.expectMessage("Called prepareResponse() before startSolving().");
+        student.prepareResponse();
     }
     
     @Test

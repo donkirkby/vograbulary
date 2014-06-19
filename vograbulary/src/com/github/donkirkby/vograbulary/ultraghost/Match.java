@@ -112,9 +112,6 @@ public class Match {
         return !isTie && bestScore >= matchScore ? bestStudent : null;
     }
     
-    public int getMinimumWordLength() {
-        return minimumWordLength;
-    }
     /**
      * Set the minimum length for solutions in this match. Default is 4.
      * @param minimumWordLength
@@ -129,8 +126,5 @@ public class Match {
      */
     public void setHyperghost(boolean isHyperghost) {
         this.isHyperghost = isHyperghost;
-    }
-    public boolean isHyperghost() {
-        return isHyperghost;
     }
 }

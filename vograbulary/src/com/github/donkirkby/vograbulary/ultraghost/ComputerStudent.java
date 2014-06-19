@@ -70,7 +70,7 @@ public class ComputerStudent extends Student {
                 || searchedWordsCount >= vocabularySize) {
             if (currentPuzzle.getOwner() == this) {
                 currentPuzzle.setSolution(searchPuzzle.getSolution());
-                getListener().askForChallenge();
+                getListener().askForResponse();
                 return true;
             }
         }
@@ -85,12 +85,13 @@ public class ComputerStudent extends Student {
     }
     
     @Override
-    public void prepareChallenge() {
+    public void prepareResponse() {
         checkCurrentPuzzle();
-        String challenge = 
-                searchPuzzle == null
-                ? ""
-                : searchPuzzle.getSolution();
+        if (currentPuzzle == null) {
+            throw new IllegalStateException(
+                    "Called prepareResponse() before startSolving().");
+        }
+        String challenge = searchPuzzle.getSolution();
         currentPuzzle.setResponse(challenge);
         if ( ! currentPuzzle.isImproved()) {
             currentPuzzle.setResponse(Puzzle.NO_SOLUTION);

@@ -277,7 +277,7 @@ public class Puzzle {
     public String findNextBetter() {
         String bestSoFar = 
                 isImproved() 
-                ? response == null ? "" : response.toUpperCase() 
+                ? response.toUpperCase() 
                 : solution == null ? "" : solution.toUpperCase();
         Puzzle searchPuzzle = new Puzzle(letters, owner);
         searchPuzzle.setPreviousWord(previousWord);

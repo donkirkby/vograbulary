@@ -4,7 +4,7 @@ public class Student {
     public interface StudentListener {
         void askForSolution();
         
-        void askForChallenge();
+        void askForResponse();
         
         void showThinking();
     }
@@ -69,8 +69,8 @@ public class Student {
     /** Get ready to submit a challenge. This is only called for the inactive
      * students.
      */
-    public void prepareChallenge() {
-        listener.askForChallenge();
+    public void prepareResponse() {
+        listener.askForResponse();
     }
     
     /** Run a background search if needed, and return true if the search is
