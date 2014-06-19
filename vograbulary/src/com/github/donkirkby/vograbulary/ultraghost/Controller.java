@@ -91,20 +91,10 @@ public class Controller implements StudentListener {
         view.focusResponse();
     }
     
-    @Override
-    public void refreshPuzzle() {
-        Puzzle puzzle = getMatch().getPuzzle();
-        if (puzzle.getResponse() != null && puzzle.getHint() == null) {
-            respond();
-        }
-        else {
-            view.refreshPuzzle();
-        }
-    }
-    
     public void start() {
         checkMatch();
         Puzzle puzzle = view.getMatch().createPuzzle(wordList);
+        watchPuzzle(puzzle);
         view.refreshPuzzle();
         for (Student student : students) {
             student.startSolving(puzzle);
@@ -112,6 +102,27 @@ public class Controller implements StudentListener {
         float delaySeconds = INTERVAL_SECONDS;
         searchTask = new SearchTask();
         view.schedule(searchTask, delaySeconds, INTERVAL_SECONDS);
+    }
+
+    /**
+     * Tell the controller to watch for changes in the current puzzle.
+     */
+    public void watchPuzzle(Puzzle puzzle) {
+        puzzle.addListener(new Puzzle.Listener() {
+            @Override
+            public void completed() {
+                Puzzle puzzle = view.getPuzzle();
+                puzzle.getOwner().addScore(puzzle.getResult().getScore());
+                String hint = puzzle.findNextBetter();
+                puzzle.setHint(hint == null ? null : "hint: " + hint);
+                view.focusNextButton();
+            }
+            
+            @Override
+            public void changed() {
+                view.refreshPuzzle();
+            }
+        });
     }
 
     private void checkMatch() {
@@ -153,15 +164,6 @@ public class Controller implements StudentListener {
         }
     }
 
-    public void respond() {
-        Puzzle puzzle = view.getPuzzle();
-        puzzle.getOwner().addScore(puzzle.getResult().getScore());
-        String hint = puzzle.findNextBetter();
-        puzzle.setHint(hint == null ? null : "hint: " + hint);
-        view.focusNextButton();
-        view.refreshPuzzle();
-    }
-    
     public Match getMatch() {
         checkMatch();
         return view.getMatch();

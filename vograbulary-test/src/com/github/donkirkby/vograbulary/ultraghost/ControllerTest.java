@@ -1,6 +1,7 @@
 package com.github.donkirkby.vograbulary.ultraghost;
 
 import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -52,6 +53,7 @@ public class ControllerTest {
         controller.setView(view);
         startPuzzle = new Puzzle("RPE", student, wordList);
         createMatch(student, student2);
+        controller.watchPuzzle(startPuzzle);
     }
 
     private void createMatch(Student... students) {
@@ -282,9 +284,9 @@ public class ControllerTest {
     @Test
     public void solveWithHumanOwnerAgainstComputer() {
         createMatch(student, computerStudent);
-        int startRefreshCount = view.getRefreshCount();
         
         startPuzzle.setSolution("");
+        int startRefreshCount = view.getRefreshCount();
 
         controller.solve();
         
@@ -294,7 +296,7 @@ public class ControllerTest {
         assertThat(
                 "refresh count", 
                 view.getRefreshCount(), 
-                is(startRefreshCount+1));
+                greaterThan(startRefreshCount));
         assertThat("score", student.getScore(), is(1));
     }
     
@@ -329,23 +331,19 @@ public class ControllerTest {
     @Test
     public void respond() {
         startPuzzle.setSolution("");
-        startPuzzle.setResponse("rope");
         int startRefreshCount = view.getRefreshCount();
-        
-        controller.respond();
+        startPuzzle.setResponse("rope");
         
         Focus focus = view.getCurrentFocus();
         assertThat("focus", focus, is(Focus.Result));
         assertThat("result", startPuzzle.getResult(), is(WordResult.WORD_FOUND));
-        assertThat("refresh count", view.getRefreshCount(), is(startRefreshCount+1));
+        assertThat("refresh count", view.getRefreshCount(), greaterThan(startRefreshCount));
     }
     
     @Test
     public void summary() {
         startPuzzle.setSolution("");
         startPuzzle.setResponse("rope");
-        
-        controller.respond();
         
         assertThat("score", student.getScore(), is(-1));
     }
@@ -382,8 +380,6 @@ public class ControllerTest {
         startPuzzle.setSolution("");
         startPuzzle.setResponse("");
         
-        controller.respond();
-        
         assertThat("hint", startPuzzle.getHint(), is("hint: ROPE"));
     }
     
@@ -392,13 +388,6 @@ public class ControllerTest {
         startPuzzle.setSolution("rope");
         startPuzzle.setResponse("");
         
-        controller.respond();
-        
         assertThat("hint", startPuzzle.getHint(), nullValue());
-    }
-    
-    @Test
-    public void clearStudents() {
-        
     }
 }

@@ -72,22 +72,33 @@
         <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
         <antcall target="build"/>
     </target>
+    <target name="PuzzleNextBetterTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="com.github.donkirkby.vograbulary.ultraghost.PuzzleNextBetterTest" todir="${junit.output.dir}"/>
+            <classpath refid="vograbulary-test.classpath"/>
+        </junit>
+    </target>
     <target name="vograbulary-test">
         <mkdir dir="${junit.output.dir}"/>
         <junit fork="yes" printsummary="withOutAndErr" haltonfailure="on">
             <formatter type="xml"/>
+            <test name="com.github.donkirkby.vograbulary.VograbularyPreferencesTest" todir="${junit.output.dir}"/>
             <test name="com.github.donkirkby.vograbulary.russian.ControllerTest" todir="${junit.output.dir}"/>
             <test name="com.github.donkirkby.vograbulary.russian.PuzzleTest" todir="${junit.output.dir}"/>
             <test name="com.github.donkirkby.vograbulary.ultraghost.ComputerStudentTest" todir="${junit.output.dir}"/>
             <test name="com.github.donkirkby.vograbulary.ultraghost.ControllerTest" todir="${junit.output.dir}"/>
+            <test name="com.github.donkirkby.vograbulary.ultraghost.MatchPreviousWordTest" todir="${junit.output.dir}"/>
             <test name="com.github.donkirkby.vograbulary.ultraghost.MatchTest" todir="${junit.output.dir}"/>
+            <test name="com.github.donkirkby.vograbulary.ultraghost.PuzzleChallengeTest" todir="${junit.output.dir}"/>
+            <test name="com.github.donkirkby.vograbulary.ultraghost.PuzzleMatchTest" todir="${junit.output.dir}"/>
+            <test name="com.github.donkirkby.vograbulary.ultraghost.PuzzleNextBetterTest" todir="${junit.output.dir}"/>
+            <test name="com.github.donkirkby.vograbulary.ultraghost.PuzzlePreviousWordTest" todir="${junit.output.dir}"/>
+            <test name="com.github.donkirkby.vograbulary.ultraghost.PuzzleResultTest" todir="${junit.output.dir}"/>
             <test name="com.github.donkirkby.vograbulary.ultraghost.PuzzleTest" todir="${junit.output.dir}"/>
             <test name="com.github.donkirkby.vograbulary.ultraghost.StudentTest" todir="${junit.output.dir}"/>
             <test name="com.github.donkirkby.vograbulary.ultraghost.UltraghostRandomTest" todir="${junit.output.dir}"/>
-            <test name="com.github.donkirkby.vograbulary.ultraghost.WordListChallengeTest" todir="${junit.output.dir}"/>
-            <test name="com.github.donkirkby.vograbulary.ultraghost.WordListMatchTest" todir="${junit.output.dir}"/>
-            <test name="com.github.donkirkby.vograbulary.ultraghost.WordListNextBetterTest" todir="${junit.output.dir}"/>
-            <test name="com.github.donkirkby.vograbulary.ultraghost.WordListSolutionTest" todir="${junit.output.dir}"/>
             <test name="com.github.donkirkby.vograbulary.ultraghost.WordListTest" todir="${junit.output.dir}"/>
             <test name="com.github.donkirkby.vograbulary.ultraghost.WordResultTest" todir="${junit.output.dir}"/>
             <classpath refid="vograbulary-test.classpath"/>
@@ -130,11 +141,19 @@
             <classpath refid="vograbulary-test.classpath"/>
         </junit>
     </target>
-    <target name="WordListChallengeTest">
+    <target name="PuzzleNextBetterTest.findNextBetter">
         <mkdir dir="${junit.output.dir}"/>
         <junit fork="yes" printsummary="withOutAndErr">
             <formatter type="xml"/>
-            <test name="com.github.donkirkby.vograbulary.ultraghost.WordListChallengeTest" todir="${junit.output.dir}"/>
+            <test name="com.github.donkirkby.vograbulary.ultraghost.PuzzleNextBetterTest" todir="${junit.output.dir}"/>
+            <classpath refid="vograbulary-test.classpath"/>
+        </junit>
+    </target>
+    <target name="VograbularyPreferencesTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="com.github.donkirkby.vograbulary.VograbularyPreferencesTest" todir="${junit.output.dir}"/>
             <classpath refid="vograbulary-test.classpath"/>
         </junit>
     </target>
@@ -146,19 +165,11 @@
             <classpath refid="vograbulary-test.classpath"/>
         </junit>
     </target>
-    <target name="WordListNextBetterTest">
+    <target name="PuzzleChallengeTest">
         <mkdir dir="${junit.output.dir}"/>
         <junit fork="yes" printsummary="withOutAndErr">
             <formatter type="xml"/>
-            <test name="com.github.donkirkby.vograbulary.ultraghost.WordListNextBetterTest" todir="${junit.output.dir}"/>
-            <classpath refid="vograbulary-test.classpath"/>
-        </junit>
-    </target>
-    <target name="WordListNextBetterTest.findNextBetter">
-        <mkdir dir="${junit.output.dir}"/>
-        <junit fork="yes" printsummary="withOutAndErr">
-            <formatter type="xml"/>
-            <test name="com.github.donkirkby.vograbulary.ultraghost.WordListNextBetterTest" todir="${junit.output.dir}"/>
+            <test name="com.github.donkirkby.vograbulary.ultraghost.PuzzleChallengeTest" todir="${junit.output.dir}"/>
             <classpath refid="vograbulary-test.classpath"/>
         </junit>
     </target>
@@ -207,6 +218,14 @@
         <junit fork="yes" printsummary="withOutAndErr">
             <formatter type="xml"/>
             <test name="com.github.donkirkby.vograbulary.ultraghost.PuzzleTest" todir="${junit.output.dir}"/>
+            <classpath refid="vograbulary-test.classpath"/>
+        </junit>
+    </target>
+    <target name="MatchPreviousWordTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="com.github.donkirkby.vograbulary.ultraghost.MatchPreviousWordTest" todir="${junit.output.dir}"/>
             <classpath refid="vograbulary-test.classpath"/>
         </junit>
     </target>

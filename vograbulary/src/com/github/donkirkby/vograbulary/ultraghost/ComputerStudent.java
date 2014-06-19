@@ -59,11 +59,7 @@ public class ComputerStudent extends Student {
                 vocabularySize 
                 - searchedWordsCount);
         for (int i = 0; i < wordCount && itr.hasNext(); i++) {
-            String word = itr.next();
-            if (word.length() < searchPuzzle.getMinimumWordLength()) {
-                continue;
-            }
-            searchPuzzle.setResponse(word);
+            searchPuzzle.setResponse(itr.next());
             if (searchPuzzle.isImproved()) {
                 searchPuzzle.setSolution(searchPuzzle.getResponse());
             }
@@ -74,7 +70,6 @@ public class ComputerStudent extends Student {
                 || searchedWordsCount >= vocabularySize) {
             if (currentPuzzle.getOwner() == this) {
                 currentPuzzle.setSolution(searchPuzzle.getSolution());
-                getListener().refreshPuzzle();
                 getListener().askForChallenge();
                 return true;
             }
@@ -100,7 +95,6 @@ public class ComputerStudent extends Student {
         if ( ! currentPuzzle.isImproved()) {
             currentPuzzle.setResponse(Puzzle.NO_SOLUTION);
         }
-        getListener().refreshPuzzle();
     }
     
     public Puzzle getCurrentPuzzle() {

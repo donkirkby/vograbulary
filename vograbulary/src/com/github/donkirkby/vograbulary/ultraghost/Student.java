@@ -7,8 +7,6 @@ public class Student {
         void askForChallenge();
         
         void showThinking();
-        
-        void refreshPuzzle();
     }
     
     private StudentListener listener;

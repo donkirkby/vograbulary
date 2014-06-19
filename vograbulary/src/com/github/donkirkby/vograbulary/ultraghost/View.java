@@ -91,7 +91,6 @@ public class View {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 match.getPuzzle().setResponse(response.getText());
-                controller.respond();
             }
         });
         menuButton.addListener(new ChangeListener() {

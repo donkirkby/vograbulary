@@ -18,6 +18,9 @@ public class PuzzleTest {
     private String letters;
     private WordList wordList;
     private Student owner;
+    private int changeCount;
+    private int completionCount;
+    private String changedSolution;
     
     @Before
     public void setUp() {
@@ -25,7 +28,22 @@ public class PuzzleTest {
         wordList = new WordList();
         wordList.read(new StringReader("PRICE\nPIECE\nPIPE\n"));
         owner = new Student("Student");
+        changeCount = 0;
+        completionCount = 0;
+        changedSolution = null;
         puzzle = new Puzzle(letters, owner, wordList);
+        puzzle.addListener(new Puzzle.Listener() {
+            @Override
+            public void changed() {
+                changeCount++;
+                changedSolution = puzzle.getSolution();
+            }
+            
+            @Override
+            public void completed() {
+                completionCount++;
+            }
+        });
     }
     
     @Test 
@@ -101,5 +119,45 @@ public class PuzzleTest {
         puzzle.setResponse(Puzzle.NO_SOLUTION);
         
         assertThat("hint", puzzle.findNextBetter(), nullValue());
+    }
+    
+    @Test
+    public void solutionChangeEvent() {
+        String expectedSolution = "XXXX";
+        puzzle.setSolution(expectedSolution);
+        
+        assertThat("change count", changeCount, is(1));
+        assertThat("solution", changedSolution, is(expectedSolution));
+    }
+    
+    @Test
+    public void responseChangeEvent() {
+        puzzle.setResponse("XXXX");
+        
+        assertThat("change count", changeCount, is(1));
+    }
+    
+    @Test
+    public void hintChangeEvent() {
+        puzzle.setHint("XXXX");
+        
+        assertThat("change count", changeCount, is(1));
+    }
+    
+    @Test
+    public void completionEvent() {
+        puzzle.setSolution("YYYY");
+        puzzle.setResponse("XXXX");
+        
+        assertThat("completion count", completionCount, is(1));
+    }
+    
+    @Test
+    public void completionEventHappensOnlyOnce() {
+        puzzle.setSolution("YYYY");
+        puzzle.setResponse("XXXX");
+        puzzle.setHint("ZZZZ");
+        
+        assertThat("completion count", completionCount, is(1));
     }
 }

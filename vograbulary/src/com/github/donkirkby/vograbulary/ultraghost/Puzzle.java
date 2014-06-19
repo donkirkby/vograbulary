@@ -1,6 +1,20 @@
 package com.github.donkirkby.vograbulary.ultraghost;
 
+import java.util.ArrayList;
+
 public class Puzzle {
+    public interface Listener {
+        /**
+         * This is called whenever one of the fields is changed.
+         */
+        void changed();
+        
+        /**
+         * This is called when the puzzle is finished. Solution and response
+         * are set.
+         */
+        void completed();
+    }
     public static String NOT_SET = null;
     public static String NO_SOLUTION = "";
     
@@ -12,6 +26,9 @@ public class Puzzle {
     private WordList wordList;
     private int minimumWordLength = 4;
     private String previousWord;
+    private ArrayList<Listener> listeners = 
+            new ArrayList<Listener>();
+    private boolean isComplete;
     
     public Puzzle(String letters, Student owner, WordList wordList) {
         if (letters == null) {
@@ -66,6 +83,23 @@ public class Puzzle {
     }
     public void setSolution(String solution) {
         this.solution = solution;
+        onChanged();
+    }
+
+    /**
+     * Raise the changed event to any listeners.
+     */
+    private void onChanged() {
+        boolean isJustCompleted =
+                isComplete
+                ? false
+                : (isComplete = (solution != null && response != null));
+        for (Listener listener : listeners) {
+            listener.changed();
+            if (isJustCompleted) {
+                listener.completed();
+            }
+        }
     }
     
     /**
@@ -79,6 +113,7 @@ public class Puzzle {
     }
     public void setResponse(String response) {
         this.response = response;
+        onChanged();
     }
     
     /**
@@ -89,6 +124,7 @@ public class Puzzle {
     }
     public void setHint(String hint) {
         this.hint = hint;
+        onChanged();
     }
     
     /**
@@ -111,7 +147,7 @@ public class Puzzle {
      */
     private WordResult checkResponse() {
         boolean isSkipped = solution == null || solution.length() == 0;
-        if (response == null || response.length() == 0) {
+        if (response.length() == 0) {
             return isSkipped
                     ? WordResult.SKIPPED
                     : WordResult.NOT_IMPROVED;
@@ -150,7 +186,7 @@ public class Puzzle {
      * was rejected.
      */
     private WordResult checkSolution() {
-        if (solution == null || solution.length() == 0) {
+        if (solution.length() == 0) {
             return WordResult.SKIPPED;
         }
         String solutionUpper = solution.toUpperCase();
@@ -288,5 +324,9 @@ public class Puzzle {
     }
     public String getPreviousWord() {
         return previousWord;
+    }
+    
+    public void addListener(Listener listener) {
+        listeners.add(listener);
     }
 }

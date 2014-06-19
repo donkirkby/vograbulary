@@ -44,10 +44,6 @@ public class ComputerStudentTest {
             public void askForChallenge() {
                 focus = FocusField.Challenge;
             }
-            
-            @Override
-            public void refreshPuzzle() {
-            }
         });
     }
     
@@ -160,6 +156,19 @@ public class ComputerStudentTest {
         student.prepareChallenge();
         
         assertThat("response", puzzle.getResponse(), is("PRICE"));
+    }
+    
+    @Test
+    public void prepareResponseNotAsGood() {
+        when(preferences.getComputerStudentVocabularySize()).thenReturn(1);
+        Puzzle puzzle = new Puzzle("PIE", new Student("Bob"), wordList);
+        student.startSolving(puzzle);
+        student.runSearchBatch();
+        puzzle.setSolution("PIPE");
+        
+        student.prepareChallenge();
+        
+        assertThat("response", puzzle.getResponse(), is(Puzzle.NO_SOLUTION));
     }
     
     @Test

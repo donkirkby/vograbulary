@@ -52,12 +52,16 @@ public class Match {
         else {
             letters = puzzle.getLetters();
             WordResult result = puzzle.getResult();
-            previousWord = 
-                    result == WordResult.LONGER ||
-                    result == WordResult.LATER ||
-                    result.getScore() < 0 
-                    ? puzzle.getResponse() 
-                    : puzzle.getSolution();
+            switch (result) {
+            case LONGER:
+            case LATER:
+            case WORD_FOUND:
+                previousWord = puzzle.getResponse();
+                break;
+            default:
+                previousWord = puzzle.getSolution();
+                break;
+            }
         }
         puzzle = new Puzzle(
                 letters, 

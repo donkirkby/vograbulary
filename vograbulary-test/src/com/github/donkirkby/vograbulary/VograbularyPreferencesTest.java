@@ -37,6 +37,23 @@ public class VograbularyPreferencesTest {
     }
     
     @Test
+    public void studentNamesShort() {
+        String expectedNames = "A|B";
+        String expectedName1 = "A";
+        String expectedName2 = "B";
+        when(raw.getString(anyString(), anyString())).thenReturn(expectedNames);
+
+        preferences.setStudentNames(expectedName1, expectedName2);
+        verify(raw).putString(anyString(), eq(expectedNames));
+        
+        String name1 = preferences.getStudentNames().get(0);
+        String name2 = preferences.getStudentNames().get(1);
+        
+        assertThat("name 1", name1, is(expectedName1));
+        assertThat("name 2", name2, is(expectedName2));
+    }
+    
+    @Test
     public void containsPipe() {
         String expectedNames = "Al/ex|Bet/ty";
         String expectedName1 = "Al/ex";
