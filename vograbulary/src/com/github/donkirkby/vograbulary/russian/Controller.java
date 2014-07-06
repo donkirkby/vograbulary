@@ -62,11 +62,7 @@ public class Controller {
     }
 
     public String adjustScore(float seconds) {
-        Puzzle puzzle = screen.getPuzzle();
-        return 
-                puzzle.isSolved()
-                ? puzzle.getScoreDisplay()
-                : puzzle.adjustScore(seconds);
+        return screen.getPuzzle().adjustScore(seconds);
     }
 
 }

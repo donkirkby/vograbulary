@@ -127,6 +127,7 @@ public class RussianDollsScreen extends VograbularyScreen {
                 controller.solve();
                 if (puzzle.isSolved()) {
                     target1Label.setText(puzzle.getCombination());
+                    totalScore.setText(puzzle.getTotalScoreDisplay());
                     target1Cell.colspan(2);
                     target2Label.setVisible(false);
                     insertButton.setVisible(false);

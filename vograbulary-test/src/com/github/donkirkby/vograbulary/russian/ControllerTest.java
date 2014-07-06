@@ -129,23 +129,6 @@ public class ControllerTest {
     }
     
     @Test
-    public void adjustScoreAfterSolving() {
-        Puzzle puzzle = new Puzzle("unable comfort");
-        when(screen.getPuzzle()).thenReturn(puzzle);
-        int seconds = 10;
-        
-        String startScore = puzzle.getScoreDisplay();
-        puzzle.setTargetWord(0);
-        puzzle.setTargetCharacter(2);
-        
-        controller.solve();
-        String adjustedScore = controller.adjustScore(seconds);
-        
-        assertThat("start score", startScore, is("100"));
-        assertThat("adjusted score", adjustedScore, is("100"));
-    }
-    
-    @Test
     public void nextSetsPrevious() {
         String expectedClue1 = "unable comfort";
         String expectedClue2 = "something else";

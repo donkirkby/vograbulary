@@ -94,6 +94,20 @@ public class PuzzleTest {
     }
 
     @Test
+    public void adjustScoreAfterSolving() {
+        Puzzle puzzle1 = new Puzzle("not relevant");
+        
+        puzzle1.adjustScore(10);
+        BigDecimal score1 = puzzle1.getScore();
+        
+        puzzle1.setSolved(true);
+        puzzle1.adjustScore(5);
+        BigDecimal score2 = puzzle1.getScore();
+        
+        assertThat("score after 2 adjustments", score2, is(score1));
+    }
+
+    @Test
     public void totalScoreWithoutPrevious() {
         Puzzle puzzle = new Puzzle("not relevant");
         
@@ -105,20 +119,33 @@ public class PuzzleTest {
     }
 
     @Test
+    public void totalScoreAfterSolving() {
+        Puzzle puzzle = new Puzzle("not relevant");
+        
+        float seconds = 10;
+        puzzle.adjustScore(seconds);
+        puzzle.setSolved(true);
+        BigDecimal totalScore = puzzle.getTotalScore();
+        BigDecimal score = puzzle.getScore();
+        
+        assertThat("score", totalScore, is(score));
+    }
+
+    @Test
     public void totalScoreWithPrevious() {
         Puzzle puzzle1 = new Puzzle("not relevant");
         puzzle1.adjustScore(10);
+        puzzle1.setSolved(true);
         BigDecimal score1 = puzzle1.getScore();
         
         Puzzle puzzle2 = new Puzzle("still irrelevant", puzzle1);
         BigDecimal totalScore1 = puzzle2.getTotalScore();
         
         puzzle2.adjustScore(20);
+        puzzle2.setSolved(true);
         BigDecimal score2 = puzzle2.getScore();
+        BigDecimal totalScore2 = puzzle2.getTotalScore();
 
-        Puzzle puzzle3 = new Puzzle("you know", puzzle2);
-        BigDecimal totalScore2 = puzzle3.getTotalScore();
-        
         assertThat("score", totalScore1, is(score1));
         assertThat("score2", totalScore2, is(score1.add(score2)));
     }

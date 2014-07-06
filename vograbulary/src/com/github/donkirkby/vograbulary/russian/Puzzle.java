@@ -18,7 +18,7 @@ public class Puzzle {
     }
     
     public Puzzle(String clue, Puzzle previous) {
-        this(clue, previous.getScore().add(previous.getTotalScore()));
+        this(clue, previous.getTotalScore());
     }
     
     private Puzzle(String clue, BigDecimal totalScore) {
@@ -74,6 +74,7 @@ public class Puzzle {
     }
     public void setSolved(boolean isSolved) {
         this.isSolved = isSolved;
+        this.totalScore = totalScore.add(getScore());
     }
 
     public String getCombination() {
@@ -92,7 +93,9 @@ public class Puzzle {
     }
 
     public String adjustScore(float seconds) {
-        delay += seconds;
+        if ( ! isSolved) {
+            delay += seconds;
+        }
         return getScoreDisplay();
     }
 
