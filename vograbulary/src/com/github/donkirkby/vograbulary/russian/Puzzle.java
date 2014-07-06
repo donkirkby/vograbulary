@@ -1,11 +1,16 @@
 package com.github.donkirkby.vograbulary.russian;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
+
 public class Puzzle {
     private String clue;
     private String[] targets;
     private int targetWord;
     private int targetCharacter;
     private boolean isSolved;
+    private float delay = 0;
     
     public Puzzle(String clue) {
         this.clue = clue;
@@ -65,5 +70,21 @@ public class Puzzle {
         return targets[targetWord].substring(0, targetCharacter) +
                 targets[(targetWord+1)%2] +
                 targets[targetWord].substring(targetCharacter);
+    }
+    
+    public BigDecimal getScore() {
+        float rawScore = 
+                Math.max(0.000101f, 100 * (float)Math.exp(-delay*Math.log(2)/10));
+        int precision = rawScore >= 100 ? 3 : 2;
+        return new BigDecimal(
+                rawScore, 
+                new MathContext(precision, RoundingMode.FLOOR));
+    }
+
+    public String adjustScore(float seconds) {
+        delay += seconds;
+        BigDecimal score = getScore();
+        int formatPrecision = Math.max(0, score.scale());
+        return String.format("%." + formatPrecision + "f", score);
     }
 }

@@ -3,6 +3,8 @@ package com.github.donkirkby.vograbulary.russian;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
+import java.math.BigDecimal;
+
 import org.junit.Test;
 
 public class PuzzleTest {
@@ -74,5 +76,20 @@ public class PuzzleTest {
         String target2 = puzzle.getTarget(1);
         assertThat("target 1", target1, is("TARGETS"));
         assertThat("target 2", target2, is("PUNCTUATION"));
+    }
+
+    @Test
+    public void adjustmentsAddUp() {
+        Puzzle puzzle1 = new Puzzle("not relevant");
+        Puzzle puzzle2 = new Puzzle("not relevant");
+        
+        puzzle1.adjustScore(10);
+        BigDecimal score1 = puzzle1.getScore();
+        
+        puzzle2.adjustScore(1);
+        puzzle2.adjustScore(9);
+        BigDecimal score2 = puzzle2.getScore();
+        
+        assertThat("score after 2 adjustments", score2, is(score1));
     }
 }

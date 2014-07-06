@@ -7,6 +7,7 @@ import static org.mockito.Mockito.*;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.junit.Before;
@@ -114,6 +115,20 @@ public class ControllerTest {
         controller.solve();
         
         assertThat("is solved", puzzle.isSolved(), is(false));
+    }
+    
+    @Test
+    public void adjustScore() {
+        Puzzle puzzle = new Puzzle("unable comfort");
+        when(screen.getPuzzle()).thenReturn(puzzle);
+        
+        BigDecimal startScore = puzzle.getScore();
+        String adjustedScoreText = controller.adjustScore(10);
+        BigDecimal adjustedScore = puzzle.getScore();
+        
+        assertThat("start score", startScore, is(BigDecimal.valueOf(100)));
+        assertThat("adjusted score text", adjustedScoreText, is("50"));
+        assertThat("adjusted score", adjustedScore, is(BigDecimal.valueOf(50)));
     }
 
     private Puzzle capturePuzzle() {

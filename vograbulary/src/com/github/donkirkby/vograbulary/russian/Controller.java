@@ -57,4 +57,8 @@ public class Controller {
         puzzle.setSolved(wordList.contains(puzzle.getCombination()));
     }
 
+    public String adjustScore(float seconds) {
+        return screen.getPuzzle().adjustScore(seconds);
+    }
+
 }
