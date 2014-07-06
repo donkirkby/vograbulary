@@ -44,7 +44,11 @@ public class Controller {
 
     public void next() {
         String clue = clues.get(++clueNumber);
-        screen.setPuzzle(new Puzzle(clue));
+        Puzzle previousPuzzle = screen.getPuzzle();
+        screen.setPuzzle(
+                previousPuzzle == null
+                ? new Puzzle(clue)
+                : new Puzzle(clue, previousPuzzle));
     }
 
     public void back() {
@@ -58,7 +62,11 @@ public class Controller {
     }
 
     public String adjustScore(float seconds) {
-        return screen.getPuzzle().adjustScore(seconds);
+        Puzzle puzzle = screen.getPuzzle();
+        return 
+                puzzle.isSolved()
+                ? puzzle.getScoreDisplay()
+                : puzzle.adjustScore(seconds);
     }
 
 }

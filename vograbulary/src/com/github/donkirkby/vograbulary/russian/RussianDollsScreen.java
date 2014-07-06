@@ -175,6 +175,8 @@ public class RussianDollsScreen extends VograbularyScreen {
         puzzleLabel.setText(puzzle.getClue());
         target1Label.setText(puzzle.getTarget(0));
         target2Label.setText(puzzle.getTarget(1));
+        puzzleScore.setText(puzzle.getScoreDisplay());
+        totalScore.setText(puzzle.getTotalScoreDisplay());
     }
     public Puzzle getPuzzle() {
         return puzzle;

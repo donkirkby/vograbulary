@@ -44,8 +44,10 @@ public class PuzzleScoreTest {
         
         String scoreText = puzzle.adjustScore(seconds);
         BigDecimal score = puzzle.getScore();
+        String scoreDisplay = puzzle.getScoreDisplay();
         
         assertThat("score", score, is(new BigDecimal(expectedScore)));
         assertThat("score text", scoreText, is(expectedScore));
+        assertThat("score display", scoreDisplay, is(expectedScore));
     }
 }

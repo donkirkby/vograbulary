@@ -92,4 +92,34 @@ public class PuzzleTest {
         
         assertThat("score after 2 adjustments", score2, is(score1));
     }
+
+    @Test
+    public void totalScoreWithoutPrevious() {
+        Puzzle puzzle = new Puzzle("not relevant");
+        
+        BigDecimal score = puzzle.getTotalScore();
+        String scoreDisplay = puzzle.getTotalScoreDisplay();
+        
+        assertThat("score", score, is(BigDecimal.ZERO));
+        assertThat("score display", scoreDisplay, is("0"));
+    }
+
+    @Test
+    public void totalScoreWithPrevious() {
+        Puzzle puzzle1 = new Puzzle("not relevant");
+        puzzle1.adjustScore(10);
+        BigDecimal score1 = puzzle1.getScore();
+        
+        Puzzle puzzle2 = new Puzzle("still irrelevant", puzzle1);
+        BigDecimal totalScore1 = puzzle2.getTotalScore();
+        
+        puzzle2.adjustScore(20);
+        BigDecimal score2 = puzzle2.getScore();
+
+        Puzzle puzzle3 = new Puzzle("you know", puzzle2);
+        BigDecimal totalScore2 = puzzle3.getTotalScore();
+        
+        assertThat("score", totalScore1, is(score1));
+        assertThat("score2", totalScore2, is(score1.add(score2)));
+    }
 }

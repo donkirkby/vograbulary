@@ -7,7 +7,6 @@ import static org.mockito.Mockito.*;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-import java.math.BigDecimal;
 import java.util.List;
 
 import org.junit.Before;
@@ -55,7 +54,6 @@ public class ControllerTest {
         
         controller.loadPuzzles(reader);
         Puzzle puzzle1 = capturePuzzle();
-        verifyNoMoreInteractions(screen);
         controller.next();
         List<Puzzle> allPuzzles = captureAllPuzzles();
         
@@ -121,14 +119,54 @@ public class ControllerTest {
     public void adjustScore() {
         Puzzle puzzle = new Puzzle("unable comfort");
         when(screen.getPuzzle()).thenReturn(puzzle);
+        int seconds = 10;
         
-        BigDecimal startScore = puzzle.getScore();
-        String adjustedScoreText = controller.adjustScore(10);
-        BigDecimal adjustedScore = puzzle.getScore();
+        String startScore = puzzle.getScoreDisplay();
+        String adjustedScore = controller.adjustScore(seconds);
         
-        assertThat("start score", startScore, is(BigDecimal.valueOf(100)));
-        assertThat("adjusted score text", adjustedScoreText, is("50"));
-        assertThat("adjusted score", adjustedScore, is(BigDecimal.valueOf(50)));
+        assertThat("start score", startScore, is("100"));
+        assertThat("adjusted score", adjustedScore, is("50"));
+    }
+    
+    @Test
+    public void adjustScoreAfterSolving() {
+        Puzzle puzzle = new Puzzle("unable comfort");
+        when(screen.getPuzzle()).thenReturn(puzzle);
+        int seconds = 10;
+        
+        String startScore = puzzle.getScoreDisplay();
+        puzzle.setTargetWord(0);
+        puzzle.setTargetCharacter(2);
+        
+        controller.solve();
+        String adjustedScore = controller.adjustScore(seconds);
+        
+        assertThat("start score", startScore, is("100"));
+        assertThat("adjusted score", adjustedScore, is("100"));
+    }
+    
+    @Test
+    public void nextSetsPrevious() {
+        String expectedClue1 = "unable comfort";
+        String expectedClue2 = "something else";
+        String input = expectedClue1 + "\n" + expectedClue2;
+        Reader reader = new StringReader(input);
+        
+        controller.loadPuzzles(reader);
+        Puzzle puzzle = capturePuzzle();
+        when(screen.getPuzzle()).thenReturn(puzzle);
+        int seconds = 10;
+        
+        String adjustedScore = controller.adjustScore(seconds);
+        puzzle.setTargetWord(0);
+        puzzle.setTargetCharacter(2);
+        controller.solve();
+        
+        controller.next();
+        Puzzle puzzle2 = captureAllPuzzles().get(1);
+        String totalScore = puzzle2.getTotalScoreDisplay();
+        
+        assertThat("total score", totalScore, is(adjustedScore));
     }
 
     private Puzzle capturePuzzle() {

@@ -11,9 +11,19 @@ public class Puzzle {
     private int targetCharacter;
     private boolean isSolved;
     private float delay = 0;
+    private BigDecimal totalScore;
     
     public Puzzle(String clue) {
+        this(clue, BigDecimal.ZERO);
+    }
+    
+    public Puzzle(String clue, Puzzle previous) {
+        this(clue, previous.getScore().add(previous.getTotalScore()));
+    }
+    
+    private Puzzle(String clue, BigDecimal totalScore) {
         this.clue = clue;
+        this.totalScore = totalScore;
         int targetPosition = 0;
         String[] words = clue.split("\\s+");
         for (int i = 0; i < words.length; i++) {
@@ -83,8 +93,23 @@ public class Puzzle {
 
     public String adjustScore(float seconds) {
         delay += seconds;
-        BigDecimal score = getScore();
+        return getScoreDisplay();
+    }
+
+    public String getScoreDisplay() {
+        return getScoreDisplay(getScore());
+    }
+
+    public String getTotalScoreDisplay() {
+        return getScoreDisplay(getTotalScore());
+    }
+
+    private String getScoreDisplay(BigDecimal score) {
         int formatPrecision = Math.max(0, score.scale());
         return String.format("%." + formatPrecision + "f", score);
+    }
+    
+    public BigDecimal getTotalScore() {
+        return totalScore;
     }
 }
