@@ -58,7 +58,11 @@ public class RussianDollsScreen extends VograbularyScreen {
         target1Label = new Label("", skin);
         target2Label = new Label("", skin);
         target1Cell = table.add(target1Label);
-        table.add(target2Label);
+        table.add(target2Label).row();
+        final TextButton leftDrag = new TextButton("Drag", skin);
+        TextButton rightDrag = new TextButton("Drag", skin);
+        table.add(leftDrag);
+        table.add(rightDrag);
         
         table = new Table(skin);
         outerTable.addActor(table);
@@ -163,6 +167,14 @@ public class RussianDollsScreen extends VograbularyScreen {
         };
         dragListener.setTapSquareSize(2);
         insertButton.addListener(dragListener);
+        
+        TargetDisplay leftDragListener = 
+                new TargetDisplay(target1Label, leftDrag);
+        TargetDisplay rightDragListener = 
+                new TargetDisplay(target2Label, rightDrag);
+        leftDragListener.setOther(rightDragListener);
+        leftDrag.addListener(leftDragListener);
+        rightDrag.addListener(rightDragListener);
     }
     
     @Override
