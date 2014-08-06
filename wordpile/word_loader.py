@@ -94,6 +94,52 @@ class WordLoader(object):
             _, word1, word2 = line.split()
             self.merge_words(word1, word2, freqdist)
             self.merge_words(word2, word1, freqdist)
+    
+    def find_barconyms(self, word, reversed_word, seen_words):
+        for j in range(0,len(word)-1):
+            for k in range(j+1, len(word)):
+                swapped_list = list(reversed_word)
+                swapped_list[j], swapped_list[k] = (swapped_list[k],
+                                                    swapped_list[j])
+                swapped_word = ''.join(swapped_list)
+                if swapped_word in seen_words:
+                    if swapped_word == 'name':
+                        print '---' + word
+                    return swapped_word
+            
+    def find_bacronyms(self, all_words):
+        freqdist = self.find_frequent_words(all_words)
+        sorted_words = freqdist.keys()
+        freqdist= None
+        seen_words = set()
+        self.bacronyms = []
+        barconyms = []
+        print 'Starting...'
+        for i, word in enumerate(sorted_words):
+#             if i > 2000:
+#                 break
+            if len(word) < 4:
+                continue
+            reversed_word = word[::-1]
+            if reversed_word in seen_words:
+                self.bacronyms.append(reversed_word)
+            else:
+                barconym = self.find_barconyms(word, reversed_word, seen_words)
+                if barconym is not None:
+                    barconyms.append(barconym)
+                seen_words.add(word)
+        
+        self.barconyms = []
+        for word in barconyms:
+            if word not in self.bacronyms and word not in self.barconyms:
+                self.barconyms.append(word)
+        print len(self.bacronyms), len(self.barconyms)
+        output_count = min(len(self.bacronyms), len(self.barconyms)/2)
+        for i in range(output_count):
+            words = {self.bacronyms[i],
+                     self.barconyms[2*i],
+                     self.barconyms[2*i+1]}
+            print ' '.join(words)
 
 if __name__ == '__main__':
     loader = WordLoader()
@@ -101,24 +147,25 @@ if __name__ == '__main__':
     loader.load_valid_words('/usr/share/dict/american-english')
     all_words = brown.words() + gutenberg.words()
 
+    loader.find_bacronyms(all_words)
 #     loader.dump_words(all_words)
 #    loader.print_sandwiches(all_words)
-    f = open("/home/don/Documents/RussianDolls2.txt")
-    try:
-        loader.filter_sandwiches(f, all_words)
-    finally:
-        f.close()
+#     f = open("/home/don/Documents/RussianDolls2.txt")
+#     try:
+#         loader.filter_sandwiches(f, all_words)
+#     finally:
+#         f.close()
 elif __name__ == '__live_coding__':
     loader = WordLoader()
     is_valid = loader.is_valid('potato')
     loader.load_valid_words('sample.txt')
     loader.load_valid_words('sample2.txt')
-    loader._valid_words = set("plain coming complaining ten sentense sense oat".split())
+    loader._valid_words = set("net ten dear read lengthy pear reap mean name amen".split())
 
-    all_words = "plain coming complaining ten sentense sense oat ot This is it : a sample sentence . It isn't long , is it ?".split()
+    all_words = "net ten ten dear dear read read raed lengthy pear reap mean name name amen".split()
  
 #     loader.dump_words(all_words)
 #     loader.print_sandwiches(all_words)
     lines = ['1e-5 plain coming\n',
              '1e-6 ot a\n']
-    loader.filter_sandwiches(lines, all_words)
+    loader.find_bacronyms(all_words)
