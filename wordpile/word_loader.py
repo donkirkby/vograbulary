@@ -2,6 +2,7 @@ from nltk.corpus import brown
 from nltk.corpus import gutenberg
 from nltk.probability import FreqDist
 from re import match
+import os
 
 class WordLoader(object):
     def __init__(self):
@@ -18,6 +19,18 @@ class WordLoader(object):
             if(self.is_valid(stripped)):
                 self._valid_words.add(stripped)
         f.close()
+    
+    def load_sorted_words(self, filename):
+        with open(filename, 'rU') as f:
+            self.sorted_words = f.readlines()
+        self.sorted_words = map(str.rstrip, self.sorted_words)
+
+    def write_sorted_words(self, all_words, filename):
+        freqdist = self.find_frequent_words(all_words)
+        self.sorted_words = freqdist.keys()
+        with open(filename, 'w') as f:
+            for word in self.sorted_words:
+                f.write(word + '\n')
 
     def dump_words(self, all_words):
         """ Take a long list of words from several texts, and use them as a
@@ -95,9 +108,13 @@ class WordLoader(object):
             self.merge_words(word1, word2, freqdist)
             self.merge_words(word2, word1, freqdist)
     
-    def find_barconyms(self, word, reversed_word, seen_words):
-        for j in range(0,len(word)-1):
-            for k in range(j+1, len(word)):
+    def find_barconyms(self, 
+                       word, 
+                       reversed_word, 
+                       seen_words,
+                       margin):
+        for j in range(margin,len(word)-1-margin):
+            for k in range(j+1, len(word)-margin):
                 swapped_list = list(reversed_word)
                 swapped_list[j], swapped_list[k] = (swapped_list[k],
                                                     swapped_list[j])
@@ -107,13 +124,11 @@ class WordLoader(object):
                         print '---' + word
                     return swapped_word
             
-    def find_bacronyms(self, all_words):
-        freqdist = self.find_frequent_words(all_words)
-        sorted_words = freqdist.keys()
-        freqdist= None
+    def find_bacronyms(self, sorted_words):
         seen_words = set()
         self.bacronyms = []
         barconyms = []
+        bacromyns = []
         print 'Starting...'
         for i, word in enumerate(sorted_words):
 #             if i > 2000:
@@ -124,30 +139,56 @@ class WordLoader(object):
             if reversed_word in seen_words:
                 self.bacronyms.append(reversed_word)
             else:
-                barconym = self.find_barconyms(word, reversed_word, seen_words)
+                barconym = self.find_barconyms(word,
+                                               reversed_word,
+                                               seen_words,
+                                               1)
                 if barconym is not None:
                     barconyms.append(barconym)
+                else:
+                    bacromyn = self.find_barconyms(word,
+                                                   reversed_word,
+                                                   seen_words,
+                                                   0)
+                    if bacromyn is not None:
+                        bacromyns.append(bacromyn)
                 seen_words.add(word)
         
         self.barconyms = []
+        self.bacromyns = []
         for word in barconyms:
-            if word not in self.bacronyms and word not in self.barconyms:
+            if (word not in self.bacronyms and
+                word not in self.barconyms):
+                
                 self.barconyms.append(word)
-        print len(self.bacronyms), len(self.barconyms)
-        output_count = min(len(self.bacronyms), len(self.barconyms)/2)
+        for word in bacromyns:
+            if (word not in self.bacronyms and
+                word not in self.barconyms and
+                word not in self.bacromyns):
+                
+                self.bacromyns.append(word)
+        print len(self.bacronyms), len(self.barconyms), len(self.bacromyns)
+        bacromyns = self.barconyms[:]
+        bacromyns.extend(self.bacromyns)
+        output_count = min(len(self.bacronyms), len(bacromyns)/2)
         for i in range(output_count):
             words = {self.bacronyms[i],
-                     self.barconyms[2*i],
-                     self.barconyms[2*i+1]}
+                     bacromyns[2*i],
+                     bacromyns[2*i+1]}
             print ' '.join(words)
 
 if __name__ == '__main__':
     loader = WordLoader()
-    loader.load_valid_words('/usr/share/dict/british-english')
-    loader.load_valid_words('/usr/share/dict/american-english')
-    all_words = brown.words() + gutenberg.words()
+    sorted_words_filename = 'sorted_words.txt'
+    if os.path.isfile(sorted_words_filename):
+        loader.load_sorted_words(sorted_words_filename)
+    else:
+        loader.load_valid_words('/usr/share/dict/british-english')
+        loader.load_valid_words('/usr/share/dict/american-english')
+        all_words = brown.words() + gutenberg.words()
+        loader.write_sorted_words(all_words, sorted_words_filename)
 
-    loader.find_bacronyms(all_words)
+    loader.find_bacronyms(loader.sorted_words)
 #     loader.dump_words(all_words)
 #    loader.print_sandwiches(all_words)
 #     f = open("/home/don/Documents/RussianDolls2.txt")
@@ -163,9 +204,11 @@ elif __name__ == '__live_coding__':
     loader._valid_words = set("net ten dear read lengthy pear reap mean name amen".split())
 
     all_words = "net ten ten dear dear read read raed lengthy pear reap mean name name amen".split()
- 
+    loader.write_sorted_words(all_words, 'sample3.txt')
+
 #     loader.dump_words(all_words)
 #     loader.print_sandwiches(all_words)
+    sorted_words = 'deer reed dear read lengthy name mean'.split()
     lines = ['1e-5 plain coming\n',
              '1e-6 ot a\n']
-    loader.find_bacronyms(all_words)
+    loader.find_bacronyms(sorted_words)

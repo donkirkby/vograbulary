@@ -21,6 +21,9 @@ vograbulary-html/war/WEB-INF/classes/com
 vograbulary-html/war/assets
 vograbulary-html/war/com.github.donkirkby.vograbulary.GwtDefinition
 
+wordpile/sample3.txt
+wordpile/sorted_words.txt
+
 # Local configuration file (sdk path, etc)
 local.properties
 .settings
