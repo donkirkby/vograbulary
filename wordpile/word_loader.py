@@ -111,70 +111,66 @@ class WordLoader(object):
     def find_barconyms(self, 
                        word, 
                        reversed_word, 
+                       frequency_score,
                        seen_words,
                        margin):
-        for j in range(margin,len(word)-1-margin):
-            for k in range(j+1, len(word)-margin):
+        for j in range(margin,len(word)-1):
+            for k in range(j+1, len(word)):
                 swapped_list = list(reversed_word)
                 swapped_list[j], swapped_list[k] = (swapped_list[k],
                                                     swapped_list[j])
                 swapped_word = ''.join(swapped_list)
                 if swapped_word in seen_words:
-                    if swapped_word == 'name':
-                        print '---' + word
-                    return swapped_word
+                    score = k - j
+                    ends = (0, len(word)-1)
+                    if j in ends:
+                        score *= 2
+                    if k in ends:
+                        score *= 2
+                    display_word = swapped_word
+                    if display_word == display_word[::-1]:
+                        #Palindrome, use other word
+                        display_word = word
+                    if display_word == display_word[::-1]:
+                        #Both palindromes, give up.
+                        continue
+                    if display_word == 'sales':
+                        print frequency_score, word, swapped_word
+                    yield (score, frequency_score, display_word)
             
     def find_bacronyms(self, sorted_words):
         seen_words = set()
         self.bacronyms = []
-        barconyms = []
-        bacromyns = []
+        barconyms = [] #[(score, frequency_score, word)]
         print 'Starting...'
-        for i, word in enumerate(sorted_words):
-#             if i > 2000:
-#                 break
-            if len(word) < 4:
+        banned_words = set("shad septa girt".split())
+        for frequency_score, word in enumerate(sorted_words):
+            if len(word) < 4 or word in banned_words:
                 continue
             reversed_word = word[::-1]
             if reversed_word in seen_words:
                 self.bacronyms.append(reversed_word)
             else:
-                barconym = self.find_barconyms(word,
-                                               reversed_word,
-                                               seen_words,
-                                               1)
-                if barconym is not None:
-                    barconyms.append(barconym)
-                else:
-                    bacromyn = self.find_barconyms(word,
-                                                   reversed_word,
-                                                   seen_words,
-                                                   0)
-                    if bacromyn is not None:
-                        bacromyns.append(bacromyn)
+                barconyms.extend(self.find_barconyms(word,
+                                                     reversed_word,
+                                                     frequency_score,
+                                                     seen_words,
+                                                     1))
                 seen_words.add(word)
         
+        barconyms.sort()
         self.barconyms = []
-        self.bacromyns = []
-        for word in barconyms:
+        for _score, _frequency_score, word in barconyms:
             if (word not in self.bacronyms and
                 word not in self.barconyms):
                 
                 self.barconyms.append(word)
-        for word in bacromyns:
-            if (word not in self.bacronyms and
-                word not in self.barconyms and
-                word not in self.bacromyns):
-                
-                self.bacromyns.append(word)
-        print len(self.bacronyms), len(self.barconyms), len(self.bacromyns)
-        bacromyns = self.barconyms[:]
-        bacromyns.extend(self.bacromyns)
-        output_count = min(len(self.bacronyms), len(bacromyns)/2)
+        print len(self.bacronyms), len(self.barconyms)
+        output_count = min(len(self.bacronyms), len(self.barconyms)/2)
         for i in range(output_count):
             words = {self.bacronyms[i],
-                     bacromyns[2*i],
-                     bacromyns[2*i+1]}
+                     self.barconyms[i],
+                     self.barconyms[i+output_count]}
             print ' '.join(words)
 
 if __name__ == '__main__':
@@ -208,7 +204,7 @@ elif __name__ == '__live_coding__':
 
 #     loader.dump_words(all_words)
 #     loader.print_sandwiches(all_words)
-    sorted_words = 'deer reed dear read lengthy name mean'.split()
+    sorted_words = 'deified edified mood dread west doom dared stew deer reed dear read lengthy name mean'.split()
     lines = ['1e-5 plain coming\n',
              '1e-6 ot a\n']
     loader.find_bacronyms(sorted_words)
