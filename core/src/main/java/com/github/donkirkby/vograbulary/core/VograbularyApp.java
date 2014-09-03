@@ -17,7 +17,7 @@ public class VograbularyApp extends Game.Default {
 
     @Override
     public void init() {
-        screens.push(new MenuScreen());
+        screens.push(new MenuScreen(screens));
     }
 
     @Override
