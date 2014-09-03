@@ -1,4 +1,4 @@
-package com.github.donkirkby.vograbulary.android;
+package com.github.donkirkby.vograbulary;
 
 import playn.android.GameActivity;
 import playn.core.PlayN;

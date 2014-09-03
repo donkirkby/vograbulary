@@ -20,6 +20,7 @@ vograbulary-html/war/WEB-INF/deploy
 vograbulary-html/war/WEB-INF/classes/com
 vograbulary-html/war/assets
 vograbulary-html/war/com.github.donkirkby.vograbulary.GwtDefinition
+android/assets
 
 wordpile/sample3.txt
 wordpile/sorted_words.txt
