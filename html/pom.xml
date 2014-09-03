@@ -52,6 +52,13 @@
 			<classifier>sources</classifier>
 		</dependency>
 
+		<dependency>
+			<groupId>com.threerings</groupId>
+			<artifactId>tripleplay</artifactId>
+			<version>${playn.version}</version>
+			<classifier>sources</classifier>
+		</dependency>
+
 		<!-- Start Google App Engine dependencies -->
 		<!-- These can be removed if you don't wish to deploy to Google App Engine -->
 		<dependency>
@@ -87,6 +94,10 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>gwt-maven-plugin</artifactId>
+				<!-- we need class metadata, override PlayN's disabling of such -->
+				<configuration>
+					<disableClassMetadata>false</disableClassMetadata>
+				</configuration>
 				<executions>
 					<execution>
 						<phase>prepare-package</phase>
