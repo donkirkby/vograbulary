@@ -20,8 +20,12 @@ public class RussianDollsScreen extends ChallengeScreen {
     }
 
     @Override
-    protected Button getMenuButton() {
+    public Button getMenuButton() {
         return menuButton;
     }
 
+    @Override
+    public String getName() {
+        return "Russian Dolls";
+    }
 }
