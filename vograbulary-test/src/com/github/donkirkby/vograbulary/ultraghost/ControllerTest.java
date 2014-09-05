@@ -16,6 +16,7 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Timer.Task;
 import com.github.donkirkby.vograbulary.VograbularyPreferences;
+import com.github.donkirkby.vograbulary.core.ultraghost.WordList;
 import com.github.donkirkby.vograbulary.ultraghost.DummyView.Focus;
 
 public class ControllerTest {

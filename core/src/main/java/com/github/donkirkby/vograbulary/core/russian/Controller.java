@@ -1,11 +1,12 @@
-package com.github.donkirkby.vograbulary.russian;
+package com.github.donkirkby.vograbulary.core.russian;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 
-import com.github.donkirkby.vograbulary.ultraghost.WordList;
+import com.github.donkirkby.vograbulary.core.russian.RussianDollsScreen;
+import com.github.donkirkby.vograbulary.core.ultraghost.WordList;
 
 public class Controller {
     private RussianDollsScreen screen;

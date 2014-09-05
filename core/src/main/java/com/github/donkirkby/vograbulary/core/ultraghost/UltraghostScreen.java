@@ -26,7 +26,7 @@ public class UltraghostScreen extends ChallengeScreen {
     protected Group createBody() {
         menuButton = new Button("Menu");
         return new Group(AxisLayout.vertical()).add(
-                new Label("Russian Dolls").addStyles(Style.FONT.is(TITLE_FONT)),
+                new Label("Ultraghost").addStyles(Style.FONT.is(TITLE_FONT)),
                 menuButton);
     }
 

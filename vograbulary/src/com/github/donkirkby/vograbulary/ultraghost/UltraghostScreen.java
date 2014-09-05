@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.github.donkirkby.vograbulary.VograbularyApp;
 import com.github.donkirkby.vograbulary.VograbularyPreferences;
 import com.github.donkirkby.vograbulary.VograbularyScreen;
+import com.github.donkirkby.vograbulary.core.ultraghost.WordList;
 
 public class UltraghostScreen extends VograbularyScreen {
     //stopJesting

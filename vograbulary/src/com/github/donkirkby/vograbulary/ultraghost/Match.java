@@ -1,5 +1,7 @@
 package com.github.donkirkby.vograbulary.ultraghost;
 
+import com.github.donkirkby.vograbulary.core.ultraghost.WordList;
+
 
 public class Match {
     private boolean isHyperghost;

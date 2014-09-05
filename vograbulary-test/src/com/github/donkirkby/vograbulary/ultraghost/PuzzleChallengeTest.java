@@ -14,6 +14,8 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
+import com.github.donkirkby.vograbulary.core.ultraghost.WordList;
+
 @RunWith(Parameterized.class)
 public class PuzzleChallengeTest {
    @Parameter

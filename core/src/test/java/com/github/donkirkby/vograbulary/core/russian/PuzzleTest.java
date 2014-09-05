@@ -1,4 +1,4 @@
-package com.github.donkirkby.vograbulary.russian;
+package com.github.donkirkby.vograbulary.core.russian;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;

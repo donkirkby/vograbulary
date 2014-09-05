@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.github.donkirkby.vograbulary.VograbularyPreferences;
+import com.github.donkirkby.vograbulary.core.ultraghost.WordList;
 
 public class MatchTest {
     private static final int MATCH_SCORE = 3;

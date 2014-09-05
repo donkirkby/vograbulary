@@ -19,7 +19,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.esotericsoftware.tablelayout.Cell;
 import com.github.donkirkby.vograbulary.VograbularyApp;
 import com.github.donkirkby.vograbulary.VograbularyScreen;
-import com.github.donkirkby.vograbulary.ultraghost.WordList;
+import com.github.donkirkby.vograbulary.core.russian.Controller;
+import com.github.donkirkby.vograbulary.core.russian.Puzzle;
+import com.github.donkirkby.vograbulary.core.ultraghost.WordList;
 
 public class RussianDollsScreen extends VograbularyScreen {
     //stopJesting
@@ -93,10 +95,12 @@ public class RussianDollsScreen extends VograbularyScreen {
         });
         
         controller = new Controller();
-        controller.setScreen(this);
+        // TODO: put this back when you migrate to the new project.
+        // controller.setScreen(this);
         Reader reader = Gdx.files.internal("data/russianDolls.txt").reader();
         controller.loadPuzzles(reader); // closes the reader
         WordList wordList = new WordList();
+        
         wordList.read(
                 Gdx.files.internal("data/wordlist.txt").reader());
         controller.setWordList(wordList);

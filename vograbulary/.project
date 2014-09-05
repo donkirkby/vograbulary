@@ -3,6 +3,7 @@
 	<name>vograbulary-old</name>
 	<comment></comment>
 	<projects>
+		<project>vograbulary-core</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

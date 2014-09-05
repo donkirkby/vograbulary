@@ -1,4 +1,4 @@
-package com.github.donkirkby.vograbulary.russian;
+package com.github.donkirkby.vograbulary.core.russian;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
@@ -15,7 +15,8 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.ArgumentCaptor;
 
-import com.github.donkirkby.vograbulary.ultraghost.WordList;
+import com.github.donkirkby.vograbulary.core.ultraghost.WordList;
+import com.github.donkirkby.vograbulary.core.russian.RussianDollsScreen;
 
 public class ControllerTest {
     private Controller controller;

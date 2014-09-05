@@ -2,6 +2,8 @@ package com.github.donkirkby.vograbulary.ultraghost;
 
 import java.util.ArrayList;
 
+import com.github.donkirkby.vograbulary.core.ultraghost.WordList;
+
 public class Puzzle {
     public interface Listener {
         /**

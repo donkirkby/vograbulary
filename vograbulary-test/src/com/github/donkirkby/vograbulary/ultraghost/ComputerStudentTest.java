@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import com.github.donkirkby.vograbulary.VograbularyPreferences;
+import com.github.donkirkby.vograbulary.core.ultraghost.WordList;
 
 public class ComputerStudentTest {
     private ComputerStudent student;

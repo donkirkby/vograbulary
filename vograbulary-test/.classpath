@@ -9,5 +9,6 @@
 	<classpathentry kind="lib" path="libs/mockito-all-1.9.5.jar"/>
 	<classpathentry kind="lib" path="/vograbulary-old/libs/gdx-tools.jar"/>
 	<classpathentry kind="lib" path="/vograbulary-old/libs/gdx.jar" sourcepath="/vograbulary-old/libs/gdx-sources.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/vograbulary-core"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

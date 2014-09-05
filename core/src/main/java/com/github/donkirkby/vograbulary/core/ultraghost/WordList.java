@@ -1,4 +1,4 @@
-package com.github.donkirkby.vograbulary.ultraghost;
+package com.github.donkirkby.vograbulary.core.ultraghost;
 
 import java.io.BufferedReader;
 import java.io.IOException;
