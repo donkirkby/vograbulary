@@ -3,18 +3,21 @@ package com.github.donkirkby.vograbulary.core.russian;
 import java.io.Reader;
 import java.io.StringReader;
 
+import playn.core.Image.Region;
+import playn.core.ImageLayer;
 import playn.core.PlayN;
-import playn.core.Pointer.Event;
 import playn.core.Pointer.Adapter;
+import playn.core.Pointer.Event;
 import playn.core.util.Callback;
+import pythagoras.f.Point;
 import react.UnitSlot;
 import tripleplay.ui.Button;
 import tripleplay.ui.Group;
-import tripleplay.ui.ImageButton;
 import tripleplay.ui.Label;
+import tripleplay.ui.Shim;
 import tripleplay.ui.Style;
-import tripleplay.ui.layout.AbsoluteLayout;
 import tripleplay.ui.layout.AxisLayout;
+import tripleplay.util.Layers;
 
 import com.github.donkirkby.vograbulary.core.ChallengeScreen;
 import com.github.donkirkby.vograbulary.core.ultraghost.WordList;
@@ -22,7 +25,7 @@ import com.github.donkirkby.vograbulary.core.ultraghost.WordList;
 public class RussianDollsScreen extends ChallengeScreen {
     private Puzzle puzzle;
     private Label puzzleLabel;
-    private ImageButton insertButton;
+    private ImageLayer insertLayer;
     private Label target1Label;
     private Label target2Label;
     private Button solveButton;
@@ -35,19 +38,16 @@ public class RussianDollsScreen extends ChallengeScreen {
     protected Group createBody() {
         Button backButton = new Button("Back");
         solveButton = new Button("Solve");
-        insertButton = new ImageButton(PlayN.assets().getImage(
-                "images/insert.png").subImage(0, 0, 64, 64));
         Group outerTable = new Group(AxisLayout.vertical().offEqualize())
         .add(
                 puzzleLabel = new Label("").addStyles(Style.TEXT_WRAP.on),
-                new Group(new AbsoluteLayout()).add(
-                        AbsoluteLayout.at(
-                                insertButton,
-                                0,
-                                0)),
+                new Shim(64, 64),
                 new Group(AxisLayout.horizontal()).add(
-                        target1Label = AxisLayout.stretch(new Label("1")),
-                        target2Label = AxisLayout.stretch(new Label("2"))),
+                        AxisLayout.stretch(new Shim(1, 1)),
+                        target1Label = new Label("1"),
+                        AxisLayout.stretch(new Shim(1, 1)),
+                        target2Label = new Label("2"),
+                        AxisLayout.stretch(new Shim(1, 1))),
                 new Group(AxisLayout.horizontal()).add(
                         backButton,
                         solveButton,
@@ -59,7 +59,11 @@ public class RussianDollsScreen extends ChallengeScreen {
                         new Label("Total:"),
                         totalScore = new Label("0")));
         
-        insertButton.layer.addListener(new Adapter() {
+        Region insertImage = PlayN.assets().getImage(
+                "images/insert.png").subImage(0, 0, 64, 64);
+        insertLayer = PlayN.graphics().createImageLayer(insertImage);
+        layer.addAt(insertLayer, 150, 160);
+        insertLayer.addListener(new Adapter() {
             private float prevX;
 
             @Override
@@ -69,8 +73,7 @@ public class RussianDollsScreen extends ChallengeScreen {
             
             @Override
             public void onPointerDrag(Event event) {
-                System.out.println(event.x());
-                insertButton.layer.transform().translateX(event.x() - prevX);
+                insertLayer.transform().translateX(event.x() - prevX);
                 prevX = event.x();
             }
         });
@@ -108,21 +111,28 @@ public class RussianDollsScreen extends ChallengeScreen {
         solveButton.onClick(new UnitSlot() {
             @Override
             public void onEmit() {
-                float insertX = insertButton.x() + insertButton.size().width()/2;
+                Point insertPoint = Layers.transform(
+                        new Point(insertLayer.width()/2, 0),
+                        insertLayer,
+                        target2Label.layer);
                 Label target;
                 int wordIndex;
-                if (insertX < target2Label.x()) {
-                    target = target1Label;
-                    wordIndex = 0;
-                }
-                else {
+                if (insertPoint.x >= 0) {
                     target = target2Label;
                     wordIndex = 1;
+                }
+                else {
+                    target = target1Label;
+                    wordIndex = 0;
+                    insertPoint = Layers.transform(
+                            new Point(insertLayer.width()/2, 0),
+                            insertLayer,
+                            target1Label.layer);
                 }
                 puzzle.setTargetWord(wordIndex);
                 String word = puzzle.getTarget(wordIndex);
                 int charIndex = 
-                        (int)(0.5 + (insertX - target.x()) /
+                        (int)(0.5 + insertPoint.x /
                         target.size().width() * word.length());
                 puzzle.setTargetCharacter(charIndex);
                 controller.solve();
@@ -137,6 +147,7 @@ public class RussianDollsScreen extends ChallengeScreen {
                 controller.back();
             }
         });
+        
         return outerTable;
     }
     
