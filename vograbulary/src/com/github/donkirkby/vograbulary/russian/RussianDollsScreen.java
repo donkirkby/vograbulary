@@ -1,6 +1,5 @@
 package com.github.donkirkby.vograbulary.russian;
 
-import java.io.Reader;
 import java.util.Arrays;
 import java.util.List;
 
@@ -21,7 +20,6 @@ import com.github.donkirkby.vograbulary.VograbularyApp;
 import com.github.donkirkby.vograbulary.VograbularyScreen;
 import com.github.donkirkby.vograbulary.core.russian.Controller;
 import com.github.donkirkby.vograbulary.core.russian.Puzzle;
-import com.github.donkirkby.vograbulary.core.ultraghost.WordList;
 
 public class RussianDollsScreen extends VograbularyScreen {
     //stopJesting
@@ -94,16 +92,6 @@ public class RussianDollsScreen extends VograbularyScreen {
             }
         });
         
-        controller = new Controller();
-        // TODO: put this back when you migrate to the new project.
-        // controller.setScreen(this);
-        Reader reader = Gdx.files.internal("data/russianDolls.txt").reader();
-        controller.loadPuzzles(reader); // closes the reader
-        WordList wordList = new WordList();
-        
-        wordList.read(
-                Gdx.files.internal("data/wordlist.txt").reader());
-        controller.setWordList(wordList);
         
         solveButton.addListener(new ChangeListener() {
             @Override
@@ -113,26 +101,6 @@ public class RussianDollsScreen extends VograbularyScreen {
                     controller.next();
                     return;
                 }
-                float insertX = insertButton.getX() + insertButton.getWidth()/2;
-                boolean touchableOnly = false;
-                Actor target = getStage().hit(
-                        insertX, 
-                        target1Label.getHeight()/2 +
-                            target1Label.getY() +
-                            target1Label.getParent().getY(), 
-                        touchableOnly);
-                
-                int wordIndex = targets.indexOf(target);
-                if (wordIndex < 0) {
-                    return;
-                }
-                puzzle.setTargetWord(wordIndex);
-                String word = puzzle.getTarget(wordIndex);
-                int charIndex = 
-                        (int)(0.5 + (insertX - target.getX()) /
-                        target.getWidth() * word.length());
-                puzzle.setTargetCharacter(charIndex);
-                controller.solve();
                 if (puzzle.isSolved()) {
                     target1Label.setText(puzzle.getCombination());
                     totalScore.setText(puzzle.getTotalScoreDisplay());
@@ -152,25 +120,6 @@ public class RussianDollsScreen extends VograbularyScreen {
             }
         });
         
-        DragListener dragListener = new DragListener() {
-            private float startDragX;
-            
-            @Override
-            public void dragStart(
-                    InputEvent event, 
-                    float x, 
-                    float y,
-                    int pointer) {
-                startDragX = x;
-            }
-            
-            @Override
-            public void drag(InputEvent event, float x, float y, int pointer) {
-                insertButton.translate(x - startDragX, 0);
-            }
-        };
-        dragListener.setTapSquareSize(2);
-        insertButton.addListener(dragListener);
         
         TargetDisplay leftDragListener = 
                 new TargetDisplay(target1Label, leftDrag);
@@ -188,12 +137,6 @@ public class RussianDollsScreen extends VograbularyScreen {
     }
 
     public void setPuzzle(Puzzle puzzle) {
-        this.puzzle = puzzle;
-        puzzleLabel.setText(puzzle.getClue());
-        target1Label.setText(puzzle.getTarget(0));
-        target2Label.setText(puzzle.getTarget(1));
-        puzzleScore.setText(puzzle.getScoreDisplay());
-        totalScore.setText(puzzle.getTotalScoreDisplay());
     }
     public Puzzle getPuzzle() {
         return puzzle;
