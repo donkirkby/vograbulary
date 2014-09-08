@@ -59,7 +59,9 @@ public class Controller {
 
     public void solve() {
         Puzzle puzzle = screen.getPuzzle();
-        puzzle.setSolved(wordList.contains(puzzle.getCombination()));
+        puzzle.setSolved(
+                puzzle.isTargetValid() &&
+                wordList.contains(puzzle.getCombination()));
     }
 
     public String adjustScore(float seconds) {

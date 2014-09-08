@@ -115,4 +115,12 @@ public class Puzzle {
     public BigDecimal getTotalScore() {
         return totalScore;
     }
+
+    public boolean isTargetValid() {
+        return
+                0 <= targetWord &&
+                targetWord < targets.length &&
+                0 < targetCharacter &&
+                targetCharacter < targets[targetWord].length();
+    }
 }

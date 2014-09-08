@@ -14,6 +14,7 @@ import react.UnitSlot;
 import tripleplay.ui.Button;
 import tripleplay.ui.Group;
 import tripleplay.ui.Label;
+import tripleplay.ui.Layout;
 import tripleplay.ui.Shim;
 import tripleplay.ui.Style;
 import tripleplay.ui.layout.AxisLayout;
@@ -33,15 +34,53 @@ public class RussianDollsScreen extends ChallengeScreen {
     private Label totalScore;
     private Button menuButton;
     private Controller controller;
+    private Point positionOfShim;
+    private Point positionOfShimPrevious;
+    private Point positionInShim;
+    private Point positionInImage;
+    private Point positionInLabel;
 
     @Override
     protected Group createBody() {
+        positionOfShim = new Point();
+        positionOfShimPrevious = new Point();
+        positionInShim = new Point();
+        positionInImage = new Point();
+        positionInLabel = new Point();
         Button backButton = new Button("Back");
         solveButton = new Button("Solve");
-        Group outerTable = new Group(AxisLayout.vertical().offEqualize())
+        final Shim insertShim = new Shim(64, 64);
+        Layout layout = new AxisLayout.Vertical() {
+            public void layout(
+                    tripleplay.ui.Container<?> elems,
+                    float left,
+                    float top,
+                    float width,
+                    float height) {
+                super.layout(elems, left, top, width, height);
+                positionInShim.set(0, 0);
+                Layers.transform(
+                        positionInShim,
+                        insertShim.layer,
+                        RussianDollsScreen.this.layer,
+                        positionOfShim);
+                if ( ! positionOfShim.equals(positionOfShimPrevious)) {
+                    positionOfShimPrevious.set(positionOfShim);
+                    Layers.transform(
+                            positionInShim,
+                            insertShim.layer,
+                            insertLayer,
+                            positionInImage);
+                    insertLayer.transform().translate(
+                            positionInImage.x + insertShim.size().width()/2 - 32,
+                            positionInImage.y);
+                }
+            };
+        }.offEqualize();
+        Group outerTable = new Group(layout)
         .add(
                 puzzleLabel = new Label("").addStyles(Style.TEXT_WRAP.on),
-                new Shim(64, 64),
+                insertShim,
                 new Group(AxisLayout.horizontal()).add(
                         AxisLayout.stretch(new Shim(1, 1)),
                         target1Label = new Label("1"),
@@ -111,28 +150,31 @@ public class RussianDollsScreen extends ChallengeScreen {
         solveButton.onClick(new UnitSlot() {
             @Override
             public void onEmit() {
-                Point insertPoint = Layers.transform(
-                        new Point(insertLayer.width()/2, 0),
+                positionInImage.set(insertLayer.width()/2, 0);
+                Layers.transform(
+                        positionInImage,
                         insertLayer,
-                        target2Label.layer);
+                        target2Label.layer,
+                        positionInLabel);
                 Label target;
                 int wordIndex;
-                if (insertPoint.x >= 0) {
+                if (positionInLabel.x >= 0) {
                     target = target2Label;
                     wordIndex = 1;
                 }
                 else {
                     target = target1Label;
                     wordIndex = 0;
-                    insertPoint = Layers.transform(
-                            new Point(insertLayer.width()/2, 0),
+                    Layers.transform(
+                            positionInImage,
                             insertLayer,
-                            target1Label.layer);
+                            target1Label.layer,
+                            positionInLabel);
                 }
                 puzzle.setTargetWord(wordIndex);
                 String word = puzzle.getTarget(wordIndex);
                 int charIndex = 
-                        (int)(0.5 + insertPoint.x /
+                        (int)(0.5 + positionInLabel.x /
                         target.size().width() * word.length());
                 puzzle.setTargetCharacter(charIndex);
                 controller.solve();

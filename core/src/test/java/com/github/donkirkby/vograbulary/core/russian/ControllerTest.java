@@ -117,6 +117,18 @@ public class ControllerTest {
     }
     
     @Test
+    public void solveInvalidly() {
+        Puzzle puzzle = new Puzzle("unable comfort");
+        when(screen.getPuzzle()).thenReturn(puzzle);
+        puzzle.setTargetWord(1);
+        puzzle.setTargetCharacter(-2);
+        
+        controller.solve();
+        
+        assertThat("is solved", puzzle.isSolved(), is(false));
+    }
+    
+    @Test
     public void adjustScore() {
         Puzzle puzzle = new Puzzle("unable comfort");
         when(screen.getPuzzle()).thenReturn(puzzle);

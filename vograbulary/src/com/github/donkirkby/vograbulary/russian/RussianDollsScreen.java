@@ -1,11 +1,7 @@
 package com.github.donkirkby.vograbulary.russian;
 
-import java.util.Arrays;
-import java.util.List;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -14,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.esotericsoftware.tablelayout.Cell;
 import com.github.donkirkby.vograbulary.VograbularyApp;
 import com.github.donkirkby.vograbulary.VograbularyScreen;
@@ -83,8 +78,6 @@ public class RussianDollsScreen extends VograbularyScreen {
         totalScore = new Label("0", skin);
         table.add(totalScore);
         
-        final List<Label> targets = Arrays.asList(target1Label, target2Label);
-        
         menuButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -101,6 +94,7 @@ public class RussianDollsScreen extends VograbularyScreen {
                     controller.next();
                     return;
                 }
+                // TODO: move the two-step logic to the new screen.
                 if (puzzle.isSolved()) {
                     target1Label.setText(puzzle.getCombination());
                     totalScore.setText(puzzle.getTotalScoreDisplay());
