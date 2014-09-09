@@ -28,6 +28,7 @@ public class RussianDollsScreen extends ChallengeScreen {
     private Label puzzleLabel;
     private ImageLayer insertLayer;
     private Label target1Label;
+    private Label solutionLabel;
     private Label target2Label;
     private Button solveButton;
     private Label puzzleScore;
@@ -83,9 +84,9 @@ public class RussianDollsScreen extends ChallengeScreen {
                 insertShim,
                 new Group(AxisLayout.horizontal()).add(
                         AxisLayout.stretch(new Shim(1, 1)),
-                        target1Label = new Label("1"),
-                        AxisLayout.stretch(new Shim(1, 1)),
-                        target2Label = new Label("2"),
+                        target1Label = new Label(""),
+                        AxisLayout.stretch(solutionLabel = new Label("")),
+                        target2Label = new Label(""),
                         AxisLayout.stretch(new Shim(1, 1))),
                 new Group(AxisLayout.horizontal()).add(
                         backButton,
@@ -150,6 +151,11 @@ public class RussianDollsScreen extends ChallengeScreen {
         solveButton.onClick(new UnitSlot() {
             @Override
             public void onEmit() {
+                if (puzzle.isSolved()) {
+                    prepareToSolve();
+                    controller.next();
+                    return;
+                }
                 positionInImage.set(insertLayer.width()/2, 0);
                 Layers.transform(
                         positionInImage,
@@ -179,13 +185,19 @@ public class RussianDollsScreen extends ChallengeScreen {
                 puzzle.setTargetCharacter(charIndex);
                 controller.solve();
                 if (puzzle.isSolved()) {
-                    controller.next();
+                    target1Label.text.update("");
+                    solutionLabel.text.update(puzzle.getCombination());
+                    target2Label.text.update("");
+                    totalScore.text.update(puzzle.getTotalScoreDisplay());
+                    insertLayer.setVisible(false);
+                    solveButton.text.update("Next");
                 }
             }
         });
         backButton.onClick(new UnitSlot() {
             @Override
             public void onEmit() {
+                prepareToSolve();
                 controller.back();
             }
         });
@@ -215,8 +227,20 @@ public class RussianDollsScreen extends ChallengeScreen {
         this.puzzle = puzzle;
         puzzleLabel.text.update(puzzle.getClue());
         target1Label.text.update(puzzle.getTarget(0));
+        solutionLabel.text.update("");
         target2Label.text.update(puzzle.getTarget(1));
         puzzleScore.text.update(puzzle.getScoreDisplay());
         totalScore.text.update(puzzle.getTotalScoreDisplay());
+    }
+    
+    private void prepareToSolve() {
+        insertLayer.setVisible(true);
+        solveButton.text.update("Solve");
+    }
+    
+    @Override
+    public void update(int delta) {
+        puzzleScore.text.update(controller.adjustScore(delta/1000f));
+        super.update(delta);
     }
 }
