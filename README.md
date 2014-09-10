@@ -90,7 +90,7 @@ Vograbulary is released under the MIT license.
 
 [Natural Language Toolkit][nltk] is released by the NLTK project under the Apache 2.0 license.
 
-Icons by [PixelKit][icons] are released under a [CC-BY license][cc].
+[Open Iconic icons][icons] are released under the [MIT license][mit].
 
 [browser]: http://donkirkby.github.io/vograbulary/run/
 [webgl]: http://get.webgl.org/
@@ -104,8 +104,8 @@ Icons by [PixelKit][icons] are released under a [CC-BY license][cc].
 [libgdx]: http://libgdx.badlogicgames.com/
 [nltk]: http://nltk.org/
 [hiero]: https://github.com/libgdx/libgdx/wiki/Hiero
-[icons]: https://www.iconfinder.com/PixelKit
-[cc]: http://creativecommons.org/licenses/by/3.0/
+[icons]: https://github.com/iconic/open-iconic
+[mit]: https://github.com/iconic/open-iconic/blob/master/ICON-LICENSE
 [ama]: http://www.npr.org/2014/01/30/268462155/russian-dolls
 [google]: https://play.google.com/apps/publish
 

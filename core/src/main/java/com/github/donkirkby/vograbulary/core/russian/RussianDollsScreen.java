@@ -3,8 +3,9 @@ package com.github.donkirkby.vograbulary.core.russian;
 import java.io.Reader;
 import java.io.StringReader;
 
-import playn.core.Image.Region;
+import playn.core.Image;
 import playn.core.ImageLayer;
+import playn.core.Layer;
 import playn.core.PlayN;
 import playn.core.Pointer.Adapter;
 import playn.core.Pointer.Event;
@@ -27,6 +28,8 @@ public class RussianDollsScreen extends ChallengeScreen {
     private Puzzle puzzle;
     private Label puzzleLabel;
     private ImageLayer insertLayer;
+    private ImageLayer dragLayer1;
+    private ImageLayer dragLayer2;
     private Label target1Label;
     private Label solutionLabel;
     private Label target2Label;
@@ -50,7 +53,8 @@ public class RussianDollsScreen extends ChallengeScreen {
         positionInLabel = new Point();
         Button backButton = new Button("Back");
         solveButton = new Button("Solve");
-        final Shim insertShim = new Shim(64, 64);
+        final Shim insertShim = new Shim(32, 32);
+        final Shim dragShim = new Shim(1, 32);
         Layout layout = new AxisLayout.Vertical() {
             public void layout(
                     tripleplay.ui.Container<?> elems,
@@ -73,7 +77,18 @@ public class RussianDollsScreen extends ChallengeScreen {
                             insertLayer,
                             positionInImage);
                     insertLayer.transform().translate(
-                            positionInImage.x + insertShim.size().width()/2 - 32,
+                            positionInImage.x + insertShim.size().width()/2 - 16,
+                            positionInImage.y);
+                    Layers.transform(
+                            positionInShim,
+                            dragShim.layer,
+                            dragLayer1,
+                            positionInImage);
+                    dragLayer1.transform().translate(
+                            positionInImage.x - 50,
+                            positionInImage.y);
+                    dragLayer2.transform().translate(
+                            positionInImage.x + 50,
                             positionInImage.y);
                 }
             };
@@ -88,6 +103,7 @@ public class RussianDollsScreen extends ChallengeScreen {
                         AxisLayout.stretch(solutionLabel = new Label("")),
                         target2Label = new Label(""),
                         AxisLayout.stretch(new Shim(1, 1))),
+                dragShim,
                 new Group(AxisLayout.horizontal()).add(
                         backButton,
                         solveButton,
@@ -99,24 +115,20 @@ public class RussianDollsScreen extends ChallengeScreen {
                         new Label("Total:"),
                         totalScore = new Label("0")));
         
-        Region insertImage = PlayN.assets().getImage(
-                "images/insert.png").subImage(0, 0, 64, 64);
+        Image insertImage = PlayN.assets().getImage("images/insert.png");
         insertLayer = PlayN.graphics().createImageLayer(insertImage);
-        layer.addAt(insertLayer, 150, 160);
-        insertLayer.addListener(new Adapter() {
-            private float prevX;
-
-            @Override
-            public void onPointerStart(Event event) {
-                prevX = event.x();
-            }
-            
-            @Override
-            public void onPointerDrag(Event event) {
-                insertLayer.transform().translateX(event.x() - prevX);
-                prevX = event.x();
-            }
-        });
+        layer.add(insertLayer);
+        DragAdapter dragAdapter = new DragAdapter();
+        insertLayer.addListener(dragAdapter);
+        
+        Image dragImage = PlayN.assets().getImage("images/drag.png");
+        dragLayer1 = PlayN.graphics().createImageLayer(dragImage);
+        layer.add(dragLayer1);
+        dragLayer1.addListener(dragAdapter);
+        
+        dragLayer2 = PlayN.graphics().createImageLayer(dragImage);
+        layer.add(dragLayer2);
+        dragLayer2.addListener(dragAdapter);
         
         controller = new Controller();
         controller.setScreen(this);
@@ -204,7 +216,7 @@ public class RussianDollsScreen extends ChallengeScreen {
         
         return outerTable;
     }
-    
+
     private void loadPuzzles(String text) {
         Reader reader = new StringReader(text);
         controller.loadPuzzles(reader); // closes the reader
@@ -242,5 +254,24 @@ public class RussianDollsScreen extends ChallengeScreen {
     public void update(int delta) {
         puzzleScore.text.update(controller.adjustScore(delta/1000f));
         super.update(delta);
+    }
+    
+    private static class DragAdapter extends Adapter {
+        private float startX;
+//        private ArrayList<Layer> dragLayers = new ArrayList<Layer>();
+//        private Layer activeLayer;
+//        private Layer oppositeLayer;
+
+        @Override
+        public void onPointerStart(Event event) {
+            // Can only be one drag event at a time, no multitouch.
+            startX = event.localX();
+        }
+        
+        @Override
+        public void onPointerDrag(Event event) {
+            Layer draggingLayer = event.hit();
+            draggingLayer.transform().translateX(event.localX() - startX);
+        }
     }
 }
