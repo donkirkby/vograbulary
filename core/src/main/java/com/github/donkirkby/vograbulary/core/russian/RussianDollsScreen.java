@@ -93,11 +93,12 @@ public class RussianDollsScreen extends ChallengeScreen {
                 }
             };
         }.offEqualize();
+        final Group targetTable = new Group(AxisLayout.horizontal());
         Group outerTable = new Group(layout)
         .add(
                 puzzleLabel = new Label("").addStyles(Style.TEXT_WRAP.on),
                 insertShim,
-                new Group(AxisLayout.horizontal()).add(
+                targetTable.add(
                         AxisLayout.stretch(new Shim(1, 1)),
                         target1Label = new Label(""),
                         AxisLayout.stretch(solutionLabel = new Label("")),
@@ -114,21 +115,23 @@ public class RussianDollsScreen extends ChallengeScreen {
                 new Group(AxisLayout.horizontal()).add(
                         new Label("Total:"),
                         totalScore = new Label("0")));
-        
         Image insertImage = PlayN.assets().getImage("images/insert.png");
         insertLayer = PlayN.graphics().createImageLayer(insertImage);
         layer.add(insertLayer);
-        DragAdapter dragAdapter = new DragAdapter();
-        insertLayer.addListener(dragAdapter);
+        insertLayer.addListener(new DragAdapter());
         
         Image dragImage = PlayN.assets().getImage("images/drag.png");
         dragLayer1 = PlayN.graphics().createImageLayer(dragImage);
         layer.add(dragLayer1);
-        dragLayer1.addListener(dragAdapter);
+        DragAdapter dragAdapter1 = new DragAdapter();
+        dragAdapter1.setFollower(target1Label);
+        dragLayer1.addListener(dragAdapter1);
         
         dragLayer2 = PlayN.graphics().createImageLayer(dragImage);
         layer.add(dragLayer2);
-        dragLayer2.addListener(dragAdapter);
+        DragAdapter dragAdapter2 = new DragAdapter();
+        dragAdapter2.setFollower(target2Label);
+        dragLayer2.addListener(dragAdapter2);
         
         controller = new Controller();
         controller.setScreen(this);
@@ -258,9 +261,14 @@ public class RussianDollsScreen extends ChallengeScreen {
     
     private static class DragAdapter extends Adapter {
         private float startX;
+        private Label follower;
 //        private ArrayList<Layer> dragLayers = new ArrayList<Layer>();
 //        private Layer activeLayer;
 //        private Layer oppositeLayer;
+        
+        public void setFollower(Label follower) {
+            this.follower = follower;
+        }
 
         @Override
         public void onPointerStart(Event event) {
@@ -271,7 +279,11 @@ public class RussianDollsScreen extends ChallengeScreen {
         @Override
         public void onPointerDrag(Event event) {
             Layer draggingLayer = event.hit();
-            draggingLayer.transform().translateX(event.localX() - startX);
+            float tx = event.localX() - startX;
+            draggingLayer.transform().translateX(tx);
+            if (follower != null) {
+                follower.layer.transform().translateX(tx);
+            }
         }
     }
 }
