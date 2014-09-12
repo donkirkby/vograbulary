@@ -30,6 +30,8 @@ public class RussianDollsScreen extends ChallengeScreen {
     private ImageLayer insertLayer;
     private ImageLayer dragLayer1;
     private ImageLayer dragLayer2;
+    private TargetDisplay target1;
+    private TargetDisplay target2;
     private Label target1Label;
     private Label solutionLabel;
     private Label target2Label;
@@ -119,6 +121,10 @@ public class RussianDollsScreen extends ChallengeScreen {
         insertLayer = PlayN.graphics().createImageLayer(insertImage);
         layer.add(insertLayer);
         insertLayer.addListener(new DragAdapter());
+        target1 = new TargetDisplay();
+        layer.add(target1.getLayer());
+        target2 = new TargetDisplay();
+        layer.add(target2.getLayer());
         
         Image dragImage = PlayN.assets().getImage("images/drag.png");
         dragLayer1 = PlayN.graphics().createImageLayer(dragImage);
@@ -200,9 +206,9 @@ public class RussianDollsScreen extends ChallengeScreen {
                 puzzle.setTargetCharacter(charIndex);
                 controller.solve();
                 if (puzzle.isSolved()) {
-                    target1Label.text.update("");
+                    target1.setText("");
                     solutionLabel.text.update(puzzle.getCombination());
-                    target2Label.text.update("");
+                    target2.setText("");
                     totalScore.text.update(puzzle.getTotalScoreDisplay());
                     insertLayer.setVisible(false);
                     solveButton.text.update("Next");
@@ -241,9 +247,9 @@ public class RussianDollsScreen extends ChallengeScreen {
     public void setPuzzle(Puzzle puzzle) {
         this.puzzle = puzzle;
         puzzleLabel.text.update(puzzle.getClue());
-        target1Label.text.update(puzzle.getTarget(0));
+        target1.setText(puzzle.getTarget(0));
         solutionLabel.text.update("");
-        target2Label.text.update(puzzle.getTarget(1));
+        target2.setText(puzzle.getTarget(1));
         puzzleScore.text.update(puzzle.getScoreDisplay());
         totalScore.text.update(puzzle.getTotalScoreDisplay());
     }
