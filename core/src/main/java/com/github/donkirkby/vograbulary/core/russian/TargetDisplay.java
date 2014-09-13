@@ -2,19 +2,21 @@ package com.github.donkirkby.vograbulary.core.russian;
 
 import playn.core.Canvas;
 import playn.core.CanvasImage;
+import playn.core.Image;
 import playn.core.ImageLayer;
 import playn.core.PlayN;
-import playn.core.Pointer.Adapter;
 import playn.core.Pointer.Event;
+import playn.core.util.Callback;
 
-public class TargetDisplay extends Adapter {
+public class TargetDisplay extends DragAdapter {
     private String text;
-    private float startX;
     private Canvas canvas;
+    private Image icon;
     private ImageLayer layer;
 
     public TargetDisplay() {
         this.text = "";
+        icon = PlayN.assets().getImage("images/drag.png");
         CanvasImage image = PlayN.graphics().createImage(250, 64);
         canvas = image.canvas();
         layer = PlayN.graphics().createImageLayer(image);
@@ -32,18 +34,25 @@ public class TargetDisplay extends Adapter {
     
     @Override
     public void onPointerStart(Event event) {
+        super.onPointerStart(event);
+        
         text += "X";
-        startX = event.localX();
         drawText();
     }
 
     private void drawText() {
         canvas.clear();
         canvas.drawText(text, 32, 32);
-    }
-    
-    @Override
-    public void onPointerDrag(Event event) {
-        layer.transform().translateX(event.localX() - startX);
+        icon.addCallback(new Callback<Image>() {
+            @Override
+            public void onSuccess(Image result) {
+                canvas.drawImage(icon, 50, 40);
+            }
+
+            @Override
+            public void onFailure(Throwable cause) {
+                // Too bad, no icon for you.
+            }
+        });
     }
 }

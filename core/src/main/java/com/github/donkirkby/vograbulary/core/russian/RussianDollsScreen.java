@@ -5,10 +5,7 @@ import java.io.StringReader;
 
 import playn.core.Image;
 import playn.core.ImageLayer;
-import playn.core.Layer;
 import playn.core.PlayN;
-import playn.core.Pointer.Adapter;
-import playn.core.Pointer.Event;
 import playn.core.util.Callback;
 import pythagoras.f.Point;
 import react.UnitSlot;
@@ -28,13 +25,9 @@ public class RussianDollsScreen extends ChallengeScreen {
     private Puzzle puzzle;
     private Label puzzleLabel;
     private ImageLayer insertLayer;
-    private ImageLayer dragLayer1;
-    private ImageLayer dragLayer2;
     private TargetDisplay target1;
     private TargetDisplay target2;
-    private Label target1Label;
     private Label solutionLabel;
-    private Label target2Label;
     private Button solveButton;
     private Label puzzleScore;
     private Label totalScore;
@@ -56,7 +49,7 @@ public class RussianDollsScreen extends ChallengeScreen {
         Button backButton = new Button("Back");
         solveButton = new Button("Solve");
         final Shim insertShim = new Shim(32, 32);
-        final Shim dragShim = new Shim(1, 32);
+        final Shim dragShim = new Shim(1, 64);
         Layout layout = new AxisLayout.Vertical() {
             public void layout(
                     tripleplay.ui.Container<?> elems,
@@ -84,12 +77,12 @@ public class RussianDollsScreen extends ChallengeScreen {
                     Layers.transform(
                             positionInShim,
                             dragShim.layer,
-                            dragLayer1,
+                            target1.getLayer(),
                             positionInImage);
-                    dragLayer1.transform().translate(
+                    target1.getLayer().transform().translate(
                             positionInImage.x - 50,
                             positionInImage.y);
-                    dragLayer2.transform().translate(
+                    target2.getLayer().transform().translate(
                             positionInImage.x + 50,
                             positionInImage.y);
                 }
@@ -102,9 +95,7 @@ public class RussianDollsScreen extends ChallengeScreen {
                 insertShim,
                 targetTable.add(
                         AxisLayout.stretch(new Shim(1, 1)),
-                        target1Label = new Label(""),
                         AxisLayout.stretch(solutionLabel = new Label("")),
-                        target2Label = new Label(""),
                         AxisLayout.stretch(new Shim(1, 1))),
                 dragShim,
                 new Group(AxisLayout.horizontal()).add(
@@ -125,19 +116,6 @@ public class RussianDollsScreen extends ChallengeScreen {
         layer.add(target1.getLayer());
         target2 = new TargetDisplay();
         layer.add(target2.getLayer());
-        
-        Image dragImage = PlayN.assets().getImage("images/drag.png");
-        dragLayer1 = PlayN.graphics().createImageLayer(dragImage);
-        layer.add(dragLayer1);
-        DragAdapter dragAdapter1 = new DragAdapter();
-        dragAdapter1.setFollower(target1Label);
-        dragLayer1.addListener(dragAdapter1);
-        
-        dragLayer2 = PlayN.graphics().createImageLayer(dragImage);
-        layer.add(dragLayer2);
-        DragAdapter dragAdapter2 = new DragAdapter();
-        dragAdapter2.setFollower(target2Label);
-        dragLayer2.addListener(dragAdapter2);
         
         controller = new Controller();
         controller.setScreen(this);
@@ -181,30 +159,31 @@ public class RussianDollsScreen extends ChallengeScreen {
                 Layers.transform(
                         positionInImage,
                         insertLayer,
-                        target2Label.layer,
+                        target2.getLayer(),
                         positionInLabel);
-                Label target;
-                int wordIndex;
-                if (positionInLabel.x >= 0) {
-                    target = target2Label;
-                    wordIndex = 1;
-                }
-                else {
-                    target = target1Label;
-                    wordIndex = 0;
-                    Layers.transform(
-                            positionInImage,
-                            insertLayer,
-                            target1Label.layer,
-                            positionInLabel);
-                }
-                puzzle.setTargetWord(wordIndex);
-                String word = puzzle.getTarget(wordIndex);
-                int charIndex = 
-                        (int)(0.5 + positionInLabel.x /
-                        target.size().width() * word.length());
-                puzzle.setTargetCharacter(charIndex);
-                controller.solve();
+                // TODO: put this back.
+//                Label target;
+//                int wordIndex;
+//                if (positionInLabel.x >= 0) {
+//                    target = target2Label;
+//                    wordIndex = 1;
+//                }
+//                else {
+//                    target = target1Label;
+//                    wordIndex = 0;
+//                    Layers.transform(
+//                            positionInImage,
+//                            insertLayer,
+//                            target1Label.layer,
+//                            positionInLabel);
+//                }
+//                puzzle.setTargetWord(wordIndex);
+//                String word = puzzle.getTarget(wordIndex);
+//                int charIndex =
+//                        (int)(0.5 + positionInLabel.x /
+//                        target.size().width() * word.length());
+//                puzzle.setTargetCharacter(charIndex);
+//                controller.solve();
                 if (puzzle.isSolved()) {
                     target1.setText("");
                     solutionLabel.text.update(puzzle.getCombination());
@@ -263,33 +242,5 @@ public class RussianDollsScreen extends ChallengeScreen {
     public void update(int delta) {
         puzzleScore.text.update(controller.adjustScore(delta/1000f));
         super.update(delta);
-    }
-    
-    private static class DragAdapter extends Adapter {
-        private float startX;
-        private Label follower;
-//        private ArrayList<Layer> dragLayers = new ArrayList<Layer>();
-//        private Layer activeLayer;
-//        private Layer oppositeLayer;
-        
-        public void setFollower(Label follower) {
-            this.follower = follower;
-        }
-
-        @Override
-        public void onPointerStart(Event event) {
-            // Can only be one drag event at a time, no multitouch.
-            startX = event.localX();
-        }
-        
-        @Override
-        public void onPointerDrag(Event event) {
-            Layer draggingLayer = event.hit();
-            float tx = event.localX() - startX;
-            draggingLayer.transform().translateX(tx);
-            if (follower != null) {
-                follower.layer.transform().translateX(tx);
-            }
-        }
     }
 }
