@@ -49,7 +49,7 @@ public class RussianDollsScreen extends ChallengeScreen {
         Button backButton = new Button("Back");
         solveButton = new Button("Solve");
         final Shim insertShim = new Shim(32, 32);
-        final Shim dragShim = new Shim(1, 64);
+        final Shim dragShim = new Shim(1, 80);
         Layout layout = new AxisLayout.Vertical() {
             public void layout(
                     tripleplay.ui.Container<?> elems,
