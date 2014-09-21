@@ -80,10 +80,10 @@ public class RussianDollsScreen extends ChallengeScreen {
                             target1.getLayer(),
                             positionInImage);
                     target1.getLayer().transform().translate(
-                            positionInImage.x - 50,
+                            positionInImage.x - 100,
                             positionInImage.y);
                     target2.getLayer().transform().translate(
-                            positionInImage.x + 50,
+                            positionInImage.x + 100,
                             positionInImage.y);
                 }
             };
@@ -114,7 +114,7 @@ public class RussianDollsScreen extends ChallengeScreen {
         insertLayer.addListener(new DragAdapter());
         target1 = new TargetDisplay();
         layer.add(target1.getLayer());
-        target2 = new TargetDisplay();
+        target2 = new TargetDisplay().withLeftSide(target1);
         layer.add(target2.getLayer());
         
         controller = new Controller();

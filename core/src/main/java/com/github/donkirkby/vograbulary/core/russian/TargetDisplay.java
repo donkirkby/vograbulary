@@ -1,7 +1,5 @@
 package com.github.donkirkby.vograbulary.core.russian;
 
-import com.github.donkirkby.vograbulary.core.VograbularyScreen;
-
 import playn.core.Canvas;
 import playn.core.CanvasImage;
 import playn.core.Image;
@@ -11,12 +9,20 @@ import playn.core.Pointer.Event;
 import playn.core.TextFormat;
 import playn.core.TextLayout;
 import playn.core.util.Callback;
+import pythagoras.f.Point;
+import tripleplay.util.Layers;
+
+import com.github.donkirkby.vograbulary.core.VograbularyScreen;
 
 public class TargetDisplay extends DragAdapter {
     private String text;
     private Canvas canvas;
     private Image icon;
     private ImageLayer layer;
+    private TargetDisplay leftSide = this;
+    private TargetDisplay rightSide = this;
+    private Point leftPoint = new Point();
+    private Point rightPoint = new Point();
 
     public TargetDisplay() {
         this.text = "";
@@ -25,6 +31,12 @@ public class TargetDisplay extends DragAdapter {
         canvas = image.canvas();
         layer = PlayN.graphics().createImageLayer(image);
         layer.addListener(this);
+    }
+    
+    public TargetDisplay withLeftSide(TargetDisplay leftSide) {
+        this.leftSide = leftSide;
+        leftSide.rightSide = this;
+        return this;
     }
     
     public ImageLayer getLayer() {
@@ -40,8 +52,17 @@ public class TargetDisplay extends DragAdapter {
     public void onPointerStart(Event event) {
         super.onPointerStart(event);
         
-        text += "X";
         drawText();
+    }
+    
+    @Override
+    public void onPointerDrag(Event event) {
+        super.onPointerDrag(event);
+        rightPoint.set(0, 0);
+        Layers.transform(rightPoint, rightSide.layer, leftSide.layer, leftPoint);
+        boolean isOverlapping = leftPoint.x < leftSide.layer.width();
+        TargetDisplay opposite = leftSide == this ? rightSide : leftSide;
+        opposite.layer.setVisible( ! isOverlapping);
     }
 
     private void drawText() {
@@ -50,7 +71,11 @@ public class TargetDisplay extends DragAdapter {
         TextLayout textLayout = PlayN.graphics().layoutText(
                 text, 
                 new TextFormat(VograbularyScreen.TITLE_FONT, isAntialiased));
-        canvas.fillText(textLayout, 32, 32);
+        float x = 
+                rightSide == this
+                ? 0
+                : canvas.width() - textLayout.width();
+        canvas.fillText(textLayout, x, 32);
         
         icon.addCallback(new Callback<Image>() {
             @Override
