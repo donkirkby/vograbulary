@@ -5,18 +5,40 @@ import playn.core.Pointer.Adapter;
 import playn.core.Pointer.Event;
 
 public class DragAdapter extends Adapter {
+    private Layer draggingLayer;
     private float startX;
+    private float shiftX;
     
     @Override
     public void onPointerStart(Event event) {
         // Can only be one drag event at a time, no multitouch.
+        draggingLayer = event.hit();
         startX = event.localX();
     }
     
     @Override
     public void onPointerDrag(Event event) {
-        Layer draggingLayer = event.hit();
-        float tx = event.localX() - startX;
+        float tx = event.localX() - startX + shiftX;
+        translateX(tx);
+    }
+
+    /**
+     * A wrapper around the layer's translateX() so this can be stubbed out
+     * during unit tests.
+     */
+    protected void translateX(float tx) {
         draggingLayer.transform().translateX(tx);
+    }
+    
+    /**
+     * Add to the current shift amount.
+     */
+    protected void shiftX(float x) {
+        shiftX += x;
+        translateX(x);
+    }
+    
+    public float getShiftX() {
+        return shiftX;
     }
 }
