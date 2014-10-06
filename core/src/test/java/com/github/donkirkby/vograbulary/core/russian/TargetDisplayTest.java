@@ -62,10 +62,24 @@ public class TargetDisplayTest {
         float txDragFrom = 100;
         float txDragTo = 90;
         float txExpected = txDragTo - 3*StubbedTargetDisplay.LETTER_WIDTH;
-        right.setTx(txDragFrom);
         
         dragFromTo(right, txDragFrom, txDragTo - 1);
         dragTo(right, txDragTo); // should be stable
+        float txAfter = right.getTx();
+        
+        assertThat("text", right.getText(), is("LEFRIGHTT"));
+        assertThat("tx after", txAfter, is(txExpected));
+    }
+    
+    @Test
+    public void passTwoLettersThenBackOne() {
+        float txDragStart = 100;
+        float txDragMiddle = 80;
+        float txDragEnd = 90;
+        float txExpected = txDragEnd - 3*StubbedTargetDisplay.LETTER_WIDTH;
+        
+        dragFromTo(right, txDragStart, txDragMiddle);
+        dragTo(right, txDragEnd);
         float txAfter = right.getTx();
         
         assertThat("text", right.getText(), is("LEFRIGHTT"));
@@ -77,6 +91,37 @@ public class TargetDisplayTest {
         dragFromTo(right, 100, 80);
         
         assertThat("text", right.getText(), is("LERIGHTFT"));
+    }
+    
+    @Test
+    public void starWithOverlap() {
+        float txDragStart = 100;
+        float txDragMiddle = 80;
+        float txDragEnd = 90;
+        float txExpected = txDragEnd - 3*StubbedTargetDisplay.LETTER_WIDTH;
+        
+        dragFromTo(right, txDragStart, txDragMiddle);
+        right.onPointerStart(new DummyPointerEvent(
+                txDragMiddle,
+                2*StubbedTargetDisplay.LETTER_WIDTH));
+        dragTo(right, txDragEnd);
+        float txAfter = right.getTx();
+        
+        assertThat("text", right.getText(), is("LEFRIGHTT"));
+        assertThat("tx after", txAfter, is(txExpected));
+    }
+    
+    @Test
+    public void withOverlapThenNone() {
+        float txDragFrom = 110;
+        float txDragMiddle = 99;
+        float txDragEnd = 100;
+
+        dragFromTo(right, txDragFrom, txDragMiddle);
+        dragTo(right, txDragEnd);
+
+        assertThat("visible", left.isVisible(), is(true));
+        assertThat("text", right.getText(), is("RIGHT"));
     }
     
     private void dragFromTo(

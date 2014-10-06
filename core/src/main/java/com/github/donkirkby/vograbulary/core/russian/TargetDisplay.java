@@ -69,13 +69,15 @@ public class TargetDisplay extends DragAdapter {
         TargetDisplay opposite;
         if (this == rightSide) {
             opposite = leftSide;
-            String text = opposite.originalText;
-            for (int i=0; i <= text.length(); i++) {
-                String portion = text.substring(i);
-                float width = calculateTextWidth(portion);
-                otherLetterPositions.add(getLeftSideWidth() - width);
+            if (opposite.isVisible()) {
+                String text = opposite.originalText;
+                for (int i=0; i <= text.length(); i++) {
+                    String portion = text.substring(i);
+                    float width = calculateTextWidth(portion);
+                    otherLetterPositions.add(getLeftSideWidth() - width);
+                }
+                splitIndex = opposite.originalText.length();
             }
-            splitIndex = opposite.originalText.length();
         }
     }
     
@@ -84,7 +86,7 @@ public class TargetDisplay extends DragAdapter {
         super.onPointerDrag(event);
         float differenceBetweenTargetPositions = calculateDifferenceBetweenTargetPositions();
         float wordPosition = differenceBetweenTargetPositions - getShiftX();
-        boolean isOverlapping = differenceBetweenTargetPositions < getLeftSideWidth();
+        boolean isOverlapping = wordPosition < getLeftSideWidth();
         TargetDisplay opposite = leftSide == this ? rightSide : leftSide;
         boolean shouldBeVisible = ! isOverlapping;
         if (shouldBeVisible != opposite.isVisible()) {
@@ -113,8 +115,8 @@ public class TargetDisplay extends DragAdapter {
                         text = opposite.originalText.substring(0, split) +
                                 originalText + 
                                 opposite.originalText.substring(split);
+                        shiftX(otherLetterPositions.get(splitIndex) - splitPosition);
                         splitIndex = split;
-                        shiftX(otherLetterPositions.get(split+1) - splitPosition);
                         drawText();
                     }
                     break;
