@@ -21,6 +21,8 @@ vograbulary-html/war/WEB-INF/classes/com
 vograbulary-html/war/assets
 vograbulary-html/war/com.github.donkirkby.vograbulary.GwtDefinition
 android/assets
+android/default.properties
+android/project.properties
 
 wordpile/sample3.txt
 wordpile/sorted_words.txt

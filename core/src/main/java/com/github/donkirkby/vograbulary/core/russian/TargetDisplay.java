@@ -71,6 +71,7 @@ public class TargetDisplay extends DragAdapter {
         if (this == rightSide) {
             opposite = leftSide;
             if (opposite.isVisible()) {
+                otherLetterPositions.clear();
                 String text = opposite.originalText;
                 for (int i=0; i <= text.length(); i++) {
                     String portion = text.substring(i);
@@ -188,6 +189,9 @@ public class TargetDisplay extends DragAdapter {
     }
     public void setPuzzle(Puzzle puzzle) {
         this.puzzle = puzzle;
+        if (getShiftX() != 0) {
+            shiftX(-getShiftX());
+        }
         setText(puzzle.getTarget(this == leftSide ? 0 : 1));
     }
 }

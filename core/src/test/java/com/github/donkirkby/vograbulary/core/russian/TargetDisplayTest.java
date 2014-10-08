@@ -96,7 +96,7 @@ public class TargetDisplayTest {
     }
     
     @Test
-    public void starWithOverlap() {
+    public void startWithOverlap() {
         float txDragStart = 100;
         float txDragMiddle = 80;
         float txDragEnd = 90;
@@ -134,6 +134,21 @@ public class TargetDisplayTest {
         dragFromTo(right, txDragFrom, txDragTo);
         
         assertThat(puzzle.getCombination(), is("LEFRIGHTT"));
+    }
+    
+    @Test
+    public void replacePuzzle() {
+        float txDragFrom = 100;
+        float txDragTo = 90;
+
+        dragFromTo(right, txDragFrom, txDragTo);
+        Puzzle puzzle2 = new Puzzle("leftmost right");
+        left.setPuzzle(puzzle2);
+        right.setPuzzle(puzzle2);
+        left.setVisible(true);
+        dragFromTo(right, txDragFrom, txDragTo);
+        
+        assertThat("text", right.getText(), is("LEFTMOSRIGHTT"));
     }
     
     private void dragFromTo(
