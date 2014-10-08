@@ -19,6 +19,7 @@ import com.github.donkirkby.vograbulary.core.VograbularyScreen;
 public class TargetDisplay extends DragAdapter {
     private String text;
     private String originalText;
+    private Puzzle puzzle;
     private Canvas canvas;
     private Image icon;
     private ImageLayer layer;
@@ -57,7 +58,7 @@ public class TargetDisplay extends DragAdapter {
     public String getText() {
         return text;
     }
-    public void setText(String text) {
+    private void setText(String text) {
         this.originalText = this.text = text;
         drawText();
     }
@@ -104,6 +105,7 @@ public class TargetDisplay extends DragAdapter {
                         leftSide == this
                         ? calculateTextWidth(rightSide.originalText)
                         : -calculateTextWidth(leftSide.originalText));
+                puzzle.setTargetWord(leftSide == this ? 1 : 0);
             }
             drawText();
         }
@@ -117,6 +119,7 @@ public class TargetDisplay extends DragAdapter {
                                 opposite.originalText.substring(split);
                         shiftX(otherLetterPositions.get(splitIndex) - splitPosition);
                         splitIndex = split;
+                        puzzle.setTargetCharacter(split);
                         drawText();
                     }
                     break;
@@ -125,7 +128,7 @@ public class TargetDisplay extends DragAdapter {
         }
     }
 
-    protected void setVisible(boolean isVisible) {
+    public void setVisible(boolean isVisible) {
         layer.setVisible(isVisible);
     }
     
@@ -178,5 +181,13 @@ public class TargetDisplay extends DragAdapter {
     
     public TargetDisplay getRightSide() {
         return rightSide;
+    }
+    
+    public Puzzle getPuzzle() {
+        return puzzle;
+    }
+    public void setPuzzle(Puzzle puzzle) {
+        this.puzzle = puzzle;
+        setText(puzzle.getTarget(this == leftSide ? 0 : 1));
     }
 }

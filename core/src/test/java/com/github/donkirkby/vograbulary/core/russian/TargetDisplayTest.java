@@ -12,14 +12,16 @@ import playn.core.Pointer.Event;
 public class TargetDisplayTest {
     private StubbedTargetDisplay left;
     private StubbedTargetDisplay right;
+    private Puzzle puzzle;
 
     @Before
     public void setUp() {
         left = new StubbedTargetDisplay();
         right = new StubbedTargetDisplay();
         right.withLeftSide(left);
-        left.setText("LEFT");
-        right.setText("RIGHT");
+        puzzle = new Puzzle("left right");
+        left.setPuzzle(puzzle);
+        right.setPuzzle(puzzle);
     }
     
     @Test
@@ -124,6 +126,16 @@ public class TargetDisplayTest {
         assertThat("text", right.getText(), is("RIGHT"));
     }
     
+    @Test
+    public void updatePuzzle() {
+        float txDragFrom = 100;
+        float txDragTo = 90;
+
+        dragFromTo(right, txDragFrom, txDragTo);
+        
+        assertThat(puzzle.getCombination(), is("LEFRIGHTT"));
+    }
+    
     private void dragFromTo(
             StubbedTargetDisplay target,
             float txDragFrom,
@@ -193,7 +205,7 @@ public class TargetDisplayTest {
         }
         
         @Override
-        protected void setVisible(boolean isVisible) {
+        public void setVisible(boolean isVisible) {
             this.isVisible = isVisible;
         }
         

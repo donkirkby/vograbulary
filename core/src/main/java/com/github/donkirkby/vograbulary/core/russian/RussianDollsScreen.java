@@ -183,11 +183,11 @@ public class RussianDollsScreen extends ChallengeScreen {
 //                        (int)(0.5 + positionInLabel.x /
 //                        target.size().width() * word.length());
 //                puzzle.setTargetCharacter(charIndex);
-//                controller.solve();
+                controller.solve();
                 if (puzzle.isSolved()) {
-                    target1.setText("");
+                    target1.setVisible(false);
                     solutionLabel.text.update(puzzle.getCombination());
-                    target2.setText("");
+                    target2.setVisible(false);
                     totalScore.text.update(puzzle.getTotalScoreDisplay());
                     insertLayer.setVisible(false);
                     solveButton.text.update("Next");
@@ -226,9 +226,11 @@ public class RussianDollsScreen extends ChallengeScreen {
     public void setPuzzle(Puzzle puzzle) {
         this.puzzle = puzzle;
         puzzleLabel.text.update(puzzle.getClue());
-        target1.setText(puzzle.getTarget(0));
+        target1.setPuzzle(puzzle);
+        target1.setVisible(true);
         solutionLabel.text.update("");
-        target2.setText(puzzle.getTarget(1));
+        target2.setPuzzle(puzzle);
+        target2.setVisible(true);
         puzzleScore.text.update(puzzle.getScoreDisplay());
         totalScore.text.update(puzzle.getTotalScoreDisplay());
     }
