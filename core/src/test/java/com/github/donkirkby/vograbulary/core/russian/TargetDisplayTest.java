@@ -151,6 +151,20 @@ public class TargetDisplayTest {
         assertThat("text", right.getText(), is("LEFTMOSRIGHTT"));
     }
     
+    @Test
+    public void dragLeftPassOneLetter() {
+        right.setTx(110);
+        float txDragFrom = 0;
+        float txDragTo = 20;
+        float txExpected = txDragTo + 4*StubbedTargetDisplay.LETTER_WIDTH;
+
+        dragFromTo(left, txDragFrom, txDragTo);
+        float txAfter = left.getTx();
+        
+        assertThat("text", left.getText(), is("RLEFTIGHT"));
+        assertThat("tx after", txAfter, is(txExpected));
+    }
+    
     private void dragFromTo(
             StubbedTargetDisplay target,
             float txDragFrom,
