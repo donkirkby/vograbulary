@@ -6,8 +6,8 @@ import playn.core.Pointer.Event;
 
 public class DragAdapter extends Adapter {
     private Layer draggingLayer;
-    private float startX;
-    private float shiftX;
+    private float startX; // local x position of the pointer when drag started 
+    private float shiftX; // shift of layer relative to pointer
     
     @Override
     public void onPointerStart(Event event) {

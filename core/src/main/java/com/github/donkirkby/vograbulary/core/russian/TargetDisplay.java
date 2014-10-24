@@ -23,15 +23,15 @@ public class TargetDisplay extends DragAdapter {
     private Canvas canvas;
     private Image icon;
     private ImageLayer layer;
-    private TargetDisplay leftSide = this;
-    private TargetDisplay rightSide = this;
-    private Point leftPoint = new Point();
-    private Point rightPoint = new Point();
+    private TargetDisplay opposite;
+    private Point point = new Point();
     private ArrayList<Float> otherLetterPositions = new ArrayList<Float>();
     private int splitIndex;
+    private int wordIndex;
     private static final TextFormat TEXT_FORMAT =
             new TextFormat(VograbularyScreen.TITLE_FONT, true);
-
+    private CanvasImage image;
+    
     public TargetDisplay() {
         this.text = "";
         createLayer();
@@ -39,18 +39,29 @@ public class TargetDisplay extends DragAdapter {
 
     protected void createLayer() {
         icon = PlayN.assets().getImage("images/drag.png");
-        CanvasImage image = PlayN.graphics().createImage(250, 80);
+        image = PlayN.graphics().createImage(250, 80);
         canvas = image.canvas();
         layer = PlayN.graphics().createImageLayer(image);
         layer.addListener(this);
     }
-    
-    public TargetDisplay withLeftSide(TargetDisplay leftSide) {
-        this.leftSide = leftSide;
-        leftSide.rightSide = this;
-        return this;
+
+    public void setOpposite(TargetDisplay opposite) {
+        this.opposite = opposite;
+        opposite.opposite = this;
+        wordIndex = isLeft() ? 0 : 1;
+        opposite.wordIndex = 1 - wordIndex;
+    }
+    public TargetDisplay getOpposite() {
+        return opposite;
     }
     
+    /**
+     * Is this target to the left of the opposite target?
+     */
+    private boolean isLeft() {
+        return calculateDifferenceBetweenTargetPositions() < 0;
+    }
+
     public ImageLayer getLayer() {
         return layer;
     }
@@ -67,64 +78,54 @@ public class TargetDisplay extends DragAdapter {
     public void onPointerStart(Event event) {
         super.onPointerStart(event);
 
-        TargetDisplay opposite;
-        if (this == rightSide) {
-            opposite = leftSide;
-            if (opposite.isVisible()) {
-                otherLetterPositions.clear();
-                String text = opposite.originalText;
-                for (int i=0; i <= text.length(); i++) {
-                    String portion = text.substring(i);
-                    float width = calculateTextWidth(portion);
-                    otherLetterPositions.add(getLeftSideWidth() - width);
-                }
-                splitIndex = opposite.originalText.length();
+        if (opposite.isVisible()) {
+            otherLetterPositions.clear();
+            String text = opposite.originalText + originalText;
+            float startPosition = 0;
+            for (int i=0; i <= opposite.originalText.length(); i++) {
+                String portion = text.substring(0, i);
+                float width = calculateTextWidth(portion);
+                otherLetterPositions.add(startPosition + width);
             }
+            otherLetterPositions.add(Float.MAX_VALUE);
+            splitIndex = otherLetterPositions.size() - 1;
         }
     }
     
     @Override
     public void onPointerDrag(Event event) {
+        // TODO: drag either word off either end, so code can be the same.
+        // undragged word actually moves when it is detached
         super.onPointerDrag(event);
         float differenceBetweenTargetPositions = calculateDifferenceBetweenTargetPositions();
         float wordPosition = differenceBetweenTargetPositions - getShiftX();
-        boolean isOverlapping = wordPosition < getLeftSideWidth();
-        TargetDisplay opposite = leftSide == this ? rightSide : leftSide;
-        boolean shouldBeVisible = ! isOverlapping;
-        if (shouldBeVisible != opposite.isVisible()) {
-            opposite.setVisible(shouldBeVisible);
-            if (shouldBeVisible) {
-                text = originalText;
-                shiftX(
-                        leftSide == this
-                        ? -calculateTextWidth(rightSide.originalText)
-                        : calculateTextWidth(leftSide.originalText));
-            }
-            else {
-                text = leftSide.originalText + rightSide.originalText;
-                shiftX(
-                        leftSide == this
-                        ? calculateTextWidth(rightSide.originalText)
-                        : -calculateTextWidth(leftSide.originalText));
-                puzzle.setTargetWord(leftSide == this ? 1 : 0);
-            }
-            drawText();
-        }
-        if ( ! shouldBeVisible) {
-            for (int split = 0; split < otherLetterPositions.size(); split++) {
-                Float splitPosition = otherLetterPositions.get(split);
-                if (wordPosition <= splitPosition) {
-                    if (split != splitIndex) {
+        for (int split = 0; split < otherLetterPositions.size(); split++) {
+            Float splitPosition = otherLetterPositions.get(split);
+            if (wordPosition <= splitPosition) {
+                if (split != splitIndex) {
+                    if (split == otherLetterPositions.size() - 1) {
+                        opposite.setVisible(true);
+                        shiftX(otherLetterPositions.get(splitIndex) -
+                                otherLetterPositions.get(0));
+                        text = originalText;
+                    }
+                    else {
+                        if (splitIndex == otherLetterPositions.size() - 1) {
+                            opposite.setVisible(false);
+                            shiftX(otherLetterPositions.get(0) - splitPosition);
+                        }
+                        else {
+                            shiftX(otherLetterPositions.get(splitIndex) - splitPosition);
+                        }
                         text = opposite.originalText.substring(0, split) +
                                 originalText + 
                                 opposite.originalText.substring(split);
-                        shiftX(otherLetterPositions.get(splitIndex) - splitPosition);
-                        splitIndex = split;
                         puzzle.setTargetCharacter(split);
-                        drawText();
                     }
-                    break;
+                    splitIndex = split;
+                    drawText();
                 }
+                break;
             }
         }
     }
@@ -137,32 +138,38 @@ public class TargetDisplay extends DragAdapter {
         return layer.visible();
     }
 
-    protected float getLeftSideWidth() {
-        return leftSide.layer.width();
-    }
-
     protected float calculateDifferenceBetweenTargetPositions() {
-        rightPoint.set(0, 0);
-        Layers.transform(rightPoint, rightSide.layer, leftSide.layer, leftPoint);
-        float differenceBetweenTargetPositions = leftPoint.x;
-        return differenceBetweenTargetPositions;
+        point.set(0, 0);
+        Layers.transform(point, layer, opposite.layer, opposite.point);
+        return opposite.point.x;
     }
 
     protected void drawText() {
         canvas.clear();
-        TextLayout textLayout = PlayN.graphics().layoutText(
+        final TextLayout textLayout = PlayN.graphics().layoutText(
                 text,
                 TEXT_FORMAT);
-        float x =
-                rightSide == this
-                ? 0
-                : canvas.width() - textLayout.width();
-        canvas.fillText(textLayout, x, 32);
+        canvas.fillText(textLayout, 0, 0);
+        if ( ! icon.isReady()) {
+            layer.setImage(image.subImage(
+                    0, 
+                    0, 
+                    textLayout.width(), 
+                    textLayout.height()));
+        }
         
         icon.addCallback(new Callback<Image>() {
             @Override
             public void onSuccess(Image result) {
-                canvas.drawImage(icon, 50, 54);
+                canvas.drawImage(
+                        icon, 
+                        (textLayout.width() - icon.width())/2, 
+                        textLayout.height());
+                layer.setImage(image.subImage(
+                        0,
+                        0, 
+                        textLayout.width(), 
+                        textLayout.height() + icon.height()));
             }
 
             @Override
@@ -176,14 +183,6 @@ public class TargetDisplay extends DragAdapter {
         return PlayN.graphics().layoutText(text, TEXT_FORMAT).width();
     }
     
-    public TargetDisplay getLeftSide() {
-        return leftSide;
-    }
-    
-    public TargetDisplay getRightSide() {
-        return rightSide;
-    }
-    
     public Puzzle getPuzzle() {
         return puzzle;
     }
@@ -192,6 +191,6 @@ public class TargetDisplay extends DragAdapter {
         if (getShiftX() != 0) {
             shiftX(-getShiftX());
         }
-        setText(puzzle.getTarget(this == leftSide ? 0 : 1));
+        setText(puzzle.getTarget(wordIndex));
     }
 }

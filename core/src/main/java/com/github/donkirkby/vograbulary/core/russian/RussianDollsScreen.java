@@ -114,7 +114,8 @@ public class RussianDollsScreen extends ChallengeScreen {
         insertLayer.addListener(new DragAdapter());
         target1 = new TargetDisplay();
         layer.add(target1.getLayer());
-        target2 = new TargetDisplay().withLeftSide(target1);
+        target2 = new TargetDisplay();
+        target1.setOpposite(target2);
         layer.add(target2.getLayer());
         
         controller = new Controller();
