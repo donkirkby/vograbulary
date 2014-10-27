@@ -24,9 +24,10 @@ public class TargetDisplay extends DragAdapter {
     private Image icon;
     private ImageLayer layer;
     private TargetDisplay opposite;
+    private boolean isLeft;
     private Point point = new Point();
     private ArrayList<Float> otherLetterPositions = new ArrayList<Float>();
-    private int splitIndex;
+    private int currentTarget;
     private int wordIndex;
     private static final TextFormat TEXT_FORMAT =
             new TextFormat(VograbularyScreen.TITLE_FONT, true);
@@ -81,14 +82,21 @@ public class TargetDisplay extends DragAdapter {
         if (opposite.isVisible()) {
             otherLetterPositions.clear();
             String text = opposite.originalText + originalText;
-            float startPosition = 0;
+            isLeft = isLeft();
+            float startPosition = 
+                    isLeft
+                    ? -calculateTextWidth(originalText)
+                    : 0;
             for (int i=0; i <= opposite.originalText.length(); i++) {
                 String portion = text.substring(0, i);
                 float width = calculateTextWidth(portion);
                 otherLetterPositions.add(startPosition + width);
             }
             otherLetterPositions.add(Float.MAX_VALUE);
-            splitIndex = otherLetterPositions.size() - 1;
+            currentTarget =
+                    isLeft
+                    ? 0
+                    : otherLetterPositions.size() - 1;
         }
     }
     
@@ -99,30 +107,40 @@ public class TargetDisplay extends DragAdapter {
         super.onPointerDrag(event);
         float differenceBetweenTargetPositions = calculateDifferenceBetweenTargetPositions();
         float wordPosition = differenceBetweenTargetPositions - getShiftX();
-        for (int split = 0; split < otherLetterPositions.size(); split++) {
-            Float splitPosition = otherLetterPositions.get(split);
-            if (wordPosition <= splitPosition) {
-                if (split != splitIndex) {
-                    if (split == otherLetterPositions.size() - 1) {
+        for (int target = 0; target < otherLetterPositions.size(); target++) {
+            Float targetLeft = otherLetterPositions.get(target);
+            if (wordPosition <= targetLeft) {
+                if (target != currentTarget) {
+                    if (target == otherLetterPositions.size() - 1) {
                         opposite.setVisible(true);
-                        shiftX(otherLetterPositions.get(splitIndex) -
+                        shiftX(otherLetterPositions.get(currentTarget) -
                                 otherLetterPositions.get(0));
                         text = originalText;
                     }
                     else {
-                        if (splitIndex == otherLetterPositions.size() - 1) {
+                        int targetOffset = isLeft ? -1 : 0;
+                        if (currentTarget == otherLetterPositions.size() - 1) {
                             opposite.setVisible(false);
-                            shiftX(otherLetterPositions.get(0) - splitPosition);
+                            shiftX(otherLetterPositions.get(0) - 
+                                    otherLetterPositions.get(target+targetOffset));
                         }
                         else {
-                            shiftX(otherLetterPositions.get(splitIndex) - splitPosition);
+                            if (currentTarget == 0) {
+                                opposite.setVisible(false);
+                            }
+                            float currentBoundary = otherLetterPositions.get(
+                                    Math.max(currentTarget + targetOffset, 0));
+                            float newBoundary = otherLetterPositions.get(
+                                    Math.max(target + targetOffset, 0));
+                            shiftX(currentBoundary - newBoundary);
                         }
-                        text = opposite.originalText.substring(0, split) +
-                                originalText + 
-                                opposite.originalText.substring(split);
-                        puzzle.setTargetCharacter(split);
+                        int splitIndex = target - (isLeft ? 1 : 0);
+                        text = opposite.originalText.substring(0, splitIndex) +
+                                originalText +
+                                opposite.originalText.substring(splitIndex);
+                        puzzle.setTargetCharacter(target);
                     }
-                    splitIndex = split;
+                    currentTarget = target;
                     drawText();
                 }
                 break;

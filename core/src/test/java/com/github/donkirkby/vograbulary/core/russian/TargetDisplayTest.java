@@ -4,7 +4,6 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import playn.core.Events.Flags;
@@ -156,16 +155,45 @@ public class TargetDisplayTest {
     }
     
     @Test
-    @Ignore
-    public void dragLeftPassOneLetter() {
+    public void dragLeftWithoutOverlap() {
         right.setTx(100);
         float txDragFrom = 0;
-        float txDragTo = 70;
-        float txExpected = txDragTo + 4*StubbedTargetDisplay.LETTER_WIDTH;
+        float txDragTo = 60;
+        float txExpected = txDragTo;
 
         dragFromTo(left, txDragFrom, txDragTo);
         float txAfter = left.getTx();
         
+        assertThat("visible", right.isVisible(), is(true));
+        assertThat("tx after", txAfter, is(txExpected));
+    }
+    
+    @Test
+    public void dragLeftWithOverlap() {
+        right.setTx(100);
+        float txDragFrom = 0;
+        float txDragTo = 61;
+        float txExpected = txDragTo;
+        
+        dragFromTo(left, txDragFrom, txDragTo);
+        float txAfter = left.getTx();
+        
+        assertThat("visible", right.isVisible(), is(false));
+        assertThat("text", left.getText(), is("LEFTRIGHT"));
+        assertThat("tx after", txAfter, is(txExpected));
+    }
+    
+    @Test
+    public void dragLeftPassOneLetter() {
+        right.setTx(100);
+        float txDragFrom = 0;
+        float txDragTo = 71;
+        float txExpected = txDragTo - 1*StubbedTargetDisplay.LETTER_WIDTH;
+        
+        dragFromTo(left, txDragFrom, txDragTo);
+        float txAfter = left.getTx();
+        
+        assertThat("visible", right.isVisible(), is(false));
         assertThat("text", left.getText(), is("RLEFTIGHT"));
         assertThat("tx after", txAfter, is(txExpected));
     }
