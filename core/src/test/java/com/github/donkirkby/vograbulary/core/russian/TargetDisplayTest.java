@@ -18,6 +18,7 @@ public class TargetDisplayTest {
     public void setUp() {
         left = new StubbedTargetDisplay();
         right = new StubbedTargetDisplay();
+        right.setTx(100);
         right.setOpposite(left);
         puzzle = new Puzzle("left right");
         left.setPuzzle(puzzle);
@@ -119,14 +120,34 @@ public class TargetDisplayTest {
         float txDragMiddle = 40;
         float txDragEnd = 41;
         float txExpected = txDragEnd;
+        float txExpectedLeft = 0;
 
         dragFromTo(right, txDragFrom, txDragMiddle);
         dragTo(right, txDragEnd);
         float txAfter = right.getTx();
+        float txLeft = left.getTx();
         
         assertThat("visible", left.isVisible(), is(true));
         assertThat("text", right.getText(), is("RIGHT"));
         assertThat("tx after", txAfter, is(txExpected));
+        assertThat("tx left", txLeft, is(txExpectedLeft));
+    }
+    
+    @Test
+    public void passAllLetters() {
+        float txDragFrom = 100;
+        float txDragTo = -2;
+        float txExpected = txDragTo;
+        float txExpectedLeft = 5*StubbedTargetDisplay.LETTER_WIDTH;
+
+        dragFromTo(right, txDragFrom, txDragTo);
+        float txAfter = right.getTx();
+        float txLeft = left.getTx();
+        
+        assertThat("text", right.getText(), is("RIGHT"));
+        assertThat("tx after", txAfter, is(txExpected));
+        assertThat("visible", left.isVisible(), is(true));
+        assertThat("left tx", txLeft, is(txExpectedLeft));
     }
     
     @Test
@@ -156,7 +177,6 @@ public class TargetDisplayTest {
     
     @Test
     public void dragLeftWithoutOverlap() {
-        right.setTx(100);
         float txDragFrom = 0;
         float txDragTo = 60;
         float txExpected = txDragTo;
@@ -170,7 +190,6 @@ public class TargetDisplayTest {
     
     @Test
     public void dragLeftWithOverlap() {
-        right.setTx(100);
         float txDragFrom = 0;
         float txDragTo = 61;
         float txExpected = txDragTo;
@@ -184,8 +203,23 @@ public class TargetDisplayTest {
     }
     
     @Test
+    public void dragLeftWithOverlapThenNone() {
+        float txDragFrom = 0;
+        float txDragMiddle = 61;
+        float txDragTo = 60;
+        float txExpected = txDragTo;
+        
+        dragFromTo(left, txDragFrom, txDragMiddle);
+        dragTo(left, txDragTo);
+        float txAfter = left.getTx();
+        
+        assertThat("visible", right.isVisible(), is(true));
+        assertThat("text", left.getText(), is("LEFT"));
+        assertThat("tx after", txAfter, is(txExpected));
+    }
+    
+    @Test
     public void dragLeftPassOneLetter() {
-        right.setTx(100);
         float txDragFrom = 0;
         float txDragTo = 71;
         float txExpected = txDragTo - 1*StubbedTargetDisplay.LETTER_WIDTH;
@@ -196,6 +230,7 @@ public class TargetDisplayTest {
         assertThat("visible", right.isVisible(), is(false));
         assertThat("text", left.getText(), is("RLEFTIGHT"));
         assertThat("tx after", txAfter, is(txExpected));
+        assertThat("target word", puzzle.getCombination(), is("RLEFTIGHT"));
     }
     
     private void dragFromTo(

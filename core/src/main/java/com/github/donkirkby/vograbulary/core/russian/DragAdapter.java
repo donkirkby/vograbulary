@@ -12,7 +12,6 @@ public class DragAdapter extends Adapter {
     @Override
     public void onPointerStart(Event event) {
         // Can only be one drag event at a time, no multitouch.
-        draggingLayer = event.hit();
         startX = event.localX() + shiftX;
     }
     
@@ -20,6 +19,14 @@ public class DragAdapter extends Adapter {
     public void onPointerDrag(Event event) {
         float tx = event.localX() - startX + shiftX;
         translateX(tx);
+    }
+    
+    /**
+     * Register as a listener with the layer.
+     */
+    public void setDraggingLayer(Layer draggingLayer) {
+        this.draggingLayer = draggingLayer;
+        draggingLayer.addListener(this);
     }
 
     /**

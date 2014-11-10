@@ -43,7 +43,7 @@ public class TargetDisplay extends DragAdapter {
         image = PlayN.graphics().createImage(250, 80);
         canvas = image.canvas();
         layer = PlayN.graphics().createImageLayer(image);
-        layer.addListener(this);
+        setDraggingLayer(layer);
     }
 
     public void setOpposite(TargetDisplay opposite) {
@@ -60,7 +60,7 @@ public class TargetDisplay extends DragAdapter {
      * Is this target to the left of the opposite target?
      */
     private boolean isLeft() {
-        return calculateDifferenceBetweenTargetPositions() < 0;
+        return calculateDifferenceBetweenTargetPositions() <= 0;
     }
 
     public ImageLayer getLayer() {
@@ -80,6 +80,8 @@ public class TargetDisplay extends DragAdapter {
         super.onPointerStart(event);
 
         if (opposite.isVisible()) {
+            puzzle.setTargetWord(opposite.wordIndex);
+            puzzle.setTargetCharacter(0);
             otherLetterPositions.clear();
             String text = opposite.originalText + originalText;
             isLeft = isLeft();
@@ -106,23 +108,28 @@ public class TargetDisplay extends DragAdapter {
         // undragged word actually moves when it is detached
         super.onPointerDrag(event);
         float differenceBetweenTargetPositions = calculateDifferenceBetweenTargetPositions();
-        float wordPosition = differenceBetweenTargetPositions - getShiftX();
+        float wordPosition = differenceBetweenTargetPositions - getShiftX() + opposite.getShiftX();
         for (int target = 0; target < otherLetterPositions.size(); target++) {
             Float targetLeft = otherLetterPositions.get(target);
             if (wordPosition <= targetLeft) {
                 if (target != currentTarget) {
                     if (target == otherLetterPositions.size() - 1) {
                         opposite.setVisible(true);
-                        shiftX(otherLetterPositions.get(currentTarget) -
-                                otherLetterPositions.get(0));
+                        float distance =
+                                otherLetterPositions.get(currentTarget) -
+                                otherLetterPositions.get(0);
+                        shiftX(distance);
+                        opposite.shiftX(-calculateTextWidth(originalText));
                         text = originalText;
                     }
                     else {
                         int targetOffset = isLeft ? -1 : 0;
                         if (currentTarget == otherLetterPositions.size() - 1) {
                             opposite.setVisible(false);
-                            shiftX(otherLetterPositions.get(0) - 
-                                    otherLetterPositions.get(target+targetOffset));
+                            float distance = otherLetterPositions.get(0) - 
+                                    otherLetterPositions.get(target+targetOffset);
+                            shiftX(distance);
+                            opposite.shiftX(calculateTextWidth(originalText));
                         }
                         else {
                             if (currentTarget == 0) {
@@ -134,11 +141,17 @@ public class TargetDisplay extends DragAdapter {
                                     Math.max(target + targetOffset, 0));
                             shiftX(currentBoundary - newBoundary);
                         }
-                        int splitIndex = target - (isLeft ? 1 : 0);
-                        text = opposite.originalText.substring(0, splitIndex) +
-                                originalText +
-                                opposite.originalText.substring(splitIndex);
-                        puzzle.setTargetCharacter(target);
+                        if (target == 0) {
+                            opposite.setVisible(true);
+                            text = originalText;
+                        }
+                        else {
+                            int splitIndex = target - (isLeft ? 1 : 0);
+                            text = opposite.originalText.substring(0, splitIndex) +
+                                    originalText +
+                                    opposite.originalText.substring(splitIndex);
+                            puzzle.setTargetCharacter(splitIndex);
+                        }
                     }
                     currentTarget = target;
                     drawText();

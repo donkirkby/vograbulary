@@ -80,10 +80,15 @@ public class RussianDollsScreen extends ChallengeScreen {
                             target1.getLayer(),
                             positionInImage);
                     target1.getLayer().transform().translate(
-                            positionInImage.x - 100,
+                            positionInImage.x + insertShim.size().width()/2 - 100,
                             positionInImage.y);
+                    Layers.transform(
+                            positionInShim,
+                            dragShim.layer,
+                            target2.getLayer(),
+                            positionInImage);
                     target2.getLayer().transform().translate(
-                            positionInImage.x + 100,
+                            positionInImage.x + insertShim.size().width()/2 + 100,
                             positionInImage.y);
                 }
             };
@@ -111,7 +116,7 @@ public class RussianDollsScreen extends ChallengeScreen {
         Image insertImage = PlayN.assets().getImage("images/insert.png");
         insertLayer = PlayN.graphics().createImageLayer(insertImage);
         layer.add(insertLayer);
-        insertLayer.addListener(new DragAdapter());
+        new DragAdapter().setDraggingLayer(insertLayer);
         target1 = new TargetDisplay();
         layer.add(target1.getLayer());
         target2 = new TargetDisplay();
@@ -156,34 +161,36 @@ public class RussianDollsScreen extends ChallengeScreen {
                     controller.next();
                     return;
                 }
-                positionInImage.set(insertLayer.width()/2, 0);
-                Layers.transform(
-                        positionInImage,
-                        insertLayer,
-                        target2.getLayer(),
-                        positionInLabel);
-                // TODO: put this back.
-//                Label target;
-//                int wordIndex;
-//                if (positionInLabel.x >= 0) {
-//                    target = target2Label;
-//                    wordIndex = 1;
-//                }
-//                else {
-//                    target = target1Label;
-//                    wordIndex = 0;
-//                    Layers.transform(
-//                            positionInImage,
-//                            insertLayer,
-//                            target1Label.layer,
-//                            positionInLabel);
-//                }
-//                puzzle.setTargetWord(wordIndex);
-//                String word = puzzle.getTarget(wordIndex);
-//                int charIndex =
-//                        (int)(0.5 + positionInLabel.x /
-//                        target.size().width() * word.length());
-//                puzzle.setTargetCharacter(charIndex);
+                if (target1.isVisible() && target2.isVisible()) {
+                    positionInImage.set(insertLayer.width()/2, 0);
+                    Layers.transform(
+                            positionInImage,
+                            insertLayer,
+                            target2.getLayer(),
+                            positionInLabel);
+                    ImageLayer target;
+                    int wordIndex;
+                    if (positionInLabel.x >= 0 && 
+                            positionInLabel.x < target2.getLayer().width()) {
+                        target = target2.getLayer();
+                        wordIndex = 1;
+                    }
+                    else {
+                        target = target1.getLayer();
+                        wordIndex = 0;
+                        Layers.transform(
+                                positionInImage,
+                                insertLayer,
+                                target,
+                                positionInLabel);
+                    }
+                    puzzle.setTargetWord(wordIndex);
+                    String word = puzzle.getTarget(wordIndex);
+                    int charIndex =
+                            (int)(0.5 + positionInLabel.x /
+                            target.width() * word.length());
+                    puzzle.setTargetCharacter(charIndex);
+                }
                 controller.solve();
                 if (puzzle.isSolved()) {
                     target1.setVisible(false);
@@ -226,12 +233,12 @@ public class RussianDollsScreen extends ChallengeScreen {
     }
     public void setPuzzle(Puzzle puzzle) {
         this.puzzle = puzzle;
-        puzzleLabel.text.update(puzzle.getClue());
         target1.setPuzzle(puzzle);
         target1.setVisible(true);
-        solutionLabel.text.update("");
         target2.setPuzzle(puzzle);
         target2.setVisible(true);
+        puzzleLabel.text.update(puzzle.getClue());
+        solutionLabel.text.update("");
         puzzleScore.text.update(puzzle.getScoreDisplay());
         totalScore.text.update(puzzle.getTotalScoreDisplay());
     }
