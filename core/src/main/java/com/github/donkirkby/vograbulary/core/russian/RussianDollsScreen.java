@@ -80,7 +80,7 @@ public class RussianDollsScreen extends ChallengeScreen {
                             target1.getLayer(),
                             positionInImage);
                     target1.getLayer().transform().translate(
-                            positionInImage.x + insertShim.size().width()/2 - 100,
+                            positionInImage.x + insertShim.size().width()/4 - target1.getLayer().width()/2,
                             positionInImage.y);
                     Layers.transform(
                             positionInShim,
@@ -88,7 +88,7 @@ public class RussianDollsScreen extends ChallengeScreen {
                             target2.getLayer(),
                             positionInImage);
                     target2.getLayer().transform().translate(
-                            positionInImage.x + insertShim.size().width()/2 + 100,
+                            positionInImage.x + 3*insertShim.size().width()/4 - target2.getLayer().width()/2,
                             positionInImage.y);
                 }
             };
