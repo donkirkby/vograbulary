@@ -1,42 +1,20 @@
 package com.github.donkirkby.vograbulary.core.ultraghost;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Iterator;
 
 public class WordList implements Iterable<String> {
     private ArrayList<String> wordList = new ArrayList<String>();
     
-    /** Read all the words from a reader and add them to the list.
+    /** Read all the words from a string and add them to the list.
      * 
-     * @param reader an open reader. This method will close it.
      */
-    public void read(Reader reader) {
-        read(new BufferedReader(reader));
-    }
-
-    /** Read all the words from a reader and add them to the list.
-     * 
-     * @param reader an open reader. This method will close it.
-     */
-    public void read(BufferedReader lineReader) {
-        try {
-            try {
-                String line;
-                while ((line = lineReader.readLine()) != null) {
-                    if (line.length() > 3) {
-                        wordList.add(line.toUpperCase());
-                    }
-                }
-            } 
-            finally {
-                lineReader.close();
+    public void read(String words) {
+        String[] lines = words.split("\\s");
+        for (String line : lines) {
+            if (line.length() > 3) {
+                wordList.add(line.toUpperCase());
             }
-        }
-        catch (IOException e) {
-            throw new RuntimeException("Reading word list failed.", e);
         }
     }
     

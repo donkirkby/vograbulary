@@ -4,9 +4,6 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
 import java.util.List;
 
 import org.junit.Before;
@@ -16,7 +13,6 @@ import org.junit.rules.ExpectedException;
 import org.mockito.ArgumentCaptor;
 
 import com.github.donkirkby.vograbulary.core.ultraghost.WordList;
-import com.github.donkirkby.vograbulary.core.russian.RussianDollsScreen;
 
 public class ControllerTest {
     private Controller controller;
@@ -29,7 +25,7 @@ public class ControllerTest {
     public void setUp() {
         screen = mock(RussianDollsScreen.class);
         WordList wordList = new WordList();
-        wordList.read(new StringReader("uncomfortable"));
+        wordList.read("uncomfortable");
         controller = new Controller();
         controller.setScreen(screen);
         controller.setWordList(wordList);
@@ -38,9 +34,8 @@ public class ControllerTest {
     @Test
     public void loadSinglePuzzle() {
         String expectedClue = "Puzzle number one.";
-        Reader reader = new StringReader(expectedClue);
         
-        controller.loadPuzzles(reader);
+        controller.loadPuzzles(expectedClue);
 
         Puzzle puzzle = capturePuzzle();
         assertThat("puzzle", puzzle.getClue(), is(expectedClue));
@@ -51,9 +46,8 @@ public class ControllerTest {
         String expectedClue1 = "Puzzle number one.";
         String expectedClue2 = "Another nice puzzle.";
         String input = expectedClue1 + "\n" + expectedClue2;
-        Reader reader = new StringReader(input);
         
-        controller.loadPuzzles(reader);
+        controller.loadPuzzles(input);
         Puzzle puzzle1 = capturePuzzle();
         controller.next();
         List<Puzzle> allPuzzles = captureAllPuzzles();
@@ -68,8 +62,8 @@ public class ControllerTest {
         String expectedClue1 = "Puzzle number one.";
         String expectedClue2 = "Another nice puzzle.";
         String input = expectedClue1 + "\n" + expectedClue2;
-        Reader reader = new StringReader(input);
-        controller.loadPuzzles(reader);
+        
+        controller.loadPuzzles(input);
         controller.next();
         
         controller.back();
@@ -77,18 +71,6 @@ public class ControllerTest {
         
         assertThat("puzzle count", allPuzzles.size(), is(3));
         assertThat("puzzle 2", allPuzzles.get(2).getClue(), is(expectedClue1));
-    }
-    
-    @Test
-    public void readerIsClosed() throws Exception {
-        String expectedPuzzle = "Puzzle number one.";
-        Reader reader = new StringReader(expectedPuzzle);
-        
-        controller.loadPuzzles(reader);
-
-        thrown.expect(IOException.class);
-        thrown.expectMessage("Stream closed");
-        reader.read();
     }
     
     @Test
@@ -156,9 +138,8 @@ public class ControllerTest {
         String expectedClue1 = "unable comfort";
         String expectedClue2 = "something else";
         String input = expectedClue1 + "\n" + expectedClue2;
-        Reader reader = new StringReader(input);
         
-        controller.loadPuzzles(reader);
+        controller.loadPuzzles(input);
         Puzzle puzzle = capturePuzzle();
         when(screen.getPuzzle()).thenReturn(puzzle);
         int seconds = 10;

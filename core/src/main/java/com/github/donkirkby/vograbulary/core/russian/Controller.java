@@ -1,11 +1,7 @@
 package com.github.donkirkby.vograbulary.core.russian;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.Reader;
 import java.util.ArrayList;
 
-import com.github.donkirkby.vograbulary.core.russian.RussianDollsScreen;
 import com.github.donkirkby.vograbulary.core.ultraghost.WordList;
 
 public class Controller {
@@ -16,23 +12,13 @@ public class Controller {
 
     /**
      * Load puzzles in from the source file, one puzzle per line.
-     * @param reader contains the puzzles, will be closed before this method
-     * returns.
      */
-    public void loadPuzzles(Reader reader) {
-        BufferedReader bufferedReader = new BufferedReader(reader);
-        try {
-            String puzzle;
-            while (null != (puzzle = bufferedReader.readLine())) {
-                clues.add(puzzle);
-            }
-            next();
-            
-            reader.close();
-        } catch (IOException ex) {
-//  TODO:          throw new RuntimeException("Loading puzzles failed.", ex);
+    public void loadPuzzles(String puzzles) {
+        String[] lines = puzzles.split("\n");
+        for (String line : lines) {
+            clues.add(line);
         }
-        
+        next();
     }
     
     public void setWordList(WordList wordList) {

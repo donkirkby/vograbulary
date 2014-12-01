@@ -108,8 +108,8 @@ public class Puzzle {
     }
 
     private String getScoreDisplay(BigDecimal score) {
-        int formatPrecision = Math.max(0, score.scale());
-        return String.format("%." + formatPrecision + "f", score);
+        String result = score.toPlainString();
+        return result;
     }
     
     public BigDecimal getTotalScore() {

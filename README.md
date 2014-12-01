@@ -51,11 +51,27 @@ Vograbulary will include definitions for the words, brief readings from public d
 Contributing
 ============
 
+[![Stories ready for you to help with][badge]][waffle]
+
 Vograbulary is built using Eclipse. Install the tools listed under [libgdx prerequisites][tools], clone this project from git, and then import the project files into Eclipse.
 
 To edit the graphics files, edit the contents of vograbulary-test/assets-raw, and then run vograbulary-test/src/com.github.donkirkby.vograbulary.AssetPacker. To change the font, follow the instructions for running [Hiero][hiero]. Launch Hiero, open the vograbulary-test/assets-raw/default.hiero settings file, and then save the font file over vograbulary-android/assets/data/ui/default.fnt. That will also generate default.png, which you need to move back to vograbulary-test/assets-raw/skin/default.png. Finally, run the AssetPacker again.
 
 If you have the tools for building iOS apps, I'm looking for someone to package the iOS version. It sounds like it's [supported by libgdx][iOS], but [not trivial][iOStrouble].
+
+Running locally
+---------------
+To run Vograbulary from source code, try one of the following:
+
+1. Run the Java version in Eclipse, or from a command line:
+
+        mvn -Pjava test
+2. Run the HTML version:
+
+        mvn -Phtml integration-test
+3. Run on your Android device:
+
+        mvn -Pandroid install
 
 Building a Release
 ------------------
@@ -108,4 +124,5 @@ Vograbulary is released under the MIT license.
 [mit]: https://github.com/iconic/open-iconic/blob/master/ICON-LICENSE
 [ama]: http://www.npr.org/2014/01/30/268462155/russian-dolls
 [google]: https://play.google.com/apps/publish
-
+[badge]: https://badge.waffle.io/donkirkby/vograbulary.svg?label=ready&title=Ready
+[waffle]: http://waffle.io/donkirkby/vograbulary

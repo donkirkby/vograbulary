@@ -1,8 +1,5 @@
 package com.github.donkirkby.vograbulary.core.russian;
 
-import java.io.Reader;
-import java.io.StringReader;
-
 import playn.core.Image;
 import playn.core.ImageLayer;
 import playn.core.PlayN;
@@ -143,7 +140,7 @@ public class RussianDollsScreen extends ChallengeScreen {
             public void onSuccess(String text) {
                 WordList wordList = new WordList();
                 
-                wordList.read(new StringReader(text)); // closes the reader
+                wordList.read(text);
                 controller.setWordList(wordList);
             }
             
@@ -214,8 +211,7 @@ public class RussianDollsScreen extends ChallengeScreen {
     }
 
     private void loadPuzzles(String text) {
-        Reader reader = new StringReader(text);
-        controller.loadPuzzles(reader); // closes the reader
+        controller.loadPuzzles(text);
     }
 
     @Override
