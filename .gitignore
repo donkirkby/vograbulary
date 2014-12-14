@@ -18,6 +18,7 @@ gen/
 html/gwt-unitCache
 html/test-classes/
 html/war/WEB-INF/classes/
+html/war/WEB-INF/deploy/
 html/war/vograbulary_html
 vograbulary-html/gwt-unitCache
 vograbulary-html/war/WEB-INF/deploy

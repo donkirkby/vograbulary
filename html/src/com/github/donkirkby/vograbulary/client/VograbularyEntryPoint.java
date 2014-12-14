@@ -12,13 +12,19 @@ import com.google.gwt.user.client.ui.RootPanel;
  */
 public class VograbularyEntryPoint implements EntryPoint {
 
+    private int puzzleIndex;
+
     /**
      * This is the entry point method.
      */
     public void onModuleLoad() {
+        String puzzleText = Assets.INSTANCE.russianDolls().getText();
+        final String[] puzzleLines = puzzleText.split("\\n");
+        puzzleIndex = 0;
+        
         final Button nextButton = new Button("Next");
         final Label puzzleLabel = new Label();
-        puzzleLabel.setText("Hello, World!");
+        puzzleLabel.setText(puzzleLines[0]);
         final Label errorLabel = new Label();
 
         // Add the nameField and sendButton to the RootPanel
@@ -37,7 +43,7 @@ public class VograbularyEntryPoint implements EntryPoint {
              * Fired when the user clicks on the sendButton.
              */
             public void onClick(ClickEvent event) {
-                puzzleLabel.setText("Good-bye.");
+                puzzleLabel.setText(puzzleLines[++puzzleIndex]);
             }
         }
 
