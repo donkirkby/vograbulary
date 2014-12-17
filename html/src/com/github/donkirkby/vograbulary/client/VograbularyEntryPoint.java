@@ -36,19 +36,11 @@ public class VograbularyEntryPoint implements EntryPoint {
         // Focus the cursor on the name field when the app loads
         nextButton.setFocus(true);
 
-
-        // Create a handler for the sendButton and nameField
-        class MyHandler implements ClickHandler {
-            /**
-             * Fired when the user clicks on the sendButton.
-             */
+        nextButton.addClickHandler(new ClickHandler() {
+            @Override
             public void onClick(ClickEvent event) {
                 puzzleLabel.setText(puzzleLines[++puzzleIndex]);
             }
-        }
-
-        // Add a handler to send the name to the server
-        MyHandler handler = new MyHandler();
-        nextButton.addClickHandler(handler);
+        });
     }
 }
