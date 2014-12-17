@@ -43,26 +43,26 @@ public class Controller {
     }
 
     public void next() {
-        String clue = clues.get(++clueNumber);
-        Puzzle previousPuzzle = screen.getPuzzle();
-        screen.setPuzzle(
-                previousPuzzle == null
-                ? new Puzzle(clue)
-                : new Puzzle(clue, previousPuzzle));
+//        String clue = clues.get(++clueNumber);
+//        Puzzle previousPuzzle = screen.getPuzzle();
+//        screen.setPuzzle(
+//                previousPuzzle == null
+//                ? new Puzzle(clue)
+//                : new Puzzle(clue, previousPuzzle));
     }
-
-    public void back() {
-        String clue = clues.get(--clueNumber);
-        screen.setPuzzle(new Puzzle(clue));
-    }
-
-    public void solve() {
-        Puzzle puzzle = screen.getPuzzle();
-        puzzle.setSolved(wordList.contains(puzzle.getCombination()));
-    }
-
-    public String adjustScore(float seconds) {
-        return screen.getPuzzle().adjustScore(seconds);
-    }
+//
+//    public void back() {
+//        String clue = clues.get(--clueNumber);
+//        screen.setPuzzle(new Puzzle(clue));
+//    }
+//
+//    public void solve() {
+//        Puzzle puzzle = screen.getPuzzle();
+//        puzzle.setSolved(wordList.contains(puzzle.getCombination()));
+//    }
+//
+//    public String adjustScore(float seconds) {
+//        return screen.getPuzzle().adjustScore(seconds);
+//    }
 
 }

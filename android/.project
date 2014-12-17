@@ -34,7 +34,7 @@
 		<link>
 			<name>assets</name>
 			<type>2</type>
-			<location>PARENT-1-PROJECT_LOC/vograbulary/src/com/github/donkirkby/vograbulary/assets</location>
+			<locationURI>PARENT-1-PROJECT_LOC/core/src/com/github/donkirkby/vograbulary/assets</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>
