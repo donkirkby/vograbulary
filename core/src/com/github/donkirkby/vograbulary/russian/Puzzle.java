@@ -108,8 +108,9 @@ public class Puzzle {
     }
 
     private String getScoreDisplay(BigDecimal score) {
-        int formatPrecision = Math.max(0, score.scale());
-        return String.format("%." + formatPrecision + "f", score);
+        // TODO: Put the formatting back in a way that works under GWT.
+        // int formatPrecision = Math.max(0, score.scale());
+        return score.toString();//String.format("%." + formatPrecision + "f", score);
     }
     
     public BigDecimal getTotalScore() {
