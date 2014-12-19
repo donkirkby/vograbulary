@@ -2,9 +2,11 @@ package com.github.donkirkby.vograbulary.client;
 
 import com.github.donkirkby.vograbulary.russian.Puzzle;
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 
@@ -14,6 +16,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 public class VograbularyEntryPoint implements EntryPoint {
 
     private Label puzzleLabel = new Label();
+    private Image insertButton = new Image(GWT.getHostPageBaseURL() + "images/insert.png");
     private Label targetWord1 = new Label();
     private Label targetWord2 = new Label();
     private int puzzleIndex;
@@ -33,6 +36,7 @@ public class VograbularyEntryPoint implements EntryPoint {
         // Add the nameField and sendButton to the RootPanel
         // Use RootPanel.get() to get the entire body element
         RootPanel.get("puzzleLabelContainer").add(puzzleLabel);
+        RootPanel.get("insertButton").add(insertButton);
         RootPanel.get("targetWord1").add(targetWord1);
         RootPanel.get("targetWord2").add(targetWord2);
         RootPanel.get("nextButtonContainer").add(nextButton);
