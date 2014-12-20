@@ -11,7 +11,11 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
@@ -25,9 +29,11 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        final ViewGroup insertLayout = (ViewGroup)findViewById(R.id.insertLayout);
         puzzleText = (TextView)findViewById(R.id.clue);
         targetWord1 = (TextView)findViewById(R.id.targetWord1);
         targetWord2 = (TextView)findViewById(R.id.targetWord2);
+        final ImageView insertButton = (ImageView)findViewById(R.id.insertImage);
         
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(
@@ -44,6 +50,29 @@ public class MainActivity extends Activity {
             puzzleSource.add("Failed to open file. " + e.getMessage());
         }
         displayPuzzle();
+        
+        insertButton.setOnTouchListener(new View.OnTouchListener() {
+            private int _xDelta;
+            
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                final int eventX = (int) event.getRawX();
+                RelativeLayout.LayoutParams layoutParams = 
+                        (RelativeLayout.LayoutParams) view.getLayoutParams();
+                switch (event.getAction() & MotionEvent.ACTION_MASK) {
+                case MotionEvent.ACTION_DOWN:
+                    _xDelta = eventX - layoutParams.leftMargin;
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    layoutParams.leftMargin = eventX - _xDelta;
+                    layoutParams.rightMargin = -250;
+                    view.setLayoutParams(layoutParams);
+                    break;
+                }
+                insertLayout.invalidate();
+                return true;
+            }
+        });
     }
 
     @Override

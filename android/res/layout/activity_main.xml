@@ -20,11 +20,22 @@
         android:text="@string/hello_world"
         android:textSize="@dimen/abc_action_bar_title_text_size" />
 
-    <ImageView
-        android:id="@+id/imageView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/insert" />
+    <RelativeLayout
+        android:id="@+id/insertLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <ImageView
+            android:id="@+id/insertImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="102dp"
+            android:contentDescription="@string/insert_description"
+            android:src="@drawable/insert" />
+
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout1"

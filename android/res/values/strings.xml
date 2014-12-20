@@ -7,5 +7,6 @@
     <string name="next">Next</string>
     <string name="previous">Previous</string>
     <string name="word">Word</string>
+    <string name="insert_description">insertion arrow</string>
 
 </resources>
