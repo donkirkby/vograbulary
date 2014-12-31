@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import com.github.donkirkby.vograbulary.russian.Puzzle;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -18,12 +16,18 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.github.donkirkby.vograbulary.russian.Puzzle;
+
 public class MainActivity extends Activity {
     private TextView puzzleText;
     private TextView targetWord1;
     private TextView targetWord2;
     private int puzzleIndex;
     private ArrayList<String> puzzleSource = new ArrayList<String>();
+    private int[] insertLocation = new int[2];
+    private int[] targetLocation = new int[2];
+    private int wordIndex = -1;
+    private int charIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,12 +71,36 @@ public class MainActivity extends Activity {
                     layoutParams.leftMargin = eventX - _xDelta;
                     layoutParams.rightMargin = -250;
                     view.setLayoutParams(layoutParams);
+                    
+                    insertButton.getLocationOnScreen(insertLocation);
+                    int insertX = insertLocation[0] +
+                            insertButton.getWidth()*24/64;
+                    wordIndex = -1;
+                    calculateInsertionPoint(insertX, targetWord1);
+                    calculateInsertionPoint(insertX, targetWord2);
+                    puzzleText.setText(wordIndex + " : " + charIndex);
                     break;
                 }
                 insertLayout.invalidate();
                 return true;
             }
         });
+    }
+    
+    private void calculateInsertionPoint(int insertX, TextView targetWord) {
+        if (wordIndex >= 0) {
+            return; // already found insertion point on other word
+        }
+        targetWord.getLocationOnScreen(targetLocation);
+        if (insertX < targetLocation[0] ||
+                targetLocation[0] + targetWord.getWidth() < insertX) {
+            return;
+        }
+        wordIndex = targetWord == targetWord1 ? 0 : 1;
+        int wordPixel = insertX - targetLocation[0];
+        int wordLength = targetWord.getText().length();
+        int wordWidth = targetWord.getWidth();
+        charIndex = (wordPixel * wordLength + wordWidth/2) / wordWidth;
     }
 
     @Override
