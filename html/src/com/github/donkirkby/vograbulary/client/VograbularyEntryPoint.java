@@ -11,6 +11,12 @@ import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseMoveHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
+import com.google.gwt.event.dom.client.TouchEndEvent;
+import com.google.gwt.event.dom.client.TouchEndHandler;
+import com.google.gwt.event.dom.client.TouchMoveEvent;
+import com.google.gwt.event.dom.client.TouchMoveHandler;
+import com.google.gwt.event.dom.client.TouchStartEvent;
+import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Button;
@@ -71,6 +77,9 @@ public class VograbularyEntryPoint implements EntryPoint {
         insertButton.addMouseDownHandler(dragger);
         insertButton.addMouseMoveHandler(dragger);
         insertButton.addMouseUpHandler(dragger);
+        insertButton.addTouchStartHandler(dragger);
+        insertButton.addTouchMoveHandler(dragger);
+        insertButton.addTouchEndHandler(dragger);
     }
     
     private void displayPuzzle() {
@@ -81,7 +90,8 @@ public class VograbularyEntryPoint implements EntryPoint {
     }
     
     private class Dragger
-    implements MouseDownHandler, MouseMoveHandler, MouseUpHandler {
+    implements MouseDownHandler, MouseMoveHandler, MouseUpHandler,
+    TouchStartHandler, TouchMoveHandler, TouchEndHandler {
         private UIObject target;
         private int startX;
         private boolean isDragging;
@@ -93,23 +103,51 @@ public class VograbularyEntryPoint implements EntryPoint {
         @Override
         public void onMouseDown(MouseDownEvent event) {
             event.preventDefault();
+            onStart(event.getClientX());
+        }
+        
+        @Override
+        public void onTouchStart(TouchStartEvent event) {
+            event.preventDefault();
+            onStart(event.getTouches().get(0).getClientX());
+        }
+
+        private void onStart(int x) {
             Event.setCapture(target.getElement());
-            startX = event.getClientX() - insertPanel.getWidgetLeft(insertButton);
+            startX = x - insertPanel.getWidgetLeft(insertButton);
             isDragging = true;
         }
         
         @Override
         public void onMouseMove(MouseMoveEvent event) {
+            onMove(event.getClientX());
+        }
+        
+        @Override
+        public void onTouchMove(TouchMoveEvent event) {
+            onMove(event.getTouches().get(0).getClientX());
+        }
+
+        private void onMove(int x) {
             if (isDragging) {
                 insertPanel.setWidgetPosition(
                         insertButton,
-                        event.getClientX() - startX, 
+                        x - startX, 
                         INSERT_BUTTON_TOP_MARGIN);
             }
         }
 
         @Override
         public void onMouseUp(MouseUpEvent event) {
+            onStop();
+        }
+        
+        @Override
+        public void onTouchEnd(TouchEndEvent event) {
+            onStop();
+        }
+
+        private void onStop() {
             Event.releaseCapture(target.getElement());
             isDragging = false;
         }
