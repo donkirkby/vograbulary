@@ -52,6 +52,9 @@ public class Puzzle {
     public void setTargetWord(int targetWord) {
         this.targetWord = targetWord;
     }
+    public int getTargetWord() {
+        return targetWord;
+    }
     
     /**
      * The index of the character in the target word that will have the other
@@ -62,6 +65,9 @@ public class Puzzle {
      */
     public void setTargetCharacter(int targetCharacter) {
         this.targetCharacter = targetCharacter;
+    }
+    public int getTargetCharacter() {
+        return targetCharacter;
     }
     public String getClue() {
         return clue;

@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.github.donkirkby.vograbulary.russian.Puzzle;
+import com.github.donkirkby.vograbulary.russian.PuzzleDisplay;
 
 public class MainActivity extends Activity {
     private TextView puzzleText;
@@ -24,10 +25,8 @@ public class MainActivity extends Activity {
     private TextView targetWord2;
     private int puzzleIndex;
     private ArrayList<String> puzzleSource = new ArrayList<String>();
-    private int[] insertLocation = new int[2];
-    private int[] targetLocation = new int[2];
-    private int wordIndex = -1;
-    private int charIndex;
+    private int[] location = new int[2];
+    private PuzzleDisplay puzzleDisplay = new PuzzleDisplay();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,19 +65,26 @@ public class MainActivity extends Activity {
                 switch (event.getAction() & MotionEvent.ACTION_MASK) {
                 case MotionEvent.ACTION_DOWN:
                     _xDelta = eventX - layoutParams.leftMargin;
+                    targetWord1.getLocationOnScreen(location);
+                    int word1Left = location[0];
+                    targetWord2.getLocationOnScreen(location);
+                    puzzleDisplay.setTargetPositions(
+                            word1Left,
+                            targetWord1.getWidth(),
+                            location[0],
+                            targetWord2.getWidth());
                     break;
                 case MotionEvent.ACTION_MOVE:
                     layoutParams.leftMargin = eventX - _xDelta;
                     layoutParams.rightMargin = -250;
                     view.setLayoutParams(layoutParams);
                     
-                    insertButton.getLocationOnScreen(insertLocation);
-                    int insertX = insertLocation[0] +
+                    insertButton.getLocationOnScreen(location);
+                    int insertX = location[0] +
                             insertButton.getWidth()*24/64;
-                    wordIndex = -1;
-                    calculateInsertionPoint(insertX, targetWord1);
-                    calculateInsertionPoint(insertX, targetWord2);
-                    puzzleText.setText(wordIndex + " : " + charIndex);
+                    puzzleDisplay.calculateInsertion(insertX);
+                    Puzzle puzzle = puzzleDisplay.getPuzzle();
+                    puzzleText.setText(puzzle.getTargetWord() + " : " + puzzle.getTargetCharacter());
                     break;
                 }
                 insertLayout.invalidate();
@@ -87,22 +93,6 @@ public class MainActivity extends Activity {
         });
     }
     
-    private void calculateInsertionPoint(int insertX, TextView targetWord) {
-        if (wordIndex >= 0) {
-            return; // already found insertion point on other word
-        }
-        targetWord.getLocationOnScreen(targetLocation);
-        if (insertX < targetLocation[0] ||
-                targetLocation[0] + targetWord.getWidth() < insertX) {
-            return;
-        }
-        wordIndex = targetWord == targetWord1 ? 0 : 1;
-        int wordPixel = insertX - targetLocation[0];
-        int wordLength = targetWord.getText().length();
-        int wordWidth = targetWord.getWidth();
-        charIndex = (wordPixel * wordLength + wordWidth/2) / wordWidth;
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -137,5 +127,6 @@ public class MainActivity extends Activity {
         puzzleText.setText(puzzle.getClue());
         targetWord1.setText(puzzle.getTarget(0));
         targetWord2.setText(puzzle.getTarget(1));
+        puzzleDisplay.setPuzzle(puzzle);
     }
 }

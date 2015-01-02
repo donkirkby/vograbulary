@@ -1,6 +1,7 @@
 package com.github.donkirkby.vograbulary.client;
 
 import com.github.donkirkby.vograbulary.russian.Puzzle;
+import com.github.donkirkby.vograbulary.russian.PuzzleDisplay;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -38,6 +39,7 @@ public class VograbularyEntryPoint implements EntryPoint {
     private Label targetWord2 = new Label();
     private int puzzleIndex;
     private String[] puzzleLines;
+    private PuzzleDisplay puzzleDisplay = new PuzzleDisplay();
 
     /**
      * This is the entry point method.
@@ -60,6 +62,9 @@ public class VograbularyEntryPoint implements EntryPoint {
         RootPanel.get("targetWord2").add(targetWord2);
         RootPanel.get("nextButtonContainer").add(nextButton);
         RootPanel.get("errorLabelContainer").add(errorLabel);
+        
+        targetWord1.getElement().addClassName("targetWord");
+        targetWord2.getElement().addClassName("targetWord");
 
         // Focus the cursor on the name field when the app loads
         nextButton.setFocus(true);
@@ -87,6 +92,7 @@ public class VograbularyEntryPoint implements EntryPoint {
         puzzleLabel.setText(puzzle.getClue());
         targetWord1.setText(puzzle.getTarget(0));
         targetWord2.setText(puzzle.getTarget(1));
+        puzzleDisplay.setPuzzle(puzzle);
     }
     
     private class Dragger
@@ -115,6 +121,11 @@ public class VograbularyEntryPoint implements EntryPoint {
         private void onStart(int x) {
             Event.setCapture(target.getElement());
             startX = x - insertPanel.getWidgetLeft(insertButton);
+            puzzleDisplay.setTargetPositions(
+                    targetWord1.getAbsoluteLeft(),
+                    targetWord1.getOffsetWidth(),
+                    targetWord2.getAbsoluteLeft(),
+                    targetWord2.getOffsetWidth());
             isDragging = true;
         }
         
@@ -134,6 +145,12 @@ public class VograbularyEntryPoint implements EntryPoint {
                         insertButton,
                         x - startX, 
                         INSERT_BUTTON_TOP_MARGIN);
+                int insertX =
+                        insertButton.getAbsoluteLeft() +
+                        insertButton.getOffsetWidth() * 24/64;
+                puzzleDisplay.calculateInsertion(insertX);
+                Puzzle puzzle = puzzleDisplay.getPuzzle();
+                puzzleLabel.setText(puzzle.getTargetWord() + ", " + puzzle.getTargetCharacter());
             }
         }
 
