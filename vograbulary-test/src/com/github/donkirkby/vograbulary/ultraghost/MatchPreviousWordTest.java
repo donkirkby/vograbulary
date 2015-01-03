@@ -3,7 +3,6 @@ package com.github.donkirkby.vograbulary.ultraghost;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
-import java.io.StringReader;
 import java.util.Arrays;
 import java.util.List;
 
@@ -48,7 +47,7 @@ public class MatchPreviousWordTest {
     @Before
     public void setUp() {
         wordList = new WordList();
-        wordList.read(new StringReader("PIERCE\nPRIZE\nPRICE\nPRIDE\nPIPE"));
+        wordList.read(Arrays.asList("PIERCE", "PRIZE", "PRICE", "PRIDE", "PIPE"));
         int matchScore = 30;
         match = new Match(
                 matchScore, 

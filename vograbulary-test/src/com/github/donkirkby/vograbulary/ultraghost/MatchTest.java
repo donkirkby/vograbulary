@@ -4,7 +4,7 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-import java.io.StringReader;
+import java.util.Arrays;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -24,7 +24,7 @@ public class MatchTest {
         student = new Student("Student");
         computer = new ComputerStudent(mock(VograbularyPreferences.class));
         wordList = new WordList();
-        wordList.read(new StringReader("PIECE\nPIPE"));
+        wordList.read(Arrays.asList("PIECE", "PIPE"));
         match = new Match(MATCH_SCORE, student, computer);
         random = new DummyRandom();
         match.setRandom(random);

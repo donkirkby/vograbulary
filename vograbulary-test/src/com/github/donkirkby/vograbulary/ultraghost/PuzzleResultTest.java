@@ -3,7 +3,6 @@ package com.github.donkirkby.vograbulary.ultraghost;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
-import java.io.StringReader;
 import java.util.Arrays;
 import java.util.List;
 
@@ -45,7 +44,7 @@ public class PuzzleResultTest {
    @Test
    public void checkSolution() {
        WordList wordList = new WordList();
-       wordList.read(new StringReader("piece\nripe\npipe"));
+       wordList.read(Arrays.asList("piece", "ripe", "pipe"));
        
        Puzzle puzzle = new Puzzle(letters, new Student("Bob"), wordList);
        puzzle.setMinimumWordLength(minimumLength);

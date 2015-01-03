@@ -5,7 +5,7 @@ import static org.hamcrest.number.OrderingComparison.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-import java.io.StringReader;
+import java.util.Arrays;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -28,7 +28,7 @@ public class ComputerStudentTest {
     @Before
     public void setUp() {
         wordList = new WordList();
-        wordList.read(new StringReader("PRICE\nPIECE\nPIPE"));
+        wordList.read(Arrays.asList("PRICE", "PIECE", "PIPE"));
         preferences = mock(VograbularyPreferences.class);
         when(preferences.getComputerStudentVocabularySize()).thenReturn(
                 Integer.MAX_VALUE);
@@ -94,7 +94,7 @@ public class ComputerStudentTest {
     @Test
     public void ignoreWorseWord() {
         wordList = new WordList();
-        wordList.read(new StringReader("PIECE\nPRICE"));
+        wordList.read(Arrays.asList("PIECE", "PRICE"));
         student.setWordList(wordList);
         student.setMaxSearchBatchCount(1);
         
@@ -109,7 +109,7 @@ public class ComputerStudentTest {
     @Test
     public void ignoreShortWord() {
         wordList = new WordList();
-        wordList.read(new StringReader("PIECE\nPIPE"));
+        wordList.read(Arrays.asList("PIECE", "PIPE"));
         student.setWordList(wordList);
         student.setMaxSearchBatchCount(1);
         
@@ -125,7 +125,7 @@ public class ComputerStudentTest {
     @Test
     public void ignoreWordsBetterThanPrevious() {
         wordList = new WordList();
-        wordList.read(new StringReader("PRICE\nPIECE\nPIPE"));
+        wordList.read(Arrays.asList("PRICE", "PIECE", "PIPE"));
         student.setWordList(wordList);
         student.setMaxSearchBatchCount(1);
         

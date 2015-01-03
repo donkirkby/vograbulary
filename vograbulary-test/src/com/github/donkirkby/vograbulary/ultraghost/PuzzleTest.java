@@ -1,9 +1,9 @@
 package com.github.donkirkby.vograbulary.ultraghost;
 
-import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 
-import java.io.StringReader;
+import java.util.Arrays;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -26,7 +26,7 @@ public class PuzzleTest {
     public void setUp() {
         letters = "PIE";
         wordList = new WordList();
-        wordList.read(new StringReader("PRICE\nPIECE\nPIPE\n"));
+        wordList.read(Arrays.asList("PRICE", "PIECE", "PIPE"));
         owner = new Student("Student");
         changeCount = 0;
         completionCount = 0;

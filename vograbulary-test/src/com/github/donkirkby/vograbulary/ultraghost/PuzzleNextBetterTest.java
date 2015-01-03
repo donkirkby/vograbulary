@@ -3,7 +3,6 @@ package com.github.donkirkby.vograbulary.ultraghost;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
-import java.io.StringReader;
 import java.util.Arrays;
 import java.util.List;
 
@@ -51,8 +50,8 @@ public class PuzzleNextBetterTest {
    @Test
    public void findNextBetter() {
        WordList wordList = new WordList();
-       wordList.read(new StringReader(
-               "pierce\npride\nprice\npipe\npine\nasks\npiece"));
+       wordList.read(Arrays.asList(
+               "pierce", "pride", "price", "pipe", "pine", "asks", "piece"));
 
        Puzzle puzzle = new Puzzle(letters, new Student("Bob"), wordList);
        puzzle.setMinimumWordLength(minimumLength);

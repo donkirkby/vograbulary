@@ -3,7 +3,6 @@ package com.github.donkirkby.vograbulary.ultraghost;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
-import java.io.StringReader;
 import java.util.Arrays;
 import java.util.List;
 
@@ -62,7 +61,7 @@ public class PuzzleChallengeTest {
    @Before
    public void setUp() {
        wordList = new WordList();
-       wordList.read(new StringReader("piece\npipe\npine\nrope\nmime\nmine"));
+       wordList.read(Arrays.asList("piece", "pipe", "pine", "rope", "mime", "mine"));
        puzzle = new Puzzle(letters, new Student("Bob"), wordList);
        puzzle.setMinimumWordLength(minimumLength);
        puzzle.setSolution(solution);

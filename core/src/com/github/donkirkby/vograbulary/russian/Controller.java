@@ -1,9 +1,7 @@
 package com.github.donkirkby.vograbulary.russian;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.Reader;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.github.donkirkby.vograbulary.ultraghost.WordList;
 
@@ -18,20 +16,9 @@ public class Controller {
      * @param reader contains the puzzles, will be closed before this method
      * returns.
      */
-    public void loadPuzzles(Reader reader) {
-        BufferedReader bufferedReader = new BufferedReader(reader);
-        try {
-            String puzzle;
-            while (null != (puzzle = bufferedReader.readLine())) {
-                clues.add(puzzle);
-            }
-            next();
-            
-            reader.close();
-        } catch (IOException ex) {
-//  TODO:          throw new RuntimeException("Loading puzzles failed.", ex);
-        }
-        
+    public void loadPuzzles(List<String> clues) {
+        this.clues.addAll(clues);
+        next();
     }
     
     public void setWordList(WordList wordList) {
@@ -43,26 +30,26 @@ public class Controller {
     }
 
     public void next() {
-//        String clue = clues.get(++clueNumber);
-//        Puzzle previousPuzzle = screen.getPuzzle();
-//        screen.setPuzzle(
-//                previousPuzzle == null
-//                ? new Puzzle(clue)
-//                : new Puzzle(clue, previousPuzzle));
+        String clue = clues.get(++clueNumber);
+        Puzzle previousPuzzle = screen.getPuzzle();
+        screen.setPuzzle(
+                previousPuzzle == null
+                ? new Puzzle(clue)
+                : new Puzzle(clue, previousPuzzle));
     }
-//
-//    public void back() {
-//        String clue = clues.get(--clueNumber);
-//        screen.setPuzzle(new Puzzle(clue));
-//    }
-//
-//    public void solve() {
-//        Puzzle puzzle = screen.getPuzzle();
-//        puzzle.setSolved(wordList.contains(puzzle.getCombination()));
-//    }
-//
-//    public String adjustScore(float seconds) {
-//        return screen.getPuzzle().adjustScore(seconds);
-//    }
+
+    public void back() {
+        String clue = clues.get(--clueNumber);
+        screen.setPuzzle(new Puzzle(clue));
+    }
+
+    public void solve() {
+        Puzzle puzzle = screen.getPuzzle();
+        puzzle.setSolved(wordList.contains(puzzle.getCombination()));
+    }
+
+    public String adjustScore(float seconds) {
+        return screen.getPuzzle().adjustScore(seconds);
+    }
 
 }

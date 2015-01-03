@@ -72,14 +72,14 @@
         android:layout_marginTop="16dp" >
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/previousButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="previous"
             android:text="@string/previous" />
 
         <Button
-            android:id="@+id/button1"
+            android:id="@+id/nextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="next"
