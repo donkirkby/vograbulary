@@ -1,7 +1,12 @@
 package com.github.donkirkby.vograbulary.client;
 
+import java.util.Arrays;
+
+import com.github.donkirkby.vograbulary.russian.Controller;
 import com.github.donkirkby.vograbulary.russian.Puzzle;
 import com.github.donkirkby.vograbulary.russian.PuzzleDisplay;
+import com.github.donkirkby.vograbulary.russian.RussianDollsScreen;
+import com.github.donkirkby.vograbulary.ultraghost.WordList;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -29,7 +34,7 @@ import com.google.gwt.user.client.ui.UIObject;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class VograbularyEntryPoint implements EntryPoint {
+public class VograbularyEntryPoint implements EntryPoint, RussianDollsScreen {
 
     private static final int INSERT_BUTTON_TOP_MARGIN = 4;
     private Label puzzleLabel = new Label();
@@ -37,21 +42,24 @@ public class VograbularyEntryPoint implements EntryPoint {
     private Image insertButton = new Image(GWT.getHostPageBaseURL() + "images/insert.png");
     private Label targetWord1 = new Label();
     private Label targetWord2 = new Label();
-    private int puzzleIndex;
-    private String[] puzzleLines;
+    private Button nextButton = new Button("Next");
     private PuzzleDisplay puzzleDisplay = new PuzzleDisplay();
+    private Controller controller = new Controller();
 
     /**
      * This is the entry point method.
      */
     public void onModuleLoad() {
         String puzzleText = Assets.INSTANCE.russianDolls().getText();
-        puzzleLines = puzzleText.split("\\n");
-        puzzleIndex = 0;
+        String wordListText = Assets.INSTANCE.wordList().getText();
+        WordList wordList = new WordList();
+        wordList.read(Arrays.asList(wordListText.split("\\n")));
+        controller.setScreen(this);
+        controller.setWordList(wordList);
+        controller.loadPuzzles(Arrays.asList(puzzleText.split("\\n")));
         
         insertPanel.setSize("100%", "40px");
         insertPanel.add(insertButton, 50, INSERT_BUTTON_TOP_MARGIN);
-        final Button nextButton = new Button("Next");
         final Label errorLabel = new Label();
 
         // Add the nameField and sendButton to the RootPanel
@@ -68,13 +76,22 @@ public class VograbularyEntryPoint implements EntryPoint {
 
         // Focus the cursor on the name field when the app loads
         nextButton.setFocus(true);
-        displayPuzzle();
 
         nextButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                puzzleIndex = (puzzleIndex+1) % puzzleLines.length;
-                displayPuzzle();
+                Puzzle puzzle = getPuzzle();
+                if (puzzle.isSolved()) {
+                    controller.next();
+                }
+                else {
+                    controller.solve();
+                    if (puzzle.isSolved()) {
+                        nextButton.setText("Next");
+                        targetWord1.setText(puzzle.getCombination());
+                        targetWord2.setText("");
+                    }
+                }
             }
         });
         
@@ -85,14 +102,6 @@ public class VograbularyEntryPoint implements EntryPoint {
         insertButton.addTouchStartHandler(dragger);
         insertButton.addTouchMoveHandler(dragger);
         insertButton.addTouchEndHandler(dragger);
-    }
-    
-    private void displayPuzzle() {
-        Puzzle puzzle = new Puzzle(puzzleLines[puzzleIndex]);
-        puzzleLabel.setText(puzzle.getClue());
-        targetWord1.setText(puzzle.getTarget(0));
-        targetWord2.setText(puzzle.getTarget(1));
-        puzzleDisplay.setPuzzle(puzzle);
     }
     
     private class Dragger
@@ -149,8 +158,6 @@ public class VograbularyEntryPoint implements EntryPoint {
                         insertButton.getAbsoluteLeft() +
                         insertButton.getOffsetWidth() * 24/64;
                 puzzleDisplay.calculateInsertion(insertX);
-                Puzzle puzzle = puzzleDisplay.getPuzzle();
-                puzzleLabel.setText(puzzle.getTargetWord() + ", " + puzzle.getTargetCharacter());
             }
         }
 
@@ -168,5 +175,19 @@ public class VograbularyEntryPoint implements EntryPoint {
             Event.releaseCapture(target.getElement());
             isDragging = false;
         }
+    }
+
+    @Override
+    public Puzzle getPuzzle() {
+        return puzzleDisplay.getPuzzle();
+    }
+
+    @Override
+    public void setPuzzle(Puzzle puzzle) {
+        puzzleLabel.setText(puzzle.getClue());
+        targetWord1.setText(puzzle.getTarget(0));
+        targetWord2.setText(puzzle.getTarget(1));
+        nextButton.setText("Solve");
+        puzzleDisplay.setPuzzle(puzzle);
     }
 }

@@ -9,4 +9,7 @@ public interface Assets extends ClientBundle {
     
     @Source("com/github/donkirkby/vograbulary/assets/russianDolls.txt")
     TextResource russianDolls();
+
+    @Source("com/github/donkirkby/vograbulary/assets/wordlist.txt")
+    TextResource wordList();
 }
