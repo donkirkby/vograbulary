@@ -17,73 +17,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="@string/hello_world"
+        android:text="@string/choose_challenge"
         android:textSize="@dimen/abc_action_bar_title_text_size" />
 
-    <RelativeLayout
-        android:id="@+id/insertLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <ImageView
-            android:id="@+id/insertImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="102dp"
-            android:contentDescription="@string/insert_description"
-            android:src="@drawable/insert" />
-
-    </RelativeLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayout1"
+    <Button
+        android:id="@+id/ultraghost"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="14dp" >
+        android:onClick="ultraghost"
+        android:text="@string/title_activity_ultraghost" />
 
-        <TextView
-            android:id="@+id/targetWord1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"
-            android:text="@string/word"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:typeface="monospace" />
-
-        <TextView
-            android:id="@+id/targetWord2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"
-            android:text="@string/word"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:typeface="monospace" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayout2"
+    <Button
+        android:id="@+id/russianDolls"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp" >
-
-        <Button
-            android:id="@+id/previousButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="previous"
-            android:text="@string/previous" />
-
-        <Button
-            android:id="@+id/nextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="next"
-            android:text="@string/next" />
-    </LinearLayout>
+        android:onClick="russianDolls"
+        android:text="@string/title_activity_russian_dolls" />
 
 </LinearLayout>

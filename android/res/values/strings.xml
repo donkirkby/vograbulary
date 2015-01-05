@@ -8,5 +8,8 @@
     <string name="previous">Previous</string>
     <string name="word">Word</string>
     <string name="insert_description">insertion arrow</string>
+    <string name="title_activity_russian_dolls">Russian Dolls</string>
+    <string name="choose_challenge">Choose a Vograbulary challenge.</string>
+    <string name="title_activity_ultraghost">Ultraghost</string>
 
 </resources>
