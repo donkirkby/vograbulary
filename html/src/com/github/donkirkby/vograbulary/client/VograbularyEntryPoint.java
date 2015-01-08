@@ -12,9 +12,8 @@ public class VograbularyEntryPoint implements EntryPoint {
      * This is the entry point method.
      */
     public void onModuleLoad() {
-        RussianDollsComposite russianDolls = new RussianDollsComposite();
         RootPanel root = RootPanel.get();
-        root.clear();
-        root.add(russianDolls);
+        AppController controller = new AppController();
+        controller.go(root);
     }
 }

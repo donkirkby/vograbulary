@@ -34,15 +34,16 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 
-public class RussianDollsComposite extends Composite implements RussianDollsScreen {
+public class RussianDollsPresenter extends Composite implements RussianDollsScreen {
 
+    public static final String HISTORY_TOKEN = "russian";
     private static final int INSERT_BUTTON_TOP_MARGIN = 4;
     private PuzzleDisplay puzzleDisplay = new PuzzleDisplay();
     private Controller controller = new Controller();
     private Dragger dragger;
 
     interface RussianDollsCompositeUiBinder extends
-    UiBinder<Widget, RussianDollsComposite> {
+    UiBinder<Widget, RussianDollsPresenter> {
     }
     
     @UiField
@@ -66,7 +67,7 @@ public class RussianDollsComposite extends Composite implements RussianDollsScre
     private static RussianDollsCompositeUiBinder uiBinder = GWT
             .create(RussianDollsCompositeUiBinder.class);
 
-    public RussianDollsComposite() {
+    public RussianDollsPresenter() {
         initWidget(uiBinder.createAndBindUi(this));
         
         dragger = new Dragger(insertButton);
