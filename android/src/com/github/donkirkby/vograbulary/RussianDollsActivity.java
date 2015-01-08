@@ -91,6 +91,9 @@ public class RussianDollsActivity extends Activity implements RussianDollsScreen
                             insertButton.getWidth()*24/64;
                     puzzleDisplay.calculateInsertion(insertX);
                     break;
+                case MotionEvent.ACTION_UP:
+                    view.performClick();
+                    break;
                 }
                 insertLayout.invalidate();
                 return true;
