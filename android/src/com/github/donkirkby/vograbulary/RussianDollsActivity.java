@@ -1,13 +1,10 @@
 package com.github.donkirkby.vograbulary;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,7 +22,8 @@ import com.github.donkirkby.vograbulary.russian.PuzzleDisplay;
 import com.github.donkirkby.vograbulary.russian.RussianDollsScreen;
 import com.github.donkirkby.vograbulary.ultraghost.WordList;
 
-public class RussianDollsActivity extends Activity implements RussianDollsScreen {
+public class RussianDollsActivity
+extends VograbularyActivity implements RussianDollsScreen {
     private TextView puzzleText;
     private TextView targetWord1;
     private TextView targetWord2;
@@ -99,22 +97,6 @@ public class RussianDollsActivity extends Activity implements RussianDollsScreen
                 return true;
             }
         });
-    }
-
-    private ArrayList<String> loadTextAsset(String assetName)
-            throws IOException {
-        ArrayList<String> lines = new ArrayList<String>();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(
-                getAssets().open(assetName)));
-        try {
-            String line;
-            while (null != (line = reader.readLine())) {
-                lines.add(line);
-            }
-        } finally {
-            reader.close();
-        }
-        return lines;
     }
 
     @Override

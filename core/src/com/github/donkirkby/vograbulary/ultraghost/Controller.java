@@ -26,8 +26,8 @@ public class Controller implements StudentListener {
         random.loadWordList(wordList);
     }
 
-    public void setView(UltraghostScreen view) {
-        this.screen = view;
+    public void setScreen(UltraghostScreen screen) {
+        this.screen = screen;
     }
     
     public void addStudent(Student student) {

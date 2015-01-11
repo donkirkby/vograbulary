@@ -61,7 +61,7 @@ public class ControllerTest {
         controller.setScheduler(scheduler);
         controller.setWordList(wordList);
         controller.setRandom(random);
-        controller.setView(view);
+        controller.setScreen(view);
         startPuzzle = new Puzzle("RPE", student, wordList);
         createMatch(student, student2);
         controller.watchPuzzle(startPuzzle);
