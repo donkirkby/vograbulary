@@ -5,11 +5,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.github.donkirkby.vograbulary.ultraghost.ComputerStudent;
 import com.github.donkirkby.vograbulary.ultraghost.Controller;
 import com.github.donkirkby.vograbulary.ultraghost.Match;
 import com.github.donkirkby.vograbulary.ultraghost.Puzzle;
@@ -17,9 +19,15 @@ import com.github.donkirkby.vograbulary.ultraghost.Student;
 import com.github.donkirkby.vograbulary.ultraghost.UltraghostRandom;
 import com.github.donkirkby.vograbulary.ultraghost.UltraghostScreen;
 import com.github.donkirkby.vograbulary.ultraghost.WordList;
+import com.github.donkirkby.vograbulary.ultraghost.WordResult;
+import com.github.donkirkby.vograbulary.ultraghost.Student.StudentListener;
 
 public class UltraghostActivity
-extends VograbularyActivity implements UltraghostScreen {
+extends VograbularyActivity implements UltraghostScreen, StudentListener {
+    public static final String INTENT_EXTRA_IS_COMPUTER = 
+            "com.github.donkirkby.vograbulary.ultraghost.iscomputer";
+    
+    private TextView ownerName;
     private TextView letters;
     private TextView solution;
     private TextView response;
@@ -39,6 +47,12 @@ extends VograbularyActivity implements UltraghostScreen {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ultraghost);
         
+        Intent intent = getIntent();
+        boolean isComputer = false;
+        isComputer =
+                intent.getBooleanExtra(INTENT_EXTRA_IS_COMPUTER, isComputer);
+        
+        ownerName = (TextView)findViewById(R.id.ownerName);
         letters = (TextView)findViewById(R.id.letters);
         solution = (TextView)findViewById(R.id.solution);
         response = (TextView)findViewById(R.id.response);
@@ -52,9 +66,8 @@ extends VograbularyActivity implements UltraghostScreen {
 
         controller = new Controller();
         controller.setRandom(new UltraghostRandom());
-        controller.addStudent(new Student("Alice"));
-        controller.addStudent(new Student("Bob"));
         controller.setScheduler(new AndroidScheduler());
+        controller.setScreen(this);
         List<String> wordSource;
         try {
             wordSource = loadTextAsset("wordlist.txt");
@@ -63,20 +76,52 @@ extends VograbularyActivity implements UltraghostScreen {
         }
         WordList wordList = new WordList();
         wordList.read(wordSource);
-        controller.setScreen(this);
+        if (isComputer) {
+            ComputerStudent computerStudent =
+                    new ComputerStudent(new VograbularyPreferences());
+            computerStudent.setWordList(wordList);
+            computerStudent.setListener(this);
+            computerStudent.setSearchBatchSize(30);
+            computerStudent.setMaxSearchBatchCount(1000); // 10s
+            controller.addStudent(computerStudent);
+            controller.addStudent(new Student("You"));
+        }
+        else {
+            controller.addStudent(new Student("Alice"));
+            controller.addStudent(new Student("Bob"));
+        }
         controller.setWordList(wordList);
         controller.start();
     }
 
     @Override
     public void refreshPuzzle() {
-        Puzzle puzzle = match.getPuzzle();
-        letters.setText(puzzle.getLetters());
-        solution.setText(puzzle.getSolution());
-        response.setText(puzzle.getResponse());
-        hint.setText(puzzle.getHint());
-        result.setText(puzzle.getResult().toString());
-        summary.setText(match.getSummary());
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Puzzle puzzle = match.getPuzzle();
+                Student winner = match.getWinner();
+                if (winner != null) {
+                    ownerName.setText("Winner: " + winner.getName());
+                    letters.setText("");
+                    focusButton(null);
+                }
+                else {
+                    ownerName.setText(puzzle.getOwner().getName());
+                    letters.setText(puzzle.getLetters());
+                }
+                solution.setText(puzzle.getSolution());
+                response.setText(puzzle.getResponse());
+                hint.setText(puzzle.getHint());
+                if (puzzle.getResult() == WordResult.UNKNOWN) {
+                    result.setText("");
+                }
+                else {
+                    result.setText(puzzle.getResult().toString());
+                }
+                summary.setText(match.getSummary());
+            }
+        });
     }
     
     public void solve(View view) {
@@ -100,26 +145,40 @@ extends VograbularyActivity implements UltraghostScreen {
 
     @Override
     public void focusSolution() {
-        solution.requestFocus();
-        focusButton(solveButton);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                solution.requestFocus();
+                focusButton(solveButton);
+            }
+        });
     }
 
     @Override
     public void focusResponse() {
-        response.requestFocus();
-        focusButton(respondButton);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                response.requestFocus();
+                focusButton(respondButton);
+            }
+        });
     }
 
     @Override
     public void focusNextButton() {
-        nextButton.requestFocus();
-        focusButton(nextButton);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                nextButton.requestFocus();
+                focusButton(nextButton);
+            }
+        });
     }
 
     @Override
     public void showThinking() {
-        // TODO Auto-generated method stub
-        
+        focusButton(null);
     }
 
     @Override
@@ -132,9 +191,22 @@ extends VograbularyActivity implements UltraghostScreen {
     }
 
     private void focusButton(Button target) {
+        boolean isFinished = match.getWinner() != null;
         for (Button button : focusButtons) {
             button.setVisibility(
-                    button == target ? Button.VISIBLE : Button.INVISIBLE);
+                    button == target && !isFinished
+                    ? Button.VISIBLE
+                    : Button.INVISIBLE);
         }
+    }
+
+    @Override
+    public void askForSolution() {
+        focusSolution();
+    }
+
+    @Override
+    public void askForResponse() {
+        focusResponse();
     }
 }

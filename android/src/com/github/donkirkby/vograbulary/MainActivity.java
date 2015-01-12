@@ -34,8 +34,20 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
     
-    public void ultraghost(View view) {
-        startActivity(new Intent(this, UltraghostActivity.class));
+    public void ultraghostHuman(View view) {
+        boolean isComputer = false;
+        startUltraghost(isComputer);
+    }
+    
+    public void ultraghostComputer(View view) {
+        boolean isComputer = true;
+        startUltraghost(isComputer);
+    }
+    
+    private void startUltraghost(boolean isComputer) {
+        Intent intent = new Intent(this, UltraghostActivity.class);
+        intent.putExtra(UltraghostActivity.INTENT_EXTRA_IS_COMPUTER, isComputer);
+        startActivity(intent);
     }
     
     public void russianDolls(View view) {

@@ -11,5 +11,7 @@
     <string name="title_activity_russian_dolls">Russian Dolls</string>
     <string name="choose_challenge">Choose a Vograbulary challenge.</string>
     <string name="title_activity_ultraghost">Ultraghost</string>
+    <string name="title_activity_ultraghost_human">Ultraghost vs. Human</string>
+    <string name="title_activity_ultraghost_computer">Ultraghost vs. Computer</string>
 
 </resources>

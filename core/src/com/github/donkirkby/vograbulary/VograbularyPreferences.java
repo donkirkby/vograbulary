@@ -1,10 +1,5 @@
 package com.github.donkirkby.vograbulary;
 
-import java.util.Arrays;
-import java.util.List;
-
-//import com.badlogic.gdx.Preferences;
-
 public class VograbularyPreferences {
 //    //stopJesting
 //    private static final String DEFAULT_STUDENT_NAMES = "Alice|Bob";
@@ -59,7 +54,7 @@ public class VograbularyPreferences {
 //    }
 //    
     public int getComputerStudentVocabularySize() {
-        return 0;
+        return 10000;
 //        return preferences.getInteger(
 //                Fields.COMPUTER_STUDENT_VOCABULARY_SIZE.name(), 
 //                DEFAULT_VOCABULARY_SIZE);

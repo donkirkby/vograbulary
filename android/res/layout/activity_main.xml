@@ -21,11 +21,18 @@
         android:textSize="@dimen/abc_action_bar_title_text_size" />
 
     <Button
-        android:id="@+id/ultraghost"
+        android:id="@+id/ultraghostHuman"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="ultraghost"
-        android:text="@string/title_activity_ultraghost" />
+        android:onClick="ultraghostHuman"
+        android:text="@string/title_activity_ultraghost_human" />
+
+    <Button
+        android:id="@+id/ultraghostComputer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="ultraghostComputer"
+        android:text="@string/title_activity_ultraghost_computer" />
 
     <Button
         android:id="@+id/russianDolls"

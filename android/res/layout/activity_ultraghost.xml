@@ -12,10 +12,17 @@
     tools:context="com.github.donkirkby.vograbulary.UltraghostActivity" >
 
     <TextView
+        android:id="@+id/ownerName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView" />
+
+    <TextView
         android:id="@+id/letters"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ABC" />
+        android:text="ABC"
+        android:textAppearance="?android:attr/textAppearanceLarge"  />
 
     <LinearLayout
         android:layout_width="match_parent"
