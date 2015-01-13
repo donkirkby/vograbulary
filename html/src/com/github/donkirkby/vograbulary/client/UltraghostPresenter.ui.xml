@@ -5,6 +5,23 @@
     
     </ui:style>
     <g:HTMLPanel>
-        <p>Ultraghost</p>
+        <p ui:field="ownerName">Owner</p>
+        <p ui:field="letters">ABC</p>
+        <table>
+            <tr>
+                <td><g:TextBox ui:field="solution"/></td>
+                <td><g:Button ui:field="solveButton" text="Solve"/></td>
+            </tr>
+            <tr>
+                <td><g:TextBox ui:field="response"/></td>
+                <td><g:Button ui:field="respondButton" text="Respond"/></td>
+            </tr>
+            <tr>
+                <td><span ui:field="hint"/></td>
+                <td><g:Button ui:field="nextButton" text="Next"/></td>
+            </tr>
+        </table>
+        <p ui:field="result">result</p>
+        <div ui:field="summary"/>
     </g:HTMLPanel>
 </ui:UiBinder> 

@@ -11,7 +11,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
@@ -26,6 +25,7 @@ import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Button;
@@ -85,26 +85,23 @@ public class RussianDollsPresenter extends Composite implements RussianDollsScre
         controller.setScreen(this);
         controller.setWordList(wordList);
         controller.loadPuzzles(Arrays.asList(puzzleText.split("\\n")));
-        
-        nextButton.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                Puzzle puzzle = getPuzzle();
-                if (puzzle.isSolved()) {
-                    controller.next();
-                }
-                else {
-                    controller.solve();
-                    if (puzzle.isSolved()) {
-                        nextButton.setText("Next");
-                        targetWord1.setInnerText(puzzle.getCombination());
-                        targetWord2.setInnerText("");
-                    }
-                }
-            }
-        });
     }
-
+    
+    @UiHandler("nextButton")
+    void next(ClickEvent e) {
+        Puzzle puzzle = getPuzzle();
+        if (puzzle.isSolved()) {
+            controller.next();
+        }
+        else {
+            controller.solve();
+            if (puzzle.isSolved()) {
+                nextButton.setText("Next");
+                targetWord1.setInnerText(puzzle.getCombination());
+                targetWord2.setInnerText("");
+            }
+        }
+    }
 
     private class Dragger
     implements MouseDownHandler, MouseMoveHandler, MouseUpHandler,

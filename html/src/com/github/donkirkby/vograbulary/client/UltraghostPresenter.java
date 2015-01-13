@@ -1,11 +1,28 @@
 package com.github.donkirkby.vograbulary.client;
 
+import java.util.Arrays;
+
+import com.github.donkirkby.vograbulary.ultraghost.Controller;
+import com.github.donkirkby.vograbulary.ultraghost.Match;
+import com.github.donkirkby.vograbulary.ultraghost.Puzzle;
+import com.github.donkirkby.vograbulary.ultraghost.Student;
+import com.github.donkirkby.vograbulary.ultraghost.UltraghostScreen;
+import com.github.donkirkby.vograbulary.ultraghost.WordList;
+import com.github.donkirkby.vograbulary.ultraghost.WordResult;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.ParagraphElement;
+import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
-public class UltraghostPresenter extends Composite {
+public class UltraghostPresenter extends Composite implements UltraghostScreen {
     public static final String HISTORY_TOKEN = "ultraghost";
 
     private static UltraghostPresenterUiBinder uiBinder = GWT
@@ -14,45 +31,53 @@ public class UltraghostPresenter extends Composite {
     interface UltraghostPresenterUiBinder extends
             UiBinder<Widget, UltraghostPresenter> {
     }
+    
+    @UiField
+    ParagraphElement ownerName;
+    
+    @UiField
+    ParagraphElement letters;
+    
+    @UiField
+    TextBox solution;
+    
+    @UiField
+    Button solveButton;
+    
+    @UiField
+    TextBox response;
+    
+    @UiField
+    Button respondButton;
+    
+    @UiField
+    SpanElement hint;
+    
+    @UiField
+    Button nextButton;
+    
+    @UiField
+    ParagraphElement result;
+    
+    @UiField
+    DivElement summary;
+    
+    private Controller controller = 
+            new Controller();
+    private Match match;
+//    private boolean isComputerOpponent;
+//  private boolean isHyperghost;
+//    private List<Button> focusButtons;
 
     public UltraghostPresenter() {
         initWidget(uiBinder.createAndBindUi(this));
-    }
 
-//  //stopJesting
-//  private Controller ultraghostController = 
-//          new Controller();
-//  private boolean isComputerOpponent;
-//  private boolean isHyperghost;
-//  private View view;
-//
-//  public UltraghostScreen(final VograbularyApp app) {
-//      super(app);
-//      Stage stage = getStage();
-//      
-//      Table table = new Table();
-//      table.setFillParent(true);
-//      stage.addActor(table);
-//      
-//      view = new View();
-//      view.create(table, app, ultraghostController);
-//      WordList wordList = new WordList();
-//      wordList.read(
-//              Gdx.files.internal("data/wordlist.txt").reader());
-//      ultraghostController.setWordList(wordList);
-//  }
-//  
-//  public void setComputerOpponent(boolean isComputerOpponent) {
-//      this.isComputerOpponent = isComputerOpponent;
-//  }
-//  
-//  public void setHyperghost(boolean isHyperghost) {
-//      this.isHyperghost = isHyperghost;
-//  }
-//
-//  @Override
-//  public void show() {
-//      view.clear();
+        String wordListText = Assets.INSTANCE.wordList().getText();
+        WordList wordList = new WordList();
+        wordList.read(Arrays.asList(wordListText.split("\\n")));
+        controller.setWordList(wordList);
+        controller.setScheduler(new GwtScheduler());
+
 //      VograbularyPreferences preferences = getApp().getPreferences();
 //      ultraghostController.clearStudents();
 //      if (isComputerOpponent) {
@@ -71,99 +96,34 @@ public class UltraghostPresenter extends Composite {
 //              }
 //          }
 //      }
-//      Match match = ultraghostController.getMatch();
+        controller.addStudent(new Student("Alice"));
+        controller.addStudent(new Student("Bob"));
+//      Match match = controller.getMatch();
 //      match.setMinimumWordLength(
 //              preferences.getUltraghostMinimumWordLength());
 //      match.setHyperghost(isHyperghost);
-//
-//      super.show();
-//  }
-//  //resumeJesting
-//  //stopJesting
-//  private Match match;
-//  private Label letters;
-//  private Label studentName;
-//  private TextField solution;
-//  private TextField response;
-//  private Label hint;
-//  private Label result;
-//  private Label scores;
-//  private TextButton solveButton;
-//  private TextButton respondButton;
-//  private TextButton nextButton;
-//  private TextButton[] focusButtons;
 //  
-//  public void create(
-//          final Table table, 
-//          final VograbularyApp app, 
-//          final Controller controller) {
-//      controller.setView(this);
-//      Skin skin = app.getSkin();
-//      table.top();
-//      studentName = new Label(" ", skin);
-//      table.add(studentName);
-//      table.row();
-//      
-//      letters = new Label(" ", skin);
-//      table.add(letters);
-//      table.row();
-//      
-//      solution = new TextField("", skin);
-//      table.add(solution).expandX().fillX().pad(5);
-//      solveButton = new TextButton("Solve", skin);
-//      table.add(solveButton).left();
-//      table.row();
-//      
-//      response = new TextField("", skin);
-//      table.add(response).expandX().fillX().pad(5);
-//      respondButton = new TextButton("Respond", skin);
-//      table.add(respondButton).left();
-//      table.row();
-//      
-//      result = new Label(" ", skin);
-//      table.add(result).fillX();
-//      nextButton = new TextButton("Next", skin);
-//      table.add(nextButton).left();
-//      table.row();
-//      
-//      hint = new Label(" ", skin);
-//      table.add(hint).fillX();
-//      table.row();
-//      
-//      scores = new Label(" \n ", skin);
-//      table.add(scores).fillX();
-//      TextButton menuButton = new TextButton("Menu", skin);
-//      table.add(menuButton).left().top();
-//      
-//      focusButtons = 
-//              new TextButton[] {solveButton, respondButton, nextButton};
-//      
-//      nextButton.addListener(new ChangeListener() {
-//          @Override
-//          public void changed(ChangeEvent event, Actor actor) {
-//              controller.start();
-//          }
-//      });
-//      solveButton.addListener(new ChangeListener() {
-//          @Override
-//          public void changed(ChangeEvent event, Actor actor) {
-//              match.getPuzzle().setSolution(solution.getText());
-//              controller.solve();
-//          }
-//      });
-//      respondButton.addListener(new ChangeListener() {
-//          @Override
-//          public void changed(ChangeEvent event, Actor actor) {
-//              match.getPuzzle().setResponse(response.getText());
-//          }
-//      });
-//      menuButton.addListener(new ChangeListener() {
-//          @Override
-//          public void changed(ChangeEvent event, Actor actor) {
-//              controller.cancelMatch();
-//              app.showMenu();
-//          }
-//      });
+//        focusButtons = Arrays.asList(solveButton, respondButton, nextButton);
+        
+        controller.setScreen(this);
+        controller.start();
+    }
+    
+    @UiHandler("solveButton")
+    void solve(ClickEvent e) {
+        match.getPuzzle().setSolution(solution.getText());
+        controller.solve();
+    }
+    
+    @UiHandler("respondButton")
+    void respond(ClickEvent e) {
+        match.getPuzzle().setResponse(response.getText());
+    }
+    
+    @UiHandler("nextButton")
+    void next(ClickEvent e) {
+        controller.start();
+    }
 //      table.addListener(new InputListener() {
 //          @Override
 //          public boolean keyUp(InputEvent event, int keycode) {
@@ -199,24 +159,11 @@ public class UltraghostPresenter extends Composite {
 //  }
 //
 //  /**
-//   * Schedule a task with the timer.
-//   */
-//  public void schedule(Task task, float delaySeconds, float intervalSeconds) {
-//      Timer.schedule(task, delaySeconds, intervalSeconds);
-//  }
-//
-//  /**
 //   * Set the display's focus in the solution field.
 //   */
 //  public void focusSolution() {
 //      focusButton(solveButton);
 //      focusField(solution);
-//  }
-//
-//  private void focusField(TextField field) {
-//      field.getStage().setKeyboardFocus(field);
-//      field.getOnscreenKeyboard().show(true);
-//      field.selectAll();
 //  }
 //  
 //  /**
@@ -266,61 +213,80 @@ public class UltraghostPresenter extends Composite {
 //      return match;
 //  }
 //  
-//  /**
-//   * Update the display to show all parts of the puzzle.
-//   */
-//  public void refreshPuzzle() {
+    @Override
+    public void clear() {
+        // TODO Auto-generated method stub
+        
+    }
+    @Override
+    public void focusSolution() {
+        solution.setFocus(true);
+    }
+    @Override
+    public void focusResponse() {
+        response.setFocus(true);
+    }
+    @Override
+    public void focusNextButton() {
+        nextButton.setFocus(true);
+    }
+    @Override
+    public void showThinking() {
+        // TODO Auto-generated method stub
+        
+    }
+    @Override
+    public void setMatch(Match match) {
+        this.match = match;
+    }
+    @Override
+    public Match getMatch() {
+        return match;
+    }
+    
+    @Override
+    public void refreshPuzzle() {
 //      if (letters == null) {
-//          // must be in unit tests, nothing to do.
-//          return;
-//      }
-//      if (match == null) {
-//          return;
-//      }
-//      Student winner = match.getWinner();
-//      scores.setText(match.getSummary());
-//      if (winner != null) {
-//          String resultText = winner.getName() + " win";
-//          if (winner.getName() != "You") {
-//              resultText += "s";
-//          }
-//          result.setText(resultText);
-//          studentName.setText(" ");
-//          letters.setText(" ");
-//          solution.setText(" ");
-//          response.setText(" ");
-//          hint.setText(" ");
-//          for (TextButton button : focusButtons) {
-//              button.setVisible(false);
-//          }
-//          return;
-//      }
-//      Puzzle puzzle = match.getPuzzle();
-//      if (puzzle != null) {
-//          Student owner = puzzle.getOwner();
-//          studentName.setText(owner == null ? "" : owner.getName());
-//          letters.setText(blankForNull(puzzle.getLettersDisplay()));
-//          setFieldContents(solution, puzzle.getSolution());
-//          setFieldContents(response, puzzle.getResponse());
-//          hint.setText(blankForNull(puzzle.getHint()) + " ");
-//          WordResult puzzleResult = puzzle.getResult();
-//          result.setText(
-//                  puzzleResult == WordResult.UNKNOWN 
-//                  ? "" 
-//                  : puzzleResult.toString());
-//      }
+//      // must be in unit tests, nothing to do.
+//      return;
 //  }
-//
-//  private void setFieldContents(TextField field, String contents) {
-//      if (field.getText() != contents) {
-//          // Only set it when the value changes, otherwise the selection
-//          // gets lost.
-//          field.setText(blankForNull(contents));
+//  if (match == null) {
+//      return;
+//  }
+//  Student winner = match.getWinner();
+//  if (winner != null) {
+//      String resultText = winner.getName() + " win";
+//      if (winner.getName() != "You") {
+//          resultText += "s";
 //      }
+//      result.setText(resultText);
+//      studentName.setText(" ");
+//      letters.setText(" ");
+//      solution.setText(" ");
+//      response.setText(" ");
+//      hint.setText(" ");
+//      for (TextButton button : focusButtons) {
+//          button.setVisible(false);
+//      }
+//      return;
 //  }
-//  
-//  private String blankForNull(Object o) {
-//      return o == null ? "" : o.toString();
+//  Puzzle puzzle = match.getPuzzle();
+//  if (puzzle != null) {
+//      Student owner = puzzle.getOwner();
+//      studentName.setText(owner == null ? "" : owner.getName());
+//      hint.setText(blankForNull(puzzle.getHint()) + " ");
 //  }
-//  //resumeJesting
+        Puzzle puzzle = match.getPuzzle();
+        ownerName.setInnerText(puzzle.getOwner().getName());
+        letters.setInnerText(puzzle.getLetters());
+        solution.setText(puzzle.getSolution());
+        response.setText(puzzle.getResponse());
+        WordResult puzzleResult = puzzle.getResult();
+        result.setInnerText(
+                puzzleResult == WordResult.UNKNOWN 
+                ? "" 
+                : puzzleResult.toString());
+        hint.setInnerText(puzzle.getHint());
+        summary.setInnerText(match.getSummary());
+    }
 }
