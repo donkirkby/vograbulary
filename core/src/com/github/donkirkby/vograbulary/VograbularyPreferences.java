@@ -14,6 +14,15 @@ public class VograbularyPreferences {
 //        COMPUTER_STUDENT_VOCABULARY_SIZE,
 //        ULTRAGHOST_MINIMUM_WORD_LENGTH
 //    };
+    
+    private boolean isComputerOpponent;
+    
+    public boolean isComputerOpponent() {
+        return isComputerOpponent;
+    }
+    public void setComputerOpponent(boolean isComputerOpponent) {
+        this.isComputerOpponent = isComputerOpponent;
+    }
 //    
 //    private Preferences preferences;
 //    

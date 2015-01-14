@@ -1,5 +1,6 @@
 package com.github.donkirkby.vograbulary.client;
 
+import com.github.donkirkby.vograbulary.VograbularyPreferences;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.History;
@@ -8,6 +9,7 @@ import com.google.gwt.user.client.ui.HasWidgets;
 
 public class AppController implements ValueChangeHandler<String> {
     private HasWidgets container;
+    private VograbularyPreferences preferences = new VograbularyPreferences();
     
     public AppController() {
         History.addValueChangeHandler(this);
@@ -21,10 +23,10 @@ public class AppController implements ValueChangeHandler<String> {
             presenter = new RussianDollsPresenter();
         }
         else if (event.getValue().equals(UltraghostPresenter.HISTORY_TOKEN)) {
-            presenter = new UltraghostPresenter();
+            presenter = new UltraghostPresenter(preferences);
         }
         else {
-            presenter = new MainPresenter();
+            presenter = new MainPresenter(preferences);
         }
         this.container.add(presenter);
     }

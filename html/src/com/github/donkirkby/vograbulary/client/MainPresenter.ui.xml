@@ -5,7 +5,12 @@
     
     </ui:style>
     <g:HTMLPanel>
-        <g:Button ui:field="ultraghostButton" text="Ultraghost"/>
+        <g:Button
+            ui:field="ultraghostHumanButton"
+            text="Ultraghost vs. Human"/>
+        <g:Button
+            ui:field="ultraghostComputerButton"
+            text="Ultraghost vs. Computer"/>
         <g:Button ui:field="russianDollsButton" text="Russian Dolls"/>
     </g:HTMLPanel>
 </ui:UiBinder> 

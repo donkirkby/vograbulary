@@ -1,5 +1,6 @@
 package com.github.donkirkby.vograbulary.client;
 
+import com.github.donkirkby.vograbulary.VograbularyPreferences;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -13,6 +14,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class MainPresenter extends Composite {
     
     public static final String HISTORY_TOKEN = "main";
+    private VograbularyPreferences preferences;
 
     private static MainPresenterUiBinder uiBinder = GWT
             .create(MainPresenterUiBinder.class);
@@ -21,7 +23,10 @@ public class MainPresenter extends Composite {
     }
     
     @UiField
-    Button ultraghostButton;
+    Button ultraghostHumanButton;
+    
+    @UiField
+    Button ultraghostComputerButton;
     
     @UiField
     Button russianDollsButton;
@@ -31,15 +36,20 @@ public class MainPresenter extends Composite {
         History.newItem(RussianDollsPresenter.HISTORY_TOKEN);
     }
     
-    @UiHandler("ultraghostButton")
-    void goUltraghost(ClickEvent e) {
+    @UiHandler("ultraghostHumanButton")
+    void goUltraghostHuman(ClickEvent e) {
+        preferences.setComputerOpponent(false);
         History.newItem(UltraghostPresenter.HISTORY_TOKEN);
     }
 
-    public MainPresenter() {
-        initWidget(uiBinder.createAndBindUi(this));
-        
-        
+    @UiHandler("ultraghostComputerButton")
+    void goUltraghostComputer(ClickEvent e) {
+        preferences.setComputerOpponent(true);
+        History.newItem(UltraghostPresenter.HISTORY_TOKEN);
     }
-
+    
+    public MainPresenter(VograbularyPreferences preferences) {
+        this.preferences = preferences;
+        initWidget(uiBinder.createAndBindUi(this));
+    }
 }

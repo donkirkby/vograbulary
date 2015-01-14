@@ -1,7 +1,10 @@
 package com.github.donkirkby.vograbulary.client;
 
 import java.util.Arrays;
+import java.util.List;
 
+import com.github.donkirkby.vograbulary.VograbularyPreferences;
+import com.github.donkirkby.vograbulary.ultraghost.ComputerStudent;
 import com.github.donkirkby.vograbulary.ultraghost.Controller;
 import com.github.donkirkby.vograbulary.ultraghost.Match;
 import com.github.donkirkby.vograbulary.ultraghost.Puzzle;
@@ -67,9 +70,9 @@ public class UltraghostPresenter extends Composite implements UltraghostScreen {
     private Match match;
 //    private boolean isComputerOpponent;
 //  private boolean isHyperghost;
-//    private List<Button> focusButtons;
+    private List<Button> focusButtons;
 
-    public UltraghostPresenter() {
+    public UltraghostPresenter(VograbularyPreferences preferences) {
         initWidget(uiBinder.createAndBindUi(this));
 
         String wordListText = Assets.INSTANCE.wordList().getText();
@@ -78,16 +81,15 @@ public class UltraghostPresenter extends Composite implements UltraghostScreen {
         controller.setWordList(wordList);
         controller.setScheduler(new GwtScheduler());
 
-//      VograbularyPreferences preferences = getApp().getPreferences();
 //      ultraghostController.clearStudents();
-//      if (isComputerOpponent) {
-//          ComputerStudent computerStudent = new ComputerStudent(preferences);
-//          computerStudent.setSearchBatchSize(30);
-//          computerStudent.setMaxSearchBatchCount(1000); // 10s
-//          ultraghostController.addStudent(computerStudent);
-//          ultraghostController.addStudent(new Student("You"));
-//      }
-//      else {
+        if (preferences.isComputerOpponent()) {
+            ComputerStudent computerStudent = new ComputerStudent(preferences);
+            computerStudent.setSearchBatchSize(30);
+            computerStudent.setMaxSearchBatchCount(1000); // 10s
+            controller.addStudent(computerStudent);
+            controller.addStudent(new Student("You"));
+        }
+        else {
 //          String studentSelections = preferences.getStudentSelections();
 //          int i = 0;
 //          for (String studentName : preferences.getStudentNames()) {
@@ -95,17 +97,22 @@ public class UltraghostPresenter extends Composite implements UltraghostScreen {
 //                  ultraghostController.addStudent(new Student(studentName));
 //              }
 //          }
-//      }
-        controller.addStudent(new Student("Alice"));
-        controller.addStudent(new Student("Bob"));
+            controller.addStudent(new Student("Alice"));
+            controller.addStudent(new Student("Bob"));
+        }
 //      Match match = controller.getMatch();
 //      match.setMinimumWordLength(
 //              preferences.getUltraghostMinimumWordLength());
 //      match.setHyperghost(isHyperghost);
-//  
-//        focusButtons = Arrays.asList(solveButton, respondButton, nextButton);
+  
+        focusButtons = Arrays.asList(solveButton, respondButton, nextButton);
         
         controller.setScreen(this);
+    }
+    
+    @Override
+    protected void onLoad() {
+        super.onLoad();
         controller.start();
     }
     
@@ -157,84 +164,41 @@ public class UltraghostPresenter extends Composite implements UltraghostScreen {
 //      result.setText("");
 //      scores.setText("");
 //  }
-//
-//  /**
-//   * Set the display's focus in the solution field.
-//   */
-//  public void focusSolution() {
-//      focusButton(solveButton);
-//      focusField(solution);
-//  }
-//  
-//  /**
-//   * Set the display's focus in the response field.
-//   */
-//  public void focusResponse() {
-//      focusButton(respondButton);
-//      focusField(response);
-//  }
-//  
-//  private void focusButton(TextButton target) {
-//      for (TextButton button : focusButtons) {
-//          button.setVisible(button == target);
-//      }
-//  }
-//  
-//  /**
-//   * Set the display's focus on the Next button.
-//   */
-//  public void focusNextButton() {
-//      focusButton(nextButton);
-//      nextButton.getStage().setKeyboardFocus(nextButton);
-//      solution.getOnscreenKeyboard().show(false);
-//  }
-//  
-//  /**
-//   * Disable all the buttons, except menu, while the computer student is
-//   * thinking of a solution.
-//   */
-//  public void showThinking() {
-//      focusButton(null);
-//  }
-//  
-//  public Puzzle getPuzzle() {
-//      return match.getPuzzle();
-//  }
-//
-//  /**
-//   * Set the match state for display. This will update several fields.
-//   */
-//  public void setMatch(Match match) {
-//      this.match = match;
-//      refreshPuzzle();
-//  }
-//  
-//  public Match getMatch() {
-//      return match;
-//  }
-//  
+
+    private void focusButton(Button target) {
+        Student winner = match.getWinner();
+        for (Button button : focusButtons) {
+            button.setVisible(winner == null && button == target);
+        }
+    }
+
     @Override
     public void clear() {
-        // TODO Auto-generated method stub
-        
     }
+    
     @Override
     public void focusSolution() {
+        focusButton(solveButton);
         solution.setFocus(true);
     }
+    
     @Override
     public void focusResponse() {
+        focusButton(respondButton);
         response.setFocus(true);
     }
+    
     @Override
     public void focusNextButton() {
+        focusButton(nextButton);
         nextButton.setFocus(true);
     }
+    
     @Override
     public void showThinking() {
-        // TODO Auto-generated method stub
-        
+        focusButton(null);
     }
+    
     @Override
     public void setMatch(Match match) {
         this.match = match;
@@ -276,16 +240,27 @@ public class UltraghostPresenter extends Composite implements UltraghostScreen {
 //      studentName.setText(owner == null ? "" : owner.getName());
 //      hint.setText(blankForNull(puzzle.getHint()) + " ");
 //  }
+        Student winner = match.getWinner();
         Puzzle puzzle = match.getPuzzle();
+        if (winner != null) {
+            String resultText = winner.getName() + " win";
+            if (winner.getName() != "You") {
+                resultText += "s";
+            }
+            result.setInnerText(resultText);
+        }
+        else {
+            WordResult puzzleResult = puzzle.getResult();
+            result.setInnerText(
+                    puzzleResult == WordResult.UNKNOWN 
+                    ? "" 
+                            : puzzleResult.toString());
+            
+        }
         ownerName.setInnerText(puzzle.getOwner().getName());
         letters.setInnerText(puzzle.getLetters());
         solution.setText(puzzle.getSolution());
         response.setText(puzzle.getResponse());
-        WordResult puzzleResult = puzzle.getResult();
-        result.setInnerText(
-                puzzleResult == WordResult.UNKNOWN 
-                ? "" 
-                : puzzleResult.toString());
         hint.setInnerText(puzzle.getHint());
         summary.setInnerText(match.getSummary());
     }
