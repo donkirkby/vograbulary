@@ -13,5 +13,6 @@
     <string name="title_activity_ultraghost">Ultraghost</string>
     <string name="title_activity_ultraghost_human">Ultraghost vs. Human</string>
     <string name="title_activity_ultraghost_computer">Ultraghost vs. Computer</string>
+    <string name="title_activity_students">Students</string>
 
 </resources>

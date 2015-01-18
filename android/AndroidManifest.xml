@@ -31,6 +31,14 @@
                 android:value="com.github.donkirkby.vograbulary.MainActivity" />
         </activity>
         <activity
+            android:name=".StudentChooserActivity"
+            android:label="@string/title_activity_students"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.github.donkirkby.vograbulary.MainActivity" />
+        </activity>
+        <activity
             android:name=".UltraghostActivity"
             android:label="@string/title_activity_ultraghost"
             android:parentActivityName=".MainActivity" >

@@ -13,32 +13,21 @@
     tools:context="com.github.donkirkby.vograbulary.MainActivity" >
 
     <TextView
-        android:id="@+id/clue"
+        android:id="@+id/prompt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:layout_weight="1"
         android:text="@string/choose_challenge"
         android:textSize="@dimen/abc_action_bar_title_text_size" />
 
-    <Button
-        android:id="@+id/ultraghostHuman"
-        android:layout_width="wrap_content"
+    <ListView
+        android:id="@+id/challengeList"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="ultraghostHuman"
-        android:text="@string/title_activity_ultraghost_human" />
+        android:layout_weight="1"
+        android:choiceMode="none" >
 
-    <Button
-        android:id="@+id/ultraghostComputer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="ultraghostComputer"
-        android:text="@string/title_activity_ultraghost_computer" />
-
-    <Button
-        android:id="@+id/russianDolls"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="russianDolls"
-        android:text="@string/title_activity_russian_dolls" />
+    </ListView>
 
 </LinearLayout>

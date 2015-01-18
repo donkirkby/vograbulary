@@ -24,8 +24,8 @@ import com.github.donkirkby.vograbulary.ultraghost.Student.StudentListener;
 
 public class UltraghostActivity
 extends VograbularyActivity implements UltraghostScreen, StudentListener {
-    public static final String INTENT_EXTRA_IS_COMPUTER = 
-            "com.github.donkirkby.vograbulary.ultraghost.iscomputer";
+    public static final String INTENT_EXTRA_STUDENT_NAMES =
+            "com.github.donkirkby.vograbulary.ultraghost.studentnames";
     
     private TextView ownerName;
     private TextView letters;
@@ -48,9 +48,8 @@ extends VograbularyActivity implements UltraghostScreen, StudentListener {
         setContentView(R.layout.activity_ultraghost);
         
         Intent intent = getIntent();
-        boolean isComputer = false;
-        isComputer =
-                intent.getBooleanExtra(INTENT_EXTRA_IS_COMPUTER, isComputer);
+        String[] studentNames = 
+                intent.getStringArrayExtra(INTENT_EXTRA_STUDENT_NAMES);
         
         ownerName = (TextView)findViewById(R.id.ownerName);
         letters = (TextView)findViewById(R.id.letters);
@@ -76,7 +75,7 @@ extends VograbularyActivity implements UltraghostScreen, StudentListener {
         }
         WordList wordList = new WordList();
         wordList.read(wordSource);
-        if (isComputer) {
+        if (studentNames.length < 2) {
             ComputerStudent computerStudent =
                     new ComputerStudent(new VograbularyPreferences());
             computerStudent.setWordList(wordList);
@@ -87,8 +86,10 @@ extends VograbularyActivity implements UltraghostScreen, StudentListener {
             controller.addStudent(new Student("You"));
         }
         else {
-            controller.addStudent(new Student("Alice"));
-            controller.addStudent(new Student("Bob"));
+            for (int i = 0; i < studentNames.length; i++) {
+                String name = studentNames[i];
+                controller.addStudent(new Student(name));
+            }
         }
         controller.setWordList(wordList);
         controller.start();
