@@ -114,7 +114,12 @@ extends VograbularyActivity implements UltraghostScreen, StudentListener {
                 }
                 else {
                     ownerName.setText(puzzle.getOwner().getName());
-                    letters.setText(puzzle.getLetters());
+                    String letterText = puzzle.getLetters();
+                    if (puzzle.getPreviousWord() != null) {
+                        letterText = letterText + " after " +
+                                puzzle.getPreviousWord();
+                    }
+                    letters.setText(letterText);
                 }
                 solution.setText(puzzle.getSolution());
                 response.setText(puzzle.getResponse());
