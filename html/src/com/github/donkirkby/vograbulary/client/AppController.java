@@ -1,6 +1,5 @@
 package com.github.donkirkby.vograbulary.client;
 
-import com.github.donkirkby.vograbulary.VograbularyPreferences;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.History;
@@ -9,7 +8,7 @@ import com.google.gwt.user.client.ui.HasWidgets;
 
 public class AppController implements ValueChangeHandler<String> {
     private HasWidgets container;
-    private VograbularyPreferences preferences = new VograbularyPreferences();
+    private GwtPreferences preferences = new GwtPreferences();
     
     public AppController() {
         History.addValueChangeHandler(this);

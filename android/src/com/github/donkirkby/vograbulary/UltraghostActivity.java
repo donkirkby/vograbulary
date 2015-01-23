@@ -26,6 +26,8 @@ public class UltraghostActivity
 extends VograbularyActivity implements UltraghostScreen, StudentListener {
     public static final String INTENT_EXTRA_STUDENT_NAMES =
             "com.github.donkirkby.vograbulary.ultraghost.studentnames";
+    public static final String INTENT_EXTRA_IS_HYPERGHOST =
+            "com.github.donkirkby.vograbulary.ultraghost.ishyperghost";
     
     private TextView ownerName;
     private TextView letters;
@@ -76,8 +78,8 @@ extends VograbularyActivity implements UltraghostScreen, StudentListener {
         WordList wordList = new WordList();
         wordList.read(wordSource);
         if (studentNames.length < 2) {
-            ComputerStudent computerStudent =
-                    new ComputerStudent(new VograbularyPreferences());
+            ComputerStudent computerStudent = new ComputerStudent(
+                    new AndroidPreferences(this));
             computerStudent.setWordList(wordList);
             computerStudent.setListener(this);
             computerStudent.setSearchBatchSize(30);
@@ -92,6 +94,9 @@ extends VograbularyActivity implements UltraghostScreen, StudentListener {
             }
         }
         controller.setWordList(wordList);
+        if (intent.getBooleanExtra(INTENT_EXTRA_IS_HYPERGHOST, true)) {
+            controller.getMatch().setHyperghost(true);
+        }
         controller.start();
     }
 

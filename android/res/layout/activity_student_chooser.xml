@@ -10,19 +10,20 @@
         android:layout_height="wrap_content"
         android:text="Choose one or more students to take the challenge." />
 
+    <ListView
+        android:id="@+id/studentList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:choiceMode="multipleChoice" >
+
+    </ListView>
+
     <Button
         android:id="@+id/startButton"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:onClick="start"
         android:text="Start" />
-
-    <ListView
-        android:id="@+id/studentList"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:choiceMode="multipleChoice" >
-
-    </ListView>
 
 </LinearLayout>

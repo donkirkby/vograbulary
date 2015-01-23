@@ -1,5 +1,6 @@
 package com.github.donkirkby.vograbulary;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -13,14 +14,22 @@ import android.widget.ListView;
 
 public class MainActivity extends Activity {
     private ListView challengeList;
-    private List<String> names;
-
+    private List<Integer> menuStringIds;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         challengeList = (ListView)findViewById(R.id.challengeList);
-        names = Arrays.asList("Ultraghost", "Russian Dolls");
+        menuStringIds = Arrays.asList(
+                R.string.title_activity_ultraghost,
+                R.string.title_activity_hyperghost,
+                R.string.title_activity_russian_dolls,
+                R.string.title_activity_students);
+        List<String> names = new ArrayList<String>();
+        for (Integer menuStringId : menuStringIds) {
+            names.add(getString(menuStringId));
+        }
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this,
                 android.R.layout.simple_list_item_activated_1,
@@ -40,13 +49,21 @@ public class MainActivity extends Activity {
     }
     
     private void start(int position) {
-        Class<?> activityClass;
-        if (position == 0) {
-            activityClass = StudentChooserActivity.class;
+        int menuStringId = menuStringIds.get(position);
+        Intent intent = new Intent();
+        if (menuStringId == R.string.title_activity_ultraghost) {
+            intent.setClass(this, StudentChooserActivity.class);
+        }
+        else if (menuStringId == R.string.title_activity_hyperghost) {
+            intent.setClass(this, StudentChooserActivity.class);
+            intent.putExtra(UltraghostActivity.INTENT_EXTRA_IS_HYPERGHOST, true);
+        }
+        else if (menuStringId == R.string.title_activity_russian_dolls) {
+            intent.setClass(this, RussianDollsActivity.class);
         }
         else {
-            activityClass = RussianDollsActivity.class;
+            intent.setClass(this, StudentEditorActivity.class);
         }
-        startActivity(new Intent(this, activityClass));
+        startActivity(intent);
     }
 }

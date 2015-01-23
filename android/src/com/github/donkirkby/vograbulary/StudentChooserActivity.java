@@ -1,7 +1,6 @@
 package com.github.donkirkby.vograbulary;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import android.content.Intent;
@@ -21,7 +20,8 @@ public class StudentChooserActivity extends VograbularyActivity {
         
         studentList = (ListView)findViewById(R.id.studentList);
         
-        names = Arrays.asList("Alice", "Bob", "Charlie", "Diane");
+        AndroidPreferences preferences = new AndroidPreferences(this);
+        names = preferences.getStudentNames();
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this,
                 android.R.layout.simple_list_item_activated_1,
@@ -36,7 +36,13 @@ public class StudentChooserActivity extends VograbularyActivity {
                 chosenNames.add(names.get(i));
             }
         }
+        Intent oldIntent = getIntent();
         Intent intent = new Intent(this, UltraghostActivity.class);
+        intent.putExtra(
+                UltraghostActivity.INTENT_EXTRA_IS_HYPERGHOST,
+                oldIntent.getBooleanExtra(
+                        UltraghostActivity.INTENT_EXTRA_IS_HYPERGHOST,
+                        false));
         intent.putExtra(
                 UltraghostActivity.INTENT_EXTRA_STUDENT_NAMES,
                 chosenNames.toArray(new String[chosenNames.size()]));

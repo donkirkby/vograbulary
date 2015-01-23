@@ -3,7 +3,6 @@ package com.github.donkirkby.vograbulary.client;
 import java.util.Arrays;
 import java.util.List;
 
-import com.github.donkirkby.vograbulary.VograbularyPreferences;
 import com.github.donkirkby.vograbulary.ultraghost.ComputerStudent;
 import com.github.donkirkby.vograbulary.ultraghost.Controller;
 import com.github.donkirkby.vograbulary.ultraghost.Match;
@@ -72,7 +71,7 @@ public class UltraghostPresenter extends Composite implements UltraghostScreen {
 //  private boolean isHyperghost;
     private List<Button> focusButtons;
 
-    public UltraghostPresenter(VograbularyPreferences preferences) {
+    public UltraghostPresenter(GwtPreferences preferences) {
         initWidget(uiBinder.createAndBindUi(this));
 
         String wordListText = Assets.INSTANCE.wordList().getText();

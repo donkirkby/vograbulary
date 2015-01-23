@@ -1,6 +1,5 @@
 package com.github.donkirkby.vograbulary.client;
 
-import com.github.donkirkby.vograbulary.VograbularyPreferences;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -14,7 +13,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class MainPresenter extends Composite {
     
     public static final String HISTORY_TOKEN = "main";
-    private VograbularyPreferences preferences;
+    private GwtPreferences preferences;
 
     private static MainPresenterUiBinder uiBinder = GWT
             .create(MainPresenterUiBinder.class);
@@ -48,7 +47,7 @@ public class MainPresenter extends Composite {
         History.newItem(UltraghostPresenter.HISTORY_TOKEN);
     }
     
-    public MainPresenter(VograbularyPreferences preferences) {
+    public MainPresenter(GwtPreferences preferences) {
         this.preferences = preferences;
         initWidget(uiBinder.createAndBindUi(this));
     }
