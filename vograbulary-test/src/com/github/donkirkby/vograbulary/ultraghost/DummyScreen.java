@@ -1,7 +1,7 @@
 package com.github.donkirkby.vograbulary.ultraghost;
 
 
-public class DummyView implements UltraghostScreen {
+public class DummyScreen implements UltraghostScreen {
     private Focus currentFocus = Focus.Unknown;
     private int refreshCount;
     private Match match;

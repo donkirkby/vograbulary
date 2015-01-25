@@ -1,5 +1,8 @@
 package com.github.donkirkby.vograbulary.ultraghost;
 
+import java.util.Arrays;
+import java.util.List;
+
 
 public class Match {
     private boolean isHyperghost;
@@ -126,5 +129,12 @@ public class Match {
      */
     public void setHyperghost(boolean isHyperghost) {
         this.isHyperghost = isHyperghost;
+    }
+    public boolean isHyperghost() {
+        return isHyperghost;
+    }
+    
+    public List<Student> getStudents() {
+        return Arrays.asList(students);
     }
 }

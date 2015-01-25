@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-
 import com.github.donkirkby.vograbulary.Scheduler;
 import com.github.donkirkby.vograbulary.ultraghost.Student.StudentListener;
 
@@ -34,6 +33,7 @@ public class Controller implements StudentListener {
         students.add(student);
         student.setListener(this);
         student.setWordList(wordList);
+        screen.setMatch(null);
     }
     
     public void clearStudents() {

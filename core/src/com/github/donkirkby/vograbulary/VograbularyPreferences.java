@@ -9,7 +9,6 @@ import java.util.Set;
 
 public abstract class VograbularyPreferences {
 //    //stopJesting
-//    private static final String DEFAULT_STUDENT_NAMES = "Alice|Bob";
 //    private static final String DEFAULT_STUDENT_SELECTIONS = "YY";
 //    private static final int DEFAULT_VOCABULARY_SIZE = 5000;
 //    private static final int DEFAULT_ULTRAGHOST_MINIMUM_WORD_LENGTH = 4;
@@ -25,23 +24,6 @@ public abstract class VograbularyPreferences {
     private static final Set<String> DEFAULT_STUDENT_NAMES = 
             new HashSet<>(Arrays.asList("Student1", "Student2"));
 
-    private boolean isHyperghost;
-    private boolean isComputerOpponent;
-    
-    public boolean isComputerOpponent() {
-        return isComputerOpponent;
-    }
-    public void setComputerOpponent(boolean isComputerOpponent) {
-        this.isComputerOpponent = isComputerOpponent;
-    }
-    public boolean isHyperghost() {
-        return isHyperghost;
-    }
-    public void setHyperghost(boolean isHyperghost) {
-        this.isHyperghost = isHyperghost;
-    }
-    
-    
     protected abstract void putStringSet(String key, Set<String> values);
     protected abstract Set<String> getStringSet(
             String key,

@@ -29,12 +29,12 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 
-public class RussianDollsPresenter extends Composite implements RussianDollsScreen {
+public class RussianDollsPresenter
+extends VograbularyPresenter implements RussianDollsScreen {
 
     public static final String HISTORY_TOKEN = "russian";
     private static final int INSERT_BUTTON_TOP_MARGIN = 4;

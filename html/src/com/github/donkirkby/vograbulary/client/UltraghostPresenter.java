@@ -1,6 +1,7 @@
 package com.github.donkirkby.vograbulary.client;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import com.github.donkirkby.vograbulary.ultraghost.ComputerStudent;
@@ -20,12 +21,12 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
-public class UltraghostPresenter extends Composite implements UltraghostScreen {
+public class UltraghostPresenter extends VograbularyPresenter implements UltraghostScreen {
     public static final String HISTORY_TOKEN = "ultraghost";
+    public static final String HISTORY_TOKEN_HYPER = "hyperghost";
 
     private static UltraghostPresenterUiBinder uiBinder = GWT
             .create(UltraghostPresenterUiBinder.class);
@@ -67,38 +68,19 @@ public class UltraghostPresenter extends Composite implements UltraghostScreen {
     private Controller controller = 
             new Controller();
     private Match match;
-//    private boolean isComputerOpponent;
-//  private boolean isHyperghost;
     private List<Button> focusButtons;
+    private GwtPreferences preferences;
 
     public UltraghostPresenter(GwtPreferences preferences) {
         initWidget(uiBinder.createAndBindUi(this));
 
+        this.preferences = preferences;
         String wordListText = Assets.INSTANCE.wordList().getText();
         WordList wordList = new WordList();
         wordList.read(Arrays.asList(wordListText.split("\\n")));
         controller.setWordList(wordList);
         controller.setScheduler(new GwtScheduler());
 
-//      ultraghostController.clearStudents();
-        if (preferences.isComputerOpponent()) {
-            ComputerStudent computerStudent = new ComputerStudent(preferences);
-            computerStudent.setSearchBatchSize(30);
-            computerStudent.setMaxSearchBatchCount(1000); // 10s
-            controller.addStudent(computerStudent);
-            controller.addStudent(new Student("You"));
-        }
-        else {
-//          String studentSelections = preferences.getStudentSelections();
-//          int i = 0;
-//          for (String studentName : preferences.getStudentNames()) {
-//              if (studentSelections.charAt(i++) == 'Y') {
-//                  ultraghostController.addStudent(new Student(studentName));
-//              }
-//          }
-            controller.addStudent(new Student("Alice"));
-            controller.addStudent(new Student("Bob"));
-        }
 //      Match match = controller.getMatch();
 //      match.setMinimumWordLength(
 //              preferences.getUltraghostMinimumWordLength());
@@ -253,7 +235,7 @@ public class UltraghostPresenter extends Composite implements UltraghostScreen {
             result.setInnerText(
                     puzzleResult == WordResult.UNKNOWN 
                     ? "" 
-                            : puzzleResult.toString());
+                    : puzzleResult.toString());
             
         }
         ownerName.setInnerText(puzzle.getOwner().getName());
@@ -262,5 +244,28 @@ public class UltraghostPresenter extends Composite implements UltraghostScreen {
         response.setText(puzzle.getResponse());
         hint.setInnerText(puzzle.getHint());
         summary.setInnerText(match.getSummary());
+    }
+
+    public void setStudents(Collection<String> students) {
+        for (String studentName : students) {
+            controller.addStudent(new Student(studentName));
+        }
+        if (students.size() == 0) {
+            controller.addStudent(new Student("You"));
+        }
+        if (students.size() < 2) {
+            ComputerStudent computerStudent = new ComputerStudent(preferences);
+            computerStudent.setSearchBatchSize(30);
+            computerStudent.setMaxSearchBatchCount(1000); // 10s
+            controller.addStudent(computerStudent);
+        }
+    }
+
+    public UltraghostPresenter setHyperghost(boolean isHyperghost) {
+        controller.getMatch().setHyperghost(isHyperghost);
+        return this;
+    }
+    public boolean isHyperghost() {
+        return controller.getMatch().isHyperghost();
     }
 }
