@@ -26,6 +26,9 @@ implements ValueChangeHandler<String>, VograbularyPresenter.NavigationListener {
         else if (event.getValue().equals(UltraghostPresenter.HISTORY_TOKEN_HYPER)) {
             presenter = new StudentChooserPresenter(preferences).setHyperghost(true);
         }
+        else if (event.getValue().equals(StudentEditorPresenter.HISTORY_TOKEN)) {
+            presenter = new StudentEditorPresenter(preferences);
+        }
         else {
             presenter = new MainPresenter(preferences);
         }

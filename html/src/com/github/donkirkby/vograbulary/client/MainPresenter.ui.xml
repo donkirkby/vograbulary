@@ -29,6 +29,8 @@
             <dt><a href="#russian">Russian Dolls</a></dt>
             <dd>Find the secret word described by a clue. One of the words from
                 the clue is nested inside another to form the secret word.</dd>
+            <dt><a href="#students">Students</a></dt>
+            <dd>Edit student names.</dd>
         </dl>
     </g:HTMLPanel>
 </ui:UiBinder> 

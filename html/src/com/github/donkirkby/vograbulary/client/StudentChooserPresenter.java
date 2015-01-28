@@ -1,7 +1,5 @@
 package com.github.donkirkby.vograbulary.client;
 
-import java.util.Arrays;
-
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.BrowserEvents;
@@ -36,7 +34,6 @@ public class StudentChooserPresenter extends VograbularyPresenter {
     private CellList<String> studentList;
     private GwtPreferences preferences;
     private boolean isHyperghost;
-
     private MultiSelectionModel<String> selectionModel;
 
     public StudentChooserPresenter(GwtPreferences preferences) {
@@ -59,7 +56,7 @@ public class StudentChooserPresenter extends VograbularyPresenter {
                 DefaultSelectionEventManager.createCheckboxManager();
         studentList.setSelectionModel(selectionModel, selectionManager);
         studentPanel.add(studentList);
-        studentList.setRowData(Arrays.asList("Alice", "Bob", "Charlie", "Diane"));
+        studentList.setRowData(preferences.getStudentNames());
     }
     
     @UiHandler("startButton")

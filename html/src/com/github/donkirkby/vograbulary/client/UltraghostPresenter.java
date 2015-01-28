@@ -239,7 +239,10 @@ public class UltraghostPresenter extends VograbularyPresenter implements Ultragh
             
         }
         ownerName.setInnerText(puzzle.getOwner().getName());
-        letters.setInnerText(puzzle.getLetters());
+        letters.setInnerText(puzzle.getLetters() +
+                (puzzle.getPreviousWord() == null
+                ? ""
+                : " after " + puzzle.getPreviousWord()));
         solution.setText(puzzle.getSolution());
         response.setText(puzzle.getResponse());
         hint.setInnerText(puzzle.getHint());
