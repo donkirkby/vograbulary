@@ -35,13 +35,7 @@ public abstract class VograbularyPreferences {
      */
     public void apply() {
     }
-//    
-//    private Preferences preferences;
-//    
-//    public VograbularyPreferences(Preferences preferences) {
-//        this.preferences = preferences;
-//    }
-//
+
     public List<String> getStudentNames() {
         Set<String> names = getStringSet(
                 Fields.STUDENT_NAMES.name(),
