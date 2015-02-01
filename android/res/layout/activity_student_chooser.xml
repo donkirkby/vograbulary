@@ -8,7 +8,7 @@
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Choose one or more students to take the challenge." />
+        android:text="@string/choose_students" />
 
     <ListView
         android:id="@+id/studentList"
@@ -24,6 +24,6 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:onClick="start"
-        android:text="Start" />
+        android:text="@string/start" />
 
 </LinearLayout>

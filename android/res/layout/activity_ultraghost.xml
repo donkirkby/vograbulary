@@ -15,13 +15,13 @@
         android:id="@+id/ownerName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:text="@string/example_owner" />
 
     <TextView
         android:id="@+id/letters"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ABC"
+        android:text="@string/example_letters"
         android:textAppearance="?android:attr/textAppearanceLarge"  />
 
     <LinearLayout
@@ -30,10 +30,11 @@
 
         <EditText
             android:id="@+id/solution"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:ems="10" >
+            android:ems="10"
+            android:inputType="text">
             <requestFocus />
         </EditText>
 
@@ -42,7 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="solve"
-            android:text="Solve" />
+            android:text="@string/solve" />
 
     </LinearLayout>
 
@@ -52,10 +53,11 @@
 
         <EditText
             android:id="@+id/response"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:ems="10" >
+            android:ems="10"
+            android:inputType="text">
 
         </EditText>
 
@@ -64,7 +66,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="respond"
-            android:text="Respond" />
+            android:text="@string/respond" />
 
     </LinearLayout>
 
@@ -74,10 +76,10 @@
 
         <TextView
             android:id="@+id/hint"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="hint"
+            android:text="@string/example_hint"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <Button
@@ -85,7 +87,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="next"
-            android:text="Next" />
+            android:text="@string/next" />
 
     </LinearLayout>
 
@@ -93,14 +95,14 @@
         android:id="@+id/result"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="result"
+        android:text="@string/example_result"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
         android:id="@+id/summary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="left"
-        android:text="Summary" />
+        android:layout_gravity="start"
+        android:text="@string/example_summary" />
 
 </LinearLayout>

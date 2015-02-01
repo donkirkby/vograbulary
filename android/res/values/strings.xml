@@ -13,5 +13,17 @@
     <string name="title_activity_ultraghost">Ultraghost</string>
     <string name="title_activity_hyperghost">Hyperghost</string>
     <string name="title_activity_students">Students</string>
+    <string name="choose_students">Choose one or more students to take the challenge.</string>
+    <string name="start">Start</string>
+    <string name="add">Add</string>
+    <string name="student_name">Name:</string>
+    <string name="delete">Delete</string>
+    <string name="example_letters">ABC</string>
+    <string name="example_owner">Owner</string>
+    <string name="respond">Respond</string>
+    <string name="solve">Solve</string>
+    <string name="example_summary">Summary</string>
+    <string name="example_result">result</string>
+    <string name="example_hint">HINT</string>
 
 </resources>

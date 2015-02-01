@@ -15,7 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0"
-            android:text="Add"
+            android:text="@string/add"
             android:onClick="add" />
 
         <ListView
@@ -39,13 +39,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.61"
-            android:text="Name:"
+            android:text="@string/student_name"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <EditText
             android:id="@+id/studentName"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName">
 
             <requestFocus />
         </EditText>
@@ -55,7 +56,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.61"
-            android:text="Delete"
+            android:text="@string/delete"
             android:onClick="delete" />
 
     </LinearLayout>
