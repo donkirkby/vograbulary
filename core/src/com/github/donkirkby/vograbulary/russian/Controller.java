@@ -45,9 +45,16 @@ public class Controller {
 
     public void solve() {
         Puzzle puzzle = screen.getPuzzle();
-        puzzle.setSolved(wordList.contains(puzzle.getCombination()));
+        puzzle.setSolved(
+                puzzle.isTargetSet() &&
+                wordList.contains(puzzle.getCombination()));
     }
 
+    /**
+     * Adjust the score based on the time.
+     * @param seconds the number of seconds since this method was last called.
+     * @return the updated score
+     */
     public String adjustScore(float seconds) {
         return screen.getPuzzle().adjustScore(seconds);
     }

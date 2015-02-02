@@ -30,7 +30,7 @@ public class PuzzleDisplayTest {
     @Parameters(name="insert at {0} selects word {1} char {2}")
     public static List<Object[]> getParameters() {
         return Arrays.asList(new Object[][] {
-                {  45, -1, 0 }, // between the two targets: no selection
+                {  45, -1,-1 }, // between the two targets: no selection
                 {  14,  0, 1 }, // each letter is 10 pixels wide
                 {  15,  0, 2 }, // round up when we pass half a letter
                 {  55,  1, 1 }  // second word
@@ -50,7 +50,7 @@ public class PuzzleDisplayTest {
     }
 
     @Test
-    public void wordIndexNone() {
+    public void setTargets() {
         display.calculateInsertion(insertX);
         
         assertThat(puzzle.getTargetWord(), is(expectedWordIndex));

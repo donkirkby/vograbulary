@@ -24,6 +24,7 @@ public class Puzzle {
     private Puzzle(String clue, BigDecimal totalScore) {
         this.clue = clue;
         this.totalScore = totalScore;
+        clearTargets();
         int targetPosition = 0;
         String[] words = clue.split("\\s+");
         for (int i = 0; i < words.length; i++) {
@@ -43,6 +44,13 @@ public class Puzzle {
     }
 
     /**
+     * Clear the target word and character so no solution is selected.
+     */
+    public void clearTargets() {
+        targetWord = targetCharacter = -1;
+    }
+
+    /**
      * The index of the word that will have the other word inserted into it.
      * For example, if the words are "unable"(0) and "comfortable"(1), then the
      * target word is 0, because "comfortable" is inserted into to "unable" to
@@ -50,6 +58,10 @@ public class Puzzle {
      * @param targetWord
      */
     public void setTargetWord(int targetWord) {
+        if (targetWord < 0 || 1 < targetWord) {
+            throw new ArrayIndexOutOfBoundsException(
+                    "Target word index " + targetWord + " is invalid.");
+        }
         this.targetWord = targetWord;
     }
     public int getTargetWord() {
@@ -64,6 +76,14 @@ public class Puzzle {
      * @param targetCharacter
      */
     public void setTargetCharacter(int targetCharacter) {
+        if (targetWord < 0) {
+            throw new IllegalStateException(
+                    "Target character set before target word.");
+        }
+        if (targetCharacter < 1 || getTarget(targetWord).length()-1 < targetCharacter) {
+            throw new ArrayIndexOutOfBoundsException(
+                    "Target character index " + targetCharacter + " is invalid.");
+        }
         this.targetCharacter = targetCharacter;
     }
     public int getTargetCharacter() {
@@ -75,15 +95,26 @@ public class Puzzle {
     public String getTarget(int wordIndex) {
         return targets[wordIndex];
     }
+    
+    public boolean isTargetSet() {
+        return targetCharacter >= 0;
+    }
+    
     public boolean isSolved() {
         return isSolved;
     }
     public void setSolved(boolean isSolved) {
         this.isSolved = isSolved;
-        this.totalScore = totalScore.add(getScore());
+        if (isSolved) {
+            this.totalScore = totalScore.add(getScore());
+        }
     }
 
     public String getCombination() {
+        if ( ! isTargetSet()) {
+            throw new IllegalStateException(
+                    "Target word and character are not set.");
+        }
         return targets[targetWord].substring(0, targetCharacter) +
                 targets[(targetWord+1)%2] +
                 targets[targetWord].substring(targetCharacter);

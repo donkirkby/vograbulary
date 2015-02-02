@@ -25,10 +25,13 @@ extends VograbularyActivity implements RussianDollsScreen {
     private TextView puzzleText;
     private TextView targetWord1;
     private TextView targetWord2;
+    private TextView scoreDisplay;
     private Button nextButton;
     private int[] location = new int[2];
     private Controller controller = new Controller();
     private PuzzleDisplay puzzleDisplay = new PuzzleDisplay();
+    private AndroidScheduler scheduler = new AndroidScheduler();
+    private Puzzle puzzle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +42,7 @@ extends VograbularyActivity implements RussianDollsScreen {
         targetWord1 = (TextView)findViewById(R.id.targetWord1);
         targetWord2 = (TextView)findViewById(R.id.targetWord2);
         nextButton = (Button)findViewById(R.id.nextButton);
+        scoreDisplay = (TextView)findViewById(R.id.scoreDisplay);
         final ImageView insertButton = (ImageView)findViewById(R.id.insertImage);
         
         List<String> puzzleSource;
@@ -95,6 +99,23 @@ extends VograbularyActivity implements RussianDollsScreen {
                 return true;
             }
         });
+        
+        final int periodMilliseconds = 100;
+        scheduler.scheduleRepeating(new Runnable() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String display = "Score: " + controller.adjustScore(
+                                0.001f * periodMilliseconds) + "\nTotal: " +
+                                puzzle.getTotalScoreDisplay();
+                        scoreDisplay.setText(display);
+                    }
+                });
+            }
+        },
+        periodMilliseconds);
     }
     
     public void next(View view) {
@@ -123,6 +144,7 @@ extends VograbularyActivity implements RussianDollsScreen {
 
     @Override
     public void setPuzzle(Puzzle puzzle) {
+        this.puzzle = puzzle;
         puzzleText.setText(puzzle.getClue());
         targetWord1.setText(puzzle.getTarget(0));
         targetWord2.setText(puzzle.getTarget(1));

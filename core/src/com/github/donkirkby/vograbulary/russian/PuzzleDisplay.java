@@ -36,7 +36,7 @@ public class PuzzleDisplay {
         targetEntries[1].width = word2Width;
     }
     public void calculateInsertion(int insertX) {
-        puzzle.setTargetWord(-1);
+        puzzle.clearTargets();
         calculateInsertionForWord(insertX, 0);
         calculateInsertionForWord(insertX, 1);
     }

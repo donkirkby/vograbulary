@@ -5,9 +5,14 @@ import static org.junit.Assert.*;
 
 import java.math.BigDecimal;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 public class PuzzleTest {
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+    
     @Test
     public void twoWordClue() {
         String expectedClue = "";
@@ -66,6 +71,15 @@ public class PuzzleTest {
         String combination = puzzle.getCombination();
         
         assertThat("combination", combination, is("UNCOMFORTABLE"));
+    }
+    
+    @Test
+    public void combinationWithoutTarget() {
+        Puzzle puzzle = new Puzzle("comfort unable");
+
+        thrown.expect(IllegalStateException.class);
+        thrown.expectMessage("Target word and character are not set.");
+        puzzle.getCombination();
     }
 
     @Test
@@ -130,6 +144,18 @@ public class PuzzleTest {
         
         assertThat("score", totalScore, is(score));
     }
+    
+    @Test
+    public void totalScoreAfterNotSolving() {
+        Puzzle puzzle = new Puzzle("not relevant");
+        
+        float seconds = 10;
+        puzzle.adjustScore(seconds);
+        puzzle.setSolved(false);
+        BigDecimal totalScore = puzzle.getTotalScore();
+        
+        assertThat("score", totalScore, is(BigDecimal.ZERO));
+    }
 
     @Test
     public void totalScoreWithPrevious() {
@@ -148,5 +174,50 @@ public class PuzzleTest {
 
         assertThat("score", totalScore1, is(score1));
         assertThat("score2", totalScore2, is(score1.add(score2)));
+    }
+    
+    @Test
+    public void isTargetSetOnNew() {
+        Puzzle puzzle = new Puzzle("not relevant");
+        
+        assertThat("isTargetSet", puzzle.isTargetSet(), is(false));
+    }
+    
+    @Test
+    public void isTargetSetOnCharacter() {
+        Puzzle puzzle = new Puzzle("not relevant");
+
+        thrown.expect(IllegalStateException.class);
+        thrown.expectMessage("Target character set before target word.");
+
+        puzzle.setTargetCharacter(1);
+    }
+    
+    @Test
+    public void isTargetSetOnWord() {
+        Puzzle puzzle = new Puzzle("not relevant");
+        puzzle.setTargetWord(0);
+        
+        assertThat("isTargetSet", puzzle.isTargetSet(), is(false));
+    }
+    
+    @Test
+    public void isTargetSetOnWordAndCharacter() {
+        Puzzle puzzle = new Puzzle("not relevant");
+        puzzle.setTargetWord(0);
+        puzzle.setTargetCharacter(1);
+        
+        assertThat("isTargetSet", puzzle.isTargetSet(), is(true));
+    }
+    
+    @Test
+    public void clearTargets() {
+        Puzzle puzzle = new Puzzle("not relevant");
+        puzzle.setTargetWord(0);
+        puzzle.setTargetCharacter(1);
+        
+        puzzle.clearTargets();
+        
+        assertThat("isTargetSet", puzzle.isTargetSet(), is(false));
     }
 }
