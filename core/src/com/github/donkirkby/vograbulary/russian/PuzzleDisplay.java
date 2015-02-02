@@ -52,7 +52,9 @@ public class PuzzleDisplay {
         int wordPixel = insertX - entry.left;
         int wordLength = puzzle.getTarget(wordIndex).length();
         int wordWidth = entry.width;
-        puzzle.setTargetCharacter(
-                (wordPixel*wordLength + wordWidth/2) / wordWidth);
+        int targetCharacter = (wordPixel*wordLength + wordWidth/2) / wordWidth;
+        if (puzzle.isValidTargetCharacter(targetCharacter)) {
+            puzzle.setTargetCharacter(targetCharacter);
+        }
     }
 }

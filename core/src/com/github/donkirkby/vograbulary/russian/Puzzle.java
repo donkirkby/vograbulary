@@ -80,12 +80,18 @@ public class Puzzle {
             throw new IllegalStateException(
                     "Target character set before target word.");
         }
-        if (targetCharacter < 1 || getTarget(targetWord).length()-1 < targetCharacter) {
+        if (! isValidTargetCharacter(targetCharacter)) {
             throw new ArrayIndexOutOfBoundsException(
                     "Target character index " + targetCharacter + " is invalid.");
         }
         this.targetCharacter = targetCharacter;
     }
+
+    public boolean isValidTargetCharacter(int targetCharacter) {
+        return 1 <= targetCharacter &&
+                targetCharacter <= getTarget(targetWord).length() - 1;
+    }
+    
     public int getTargetCharacter() {
         return targetCharacter;
     }
