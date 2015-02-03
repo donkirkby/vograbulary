@@ -20,5 +20,7 @@
             </tr>
         </table>
         <g:Button ui:field="nextButton"/>
+        <p ui:field="scoreDisplay"/>
+        <p ui:field="totalDisplay"/>
     </g:HTMLPanel>
 </ui:UiBinder> 

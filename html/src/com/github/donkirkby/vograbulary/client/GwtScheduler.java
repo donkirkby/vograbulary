@@ -4,7 +4,7 @@ import com.github.donkirkby.vograbulary.Scheduler;
 import com.google.gwt.user.client.Timer;
 
 public class GwtScheduler implements Scheduler {
-    Timer timer;
+    private Timer timer;
 
     @Override
     public void scheduleRepeating(final Runnable task, int periodMilliseconds) {

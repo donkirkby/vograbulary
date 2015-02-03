@@ -41,6 +41,7 @@ extends VograbularyPresenter implements RussianDollsScreen {
     private PuzzleDisplay puzzleDisplay = new PuzzleDisplay();
     private Controller controller = new Controller();
     private Dragger dragger;
+    private GwtScheduler scheduler = new GwtScheduler();
 
     interface RussianDollsCompositeUiBinder extends
     UiBinder<Widget, RussianDollsPresenter> {
@@ -64,6 +65,12 @@ extends VograbularyPresenter implements RussianDollsScreen {
     @UiField
     Button nextButton;
 
+    @UiField
+    ParagraphElement scoreDisplay;
+    
+    @UiField
+    ParagraphElement totalDisplay;
+    
     private static RussianDollsCompositeUiBinder uiBinder = GWT
             .create(RussianDollsCompositeUiBinder.class);
 
@@ -85,6 +92,21 @@ extends VograbularyPresenter implements RussianDollsScreen {
         controller.setScreen(this);
         controller.setWordList(wordList);
         controller.loadPuzzles(Arrays.asList(puzzleText.split("\\n")));
+
+        final int periodMilliseconds = 100;
+        final float periodSeconds = periodMilliseconds / 1000.0f;
+        scheduler.scheduleRepeating(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        String score = controller.adjustScore(periodSeconds);
+                        String total =
+                                puzzleDisplay.getPuzzle().getTotalScoreDisplay();
+                        scoreDisplay.setInnerText("Score: " + score);
+                        totalDisplay.setInnerText("Total: " + total);
+                    }
+                },
+                periodMilliseconds);
     }
     
     @UiHandler("nextButton")
