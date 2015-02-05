@@ -13,37 +13,37 @@
         android:text="@string/hello_world"
         android:textSize="@dimen/abc_action_bar_title_text_size" />
 
-        <ImageView
-            android:id="@+id/insertImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/spacer"
-            android:layout_below="@+id/clue"
-            android:layout_marginLeft="-16dp"
-            android:contentDescription="@string/insert_description"
-            android:src="@drawable/insert" />
+    <ImageView
+        android:id="@+id/insertImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/spacer"
+        android:layout_below="@+id/clue"
+        android:layout_marginLeft="-16dp"
+        android:contentDescription="@string/insert_description"
+        android:src="@drawable/insert" />
 
-        <TextView
-            android:id="@+id/targetWord1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/insertImage"
-            android:layout_marginRight="20dp"
-            android:layout_toLeftOf="@+id/spacer"
-            android:text="@string/word"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:typeface="monospace" />
+    <TextView
+        android:id="@+id/targetWord1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/insertImage"
+        android:layout_marginRight="20dp"
+        android:layout_toLeftOf="@+id/spacer"
+        android:text="@string/word"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:typeface="monospace" />
 
-        <TextView
-            android:id="@+id/targetWord2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/insertImage"
-            android:layout_marginLeft="20dp"
-            android:layout_toRightOf="@+id/spacer"
-            android:text="@string/word"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:typeface="monospace" />
+    <TextView
+        android:id="@+id/targetWord2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/insertImage"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@+id/spacer"
+        android:text="@string/word"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:typeface="monospace" />
 
     <ImageView
         android:id="@+id/dragImage1"
