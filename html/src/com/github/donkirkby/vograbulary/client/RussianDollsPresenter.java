@@ -63,6 +63,12 @@ extends VograbularyPresenter implements RussianDollsScreen {
     SpanElement targetWord2;
     
     @UiField
+    Image dragButton1;
+    
+    @UiField
+    Image dragButton2;
+    
+    @UiField
     Button nextButton;
 
     @UiField
@@ -93,6 +99,8 @@ extends VograbularyPresenter implements RussianDollsScreen {
         controller.setWordList(wordList);
         controller.loadPuzzles(Arrays.asList(puzzleText.split("\\n")));
 
+        dragButton1.setVisible(false);
+        dragButton2.setVisible(false);
         final int periodMilliseconds = 100;
         final float periodSeconds = periodMilliseconds / 1000.0f;
         scheduler.scheduleRepeating(
@@ -100,10 +108,17 @@ extends VograbularyPresenter implements RussianDollsScreen {
                     @Override
                     public void run() {
                         String score = controller.adjustScore(periodSeconds);
-                        String total =
-                                puzzleDisplay.getPuzzle().getTotalScoreDisplay();
+                        Puzzle puzzle = puzzleDisplay.getPuzzle();
+                        String total = puzzle.getTotalScoreDisplay();
                         scoreDisplay.setInnerText("Score: " + score);
                         totalDisplay.setInnerText("Total: " + total);
+                        boolean shouldHide =
+                                ! dragButton1.isVisible() &&
+                                puzzle.getScore().intValue() < 50;
+                        if (shouldHide) {
+                            dragButton1.setVisible(true);
+                            dragButton2.setVisible(true);
+                        }
                     }
                 },
                 periodMilliseconds);

@@ -19,6 +19,10 @@
                 <td><span class="targetWord" ui:field="targetWord2"/></td>
             </tr>
         </table>
+        <g:AbsolutePanel ui:field="dragPanel" styleName="{style.insertPanel}">
+            <g:Image url="images/drag.png" ui:field="dragButton1"/>
+            <g:Image url="images/drag.png" ui:field="dragButton2"/>
+        </g:AbsolutePanel>
         <g:Button ui:field="nextButton"/>
         <p ui:field="scoreDisplay"/>
         <p ui:field="totalDisplay"/>

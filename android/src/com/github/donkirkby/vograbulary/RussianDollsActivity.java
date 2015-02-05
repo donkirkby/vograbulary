@@ -37,13 +37,16 @@ extends VograbularyActivity implements RussianDollsScreen {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_russian_dolls);
-        final ViewGroup insertLayout = (ViewGroup)findViewById(R.id.insertLayout);
+        final ViewGroup russianDollsLayout =
+                (ViewGroup)findViewById(R.id.russianDollsLayout);
         puzzleText = (TextView)findViewById(R.id.clue);
         targetWord1 = (TextView)findViewById(R.id.targetWord1);
         targetWord2 = (TextView)findViewById(R.id.targetWord2);
         nextButton = (Button)findViewById(R.id.nextButton);
         scoreDisplay = (TextView)findViewById(R.id.scoreDisplay);
         final ImageView insertButton = (ImageView)findViewById(R.id.insertImage);
+        final ImageView dragButton1 = (ImageView)findViewById(R.id.dragImage1);
+        final ImageView dragButton2 = (ImageView)findViewById(R.id.dragImage2);
         
         List<String> puzzleSource;
         List<String> wordSource;
@@ -95,11 +98,13 @@ extends VograbularyActivity implements RussianDollsScreen {
                     view.performClick();
                     break;
                 }
-                insertLayout.invalidate();
+                russianDollsLayout.invalidate();
                 return true;
             }
         });
         
+        dragButton1.setVisibility(View.INVISIBLE);
+        dragButton2.setVisibility(View.INVISIBLE);
         final int periodMilliseconds = 100;
         scheduler.scheduleRepeating(new Runnable() {
             @Override
@@ -111,6 +116,13 @@ extends VograbularyActivity implements RussianDollsScreen {
                                 0.001f * periodMilliseconds) + "\nTotal: " +
                                 puzzle.getTotalScoreDisplay();
                         scoreDisplay.setText(display);
+                        boolean shouldHide =
+                                dragButton1.getVisibility() == View.INVISIBLE &&
+                                puzzle.getScore().intValue() < 50;
+                        if (shouldHide) {
+                            dragButton1.setVisibility(View.VISIBLE);
+                            dragButton2.setVisibility(View.VISIBLE);
+                        }
                     }
                 });
             }
