@@ -18,6 +18,7 @@ import com.github.donkirkby.vograbulary.russian.Controller;
 import com.github.donkirkby.vograbulary.russian.Puzzle;
 import com.github.donkirkby.vograbulary.russian.PuzzleDisplay;
 import com.github.donkirkby.vograbulary.russian.RussianDollsScreen;
+import com.github.donkirkby.vograbulary.russian.TargetDisplay;
 import com.github.donkirkby.vograbulary.ultraghost.WordList;
 
 public class RussianDollsActivity
@@ -25,6 +26,8 @@ extends VograbularyActivity implements RussianDollsScreen {
     private TextView puzzleText;
     private TextView targetWord1;
     private TextView targetWord2;
+    private TargetDisplay targetDisplay1;
+    private TargetDisplay targetDisplay2;
     private TextView scoreDisplay;
     private Button nextButton;
     private int[] location = new int[2];
@@ -32,19 +35,20 @@ extends VograbularyActivity implements RussianDollsScreen {
     private PuzzleDisplay puzzleDisplay = new PuzzleDisplay();
     private AndroidScheduler scheduler = new AndroidScheduler();
     private Puzzle puzzle;
+    private ImageView insertButton;
+    private ViewGroup russianDollsLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_russian_dolls);
-        final ViewGroup russianDollsLayout =
-                (ViewGroup)findViewById(R.id.russianDollsLayout);
+        russianDollsLayout = (ViewGroup)findViewById(R.id.russianDollsLayout);
         puzzleText = (TextView)findViewById(R.id.clue);
         targetWord1 = (TextView)findViewById(R.id.targetWord1);
         targetWord2 = (TextView)findViewById(R.id.targetWord2);
         nextButton = (Button)findViewById(R.id.nextButton);
         scoreDisplay = (TextView)findViewById(R.id.scoreDisplay);
-        final ImageView insertButton = (ImageView)findViewById(R.id.insertImage);
+        insertButton = (ImageView)findViewById(R.id.insertImage);
         final ImageView dragButton1 = (ImageView)findViewById(R.id.dragImage1);
         final ImageView dragButton2 = (ImageView)findViewById(R.id.dragImage2);
         
@@ -64,44 +68,10 @@ extends VograbularyActivity implements RussianDollsScreen {
         controller.setWordList(wordList);
         controller.loadPuzzles(puzzleSource);
         
-        insertButton.setOnTouchListener(new View.OnTouchListener() {
-            private int _xDelta;
-            
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                final int eventX = (int) event.getRawX();
-                RelativeLayout.LayoutParams layoutParams = 
-                        (RelativeLayout.LayoutParams) view.getLayoutParams();
-                switch (event.getAction() & MotionEvent.ACTION_MASK) {
-                case MotionEvent.ACTION_DOWN:
-                    _xDelta = eventX - layoutParams.leftMargin;
-                    targetWord1.getLocationOnScreen(location);
-                    int word1Left = location[0];
-                    targetWord2.getLocationOnScreen(location);
-                    puzzleDisplay.setTargetPositions(
-                            word1Left,
-                            targetWord1.getWidth(),
-                            location[0],
-                            targetWord2.getWidth());
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    layoutParams.leftMargin = eventX - _xDelta;
-                    layoutParams.rightMargin = -250;
-                    view.setLayoutParams(layoutParams);
-                    
-                    insertButton.getLocationOnScreen(location);
-                    int insertX = location[0] +
-                            insertButton.getWidth()*24/64;
-                    puzzleDisplay.calculateInsertion(insertX);
-                    break;
-                case MotionEvent.ACTION_UP:
-                    view.performClick();
-                    break;
-                }
-                russianDollsLayout.invalidate();
-                return true;
-            }
-        });
+        insertButton.setOnTouchListener(new InsertTouchListener());
+        targetDisplay1 = new AndroidTargetDisplay(targetWord1, dragButton1);
+        targetDisplay2 = new AndroidTargetDisplay(targetWord2, dragButton2);
+        targetDisplay1.setOther(targetDisplay2);
         
         dragButton1.setVisibility(View.INVISIBLE);
         dragButton2.setVisibility(View.INVISIBLE);
@@ -128,6 +98,45 @@ extends VograbularyActivity implements RussianDollsScreen {
             }
         },
         periodMilliseconds);
+    }
+    
+    private class InsertTouchListener implements View.OnTouchListener {
+        private int _xDelta;
+        
+        @Override
+        public boolean onTouch(View view, MotionEvent event) {
+            final int eventX = (int) event.getRawX();
+            RelativeLayout.LayoutParams layoutParams = 
+                    (RelativeLayout.LayoutParams) view.getLayoutParams();
+            switch (event.getAction() & MotionEvent.ACTION_MASK) {
+            case MotionEvent.ACTION_DOWN:
+                _xDelta = eventX - layoutParams.leftMargin;
+                targetWord1.getLocationOnScreen(location);
+                int word1Left = location[0];
+                targetWord2.getLocationOnScreen(location);
+                puzzleDisplay.setTargetPositions(
+                        word1Left,
+                        targetWord1.getWidth(),
+                        location[0],
+                        targetWord2.getWidth());
+                break;
+            case MotionEvent.ACTION_MOVE:
+                layoutParams.leftMargin = eventX - _xDelta;
+                layoutParams.rightMargin = -250;
+                view.setLayoutParams(layoutParams);
+                
+                insertButton.getLocationOnScreen(location);
+                int insertX = location[0] +
+                        insertButton.getWidth()*24/64;
+                puzzleDisplay.calculateInsertion(insertX);
+                break;
+            case MotionEvent.ACTION_UP:
+                view.performClick();
+                break;
+            }
+            russianDollsLayout.invalidate();
+            return true;
+        }
     }
     
     public void next(View view) {

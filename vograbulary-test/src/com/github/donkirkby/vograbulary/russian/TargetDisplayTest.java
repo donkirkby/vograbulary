@@ -2,202 +2,199 @@ package com.github.donkirkby.vograbulary.russian;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 import org.junit.Before;
 import org.junit.Test;
 
-//import com.badlogic.gdx.scenes.scene2d.InputEvent;
-//import com.badlogic.gdx.scenes.scene2d.ui.Label;
-//import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
 public class TargetDisplayTest {
-//    private Label leftTarget;
-//    private Label rightTarget;
-//    private TextButton leftDrag;
-//    private TextButton rightDrag;
-//    private TargetDisplay leftDisplay;
-//    private TargetDisplay rightDisplay;
-//    
-//    @Before
-//    public void setUp() {
-//        leftTarget = new DummyLabel("LEFT", 0);
-//        rightTarget = new DummyLabel("RIGHT", 100);
-//        leftDrag = mock(TextButton.class);
-//        rightDrag = mock(TextButton.class);
-//        leftDisplay = new TargetDisplay(leftTarget, leftDrag);
-//        rightDisplay = new TargetDisplay(rightTarget, rightDrag);
-//        leftDisplay.setOther(rightDisplay);
-//    }
-//    
-//    @Test
-//    public void drag() {
-//        float startX = 10;
-//        float dragX = 25;
-//        InputEvent event = new InputEvent();
-//        float ignoredY = 0;
-//        int ignoredPointer = 0;
-//        
-//        leftDisplay.dragStart(event, startX, ignoredY, ignoredPointer);
-//        leftDisplay.drag(event, dragX, ignoredY, ignoredPointer);
-//        
-//        verify(leftDrag).translate(dragX - startX, 0);
-//        assertThat("target.x", leftTarget.getX(), is(dragX - startX));
-//    }
-//    
-//    @Test
-//    public void hideRight() {
-//        float startX = 10;
-//        float dragX = 65;
-//        InputEvent event = new InputEvent();
-//        float ignoredY = 0;
-//        int ignoredPointer = 0;
-//        
-//        leftDisplay.dragStart(event, startX, ignoredY, ignoredPointer);
-//        leftDisplay.drag(event, dragX, ignoredY, ignoredPointer);
-//        
-//        verify(rightDrag).setVisible(false);
-//    }
-//    
-//    @Test
-//    public void showRight() {
-//        float startX = 10;
-//        float dragX = 35;
-//        InputEvent event = new InputEvent();
-//        float ignoredY = 0;
-//        int ignoredPointer = 0;
-//        
-//        leftDisplay.dragStart(event, startX, ignoredY, ignoredPointer);
-//        leftDisplay.drag(event, dragX, ignoredY, ignoredPointer);
-//        
-//        verify(rightDrag).setVisible(true);
-//    }
-//    
-//    @Test
-//    public void hideLeft() {
-//        float startX = 110;
-//        float dragX = 35;
-//        InputEvent event = new InputEvent();
-//        float ignoredY = 0;
-//        int ignoredPointer = 0;
-//        
-//        rightDisplay.dragStart(event, startX, ignoredY, ignoredPointer);
-//        rightDisplay.drag(event, dragX, ignoredY, ignoredPointer);
-//        
-//        verify(leftDrag).setVisible(false);
-//    }
-//    
-//    @Test
-//    public void hideThenShow() {
-//        float startX = 0;
-//        float drag1X = 70;
-//        float drag2X = 55;
-//        InputEvent event = new InputEvent();
-//        float ignoredY = 0;
-//        int ignoredPointer = 0;
-//        
-//        leftDisplay.dragStart(event, startX, ignoredY, ignoredPointer);
-//        leftDisplay.drag(event, drag1X, ignoredY, ignoredPointer);
-//        leftDisplay.dragStart(event, drag1X, ignoredY, ignoredPointer);
-//        leftDisplay.drag(event, drag2X, ignoredY, ignoredPointer);
-//        
-//        verify(rightDrag, times(2)).setVisible(false);
-//    }
-//    
-//    @Test
-//    public void pushRight() {
-//        float startX = 0;
-//        float dragX = 104-leftTarget.getWidth(); // starts to push label, but doesn't split yet
-//        InputEvent event = new InputEvent();
-//        float ignoredY = 0;
-//        int ignoredPointer = 0;
-//        
-//        leftDisplay.dragStart(event, startX, ignoredY, ignoredPointer);
-//        leftDisplay.drag(event, dragX, ignoredY, ignoredPointer);
-//        
-//        assertThat("target position", rightTarget.getX(), is(104f));
-//    }
-//    
-//    @Test
-//    public void pushLeft() {
-//        float startX = 100;
-//        float dragX = -4+leftTarget.getWidth(); // starts to push label, but doesn't split yet
-//        InputEvent event = new InputEvent();
-//        float ignoredY = 0;
-//        int ignoredPointer = 0;
-//        
-//        rightDisplay.dragStart(event, startX, ignoredY, ignoredPointer);
-//        rightDisplay.drag(event, dragX, ignoredY, ignoredPointer);
-//        
-//        assertThat("target position", leftTarget.getX(), is(-4f));
-//    }
-//    
-//    @Test
-//    public void splitRight() {
-//        float startX = 0;
-//        float dragX = 105-leftTarget.getWidth(); // split first letter
-//        InputEvent event = new InputEvent();
-//        float ignoredY = 0;
-//        int ignoredPointer = 0;
-//        
-//        leftDisplay.dragStart(event, startX, ignoredY, ignoredPointer);
-//        leftDisplay.drag(event, dragX, ignoredY, ignoredPointer);
-//        
-//        assertThat("target position", rightTarget.getX(), is(105f));
-//        assertThat("left text", leftTarget.getText().toString(), is("RLEFT"));
-//        assertThat("right text", rightTarget.getText().toString(), is("IGHT"));
-//    }
-//    
-//    @Test
-//    public void splitLeft() {
-//        float startX = 100;
-//        float dragX = -5+leftTarget.getWidth(); // split first letter
-//        InputEvent event = new InputEvent();
-//        float ignoredY = 0;
-//        int ignoredPointer = 0;
-//        
-//        rightDisplay.dragStart(event, startX, ignoredY, ignoredPointer);
-//        rightDisplay.drag(event, dragX, ignoredY, ignoredPointer);
-//        
-//        assertThat("target position", leftTarget.getX(), is(-5f));
-//        assertThat("left text", leftTarget.getText().toString(), is("LEF"));
-//        assertThat("right text", rightTarget.getText().toString(), is("RIGHTT"));
-//    }
-//    
-//    @Test
-//    public void splitBeyondRight() {
-//        float startX = 0;
-//        float dragX = 130-leftTarget.getWidth(); // split first letter
-//        InputEvent event = new InputEvent();
-//        float ignoredY = 0;
-//        int ignoredPointer = 0;
-//        
-//        leftDisplay.dragStart(event, startX, ignoredY, ignoredPointer);
-//        leftDisplay.drag(event, dragX, ignoredY, ignoredPointer);
-//        
-//        assertThat("target position", rightTarget.getX(), is(130f));
-//        assertThat("left text", leftTarget.getText().toString(), is("RIGHLEFT"));
-//        assertThat("right text", rightTarget.getText().toString(), is("T"));
-//    }
-//    
-//    private class DummyLabel extends Label {
-//        public DummyLabel(String text, float x) {
-//            super(text, (LabelStyle)null);
-//            setX(x);
-//        }
-//        
-//        @Override
-//        public void setStyle(LabelStyle style) {
-//        }
-//        
-//        @Override
-//        public float getPrefWidth() {
-//            return getText().length()*5;
-//        }
-//        
-//        @Override
-//        public float getPrefHeight() {
-//            return 20;
-//        }
-//    }
+    private class DummyTargetDisplay extends TargetDisplay {
+        private String text;
+        private int x;
+        private boolean isDragVisible = true;
+        
+        public DummyTargetDisplay(String text, int x) {
+            this.text = text;
+            this.x = x;
+        }
+        
+        @Override
+        public String getText() {
+            return text;
+        }
+        
+        @Override
+        public void setText(String text) {
+            this.text = text;
+        }
+
+        @Override
+        public int getX() {
+            return x;
+        }
+
+        @Override
+        public void setX(int x) {
+            this.x = x;
+        }
+        
+        @Override
+        public int getWidth() {
+            return text.length()*5;
+        }
+
+        @Override
+        public boolean isDragVisible() {
+            return isDragVisible;
+        }
+
+        @Override
+        public void setDragVisible(boolean isDragVisible) {
+            this.isDragVisible = isDragVisible;
+        }
+    }
+    private TargetDisplay leftDisplay;
+    private TargetDisplay rightDisplay;
+    
+    @Before
+    public void setUp() {
+        leftDisplay = new DummyTargetDisplay("LEFT", 0);
+        rightDisplay = new DummyTargetDisplay("RIGHT", 100);
+        leftDisplay.setOther(rightDisplay);
+    }
+    
+    @Test
+    public void drag() {
+        int startX = 10;
+        int dragX = 25;
+        
+        leftDisplay.dragStart(startX);
+        leftDisplay.drag(dragX);
+        
+        assertThat("target.x", leftDisplay.getX(), is(dragX - startX));
+    }
+    
+    @Test
+    public void dragTwice() {
+        // The drag position is always the pointer position relative to the
+        // text field.
+        int startX = 10;
+        int dragX1 = 25;
+        int dragX2 = 23;
+        
+        leftDisplay.dragStart(startX);
+        leftDisplay.drag(dragX1);
+        leftDisplay.drag(dragX2);
+        
+        assertThat("target.x", leftDisplay.getX(), is(dragX1 - startX + dragX2 - startX));
+    }
+    
+    @Test
+    public void hideRight() {
+        int startX = 10;
+        int dragX = 65;
+        
+        leftDisplay.dragStart(startX);
+        leftDisplay.drag(dragX);
+        
+        assertThat(rightDisplay.isDragVisible(), is(false));
+    }
+    
+    @Test
+    public void showRight() {
+        int startX = 10;
+        int dragX = 35;
+        
+        leftDisplay.dragStart(startX);
+        leftDisplay.drag(dragX);
+        
+        assertThat(rightDisplay.isDragVisible(), is(true));
+    }
+    
+    @Test
+    public void hideLeft() {
+        int startX = 110;
+        int dragX = 35;
+        
+        rightDisplay.dragStart(startX);
+        rightDisplay.drag(dragX);
+        
+        assertThat(leftDisplay.isDragVisible(), is(false));
+    }
+    
+    @Test
+    public void hideThenShow() {
+        int startX = 0;
+        int drag1X = 70;
+        int drag2X = 45;
+        
+        leftDisplay.dragStart(startX);
+        leftDisplay.drag(drag1X);
+        assertThat(rightDisplay.isDragVisible(), is(false));
+
+        leftDisplay.dragStart(drag1X);
+        leftDisplay.drag(drag2X);
+        assertThat(rightDisplay.isDragVisible(), is(true));
+    }
+    
+    @Test
+    public void pushRight() {
+        int startX = 0;
+        int dragX = 104-leftDisplay.getWidth(); // starts to push label, but doesn't split yet
+        
+        leftDisplay.dragStart(startX);
+        leftDisplay.drag(dragX);
+        
+        assertThat("target position", rightDisplay.getX(), is(104));
+    }
+    
+    @Test
+    public void pushLeft() {
+        int startX = 100;
+        int dragX = -4+leftDisplay.getWidth(); // starts to push label, but doesn't split yet
+        
+        rightDisplay.dragStart(startX);
+        rightDisplay.drag(dragX);
+        
+        assertThat("target position", leftDisplay.getX(), is(-4));
+    }
+    
+    @Test
+    public void splitRight() {
+        int startX = 0;
+        int dragX = 105-leftDisplay.getWidth(); // split first letter
+        
+        leftDisplay.dragStart(startX);
+        leftDisplay.drag(dragX);
+        
+        assertThat("target position", rightDisplay.getX(), is(105));
+        assertThat("left text", leftDisplay.getText().toString(), is("RLEFT"));
+        assertThat("right text", rightDisplay.getText().toString(), is("IGHT"));
+    }
+    
+    @Test
+    public void splitLeft() {
+        int startX = 100;
+        int dragX = -5+leftDisplay.getWidth(); // split first letter
+        
+        rightDisplay.dragStart(startX);
+        rightDisplay.drag(dragX);
+        
+        assertThat("target position", leftDisplay.getX(), is(-5));
+        assertThat("left text", leftDisplay.getText().toString(), is("LEF"));
+        assertThat("right text", rightDisplay.getText().toString(), is("RIGHTT"));
+    }
+    
+    @Test
+    public void splitBeyondRight() {
+        int startX = 0;
+        int dragX = 130-leftDisplay.getWidth(); // split first letter
+        
+        leftDisplay.dragStart(startX);
+        leftDisplay.drag(dragX);
+        
+        assertThat("target position", rightDisplay.getX(), is(130));
+        assertThat("left text", leftDisplay.getText().toString(), is("RIGHLEFT"));
+        assertThat("right text", rightDisplay.getText().toString(), is("T"));
+    }
 }

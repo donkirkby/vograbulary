@@ -28,8 +28,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/insertImage"
-        android:layout_marginRight="20dp"
-        android:layout_toLeftOf="@+id/spacer"
+        android:layout_marginLeft="-70dp"
+        android:layout_toRightOf="@+id/spacer"
         android:text="@string/word"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:typeface="monospace" />
@@ -57,7 +57,7 @@
         android:id="@+id/dragImage2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/targetWord2"
+        android:layout_alignLeft="@+id/targetWord2"
         android:layout_below="@+id/targetWord2"
         android:src="@drawable/drag" />
 
