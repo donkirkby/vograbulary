@@ -9,7 +9,6 @@ import com.github.donkirkby.vograbulary.russian.RussianDollsScreen;
 import com.github.donkirkby.vograbulary.ultraghost.WordList;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.ParagraphElement;
-import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
@@ -30,6 +29,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -51,16 +51,19 @@ extends VograbularyPresenter implements RussianDollsScreen {
     AbsolutePanel insertPanel;
     
     @UiField
+    AbsolutePanel targetPanel;
+    
+    @UiField
     Image insertButton;
     
     @UiField
     ParagraphElement clue;
     
     @UiField
-    SpanElement targetWord1;
+    Label targetWord1;
     
     @UiField
-    SpanElement targetWord2;
+    Label targetWord2;
     
     @UiField
     Image dragButton1;
@@ -99,8 +102,15 @@ extends VograbularyPresenter implements RussianDollsScreen {
         controller.setWordList(wordList);
         controller.loadPuzzles(Arrays.asList(puzzleText.split("\\n")));
 
+        targetWord1.addStyleName("targetWord");
+        targetWord2.addStyleName("targetWord");
         dragButton1.setVisible(false);
         dragButton2.setVisible(false);
+        GwtTargetDisplay targetDisplay1 =
+                new GwtTargetDisplay(targetWord1, dragButton1, targetPanel);
+        GwtTargetDisplay targetDisplay2 =
+                new GwtTargetDisplay(targetWord2, dragButton2, targetPanel);
+        targetDisplay1.setOther(targetDisplay2);
         final int periodMilliseconds = 100;
         final float periodSeconds = periodMilliseconds / 1000.0f;
         scheduler.scheduleRepeating(
@@ -112,10 +122,10 @@ extends VograbularyPresenter implements RussianDollsScreen {
                         String total = puzzle.getTotalScoreDisplay();
                         scoreDisplay.setInnerText("Score: " + score);
                         totalDisplay.setInnerText("Total: " + total);
-                        boolean shouldHide =
+                        boolean shouldShow =
                                 ! dragButton1.isVisible() &&
                                 puzzle.getScore().intValue() < 50;
-                        if (shouldHide) {
+                        if (shouldShow) {
                             dragButton1.setVisible(true);
                             dragButton2.setVisible(true);
                         }
@@ -134,8 +144,8 @@ extends VograbularyPresenter implements RussianDollsScreen {
             controller.solve();
             if (puzzle.isSolved()) {
                 nextButton.setText("Next");
-                targetWord1.setInnerText(puzzle.getCombination());
-                targetWord2.setInnerText("");
+                targetWord1.setText(puzzle.getCombination());
+                targetWord2.setText("");
             }
         }
     }
@@ -231,8 +241,8 @@ extends VograbularyPresenter implements RussianDollsScreen {
     @Override
     public void setPuzzle(Puzzle puzzle) {
         clue.setInnerText(puzzle.getClue());
-        targetWord1.setInnerText(puzzle.getTarget(0));
-        targetWord2.setInnerText(puzzle.getTarget(1));
+        targetWord1.setText(puzzle.getTarget(0));
+        targetWord2.setText(puzzle.getTarget(1));
         nextButton.setText("Solve");
         dragger.centre();
         puzzleDisplay.setPuzzle(puzzle);
