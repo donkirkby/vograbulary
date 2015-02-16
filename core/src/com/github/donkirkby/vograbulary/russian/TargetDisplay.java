@@ -20,6 +20,12 @@ public abstract class TargetDisplay {
     /** set the x position of the target text field */
     public abstract void setX(int x);
     
+    /** get the x position of the drag button for the target */
+    public abstract int getDragX();
+    
+    /** set the x position of the drag button for the target */
+    public abstract void setDragX(int x);
+    
     /** get the width of the target text field */
     public abstract int getWidth();
     
@@ -82,6 +88,7 @@ public abstract class TargetDisplay {
 
     private void translate(int offset) {
         setX(getX() + offset);
+        setDragX(getDragX() + offset);
     }
 
     private void adjustText(int overlap) {
@@ -90,8 +97,13 @@ public abstract class TargetDisplay {
         int letterOverlap = 
                 Math.min(otherLength-1, (int) (overlap/letterWidth));
         if (sign > 0) {
-            setText(otherText.substring(0, letterOverlap) + originalText);
-            other.setText(otherText.substring(letterOverlap));
+            int lettersToAdd =
+                    originalText.length() + letterOverlap - getText().length();
+            if (lettersToAdd != 0) {
+                setText(otherText.substring(0, letterOverlap) + originalText);
+                other.setText(otherText.substring(letterOverlap));
+                setX(getX() - lettersToAdd*letterWidth);
+            }
         }
         else {
             setText(

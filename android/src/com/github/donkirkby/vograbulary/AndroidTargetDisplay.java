@@ -26,6 +26,10 @@ extends TargetDisplay implements View.OnTouchListener{
         return (RelativeLayout.LayoutParams)textView.getLayoutParams();
     }
     
+    private LayoutParams getDragLayoutParams() {
+        return (RelativeLayout.LayoutParams)dragButton.getLayoutParams();
+    }
+    
     @Override
     public String getText() {
         return textView.getText().toString();
@@ -57,6 +61,20 @@ extends TargetDisplay implements View.OnTouchListener{
         LayoutParams layoutParams = getLayoutParams();
         layoutParams.leftMargin = x + offsetX;
         textView.setLayoutParams(layoutParams);
+    }
+    
+    @Override
+    public int getDragX() {
+        checkOffset();
+        return getDragLayoutParams().leftMargin - offsetX;
+    }
+    
+    @Override
+    public void setDragX(int x) {
+        checkOffset();
+        LayoutParams dragLayoutParams = getDragLayoutParams();
+        dragLayoutParams.leftMargin = x + offsetX;
+        dragButton.setLayoutParams(dragLayoutParams);
     }
 
     @Override

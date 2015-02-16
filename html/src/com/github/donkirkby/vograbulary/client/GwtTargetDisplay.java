@@ -61,6 +61,16 @@ TouchStartHandler, TouchMoveHandler, TouchEndHandler {
     public void setX(int x) {
         checkOffset();
         panel.setWidgetPosition(label, x, labelY);
+    }
+    
+    @Override
+    public int getDragX() {
+        return panel.getWidgetLeft(dragButton);
+    }
+    
+    @Override
+    public void setDragX(int x) {
+        checkOffset();
         panel.setWidgetPosition(dragButton, x, buttonY);
     }
     
