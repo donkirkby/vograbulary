@@ -1,44 +1,32 @@
 package com.github.donkirkby.vograbulary.russian;
 
+import static com.github.donkirkby.vograbulary.russian.LetterDisplayTest.*;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
+import java.util.List;
+
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 
 public class TargetDisplayTest {
-    private static final int LETTER_WIDTH = 5;
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+    
     private class DummyTargetDisplay extends TargetDisplay {
-        private String text;
-        private int x;
         private int dragX;
         private boolean isDragVisible = true;
         
-        public DummyTargetDisplay(String text, int x) {
-            this.text = text;
-            this.x = x;
+        public DummyTargetDisplay(
+                String text,
+                int x,
+                LetterDisplayFactory factory) {
+            super(x, factory);
+            setText(text);
             this.dragX = x;
-        }
-        
-        @Override
-        public String getText() {
-            return text;
-        }
-        
-        @Override
-        public void setText(String text) {
-            this.text = text;
-        }
-
-        @Override
-        public int getX() {
-            return x;
-        }
-
-        @Override
-        public void setX(int x) {
-            this.x = x;
         }
         
         @Override
@@ -52,11 +40,6 @@ public class TargetDisplayTest {
         }
         
         @Override
-        public int getWidth() {
-            return text.length()*LETTER_WIDTH;
-        }
-
-        @Override
         public boolean isDragVisible() {
             return isDragVisible;
         }
@@ -66,14 +49,65 @@ public class TargetDisplayTest {
             this.isDragVisible = isDragVisible;
         }
     }
+
+    private class DummyLetterDisplayFactory extends LetterDisplayFactory {
+        @Override
+        public LetterDisplay create(String letter, int x) {
+            return new LetterDisplayTest.DummyLetterDisplay(letter, x);
+        }
+        
+    }
     private TargetDisplay leftDisplay;
     private TargetDisplay rightDisplay;
+    private List<LetterDisplay> leftLetters;
+    private List<LetterDisplay> rightLetters;
     
     @Before
     public void setUp() {
-        leftDisplay = new DummyTargetDisplay("LEFT", 0);
-        rightDisplay = new DummyTargetDisplay("RIGHT", 100);
+        DummyLetterDisplayFactory factory = new DummyLetterDisplayFactory();
+        leftDisplay = new DummyTargetDisplay("LEFT", 0, factory);
+        rightDisplay = new DummyTargetDisplay("RIGHT", 100, factory);
         leftDisplay.setOther(rightDisplay);
+        leftDisplay.setText("LEFT");
+        rightDisplay.setText("RIGHT");
+        leftLetters = leftDisplay.getLetters();
+        rightLetters = rightDisplay.getLetters();
+    }
+    
+    @Test
+    public void leftLetterPositions() {
+        assertThat("letter count", leftLetters.size(), is(4));
+        assertThat("first letter", leftLetters.get(0).getLetter(), is("L"));
+        assertThat("first x", leftLetters.get(0).getLeft(), is(0));
+        assertThat("second letter", leftLetters.get(1).getLetter(), is("E"));
+        assertThat("second x", leftLetters.get(1).getLeft(), is(LETTER_WIDTH));
+    }
+    
+    @Test
+    public void rightLetterPositions() {
+        assertThat("first x", rightLetters.get(0).getLeft(), is(100));
+    }
+    
+    @Test
+    public void resetText() {
+        leftDisplay.setText("SINISTER");
+        
+        assertThat("letter count", leftLetters.size(), is(8));
+    }
+    
+    @Test
+    public void lettersReadOnly() {
+        thrown.expect(UnsupportedOperationException.class);
+        leftLetters.clear();
+    }
+    
+    @Test
+    public void layout() {
+        LetterDisplay letterDisplay = leftLetters.get(1);
+        letterDisplay.setLeft(0);
+        leftDisplay.layout();
+        
+        assertThat("left", letterDisplay.getLeft(), is(LETTER_WIDTH));
     }
     
     @Test
@@ -84,8 +118,33 @@ public class TargetDisplayTest {
         leftDisplay.dragStart(startX);
         leftDisplay.drag(dragX);
         
-        assertThat("target.x", leftDisplay.getX(), is(dragX - startX));
         assertThat("dragButton.x", leftDisplay.getDragX(), is(dragX - startX));
+        assertThat(
+                "first letter x",
+                leftLetters.get(0).getLeft(),
+                is(dragX - startX));
+        assertThat(
+                "second letter x",
+                leftLetters.get(1).getLeft(),
+                is(dragX - startX + LETTER_WIDTH));
+        assertThat(
+                "right word letter x",
+                rightLetters.get(0).getLeft(),
+                is(100));
+    }
+    
+    @Test
+    public void dragRight() {
+        int startX = 100;
+        int dragX = 75;
+        
+        rightDisplay.dragStart(startX);
+        rightDisplay.drag(dragX);
+        
+        assertThat(
+                "left word letter x",
+                leftLetters.get(0).getLeft(),
+                is(0));
     }
     
     @Test
@@ -100,7 +159,10 @@ public class TargetDisplayTest {
         leftDisplay.drag(dragX1);
         leftDisplay.drag(dragX2);
         
-        assertThat("target.x", leftDisplay.getX(), is(dragX1 - startX + dragX2 - startX));
+        assertThat(
+                "target.x",
+                leftLetters.get(0).getLeft(),
+                is(dragX1 - startX + dragX2 - startX));
     }
     
     @Test
@@ -154,109 +216,121 @@ public class TargetDisplayTest {
     @Test
     public void pushRight() {
         int startX = 0;
-        int dragX = 104-leftDisplay.getWidth(); // starts to push label, but doesn't split yet
+        int dragX = 104-20; // starts to push label, but doesn't split yet
         
         leftDisplay.dragStart(startX);
         leftDisplay.drag(dragX);
         
-        assertThat("target position", rightDisplay.getX(), is(104));
+        assertThat("target position", rightLetters.get(0).getLeft(), is(104));
     }
     
     @Test
     public void pushLeft() {
         int startX = 100;
-        int dragX = -4+leftDisplay.getWidth(); // starts to push label, but doesn't split yet
+        // starts to push label, but doesn't split yet
+        int dragX = -4+20;
         
         rightDisplay.dragStart(startX);
         rightDisplay.drag(dragX);
         
-        assertThat("target position", leftDisplay.getX(), is(-4));
+        assertThat(
+                "target position",
+                leftLetters.get(3).getLeft(),
+                is(dragX - LETTER_WIDTH));
     }
     
     @Test
     public void splitRight() {
         int startX = 0;
-        int dragX = 105-leftDisplay.getWidth(); // split first letter
-        int expectedRightX = 105; // start of right word
+        int dragX = 105-20; // split first letter
+        int expectedRightTailX = 105; // start of right word
+        int expectedRightHeadX = dragX - LETTER_WIDTH;
         int expectedDragX = dragX; // drag button position
-        int expectedLeftX = dragX - LETTER_WIDTH; // added one letter to start, so move left
         
         leftDisplay.dragStart(startX);
         leftDisplay.drag(dragX);
         
-        assertThat("right position", rightDisplay.getX(), is(expectedRightX));
+        assertThat(
+                "right tail position",
+                rightLetters.get(1).getLeft(),
+                is(expectedRightTailX));
+        assertThat(
+                "right head position",
+                rightLetters.get(0).getLeft(),
+                is(expectedRightHeadX));
         assertThat("drag position", leftDisplay.getDragX(), is(expectedDragX));
-        assertThat("left position", leftDisplay.getX(), is(expectedLeftX));
-        assertThat("left text", leftDisplay.getText().toString(), is("RLEFT"));
-        assertThat("right text", rightDisplay.getText().toString(), is("IGHT"));
     }
-    
-    @Test
-    public void splitMoreRight() {
-        int startX = 0;
-        int dragX = 110-leftDisplay.getWidth(); // split first two letters
-        int expectedRightX = 110; // start of right word
-        int expectedDragX = dragX; // drag button position
-        int expectedLeftX = dragX - 2*LETTER_WIDTH; // added two letters to start, so move left
-        
-        leftDisplay.dragStart(startX);
-        leftDisplay.drag(dragX);
-        
-        assertThat("right position", rightDisplay.getX(), is(expectedRightX));
-        assertThat("drag position", leftDisplay.getDragX(), is(expectedDragX));
-        assertThat("left position", leftDisplay.getX(), is(expectedLeftX));
-        assertThat("left text", leftDisplay.getText().toString(), is("RILEFT"));
-        assertThat("right text", rightDisplay.getText().toString(), is("GHT"));
-    }
-    
-    @Test
-    public void splitMoreRightInTwoSteps() {
-        int startX = 0;
-        int dragX1 = 110-leftDisplay.getWidth(); // split first letter
-        int dragX2 = 112-leftDisplay.getWidth(); // split first two letters
-        int expectedRightX = 112; // start of right word
-        int expectedDragX = dragX2; // drag button position
-        int expectedLeftX = dragX2 - 2*LETTER_WIDTH; // added two letters to start, so move left
-        
-        leftDisplay.dragStart(startX);
-        leftDisplay.drag(dragX1);
-        leftDisplay.drag(dragX2 - dragX1);
-        
-        assertThat("right position", rightDisplay.getX(), is(expectedRightX));
-        assertThat("drag position", leftDisplay.getDragX(), is(expectedDragX));
-        assertThat("left position", leftDisplay.getX(), is(expectedLeftX));
-        assertThat("left text", leftDisplay.getText().toString(), is("RILEFT"));
-        assertThat("right text", rightDisplay.getText().toString(), is("GHT"));
-    }
-    
+
     @Test
     public void splitLeft() {
         int startX = 100;
-        int dragX = -5+leftDisplay.getWidth(); // split first letter
-        int expectedLeftX = -5; // start of left word
+        int dragX = 15; // split first letter
         int expectedDragX = dragX; // drag button position
-        int expectedRightX = dragX;
+        int expectedLeftTailX = dragX;
+        int expectedLeftHeadX = dragX + 25;
         
         rightDisplay.dragStart(startX);
         rightDisplay.drag(dragX);
         
-        assertThat("left position", leftDisplay.getX(), is(expectedLeftX));
+        assertThat(
+                "left tail position",
+                leftLetters.get(2).getRight(),
+                is(expectedLeftTailX));
+        assertThat(
+                "left head position",
+                leftLetters.get(3).getLeft(),
+                is(expectedLeftHeadX));
         assertThat("drag position", rightDisplay.getDragX(), is(expectedDragX));
-        assertThat("right position", rightDisplay.getX(), is(expectedRightX));
-        assertThat("left text", leftDisplay.getText().toString(), is("LEF"));
-        assertThat("right text", rightDisplay.getText().toString(), is("RIGHTT"));
     }
     
     @Test
-    public void splitBeyondRight() {
+    public void splitRightInTwoSteps() {
         int startX = 0;
-        int dragX = 130-leftDisplay.getWidth();
+        int dragX1 = 104-20; // push
+        int dragX2 = 1; // split first letter
+        int expectedRightTailX = 105; // start of right word
+        int expectedRightHeadX = dragX1 + dragX2 - LETTER_WIDTH;
         
         leftDisplay.dragStart(startX);
-        leftDisplay.drag(dragX);
+        leftDisplay.drag(dragX1);
+        leftDisplay.drag(dragX2);
         
-        assertThat("target position", rightDisplay.getX(), is(130));
-        assertThat("left text", leftDisplay.getText().toString(), is("RIGHLEFT"));
-        assertThat("right text", rightDisplay.getText().toString(), is("T"));
+        assertThat(
+                "right tail position",
+                rightLetters.get(1).getLeft(),
+                is(expectedRightTailX));
+        assertThat(
+                "right head position",
+                rightLetters.get(0).getLeft(),
+                is(expectedRightHeadX));
+    }
+
+    @Test
+    public void splitLeftInTwoSteps() {
+        int startX = 100;
+        int dragX1 = 16; // push
+        int dragX2 = 99; // split first letter
+        int expectedLeftTailX = 15;
+        int expectedLeftHeadX = 15 + 25;
+        
+        rightDisplay.dragStart(startX);
+        rightDisplay.drag(dragX1);
+        rightDisplay.drag(dragX2);
+        
+        assertThat(
+                "left tail position",
+                leftLetters.get(2).getRight(),
+                is(expectedLeftTailX));
+        assertThat(
+                "left head position",
+                leftLetters.get(3).getLeft(),
+                is(expectedLeftHeadX));
+    }
+    
+    @Test
+    public void getText() {
+        String text = rightDisplay.getText();
+        
+        assertThat("text", text, is("RIGHT"));
     }
 }

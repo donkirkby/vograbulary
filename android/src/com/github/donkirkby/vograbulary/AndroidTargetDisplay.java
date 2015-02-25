@@ -17,6 +17,7 @@ extends TargetDisplay implements View.OnTouchListener{
     private int offsetX; // add to x to get leftMargin
     
     public AndroidTargetDisplay(TextView textView, ImageView dragButton) {
+        super(0, null);
         this.textView = textView;
         this.dragButton = dragButton;
         dragButton.setOnTouchListener(this);
@@ -29,22 +30,6 @@ extends TargetDisplay implements View.OnTouchListener{
     private LayoutParams getDragLayoutParams() {
         return (RelativeLayout.LayoutParams)dragButton.getLayoutParams();
     }
-    
-    @Override
-    public String getText() {
-        return textView.getText().toString();
-    }
-    
-    @Override
-    public void setText(String text) {
-        textView.setText(text);
-    }
-    
-    @Override
-    public int getX() {
-        checkOffset();
-        return getLayoutParams().leftMargin - offsetX;
-    }
 
     private void checkOffset() {
         if ( ! isInitialized) {
@@ -53,14 +38,6 @@ extends TargetDisplay implements View.OnTouchListener{
             offsetX = getLayoutParams().leftMargin - location[0];
             isInitialized = true;
         }
-    }
-    
-    @Override
-    public void setX(int x) {
-        checkOffset();
-        LayoutParams layoutParams = getLayoutParams();
-        layoutParams.leftMargin = x + offsetX;
-        textView.setLayoutParams(layoutParams);
     }
     
     @Override
@@ -75,11 +52,6 @@ extends TargetDisplay implements View.OnTouchListener{
         LayoutParams dragLayoutParams = getDragLayoutParams();
         dragLayoutParams.leftMargin = x + offsetX;
         dragButton.setLayoutParams(dragLayoutParams);
-    }
-
-    @Override
-    public int getWidth() {
-        return textView.getWidth();
     }
     
     @Override

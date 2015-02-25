@@ -82,6 +82,8 @@ extends VograbularyPresenter implements RussianDollsScreen {
     
     private static RussianDollsCompositeUiBinder uiBinder = GWT
             .create(RussianDollsCompositeUiBinder.class);
+    private GwtTargetDisplay targetDisplay1;
+    private GwtTargetDisplay targetDisplay2;
 
     public RussianDollsPresenter() {
         initWidget(uiBinder.createAndBindUi(this));
@@ -94,6 +96,12 @@ extends VograbularyPresenter implements RussianDollsScreen {
         insertButton.addTouchMoveHandler(dragger);
         insertButton.addTouchEndHandler(dragger);
 
+        dragButton1.setVisible(false);
+        dragButton2.setVisible(false);
+        targetDisplay1 = new GwtTargetDisplay(0, dragButton1, targetPanel);
+        targetDisplay2 = new GwtTargetDisplay(200, dragButton2, targetPanel);
+        targetDisplay1.setOther(targetDisplay2);
+
         String puzzleText = Assets.INSTANCE.russianDolls().getText();
         String wordListText = Assets.INSTANCE.wordList().getText();
         WordList wordList = new WordList();
@@ -102,15 +110,6 @@ extends VograbularyPresenter implements RussianDollsScreen {
         controller.setWordList(wordList);
         controller.loadPuzzles(Arrays.asList(puzzleText.split("\\n")));
 
-        targetWord1.addStyleName("targetWord");
-        targetWord2.addStyleName("targetWord");
-        dragButton1.setVisible(false);
-        dragButton2.setVisible(false);
-        GwtTargetDisplay targetDisplay1 =
-                new GwtTargetDisplay(targetWord1, dragButton1, targetPanel);
-        GwtTargetDisplay targetDisplay2 =
-                new GwtTargetDisplay(targetWord2, dragButton2, targetPanel);
-        targetDisplay1.setOther(targetDisplay2);
         final int periodMilliseconds = 100;
         final float periodSeconds = periodMilliseconds / 1000.0f;
         scheduler.scheduleRepeating(
@@ -144,8 +143,14 @@ extends VograbularyPresenter implements RussianDollsScreen {
             controller.solve();
             if (puzzle.isSolved()) {
                 nextButton.setText("Next");
-                targetWord1.setText(puzzle.getCombination());
-                targetWord2.setText("");
+                targetDisplay1.setText(puzzle.getCombination());
+                targetDisplay2.setText("");
+                scheduler.scheduleDeferred(new Runnable() {
+                    @Override
+                    public void run() {
+                        targetDisplay1.layout();
+                    }
+                });
             }
         }
     }
@@ -187,10 +192,10 @@ extends VograbularyPresenter implements RussianDollsScreen {
             Event.setCapture(target.getElement());
             startX = x - insertPanel.getWidgetLeft(insertButton);
             puzzleDisplay.setTargetPositions(
-                    targetWord1.getAbsoluteLeft(),
-                    targetWord1.getOffsetWidth(),
-                    targetWord2.getAbsoluteLeft(),
-                    targetWord2.getOffsetWidth());
+                    targetDisplay1.getLettersLeft(),
+                    targetDisplay1.getLettersRight() - targetDisplay1.getLettersRight(),
+                    targetDisplay2.getLettersLeft(),
+                    targetDisplay2.getLettersRight() - targetDisplay2.getLettersRight());
             isDragging = true;
         }
         
@@ -241,10 +246,17 @@ extends VograbularyPresenter implements RussianDollsScreen {
     @Override
     public void setPuzzle(Puzzle puzzle) {
         clue.setInnerText(puzzle.getClue());
-        targetWord1.setText(puzzle.getTarget(0));
-        targetWord2.setText(puzzle.getTarget(1));
+        targetDisplay1.setText(puzzle.getTarget(0));
+        targetDisplay2.setText(puzzle.getTarget(1));
         nextButton.setText("Solve");
         dragger.centre();
         puzzleDisplay.setPuzzle(puzzle);
+        scheduler.scheduleDeferred(new Runnable() {
+            @Override
+            public void run() {
+                targetDisplay1.layout();
+                targetDisplay2.layout();
+            }
+        });
     }
 }

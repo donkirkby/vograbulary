@@ -16,22 +16,19 @@ import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Label;
 
 public class GwtTargetDisplay
 extends TargetDisplay
 implements MouseDownHandler, MouseMoveHandler, MouseUpHandler,
 TouchStartHandler, TouchMoveHandler, TouchEndHandler {
-    private Label label;
     private Image dragButton;
     private AbsolutePanel panel;
     private boolean isDragging;
-    private int labelY;
     private int buttonY;
     private boolean isInitialized;
     
-    public GwtTargetDisplay(Label label, Image dragButton, AbsolutePanel panel) {
-        this.label = label;
+    public GwtTargetDisplay(int x, Image dragButton, AbsolutePanel panel) {
+        super(x, new GwtLetterDisplayFactory(panel));
         this.dragButton = dragButton;
         this.panel = panel;
         dragButton.addMouseDownHandler(this);
@@ -40,27 +37,6 @@ TouchStartHandler, TouchMoveHandler, TouchEndHandler {
         dragButton.addTouchStartHandler(this);
         dragButton.addTouchMoveHandler(this);
         dragButton.addTouchEndHandler(this);
-    }
-    
-    @Override
-    public String getText() {
-        return label.getText();
-    }
-
-    @Override
-    public void setText(String text) {
-        label.setText(text);
-    }
-
-    @Override
-    public int getX() {
-        return panel.getWidgetLeft(label);
-    }
-
-    @Override
-    public void setX(int x) {
-        checkOffset();
-        panel.setWidgetPosition(label, x, labelY);
     }
     
     @Override
@@ -76,15 +52,9 @@ TouchStartHandler, TouchMoveHandler, TouchEndHandler {
     
     private void checkOffset() {
         if ( ! isInitialized) {
-            labelY = panel.getWidgetTop(label);
             buttonY = panel.getWidgetTop(dragButton);
             isInitialized = true;
         }
-    }
-
-    @Override
-    public int getWidth() {
-        return label.getOffsetWidth();
     }
 
     @Override
@@ -112,7 +82,7 @@ TouchStartHandler, TouchMoveHandler, TouchEndHandler {
     private void onStart(int x) {
         Event.setCapture(dragButton.getElement());
         isDragging = true;
-        dragStart(x - panel.getWidgetLeft(label));
+        dragStart(x - panel.getWidgetLeft(dragButton));
     }
     
     @Override
@@ -127,7 +97,7 @@ TouchStartHandler, TouchMoveHandler, TouchEndHandler {
 
     private void onMove(int x) {
         if (isDragging) {
-            drag(x - panel.getWidgetLeft(label));
+            drag(x - panel.getWidgetLeft(dragButton));
         }
     }
 
