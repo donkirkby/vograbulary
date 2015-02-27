@@ -17,7 +17,7 @@ extends TargetDisplay implements View.OnTouchListener{
     private int offsetX; // add to x to get leftMargin
     
     public AndroidTargetDisplay(TextView textView, ImageView dragButton) {
-        super(0, null);
+        super(null);
         this.textView = textView;
         this.dragButton = dragButton;
         dragButton.setOnTouchListener(this);

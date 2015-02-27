@@ -9,10 +9,10 @@ public class GwtLetterDisplay extends LetterDisplay {
     private AbsolutePanel panel;
     private Label label;
     
-    public GwtLetterDisplay(AbsolutePanel panel, Label label, int x) {
+    public GwtLetterDisplay(AbsolutePanel panel, Label label) {
         this.panel = panel;
         this.label = label;
-        setLeft(x);
+        setLeft(0);
     }
 
     @Override

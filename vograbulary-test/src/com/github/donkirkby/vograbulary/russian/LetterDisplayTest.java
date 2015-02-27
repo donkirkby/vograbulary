@@ -12,8 +12,7 @@ public class LetterDisplayTest {
         private int left;
         private String letter;
         
-        public DummyLetterDisplay(String letter, int x) {
-            this.left = x;
+        public DummyLetterDisplay(String letter) {
             this.letter = letter;
         }
 
@@ -40,9 +39,10 @@ public class LetterDisplayTest {
 
     @Test
     public void right() {
-        int x = 10;
-        int expectedRight = x + LETTER_WIDTH;
-        LetterDisplay display = new DummyLetterDisplay("P", x);
+        int left = 10;
+        int expectedRight = left + LETTER_WIDTH;
+        LetterDisplay display = new DummyLetterDisplay("P");
+        display.setLeft(left);
         
         int right = display.getRight();
         

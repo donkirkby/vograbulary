@@ -21,14 +21,13 @@ public class GwtTargetDisplay
 extends TargetDisplay
 implements MouseDownHandler, MouseMoveHandler, MouseUpHandler,
 TouchStartHandler, TouchMoveHandler, TouchEndHandler {
+    private static final int DRAG_MARGIN = 22;
     private Image dragButton;
     private AbsolutePanel panel;
     private boolean isDragging;
-    private int buttonY;
-    private boolean isInitialized;
     
     public GwtTargetDisplay(int x, Image dragButton, AbsolutePanel panel) {
-        super(x, new GwtLetterDisplayFactory(panel));
+        super(new GwtLetterDisplayFactory(panel));
         this.dragButton = dragButton;
         this.panel = panel;
         dragButton.addMouseDownHandler(this);
@@ -46,17 +45,9 @@ TouchStartHandler, TouchMoveHandler, TouchEndHandler {
     
     @Override
     public void setDragX(int x) {
-        checkOffset();
-        panel.setWidgetPosition(dragButton, x, buttonY);
+        panel.setWidgetPosition(dragButton, x, DRAG_MARGIN);
     }
     
-    private void checkOffset() {
-        if ( ! isInitialized) {
-            buttonY = panel.getWidgetTop(dragButton);
-            isInitialized = true;
-        }
-    }
-
     @Override
     public boolean isDragVisible() {
         return dragButton.isVisible();

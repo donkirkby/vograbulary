@@ -26,14 +26,13 @@ public abstract class TargetDisplay {
     
     private LetterDisplayFactory factory;
     private List<LetterDisplay> letters = new ArrayList<>();
-    private int x;
     private int dragStartX;
     private TargetDisplay other;
     private int visibleBoundary;
     private int sign;
+    private int screenWidth;
 
-    public TargetDisplay(int x, LetterDisplayFactory factory) {
-        this.x = x;
+    public TargetDisplay(LetterDisplayFactory factory) {
         this.factory = factory;
     }
 
@@ -44,11 +43,9 @@ public abstract class TargetDisplay {
     
     public void setText(String text) {
         letters.clear();
-        int nextX = x;
         for (int i = 0; i < text.length(); i++) {
-            LetterDisplay letter = factory.create(text.substring(i, i+1), nextX);
+            LetterDisplay letter = factory.create(text.substring(i, i+1));
             letters.add(letter);
-            nextX += letter.getWidth();
         }
     }
     
@@ -137,10 +134,29 @@ public abstract class TargetDisplay {
     }
 
     public void layout() {
-        int nextX = x;
+        int nextX = screenWidth / 2;
+        for (LetterDisplay letterDisplay : letters) {
+            nextX += letterDisplay.getWidth();
+        }
+        other.setDragX(nextX);
+        for (LetterDisplay letterDisplay : other.letters) {
+            letterDisplay.setLeft(nextX);
+            nextX += letterDisplay.getWidth();
+        }
+        nextX = screenWidth - nextX;
+        setDragX(nextX);
         for (LetterDisplay letterDisplay : letters) {
             letterDisplay.setLeft(nextX);
             nextX += letterDisplay.getWidth();
         }
+    }
+    
+    /** Get the width of the screen that the display should be centred on. */
+    public int getScreenWidth() {
+        return screenWidth;
+    }
+    /** Set the width of the screen that the display should be centred on. */
+    public void setScreenWidth(int screenWidth) {
+        this.screenWidth = screenWidth;
     }
 }

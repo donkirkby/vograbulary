@@ -254,8 +254,8 @@ extends VograbularyPresenter implements RussianDollsScreen {
         scheduler.scheduleDeferred(new Runnable() {
             @Override
             public void run() {
+                targetDisplay1.setScreenWidth(targetPanel.getOffsetWidth());
                 targetDisplay1.layout();
-                targetDisplay2.layout();
             }
         });
     }

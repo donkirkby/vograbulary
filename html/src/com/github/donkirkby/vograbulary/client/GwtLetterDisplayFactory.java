@@ -13,9 +13,9 @@ public class GwtLetterDisplayFactory extends LetterDisplayFactory{
     }
     
     @Override
-    public LetterDisplay create(String letter, int x) {
+    public LetterDisplay create(String letter) {
         Label label = new Label(letter);
         panel.add(label);
-        return new GwtLetterDisplay(panel, label, x);
+        return new GwtLetterDisplay(panel, label);
     }
 }
