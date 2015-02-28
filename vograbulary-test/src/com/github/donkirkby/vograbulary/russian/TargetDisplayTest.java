@@ -4,6 +4,7 @@ import static com.github.donkirkby.vograbulary.russian.LetterDisplayTest.*;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
@@ -21,10 +22,8 @@ public class TargetDisplayTest {
         private boolean isDragVisible = true;
         
         public DummyTargetDisplay(
-                String text,
                 LetterDisplayFactory factory) {
             super(factory);
-            setText(text);
         }
         
         @Override
@@ -49,25 +48,39 @@ public class TargetDisplayTest {
     }
 
     private class DummyLetterDisplayFactory extends LetterDisplayFactory {
+        private List<DummyLetterDisplay> active = new ArrayList<>();
+        
         @Override
         public LetterDisplay create(String letter) {
-            return new LetterDisplayTest.DummyLetterDisplay(letter);
+            LetterDisplayTest.DummyLetterDisplay display =
+                    new LetterDisplayTest.DummyLetterDisplay(letter);
+            active.add(display);
+            return display;
+        }
+
+        @Override
+        public void destroy(LetterDisplay letter) {
+            active.remove(letter);
         }
         
+        public List<DummyLetterDisplay> getActive() {
+            return active;
+        }
     }
     private TargetDisplay leftDisplay;
     private TargetDisplay rightDisplay;
     private List<LetterDisplay> leftLetters;
     private List<LetterDisplay> rightLetters;
+    private DummyLetterDisplayFactory factory;
     
     @Before
     public void setUp() {
         // Starting layout:
         // 0   20      45      65   90
         // LEFT                RIGHT
-        DummyLetterDisplayFactory factory = new DummyLetterDisplayFactory();
-        leftDisplay = new DummyTargetDisplay("LEFT", factory);
-        rightDisplay = new DummyTargetDisplay("RIGHT", factory);
+        factory = new DummyLetterDisplayFactory();
+        leftDisplay = new DummyTargetDisplay(factory);
+        rightDisplay = new DummyTargetDisplay(factory);
         leftDisplay.setOther(rightDisplay);
         leftDisplay.setText("LEFT");
         rightDisplay.setText("RIGHT");
@@ -89,6 +102,7 @@ public class TargetDisplayTest {
     @Test
     public void rightLetterPositions() {
         assertThat("first x", rightLetters.get(0).getLeft(), is(65));
+        assertThat("right width", rightDisplay.getLettersWidth(), is(25));
     }
     
     @Test
@@ -96,6 +110,10 @@ public class TargetDisplayTest {
         leftDisplay.setText("SINISTER");
         
         assertThat("letter count", leftLetters.size(), is(8));
+        assertThat(
+                "active count",
+                factory.getActive().size(),
+                is(leftLetters.size() + rightLetters.size()));
     }
     
     @Test

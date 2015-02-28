@@ -34,4 +34,8 @@ public class GwtLetterDisplay extends LetterDisplay {
     public String getLetter() {
         return label.getText();
     }
+    
+    public Label getLabel() {
+        return label;
+    }
 }

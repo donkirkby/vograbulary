@@ -42,6 +42,9 @@ public abstract class TargetDisplay {
     }
     
     public void setText(String text) {
+        for (LetterDisplay letterDisplay : letters) {
+            factory.destroy(letterDisplay);
+        }
         letters.clear();
         for (int i = 0; i < text.length(); i++) {
             LetterDisplay letter = factory.create(text.substring(i, i+1));
@@ -99,6 +102,10 @@ public abstract class TargetDisplay {
 
     public int getLettersLeft() {
         return letters.get(0).getLeft();
+    }
+
+    public int getLettersWidth() {
+        return getLettersRight() - getLettersLeft();
     }
 
     private void surround(int left, int right) {

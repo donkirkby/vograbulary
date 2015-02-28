@@ -29,7 +29,6 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -58,12 +57,6 @@ extends VograbularyPresenter implements RussianDollsScreen {
     
     @UiField
     ParagraphElement clue;
-    
-    @UiField
-    Label targetWord1;
-    
-    @UiField
-    Label targetWord2;
     
     @UiField
     Image dragButton1;
@@ -166,16 +159,6 @@ extends VograbularyPresenter implements RussianDollsScreen {
             this.target = target;
         }
         
-        public void centre() {
-            int centreX = (targetWord2.getAbsoluteLeft() + 
-                    targetWord2.getOffsetWidth() -
-                    insertButton.getOffsetWidth()) / 2;
-            insertPanel.setWidgetPosition(
-                    insertButton,
-                    centreX, 
-                    INSERT_BUTTON_TOP_MARGIN);
-        }
-        
         @Override
         public void onMouseDown(MouseDownEvent event) {
             event.preventDefault();
@@ -193,9 +176,9 @@ extends VograbularyPresenter implements RussianDollsScreen {
             startX = x - insertPanel.getWidgetLeft(insertButton);
             puzzleDisplay.setTargetPositions(
                     targetDisplay1.getLettersLeft(),
-                    targetDisplay1.getLettersRight() - targetDisplay1.getLettersRight(),
+                    targetDisplay1.getLettersWidth(),
                     targetDisplay2.getLettersLeft(),
-                    targetDisplay2.getLettersRight() - targetDisplay2.getLettersRight());
+                    targetDisplay2.getLettersWidth());
             isDragging = true;
         }
         
@@ -216,7 +199,7 @@ extends VograbularyPresenter implements RussianDollsScreen {
                         x - startX, 
                         INSERT_BUTTON_TOP_MARGIN);
                 int insertX =
-                        insertButton.getAbsoluteLeft() +
+                        insertPanel.getWidgetLeft(insertButton) +
                         insertButton.getOffsetWidth() * 24/64;
                 puzzleDisplay.calculateInsertion(insertX);
             }
@@ -249,13 +232,16 @@ extends VograbularyPresenter implements RussianDollsScreen {
         targetDisplay1.setText(puzzle.getTarget(0));
         targetDisplay2.setText(puzzle.getTarget(1));
         nextButton.setText("Solve");
-        dragger.centre();
         puzzleDisplay.setPuzzle(puzzle);
         scheduler.scheduleDeferred(new Runnable() {
             @Override
             public void run() {
                 targetDisplay1.setScreenWidth(targetPanel.getOffsetWidth());
                 targetDisplay1.layout();
+                insertPanel.setWidgetPosition(
+                        insertButton,
+                        targetDisplay1.getLettersRight(), 
+                        INSERT_BUTTON_TOP_MARGIN);
             }
         });
     }

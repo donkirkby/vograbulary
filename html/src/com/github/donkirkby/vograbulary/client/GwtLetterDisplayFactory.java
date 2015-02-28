@@ -18,4 +18,9 @@ public class GwtLetterDisplayFactory extends LetterDisplayFactory{
         panel.add(label);
         return new GwtLetterDisplay(panel, label);
     }
+
+    @Override
+    public void destroy(LetterDisplay letter) {
+        panel.remove(((GwtLetterDisplay)letter).getLabel());
+    }
 }
