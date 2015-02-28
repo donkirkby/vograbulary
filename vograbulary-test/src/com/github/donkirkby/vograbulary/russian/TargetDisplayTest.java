@@ -72,6 +72,7 @@ public class TargetDisplayTest {
     private List<LetterDisplay> leftLetters;
     private List<LetterDisplay> rightLetters;
     private DummyLetterDisplayFactory factory;
+    private Puzzle puzzle;
     
     @Before
     public void setUp() {
@@ -82,8 +83,8 @@ public class TargetDisplayTest {
         leftDisplay = new DummyTargetDisplay(factory);
         rightDisplay = new DummyTargetDisplay(factory);
         leftDisplay.setOther(rightDisplay);
-        leftDisplay.setText("LEFT");
-        rightDisplay.setText("RIGHT");
+        puzzle = new Puzzle("LEFT RIGHT");
+        leftDisplay.setPuzzle(puzzle);
         leftDisplay.setScreenWidth(90);
         leftDisplay.layout();
         leftLetters = leftDisplay.getLetters();
@@ -248,6 +249,7 @@ public class TargetDisplayTest {
         leftDisplay.drag(dragX);
         
         assertThat("target position", rightLetters.get(0).getLeft(), is(69));
+        assertThat("target character", puzzle.getTargetCharacter(), is(-1));
     }
     
     @Test
@@ -285,6 +287,8 @@ public class TargetDisplayTest {
                 rightLetters.get(0).getLeft(),
                 is(expectedRightHeadX));
         assertThat("drag position", leftDisplay.getDragX(), is(expectedDragX));
+        assertThat("target character", puzzle.getTargetCharacter(), is(1));
+        assertThat("target word", puzzle.getTargetWord(), is(1));
     }
 
     @Test
@@ -307,6 +311,8 @@ public class TargetDisplayTest {
                 leftLetters.get(3).getLeft(),
                 is(expectedLeftHeadX));
         assertThat("drag position", rightDisplay.getDragX(), is(expectedDragX));
+        assertThat("target character", puzzle.getTargetCharacter(), is(3));
+        assertThat("target word", puzzle.getTargetWord(), is(0));
     }
     
     @Test

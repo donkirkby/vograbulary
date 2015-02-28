@@ -26,6 +26,7 @@ public abstract class TargetDisplay {
     
     private LetterDisplayFactory factory;
     private List<LetterDisplay> letters = new ArrayList<>();
+    private Puzzle puzzle;
     private int dragStartX;
     private TargetDisplay other;
     private int visibleBoundary;
@@ -39,6 +40,13 @@ public abstract class TargetDisplay {
     public void setOther(TargetDisplay other) {
         this.other = other;
         other.other = this;
+    }
+    
+    public void setPuzzle(Puzzle puzzle) {
+        this.puzzle = puzzle;
+        other.puzzle = puzzle;
+        setText(puzzle.getTarget(0));
+        other.setText(puzzle.getTarget(1));
     }
     
     public void setText(String text) {
@@ -113,6 +121,14 @@ public abstract class TargetDisplay {
         List<LetterDisplay> after = new ArrayList<>();
         for (LetterDisplay letterDisplay : letters) {
             letterDisplay.split(left, right, before, after);
+        }
+        
+        if (before.size() == 0 || after.size() == 0) {
+            puzzle.clearTargets();
+        }
+        else {
+            puzzle.setTargetWord((1 - sign)/2);
+            puzzle.setTargetCharacter(before.size());
         }
         
         if (before.size() > 0 && letters.get(letters.size()-1).getStartRight() > left) {

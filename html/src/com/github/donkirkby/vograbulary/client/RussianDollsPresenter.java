@@ -229,8 +229,7 @@ extends VograbularyPresenter implements RussianDollsScreen {
     @Override
     public void setPuzzle(Puzzle puzzle) {
         clue.setInnerText(puzzle.getClue());
-        targetDisplay1.setText(puzzle.getTarget(0));
-        targetDisplay2.setText(puzzle.getTarget(1));
+        targetDisplay1.setPuzzle(puzzle);
         nextButton.setText("Solve");
         puzzleDisplay.setPuzzle(puzzle);
         scheduler.scheduleDeferred(new Runnable() {
