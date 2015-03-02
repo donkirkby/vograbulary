@@ -13,13 +13,18 @@ public class AndroidTargetDisplay
 extends TargetDisplay implements View.OnTouchListener{
     private TextView textView;
     private ImageView dragButton;
+    private ImageView insertButton;
     private boolean isInitialized;
     private int offsetX; // add to x to get leftMargin
     
-    public AndroidTargetDisplay(TextView textView, ImageView dragButton) {
+    public AndroidTargetDisplay(
+            TextView textView,
+            ImageView dragButton,
+            ImageView insertButton) {
         super(null);
         this.textView = textView;
         this.dragButton = dragButton;
+        this.insertButton = insertButton;
         dragButton.setOnTouchListener(this);
     }
     
@@ -62,6 +67,16 @@ extends TargetDisplay implements View.OnTouchListener{
     @Override
     public void setDragVisible(boolean isDragVisible) {
         dragButton.setVisibility(isDragVisible ? View.VISIBLE : View.INVISIBLE);
+    }
+    
+    @Override
+    public boolean isInsertVisible() {
+        return insertButton.getVisibility() == View.VISIBLE;
+    }
+    
+    @Override
+    public void setInsertVisible(boolean isInsertVisible) {
+        insertButton.setVisibility(isInsertVisible ? View.VISIBLE : View.INVISIBLE);
     }
 
     @Override

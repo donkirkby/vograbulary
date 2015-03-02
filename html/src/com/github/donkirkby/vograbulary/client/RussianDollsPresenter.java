@@ -89,11 +89,13 @@ extends VograbularyPresenter implements RussianDollsScreen {
         insertButton.addTouchMoveHandler(dragger);
         insertButton.addTouchEndHandler(dragger);
 
-        dragButton1.setVisible(false);
-        dragButton2.setVisible(false);
-        targetDisplay1 = new GwtTargetDisplay(0, dragButton1, targetPanel);
-        targetDisplay2 = new GwtTargetDisplay(200, dragButton2, targetPanel);
+        targetDisplay1 =
+                new GwtTargetDisplay(insertButton, dragButton1, targetPanel);
+        targetDisplay2 =
+                new GwtTargetDisplay(insertButton, dragButton2, targetPanel);
         targetDisplay1.setOther(targetDisplay2);
+        targetDisplay1.setDragVisible(false);
+        targetDisplay2.setDragVisible(false);
 
         String puzzleText = Assets.INSTANCE.russianDolls().getText();
         String wordListText = Assets.INSTANCE.wordList().getText();
@@ -115,11 +117,12 @@ extends VograbularyPresenter implements RussianDollsScreen {
                         scoreDisplay.setInnerText("Score: " + score);
                         totalDisplay.setInnerText("Total: " + total);
                         boolean shouldShow =
-                                ! dragButton1.isVisible() &&
+                                ! targetDisplay1.isDragVisible() &&
+                                ! targetDisplay2.isDragVisible() &&
                                 puzzle.getScore().intValue() < 50;
                         if (shouldShow) {
-                            dragButton1.setVisible(true);
-                            dragButton2.setVisible(true);
+                            targetDisplay1.setDragVisible(true);
+                            targetDisplay2.setDragVisible(true);
                         }
                     }
                 },

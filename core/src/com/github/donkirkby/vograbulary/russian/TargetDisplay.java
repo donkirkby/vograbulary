@@ -24,6 +24,12 @@ public abstract class TargetDisplay {
     /** set the visibility of the drag button for the target */
     public abstract void setDragVisible(boolean isDragVisible);
     
+    /** is the insert button visible? */
+    public abstract boolean isInsertVisible();
+    
+    /** set the visibility of the insert button. */
+    public abstract void setInsertVisible(boolean isInsertVisible);
+    
     private LetterDisplayFactory factory;
     private List<LetterDisplay> letters = new ArrayList<>();
     private Puzzle puzzle;
@@ -47,6 +53,10 @@ public abstract class TargetDisplay {
         other.puzzle = puzzle;
         setText(puzzle.getTarget(0));
         other.setText(puzzle.getTarget(1));
+        setDragVisible(false);
+        other.setDragVisible(false);
+        setInsertVisible(true);
+        this.sign = other.sign = 0;
     }
     
     public void setText(String text) {
@@ -76,13 +86,16 @@ public abstract class TargetDisplay {
         dragStartX = x;
         if (sign == 0) {
             // first drag
-            other.visibleBoundary = visibleBoundary = 
-                    (getLettersLeft() + other.getLettersLeft())/2;
+            setInsertVisible(false);
             sign = (int)Math.signum(other.getLettersLeft() - getLettersLeft());
             other.sign = -sign;
             boolean isOtherMovingLeft = sign > 0;
             other.recordLetterStartPositions(isOtherMovingLeft);
         }
+        visibleBoundary =
+                screenWidth/2
+                - (1+sign)/2 * getLettersWidth()
+                - sign * other.getLettersWidth();
     }
     
     private void recordLetterStartPositions(boolean isMovingLeft) {
@@ -103,7 +116,13 @@ public abstract class TargetDisplay {
         
         other.setDragVisible(sign*getLettersLeft() <= sign*visibleBoundary);
     }
-
+    
+    public void dragStop() {
+        if (other.isDragVisible()) {
+            this.sign = other.sign = 0;
+        }
+    }
+    
     public int getLettersRight() {
         return letters.get(letters.size()-1).getRight();
     }
@@ -180,6 +199,6 @@ public abstract class TargetDisplay {
     }
     /** Set the width of the screen that the display should be centred on. */
     public void setScreenWidth(int screenWidth) {
-        this.screenWidth = screenWidth;
+        this.screenWidth = other.screenWidth = screenWidth;
     }
 }

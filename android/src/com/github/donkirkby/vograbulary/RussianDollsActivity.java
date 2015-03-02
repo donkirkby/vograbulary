@@ -69,8 +69,10 @@ extends VograbularyActivity implements RussianDollsScreen {
         controller.loadPuzzles(puzzleSource);
         
         insertButton.setOnTouchListener(new InsertTouchListener());
-        targetDisplay1 = new AndroidTargetDisplay(targetWord1, dragButton1);
-        targetDisplay2 = new AndroidTargetDisplay(targetWord2, dragButton2);
+        targetDisplay1 =
+                new AndroidTargetDisplay(targetWord1, dragButton1, insertButton);
+        targetDisplay2 =
+                new AndroidTargetDisplay(targetWord2, dragButton2, insertButton);
         targetDisplay1.setOther(targetDisplay2);
         
         dragButton1.setVisibility(View.INVISIBLE);

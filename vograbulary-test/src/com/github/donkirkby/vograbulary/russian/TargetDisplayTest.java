@@ -20,6 +20,7 @@ public class TargetDisplayTest {
     private class DummyTargetDisplay extends TargetDisplay {
         private int dragX;
         private boolean isDragVisible = true;
+        private boolean isInsertVisible = true;
         
         public DummyTargetDisplay(
                 LetterDisplayFactory factory) {
@@ -44,6 +45,16 @@ public class TargetDisplayTest {
         @Override
         public void setDragVisible(boolean isDragVisible) {
             this.isDragVisible = isDragVisible;
+        }
+        
+        @Override
+        public boolean isInsertVisible() {
+            return isInsertVisible;
+        }
+        
+        @Override
+        public void setInsertVisible(boolean isInsertVisible) {
+            this.isInsertVisible = isInsertVisible;
         }
     }
 
@@ -107,9 +118,16 @@ public class TargetDisplayTest {
     }
     
     @Test
-    public void resetText() {
-        leftDisplay.setText("SINISTER");
+    public void setPuzzle() {
+        leftDisplay.setDragVisible(true);
+        rightDisplay.setDragVisible(true);
+        leftDisplay.setInsertVisible(false);
+
+        leftDisplay.setPuzzle(new Puzzle("SINISTER SOUND"));
         
+        assertThat("left drag visible", leftDisplay.isDragVisible(), is(false));
+        assertThat("right drag visible", rightDisplay.isDragVisible(), is(false));
+        assertThat("insert visible", leftDisplay.isInsertVisible(), is(true));
         assertThat("letter count", leftLetters.size(), is(8));
         assertThat(
                 "active count",
@@ -158,6 +176,7 @@ public class TargetDisplayTest {
                 "right word letter x",
                 rightLetters.get(0).getLeft(),
                 is(65));
+        assertThat("insert is visible", leftDisplay.isInsertVisible(), is(false));
     }
     
     @Test
@@ -195,7 +214,7 @@ public class TargetDisplayTest {
     @Test
     public void hideRight() {
         int startX = 10;
-        int dragX = 65;
+        int dragX = 11;
         
         leftDisplay.dragStart(startX);
         leftDisplay.drag(dragX);
@@ -206,7 +225,7 @@ public class TargetDisplayTest {
     @Test
     public void showRight() {
         int startX = 10;
-        int dragX = 35;
+        int dragX = 9;
         
         leftDisplay.dragStart(startX);
         leftDisplay.drag(dragX);
@@ -216,8 +235,8 @@ public class TargetDisplayTest {
     
     @Test
     public void hideLeft() {
-        int startX = 110;
-        int dragX = 35;
+        int startX = 65;
+        int dragX = 64;
         
         rightDisplay.dragStart(startX);
         rightDisplay.drag(dragX);
@@ -228,8 +247,8 @@ public class TargetDisplayTest {
     @Test
     public void hideThenShow() {
         int startX = 0;
-        int drag1X = 70;
-        int drag2X = 32;
+        int drag1X = 1;
+        int drag2X = -1;
         
         leftDisplay.dragStart(startX);
         leftDisplay.drag(drag1X);
@@ -258,6 +277,44 @@ public class TargetDisplayTest {
         // starts to push label, but doesn't split yet
         int dragX = -4+20;
         
+        rightDisplay.dragStart(startX);
+        rightDisplay.drag(dragX);
+        
+        assertThat(
+                "target position",
+                leftLetters.get(3).getLeft(),
+                is(dragX - LETTER_WIDTH));
+    }
+    
+    @Test
+    public void dragLeftPushLeft() {
+        int startX = 65;
+        // starts to push label, but doesn't split yet
+        int dragX = -4+20;
+        
+        leftDisplay.dragStart(0);
+        leftDisplay.drag(-1);
+        leftDisplay.dragStop();
+        rightDisplay.dragStart(startX);
+        rightDisplay.drag(dragX);
+        
+        assertThat(
+                "target position",
+                leftLetters.get(3).getLeft(),
+                is(dragX - LETTER_WIDTH));
+    }
+    
+    @Test
+    public void dragLeftResetPushLeft() {
+        int startX = 65;
+        // starts to push label, but doesn't split yet
+        int dragX = -4+20;
+        
+        leftDisplay.dragStart(0);
+        leftDisplay.drag(1);
+        leftDisplay.dragStop();
+        leftDisplay.setPuzzle(new Puzzle("LENT SIGHT"));
+        leftDisplay.layout();
         rightDisplay.dragStart(startX);
         rightDisplay.drag(dragX);
         
