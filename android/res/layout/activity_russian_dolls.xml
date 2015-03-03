@@ -24,41 +24,29 @@
         android:src="@drawable/insert" />
 
     <TextView
-        android:id="@+id/targetWord1"
+        android:id="@+id/spacer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/insertImage"
-        android:layout_marginLeft="-70dp"
-        android:layout_toRightOf="@+id/spacer"
-        android:text="@string/word"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:typeface="monospace" />
-
-    <TextView
-        android:id="@+id/targetWord2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/insertImage"
-        android:layout_marginLeft="20dp"
-        android:layout_toRightOf="@+id/spacer"
-        android:text="@string/word"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:typeface="monospace" />
+        android:layout_centerHorizontal="true" />
 
     <ImageView
         android:id="@+id/dragImage1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/targetWord1"
-        android:layout_below="@+id/targetWord1"
+        android:layout_marginLeft="-70dp"
+        android:layout_toRightOf="@+id/spacer"
+        android:layout_below="@+id/spacer"
         android:src="@drawable/drag" />
     
     <ImageView
         android:id="@+id/dragImage2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/targetWord2"
-        android:layout_below="@+id/targetWord2"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@+id/spacer"
+        android:layout_below="@+id/spacer"
         android:src="@drawable/drag" />
 
     <Button
@@ -86,12 +74,5 @@
         android:layout_alignLeft="@+id/previousButton"
         android:layout_below="@+id/previousButton"
         android:text="Score: 0" />
-
-    <TextView
-        android:id="@+id/spacer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

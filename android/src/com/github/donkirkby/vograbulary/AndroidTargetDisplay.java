@@ -2,34 +2,28 @@ package com.github.donkirkby.vograbulary;
 
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
-import android.widget.TextView;
 
 import com.github.donkirkby.vograbulary.russian.TargetDisplay;
 
 public class AndroidTargetDisplay
 extends TargetDisplay implements View.OnTouchListener{
-    private TextView textView;
     private ImageView dragButton;
     private ImageView insertButton;
     private boolean isInitialized;
     private int offsetX; // add to x to get leftMargin
     
     public AndroidTargetDisplay(
-            TextView textView,
             ImageView dragButton,
-            ImageView insertButton) {
-        super(null);
-        this.textView = textView;
+            ImageView insertButton,
+            ViewGroup layout) {
+        super(new AndroidLetterDisplayFactory(layout));
         this.dragButton = dragButton;
         this.insertButton = insertButton;
         dragButton.setOnTouchListener(this);
-    }
-    
-    private LayoutParams getLayoutParams() {
-        return (RelativeLayout.LayoutParams)textView.getLayoutParams();
     }
     
     private LayoutParams getDragLayoutParams() {
@@ -39,8 +33,8 @@ extends TargetDisplay implements View.OnTouchListener{
     private void checkOffset() {
         if ( ! isInitialized) {
             int[] location = new int[2];
-            textView.getLocationOnScreen(location);
-            offsetX = getLayoutParams().leftMargin - location[0];
+            dragButton.getLocationOnScreen(location);
+            offsetX = getDragLayoutParams().leftMargin - location[0];
             isInitialized = true;
         }
     }
@@ -90,6 +84,7 @@ extends TargetDisplay implements View.OnTouchListener{
             drag(eventX);
             break;
         case MotionEvent.ACTION_UP:
+            dragStop();
             view.performClick();
             break;
         }
