@@ -7,8 +7,11 @@ import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.github.donkirkby.vograbulary.ultraghost.ComputerStudent;
@@ -31,8 +34,8 @@ extends VograbularyActivity implements UltraghostScreen, StudentListener {
     
     private TextView ownerName;
     private TextView letters;
-    private TextView solution;
-    private TextView response;
+    private EditText solution;
+    private EditText response;
     private TextView hint;
     private TextView result;
     private TextView summary;
@@ -43,6 +46,7 @@ extends VograbularyActivity implements UltraghostScreen, StudentListener {
     
     private Match match;
     private Controller controller;
+    private Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +59,8 @@ extends VograbularyActivity implements UltraghostScreen, StudentListener {
         
         ownerName = (TextView)findViewById(R.id.ownerName);
         letters = (TextView)findViewById(R.id.letters);
-        solution = (TextView)findViewById(R.id.solution);
-        response = (TextView)findViewById(R.id.response);
+        solution = (EditText)findViewById(R.id.solution);
+        response = (EditText)findViewById(R.id.response);
         hint = (TextView)findViewById(R.id.hint);
         result = (TextView)findViewById(R.id.result);
         summary = (TextView)findViewById(R.id.summary);
@@ -64,7 +68,29 @@ extends VograbularyActivity implements UltraghostScreen, StudentListener {
         respondButton = (Button)findViewById(R.id.respondButton);
         nextButton = (Button)findViewById(R.id.nextButton);
         focusButtons = Arrays.asList(solveButton, respondButton, nextButton);
-
+        handler = new Handler();
+        
+        solution.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                solve(null);
+                return true;
+            }
+        });
+        
+        response.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (respondButton.getVisibility() == View.VISIBLE) {
+                    respond(null);
+                }
+                else {
+                    next(null);
+                }
+                return true;
+            }
+        });
+        
         controller = new Controller();
         controller.setRandom(new UltraghostRandom());
         controller.setScheduler(new AndroidScheduler());
@@ -154,12 +180,22 @@ extends VograbularyActivity implements UltraghostScreen, StudentListener {
         
     }
 
+    private void focusField(final EditText field) {
+        field.requestFocus();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                field.selectAll();
+            }
+        });
+    }
+
     @Override
     public void focusSolution() {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                solution.requestFocus();
+                focusField(solution);
                 focusButton(solveButton);
             }
         });
@@ -170,7 +206,7 @@ extends VograbularyActivity implements UltraghostScreen, StudentListener {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                response.requestFocus();
+                focusField(response);
                 focusButton(respondButton);
             }
         });
@@ -181,7 +217,6 @@ extends VograbularyActivity implements UltraghostScreen, StudentListener {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                nextButton.requestFocus();
                 focusButton(nextButton);
             }
         });

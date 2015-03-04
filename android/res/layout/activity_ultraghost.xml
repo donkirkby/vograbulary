@@ -34,7 +34,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
-            android:inputType="text">
+            android:imeOptions="actionNext"
+            android:inputType="text|textNoSuggestions">
+
             <requestFocus />
         </EditText>
 
@@ -57,7 +59,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
-            android:inputType="text">
+            android:imeOptions="actionNext"
+            android:inputType="text|textNoSuggestions">
 
         </EditText>
 
