@@ -17,6 +17,8 @@ import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -69,6 +71,7 @@ public class UltraghostPresenter extends VograbularyPresenter implements Ultragh
             new Controller();
     private Match match;
     private List<Button> focusButtons;
+    private List<TextBox> focusFields;
     private GwtPreferences preferences;
 
     public UltraghostPresenter(GwtPreferences preferences) {
@@ -87,6 +90,7 @@ public class UltraghostPresenter extends VograbularyPresenter implements Ultragh
 //      match.setHyperghost(isHyperghost);
   
         focusButtons = Arrays.asList(solveButton, respondButton, nextButton);
+        focusFields = Arrays.asList(solution, response);
         
         controller.setScreen(this);
     }
@@ -97,10 +101,24 @@ public class UltraghostPresenter extends VograbularyPresenter implements Ultragh
         controller.start();
     }
     
+    @UiHandler("solution")
+    void solutionKeyPress(KeyPressEvent e) {
+        if (e.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
+            solve(null);
+        }
+    }
+    
     @UiHandler("solveButton")
     void solve(ClickEvent e) {
         match.getPuzzle().setSolution(solution.getText());
         controller.solve();
+    }
+    
+    @UiHandler("response")
+    void responseKeyPress(KeyPressEvent e) {
+        if (e.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
+            respond(null);
+        }
     }
     
     @UiHandler("respondButton")
@@ -112,39 +130,15 @@ public class UltraghostPresenter extends VograbularyPresenter implements Ultragh
     void next(ClickEvent e) {
         controller.start();
     }
-//      table.addListener(new InputListener() {
-//          @Override
-//          public boolean keyUp(InputEvent event, int keycode) {
-//              if (keycode == Input.Keys.ENTER) {
-//                  ChangeListener.ChangeEvent changeEvent = 
-//                          new ChangeListener.ChangeEvent();
-//                  for (TextButton button : focusButtons) {
-//                      if (button.isVisible()) {
-//                          button.fire(changeEvent);
-//                          return true;
-//                      }
-//                  }
-//              }
-//              return false;
-//          }
-//      });
-//      // On some platforms, setting the focus in an enter key handler is
-//      // not compatible with the default focus traversal. Disable it.
-//      solution.setFocusTraversal(false);
-//      response.setFocusTraversal(false);
-//      
-//      focusNextButton();
-//  }
-//  
-//  public void clear() {
-//      studentName.setText(" ");
-//      letters.setText(" ");
-//      solution.setText("");
-//      response.setText("");
-//      hint.setText(" ");
-//      result.setText("");
-//      scores.setText("");
-//  }
+    
+    private void focusField(TextBox target) {
+        for (TextBox field : focusFields) {
+            field.setEnabled(target == field);
+        }
+        if (target != null) {
+            target.setFocus(true);
+        }
+    }
 
     private void focusButton(Button target) {
         Student winner = match.getWinner();
@@ -160,18 +154,19 @@ public class UltraghostPresenter extends VograbularyPresenter implements Ultragh
     @Override
     public void focusSolution() {
         focusButton(solveButton);
-        solution.setFocus(true);
+        focusField(solution);
     }
     
     @Override
     public void focusResponse() {
         focusButton(respondButton);
-        response.setFocus(true);
+        focusField(response);
     }
     
     @Override
     public void focusNextButton() {
         focusButton(nextButton);
+        focusField(null);
         nextButton.setFocus(true);
     }
     
