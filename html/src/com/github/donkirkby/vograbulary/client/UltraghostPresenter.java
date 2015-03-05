@@ -73,6 +73,7 @@ public class UltraghostPresenter extends VograbularyPresenter implements Ultragh
     private List<Button> focusButtons;
     private List<TextBox> focusFields;
     private GwtPreferences preferences;
+    private GwtScheduler scheduler;
 
     public UltraghostPresenter(GwtPreferences preferences) {
         initWidget(uiBinder.createAndBindUi(this));
@@ -81,12 +82,11 @@ public class UltraghostPresenter extends VograbularyPresenter implements Ultragh
         String wordListText = Assets.INSTANCE.wordList().getText();
         WordList wordList = new WordList();
         wordList.read(Arrays.asList(wordListText.split("\\n")));
+        controller.setPreferences(preferences);
         controller.setWordList(wordList);
-        controller.setScheduler(new GwtScheduler());
+        scheduler = new GwtScheduler();
+        controller.setScheduler(scheduler);
 
-//      Match match = controller.getMatch();
-//      match.setMinimumWordLength(
-//              preferences.getUltraghostMinimumWordLength());
 //      match.setHyperghost(isHyperghost);
   
         focusButtons = Arrays.asList(solveButton, respondButton, nextButton);
@@ -131,12 +131,18 @@ public class UltraghostPresenter extends VograbularyPresenter implements Ultragh
         controller.start();
     }
     
-    private void focusField(TextBox target) {
+    private void focusField(final TextBox target) {
         for (TextBox field : focusFields) {
             field.setEnabled(target == field);
         }
         if (target != null) {
             target.setFocus(true);
+            scheduler.scheduleDeferred(new Runnable() {
+                @Override
+                public void run() {
+                    target.selectAll();
+                }
+            });
         }
     }
 

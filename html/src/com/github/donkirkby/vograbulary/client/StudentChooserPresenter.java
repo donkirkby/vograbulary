@@ -10,6 +10,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.CellPreviewEvent;
 import com.google.gwt.view.client.CellPreviewEvent.Handler;
@@ -27,6 +28,12 @@ public class StudentChooserPresenter extends VograbularyPresenter {
     
     @UiField
     HTMLPanel studentPanel;
+    
+    @UiField
+    ListBox wordLength;
+    
+    @UiField
+    ListBox vocabularySize;
     
     @UiField
     Button startButton;
@@ -57,10 +64,34 @@ public class StudentChooserPresenter extends VograbularyPresenter {
         studentList.setSelectionModel(selectionModel, selectionManager);
         studentPanel.add(studentList);
         studentList.setRowData(preferences.getStudentNames());
+        setListBoxValue(
+                wordLength,
+                preferences.getUltraghostMinimumWordLength());
+        setListBoxValue(
+                vocabularySize,
+                preferences.getComputerStudentVocabularySize());
+    }
+    
+    private void setListBoxValue(ListBox listBox, int value) {
+        for (int i = 0; i < listBox.getItemCount(); i++) {
+            if (Integer.parseInt(listBox.getItemText(i)) == value) {
+                listBox.setSelectedIndex(i);
+                return;
+            }
+        }
+        listBox.setSelectedIndex(0);
+    }
+    
+    private int getListBoxValue(ListBox listBox) {
+        return Integer.parseInt(listBox.getItemText(listBox.getSelectedIndex()));
     }
     
     @UiHandler("startButton")
     void start(ClickEvent view) {
+        preferences.setUltraghostMinimumWordLength(
+                getListBoxValue(wordLength));
+        preferences.setComputerStudentVocabularySize(
+                getListBoxValue(vocabularySize));
         UltraghostPresenter presenter = new UltraghostPresenter(preferences);
         presenter.setStudents(selectionModel.getSelectedSet());
         presenter.setHyperghost(isHyperghost);
