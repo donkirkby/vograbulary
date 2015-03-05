@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.github.donkirkby.vograbulary.Scheduler;
+import com.github.donkirkby.vograbulary.VograbularyPreferences;
 import com.github.donkirkby.vograbulary.ultraghost.Student.StudentListener;
 
 public class Controller implements StudentListener {
@@ -14,6 +15,7 @@ public class Controller implements StudentListener {
     //resumeJesting
 
     private UltraghostRandom random = new UltraghostRandom();
+    private VograbularyPreferences preferences;
     private UltraghostScreen screen;
     private WordList wordList = new WordList();
     private Runnable searchTask;
@@ -23,6 +25,13 @@ public class Controller implements StudentListener {
     public void setRandom(UltraghostRandom random) {
         this.random = random;
         random.loadWordList(wordList);
+    }
+    
+    public void setPreferences(VograbularyPreferences preferences) {
+        this.preferences = preferences;
+    }
+    public VograbularyPreferences getPreferences() {
+        return preferences;
     }
 
     public void setScreen(UltraghostScreen screen) {
@@ -137,6 +146,8 @@ public class Controller implements StudentListener {
                     MATCH_SCORE, 
                     students.toArray(new Student[students.size()]));
             match.setRandom(random);
+            match.setMinimumWordLength(
+                    preferences.getUltraghostMinimumWordLength());
             screen.setMatch(match);
             for (Student student : students) {
                 student.setMatch(match);

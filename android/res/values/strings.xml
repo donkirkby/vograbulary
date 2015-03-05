@@ -25,5 +25,7 @@
     <string name="example_summary">Summary</string>
     <string name="example_result">result</string>
     <string name="example_hint">HINT</string>
+    <string name="choose_word_length">Minimum word length is 0.</string>
+    <string name="choose_vocabulary_size">Computer\'s vocabulary size is 0.</string>
 
 </resources>

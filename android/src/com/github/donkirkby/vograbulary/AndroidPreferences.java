@@ -27,14 +27,31 @@ public class AndroidPreferences extends VograbularyPreferences {
 
     @Override
     protected void putStringSet(String key, Set<String> values) {
+        getEditor().putStringSet(key, values);
+    }
+
+    private Editor getEditor() {
         if (editor == null) {
+            
             editor = preferences.edit();
         }
-        editor.putStringSet(key, values);
+        return editor;
     }
     
     @Override
     public void apply() {
-        editor.apply();
+        if (editor != null) {
+            editor.apply();
+        }
+    }
+
+    @Override
+    protected void putInteger(String key, int value) {
+        getEditor().putInt(key, value);
+    }
+
+    @Override
+    protected int getInteger(String key, int defaultValue) {
+        return preferences.getInt(key, defaultValue);
     }
 }

@@ -91,7 +91,9 @@ extends VograbularyActivity implements UltraghostScreen, StudentListener {
             }
         });
         
+        AndroidPreferences preferences = new AndroidPreferences(this);
         controller = new Controller();
+        controller.setPreferences(preferences);
         controller.setRandom(new UltraghostRandom());
         controller.setScheduler(new AndroidScheduler());
         controller.setScreen(this);
@@ -104,8 +106,7 @@ extends VograbularyActivity implements UltraghostScreen, StudentListener {
         WordList wordList = new WordList();
         wordList.read(wordSource);
         if (studentNames.length < 2) {
-            ComputerStudent computerStudent = new ComputerStudent(
-                    new AndroidPreferences(this));
+            ComputerStudent computerStudent = new ComputerStudent(preferences);
             computerStudent.setWordList(wordList);
             computerStudent.setListener(this);
             computerStudent.setSearchBatchSize(30);

@@ -30,17 +30,36 @@ public class GwtPreferences extends VograbularyPreferences {
             cookie.append(string);
         }
         
+        setCookie(key, cookie.toString());
+    }
+
+    private void setCookie(String key, String value) {
         Date expires = new Date(System.currentTimeMillis() + COOKIE_LIFETIME);
-        Cookies.setCookie(COOKIE_ROOT + key, cookie.toString(), expires);
+        Cookies.setCookie(COOKIE_ROOT + key, value, expires);
     }
 
     @Override
     protected Set<String> getStringSet(String key, Set<String> defValues) {
-        String cookie = Cookies.getCookie(COOKIE_ROOT + key);
+        String cookie = getCookie(key);
         if (cookie == null) {
             return defValues;
         }
         return new HashSet<>(Arrays.asList(cookie.split("\\|")));
+    }
+
+    private String getCookie(String key) {
+        return Cookies.getCookie(COOKIE_ROOT + key);
+    }
+
+    @Override
+    protected void putInteger(String key, int value) {
+        setCookie(key, Integer.toString(value));
+    }
+
+    @Override
+    protected int getInteger(String key, int defaultValue) {
+        String cookie = getCookie(key);
+        return cookie == null ? defaultValue : Integer.parseInt(cookie);
     }
 
 }

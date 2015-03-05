@@ -59,6 +59,7 @@ public class ControllerTest {
         computerStudent = new ComputerStudent(preferences);
         controller = new Controller();
         searchTask = null;
+        controller.setPreferences(preferences);
         controller.setScheduler(scheduler);
         controller.setWordList(wordList);
         controller.setRandom(random);
@@ -360,6 +361,9 @@ public class ControllerTest {
     public void newMatch() {
         controller.start();
         Match match1 = controller.getMatch();
+        int expectedWordLength = 7;
+        when(preferences.getUltraghostMinimumWordLength()).thenReturn(
+                expectedWordLength);
         
         controller.clearStudents();
         controller.addStudent(student);
@@ -371,6 +375,10 @@ public class ControllerTest {
         
         assertThat("match1", match1, notNullValue());
         assertThat("match2", match2, allOf(notNullValue(), not(match1)));
+        assertThat(
+                "word length",
+                match2.getPuzzle().getMinimumWordLength(),
+                is(expectedWordLength));
     }
     
     @Test
@@ -402,6 +410,7 @@ public class ControllerTest {
     @Test
     public void addStudent() {
         controller = new Controller();
+        controller.setPreferences(preferences);
         controller.setScreen(new DummyScreen());
         
         controller.addStudent(student);
@@ -416,6 +425,7 @@ public class ControllerTest {
     @Test
     public void addStudentAfterGetMatch() {
         controller = new Controller();
+        controller.setPreferences(preferences);
         controller.setScreen(new DummyScreen());
         
         controller.getMatch();

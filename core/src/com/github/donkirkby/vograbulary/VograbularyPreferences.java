@@ -8,12 +8,10 @@ import java.util.List;
 import java.util.Set;
 
 public abstract class VograbularyPreferences {
-//    //stopJesting
 //    private static final String DEFAULT_STUDENT_SELECTIONS = "YY";
-//    private static final int DEFAULT_VOCABULARY_SIZE = 5000;
-//    private static final int DEFAULT_ULTRAGHOST_MINIMUM_WORD_LENGTH = 4;
-//    //resumeJesting
-//
+    private static final int DEFAULT_VOCABULARY_SIZE = 5000;
+    private static final int DEFAULT_ULTRAGHOST_MINIMUM_WORD_LENGTH = 4;
+
     private enum Fields { 
         STUDENT_NAMES,
         STUDENT_SELECTIONS,
@@ -28,6 +26,9 @@ public abstract class VograbularyPreferences {
     protected abstract Set<String> getStringSet(
             String key,
             Set<String> defValues);
+    
+    protected abstract void putInteger(String key, int value);
+    protected abstract int getInteger(String key, int defaultValue);
 
     /**
      * Store any changes submitted through the put methods.
@@ -63,27 +64,26 @@ public abstract class VograbularyPreferences {
 //    }
 //    
     public int getComputerStudentVocabularySize() {
-        return 10000;
-//        return preferences.getInteger(
-//                Fields.COMPUTER_STUDENT_VOCABULARY_SIZE.name(), 
-//                DEFAULT_VOCABULARY_SIZE);
+        return getInteger(
+                Fields.COMPUTER_STUDENT_VOCABULARY_SIZE.name(),
+                DEFAULT_VOCABULARY_SIZE);
     }
-//    public void setComputerStudentVocabularySize(int vocabularySize) {
-//        preferences.putInteger(
-//                Fields.COMPUTER_STUDENT_VOCABULARY_SIZE.name(), 
-//                vocabularySize);
-//        preferences.flush();
-//    }
-//    
-//    public int getUltraghostMinimumWordLength() {
-//        return preferences.getInteger(
-//                Fields.ULTRAGHOST_MINIMUM_WORD_LENGTH.name(), 
-//                DEFAULT_ULTRAGHOST_MINIMUM_WORD_LENGTH);
-//    }
-//    public void setUltraghostMinimumWordLength(int wordLength) {
-//        preferences.putInteger(
-//                Fields.ULTRAGHOST_MINIMUM_WORD_LENGTH.name(), 
-//                wordLength);
-//        preferences.flush();
-//    }
+    public void setComputerStudentVocabularySize(int vocabularySize) {
+        putInteger(
+                Fields.COMPUTER_STUDENT_VOCABULARY_SIZE.name(), 
+                vocabularySize);
+        apply();
+    }
+
+    public int getUltraghostMinimumWordLength() {
+        return getInteger(
+                Fields.ULTRAGHOST_MINIMUM_WORD_LENGTH.name(), 
+                DEFAULT_ULTRAGHOST_MINIMUM_WORD_LENGTH);
+    }
+    public void setUltraghostMinimumWordLength(int wordLength) {
+        putInteger(
+                Fields.ULTRAGHOST_MINIMUM_WORD_LENGTH.name(), 
+                wordLength);
+        apply();
+    }
 }

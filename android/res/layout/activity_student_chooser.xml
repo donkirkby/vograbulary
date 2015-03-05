@@ -19,6 +19,28 @@
 
     </ListView>
 
+    <TextView
+        android:id="@+id/wordLengthLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/choose_word_length" />
+
+    <SeekBar
+        android:id="@+id/wordLengthSlider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/vocabularySizeLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/choose_vocabulary_size" />
+
+    <SeekBar
+        android:id="@+id/vocabularySizeSlider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <Button
         android:id="@+id/startButton"
         android:layout_width="fill_parent"
