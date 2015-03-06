@@ -19,11 +19,11 @@ import com.github.donkirkby.vograbulary.ultraghost.Controller;
 import com.github.donkirkby.vograbulary.ultraghost.Match;
 import com.github.donkirkby.vograbulary.ultraghost.Puzzle;
 import com.github.donkirkby.vograbulary.ultraghost.Student;
+import com.github.donkirkby.vograbulary.ultraghost.Student.StudentListener;
 import com.github.donkirkby.vograbulary.ultraghost.UltraghostRandom;
 import com.github.donkirkby.vograbulary.ultraghost.UltraghostScreen;
 import com.github.donkirkby.vograbulary.ultraghost.WordList;
 import com.github.donkirkby.vograbulary.ultraghost.WordResult;
-import com.github.donkirkby.vograbulary.ultraghost.Student.StudentListener;
 
 public class UltraghostActivity
 extends VograbularyActivity implements UltraghostScreen, StudentListener {
@@ -70,18 +70,16 @@ extends VograbularyActivity implements UltraghostScreen, StudentListener {
         focusButtons = Arrays.asList(solveButton, respondButton, nextButton);
         handler = new Handler();
         
-        solution.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        TextView.OnEditorActionListener actionListener = new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                solve(null);
-                return true;
-            }
-        });
-        
-        response.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (respondButton.getVisibility() == View.VISIBLE) {
+                if (event != null && event.getAction() != KeyEvent.ACTION_DOWN) {
+                    return false;
+                }
+                if (solveButton.getVisibility() == View.VISIBLE) {
+                    solve(null);
+                }
+                else if (respondButton.getVisibility() == View.VISIBLE) {
                     respond(null);
                 }
                 else {
@@ -89,7 +87,9 @@ extends VograbularyActivity implements UltraghostScreen, StudentListener {
                 }
                 return true;
             }
-        });
+        };
+        solution.setOnEditorActionListener(actionListener);
+        response.setOnEditorActionListener(actionListener);
         
         AndroidPreferences preferences = new AndroidPreferences(this);
         controller = new Controller();
