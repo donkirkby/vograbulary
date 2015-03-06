@@ -74,7 +74,7 @@ extends VograbularyActivity implements UltraghostScreen, StudentListener {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (event != null && event.getAction() != KeyEvent.ACTION_DOWN) {
-                    return false;
+                    return true;
                 }
                 if (solveButton.getVisibility() == View.VISIBLE) {
                     solve(null);
