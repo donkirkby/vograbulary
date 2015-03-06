@@ -1,2 +1,0 @@
-# Module com.github.donkirkby.vograbulary.GwtDefinition
-# RPC service class, partial path of RPC policy file

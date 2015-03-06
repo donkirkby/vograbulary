@@ -1,0 +1,20 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+    xmlns:g="urn:import:com.google.gwt.user.client.ui">
+    <ui:style>
+    
+    </ui:style>
+    <g:HTMLPanel>
+        <table>
+            <tr><td>
+                <g:Button ui:field="addButton">Add</g:Button>
+                <g:HTMLPanel ui:field="studentPanel"/>
+            </td><td>
+                <p>Name:
+                <g:TextBox ui:field="studentName"/>
+                </p>
+                <p><g:Button ui:field="deleteButton">Delete</g:Button></p>
+            </td></tr>
+        </table>
+    </g:HTMLPanel>
+</ui:UiBinder> 
