@@ -3,22 +3,38 @@ from nltk.corpus import gutenberg
 from nltk.probability import FreqDist
 from re import match
 import os
+import subprocess
 
 class WordLoader(object):
     def __init__(self):
         self._max_words = 70000
         self._valid_words = set()
+        self._invalid_words = set("""
+clii clix clvi clvii clxi clxii clxiv clxix clxvi clxvii ii iii iv ix lii
+lix lvi lvii lxi lxii lxiv lxix lxvi lxvii vi vii viii x xci xcii xciv
+xcix xcvi xcvii xi xii xiii xiv xix xv xvi xvii xviii xx xxi xxii xxiii
+xxiv xxix xxv xxvi xxvii xxviii xxx xxxi xxxii xxxiii xxxiv xxxix xxxv
+xxxvi xxxvii xxxviii""".split())
         
     def is_valid(self, word):
-        return match(r'^[a-z]+$', word) is not None
+        return match(r'^[a-z]+$', word) is not None and word not in self._invalid_words
+
+    def load_valid_words_from_stream(self, words):
+        for word in words:
+            stripped = word.strip()
+            if (self.is_valid(stripped)):
+                self._valid_words.add(stripped)
 
     def load_valid_words(self, filename):
-        f = open(filename)
-        for word in f:
-            stripped = word.strip()
-            if(self.is_valid(stripped)):
-                self._valid_words.add(stripped)
-        f.close()
+        with open(filename) as f:
+            self.load_valid_words_from_stream(f)
+            
+    def load_valid_words_from_aspell(self, language):
+        process = subprocess.Popen(
+            ['aspell', 'dump', 'master', '--lang', language],
+            stdout=subprocess.PIPE)
+        self.load_valid_words_from_stream(process.stdout)
+        process.communicate() # wait for process to finish
     
     def load_sorted_words(self, filename):
         with open(filename, 'rU') as f:
@@ -176,16 +192,18 @@ class WordLoader(object):
 if __name__ == '__main__':
     loader = WordLoader()
     sorted_words_filename = 'sorted_words.txt'
-    if os.path.isfile(sorted_words_filename):
+    if False and os.path.isfile(sorted_words_filename):
         loader.load_sorted_words(sorted_words_filename)
     else:
-        loader.load_valid_words('/usr/share/dict/british-english')
-        loader.load_valid_words('/usr/share/dict/american-english')
+#         loader.load_valid_words('/usr/share/dict/british-english')
+#         loader.load_valid_words('/usr/share/dict/american-english')
+        loader.load_valid_words_from_aspell("en_GB")
+        loader.load_valid_words_from_aspell("en_US")
         all_words = brown.words() + gutenberg.words()
         loader.write_sorted_words(all_words, sorted_words_filename)
 
-    loader.find_bacronyms(loader.sorted_words)
-#     loader.dump_words(all_words)
+#    loader.find_bacronyms(loader.sorted_words)
+    loader.dump_words(all_words)
 #    loader.print_sandwiches(all_words)
 #     f = open("/home/don/Documents/RussianDolls2.txt")
 #     try:
