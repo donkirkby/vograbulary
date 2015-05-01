@@ -7,6 +7,9 @@ import com.google.gwt.resources.client.TextResource;
 public interface Assets extends ClientBundle {
     public static final Assets INSTANCE = GWT.create(Assets.class);
     
+    @Source("com/github/donkirkby/vograbulary/assets/bacronyms.txt")
+    TextResource bacronyms();
+
     @Source("com/github/donkirkby/vograbulary/assets/russianDolls.txt")
     TextResource russianDolls();
 

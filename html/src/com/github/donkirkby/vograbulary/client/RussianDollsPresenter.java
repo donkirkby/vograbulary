@@ -73,8 +73,8 @@ extends VograbularyPresenter implements RussianDollsScreen {
     @UiField
     ParagraphElement totalDisplay;
     
-    private static RussianDollsCompositeUiBinder uiBinder = GWT
-            .create(RussianDollsCompositeUiBinder.class);
+    private static RussianDollsCompositeUiBinder uiBinder =
+            GWT.create(RussianDollsCompositeUiBinder.class);
     private GwtTargetDisplay targetDisplay1;
     private GwtTargetDisplay targetDisplay2;
 

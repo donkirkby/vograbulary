@@ -29,6 +29,10 @@
             <dt><a href="#russian">Russian Dolls</a></dt>
             <dd>Find the secret word described by a clue. One of the words from
                 the clue is nested inside another to form the secret word.</dd>
+            <dt><a href="#bacronyms">Bacronyms</a></dt>
+            <dd>Each puzzle shows three words. One of them is a bacronym: when
+                you reverse the letters, it spells a different word. Click on
+                the bacronym to solve the puzzle.</dd>
             <dt><a href="#students">Students</a></dt>
             <dd>Edit student names.</dd>
         </dl>

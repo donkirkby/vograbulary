@@ -29,6 +29,9 @@ implements ValueChangeHandler<String>, VograbularyPresenter.NavigationListener {
         else if (event.getValue().equals(StudentEditorPresenter.HISTORY_TOKEN)) {
             presenter = new StudentEditorPresenter(preferences);
         }
+        else if (event.getValue().equals(BacronymsPresenter.HISTORY_TOKEN)) {
+            presenter = new BacronymsPresenter();
+        }
         else {
             presenter = new MainPresenter(preferences);
         }

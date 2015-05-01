@@ -150,8 +150,8 @@ xxxvi xxxvii xxxviii""".split())
                     if display_word == display_word[::-1]:
                         #Both palindromes, give up.
                         continue
-                    if display_word == 'sales':
-                        print frequency_score, word, swapped_word
+#                     if display_word == 'sales':
+#                         print frequency_score, word, swapped_word
                     yield (score, frequency_score, display_word)
             
     def find_bacronyms(self, sorted_words):
@@ -202,8 +202,8 @@ if __name__ == '__main__':
         all_words = brown.words() + gutenberg.words()
         loader.write_sorted_words(all_words, sorted_words_filename)
 
-#    loader.find_bacronyms(loader.sorted_words)
-    loader.dump_words(all_words)
+    loader.find_bacronyms(loader.sorted_words)
+#     loader.dump_words(all_words)
 #    loader.print_sandwiches(all_words)
 #     f = open("/home/don/Documents/RussianDolls2.txt")
 #     try:
