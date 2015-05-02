@@ -3,19 +3,23 @@
               Any modifications will be overwritten.
               To include a user specific buildfile here, simply create one in the same
               directory with the processing instruction <?eclipse.ant.import?>
-              as the first entry and export the buildfile again. --><project basedir="." default="build" name="vograbulary">
+              as the first entry and export the buildfile again. --><project basedir="." default="build" name="vograbulary-core">
     <property environment="env"/>
-    <property name="vograbulary-android.location" value="../vograbulary-android"/>
-    <property name="vograbulary-desktop.location" value="../vograbulary-desktop"/>
-    <property name="vograbulary-html.location" value="../vograbulary-html"/>
+    <property name="vograbulary-android.location" value="../android"/>
+    <property name="vograbulary-html.location" value="../html"/>
     <property name="vograbulary-test.location" value="../vograbulary-test"/>
-    <property name="ECLIPSE_HOME" value="../../../../../opt/eclipse"/>
+    <property name="ECLIPSE_HOME" value="../../../../../opt/eclipse/"/>
+    <property name="junit.output.dir" value="junit"/>
     <property name="debuglevel" value="source,lines,vars"/>
     <property name="target" value="1.7"/>
     <property name="source" value="1.7"/>
-    <path id="vograbulary.classpath">
+    <path id="vograbulary-core.classpath">
         <pathelement location="bin"/>
-        <pathelement location="libs/gdx.jar"/>
+    </path>
+    <path id="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER.libraryclasspath"/>
+    <path id="run.PuzzleTargetValidTest.classpath">
+        <path refid="vograbulary-core.classpath"/>
+        <path refid="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER.libraryclasspath"/>
     </path>
     <target name="init">
         <mkdir dir="bin"/>
@@ -35,18 +39,12 @@
         <echo message="${ant.project.name}: ${ant.file}"/>
         <javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}">
             <src path="src"/>
-            <classpath refid="vograbulary.classpath"/>
+            <classpath refid="vograbulary-core.classpath"/>
         </javac>
     </target>
     <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects">
         <ant antfile="build.xml" dir="${vograbulary-android.location}" inheritAll="false" target="clean"/>
         <ant antfile="build.xml" dir="${vograbulary-android.location}" inheritAll="false" target="build">
-            <propertyset>
-                <propertyref name="build.compiler"/>
-            </propertyset>
-        </ant>
-        <ant antfile="build.xml" dir="${vograbulary-desktop.location}" inheritAll="false" target="clean"/>
-        <ant antfile="build.xml" dir="${vograbulary-desktop.location}" inheritAll="false" target="build">
             <propertyset>
                 <propertyref name="build.compiler"/>
             </propertyset>
@@ -76,5 +74,21 @@
     <target description="compile project with Eclipse compiler" name="build-eclipse-compiler">
         <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
         <antcall target="build"/>
+    </target>
+    <target name="PuzzleTargetValidTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="com.github.donkirkby.vograbulary.core.russian.PuzzleTargetValidTest" todir="${junit.output.dir}"/>
+            <classpath refid="run.PuzzleTargetValidTest.classpath"/>
+        </junit>
+    </target>
+    <target name="junitreport">
+        <junitreport todir="${junit.output.dir}">
+            <fileset dir="${junit.output.dir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="frames" todir="${junit.output.dir}"/>
+        </junitreport>
     </target>
 </project>

@@ -38,9 +38,8 @@ Running Vograbulary
 ===================
 
 You can try the app in a few ways:
- * in [a browser][browser] (requires [WebGL][webgl])
+ * in [a browser][browser] (most of it should even work without Internet access)
  * as an Android app, if you join my [beta testers community][testers]
- * as a Java application: you can download the Java jar from my [releases page][releases] and then run it from a command line: `java -jar vograbulary.jar`
 
 As well as the word challenges, the app will include tools to measure current vocabulary size by testing sample words in an exponential distribution from a word list sorted by usage frequency. For more accurate measurement, the testing will zoom in on the estimated upper limit of the student's vocabulary. 
 
@@ -75,9 +74,8 @@ To publish a release:
 * Commit the `gh-pages` branch and check that the new version works on the web site.
 * Check if the `master` branch has anything to commit. It usually doesn't.
 * Open the Android manifest file, scroll down, and click on the Export Wizard link.
-* Compile the jar file using the Ant build script in the vograbulary-desktop project.
 * Go to the [Google Play page][google], and upload the new version. Also check that the description is up to date, particularly the list of word challenges.
-* Go to the GitHub releases page, create a new release using a tag like `v0.x.0-alpha`. Attach the apk and the jar files.
+* Go to the GitHub [releases page][releases], create a new release using a tag like `v0.x.0-alpha`. Attach the apk file.
 
 License
 =======
@@ -93,7 +91,6 @@ Vograbulary is released under the MIT license.
 Icons by [PixelKit][icons] are released under a [CC-BY license][cc].
 
 [browser]: http://donkirkby.github.io/vograbulary/run/
-[webgl]: http://get.webgl.org/
 [testers]: https://plus.google.com/u/0/communities/103264778621024783530
 [releases]: https://github.com/donkirkby/vograbulary/releases
 [tools]: https://github.com/libgdx/libgdx/wiki/Project-setup%2C-running-%26-debugging
