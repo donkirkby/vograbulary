@@ -43,8 +43,7 @@ public class Controller {
     
     public void solve() {
         String selectedWord = screen.getPuzzle().getSelectedWord();
-        String reversed = new StringBuilder(selectedWord).reverse().toString();
-        if (wordList.contains(reversed)) {
+        if (wordList.contains(selectedWord)) {
             screen.setState(BacronymsScreen.State.SOLVED);
         }
         else {

@@ -54,6 +54,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.github.donkirkby.vograbulary.MainActivity" />
         </activity>
+        <activity android:name="BacronymsActivity" android:label="@string/title_activity_bacronyms"></activity>
     </application>
 
 </manifest>

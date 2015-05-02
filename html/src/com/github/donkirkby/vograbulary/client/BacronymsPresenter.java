@@ -70,7 +70,7 @@ extends VograbularyPresenter implements BacronymsScreen {
     @Override
     public void setPuzzle(Puzzle puzzle) {
         this.puzzle = puzzle;
-        selectWord(-1);
+        displayWords();
     }
     
     @Override
@@ -84,16 +84,14 @@ extends VograbularyPresenter implements BacronymsScreen {
     }
 
     private void selectWord(int selectedIndex) {
+        puzzle.setSelectedIndex(selectedIndex);
+        controller.solve();
+        displayWords();
+    }
+
+    private void displayWords() {
         for (int i = 0; i < wordButtons.size(); i++) {
-            String word = puzzle.getWord(i);
-            if (i == selectedIndex) {
-                word = new StringBuilder(word).reverse().toString();
-            }
-            wordButtons.get(i).setText(word);
-        }
-        if (selectedIndex >= 0) {
-            puzzle.setSelectedIndex(selectedIndex);
-            controller.solve();
+            wordButtons.get(i).setText(puzzle.getWord(i));
         }
     }
     

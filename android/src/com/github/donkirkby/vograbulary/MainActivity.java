@@ -25,6 +25,7 @@ public class MainActivity extends Activity {
                 R.string.title_activity_ultraghost,
                 R.string.title_activity_hyperghost,
                 R.string.title_activity_russian_dolls,
+                R.string.title_activity_bacronyms,
                 R.string.title_activity_students);
         List<String> names = new ArrayList<String>();
         for (Integer menuStringId : menuStringIds) {
@@ -60,6 +61,9 @@ public class MainActivity extends Activity {
         }
         else if (menuStringId == R.string.title_activity_russian_dolls) {
             intent.setClass(this, RussianDollsActivity.class);
+        }
+        else if (menuStringId == R.string.title_activity_bacronyms) {
+            intent.setClass(this, BacronymsActivity.class);
         }
         else {
             intent.setClass(this, StudentEditorActivity.class);

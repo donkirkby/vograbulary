@@ -34,8 +34,15 @@ public class PuzzleTest {
     }
     
     @Test
+    public void wordReversed() {
+        puzzle.setSelectedIndex(1);
+        String word = puzzle.getWord(1);
+        assertThat("word", word, is("elddim"));
+    }
+    
+    @Test
     public void selectFirstWord() {
-        String expectedWord = "left";
+        String expectedWord = "tfel";
         
         puzzle.setSelectedIndex(0);
         String word = puzzle.getSelectedWord();
@@ -45,7 +52,7 @@ public class PuzzleTest {
     
     @Test
     public void selectLastWord() {
-        String expectedWord = "right";
+        String expectedWord = "thgir";
         
         puzzle.setSelectedIndex(2);
         String word = puzzle.getSelectedWord();

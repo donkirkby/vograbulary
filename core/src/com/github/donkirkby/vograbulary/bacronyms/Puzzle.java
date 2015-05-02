@@ -12,7 +12,11 @@ public class Puzzle {
     }
 
     public String getWord(int i) {
-        return words.get(i);
+        String word = words.get(i);
+        if (i == selectedIndex) {
+            word = new StringBuilder(word).reverse().toString();
+        }
+        return word;
     }
     
     public int getSelectedIndex() {
@@ -23,7 +27,7 @@ public class Puzzle {
     }
 
     public String getSelectedWord() {
-        return words.get(selectedIndex);
+        return getWord(selectedIndex);
     }
 
     public boolean isSelected() {
