@@ -2,20 +2,17 @@ Add new words to a student's vocabulary and make the words stick (grab them).
 
 Word Challenges
 ===============
-
 This app will eventually have several word challenges like anagrams, word ladders, and Quizl, but so far it only has the first two word challenges: Ultraghost and Russian Dolls.
 Students will be able to complete these challenges alone or with a timer, against other students, or against an artificial intelligence.
 
 Ultraghost
 ----------
-
 On each turn, you are given a three letter puzzle, like CIP. You have to find a word that starts with the first letter, contains the middle letter, and ends with the last letter. For example, CRISP starts with C, contains I, and ends with P. Once you enter your answer, your opponent has a few seconds to enter a better one. An answer is better if it is shorter, or if it is the same length and comes earlier in the dictionary. For example CLIP is shorter than CRISP. The app will then give you a hint if there are any better words that you didn't think of. For example, CHIP is earlier than CLIP in the dictionary.
 
 If you'd like a few practice puzzles, try GHS, ORG, EOS. Scroll down for my answers.
 
 Russian Dolls
 -------------
-
 So far, this is a solitaire challenge based on an episode of [Ask Me Another][ama]. Each puzzle gives a clue with two words highlighted. One of those words gets put completely inside the other to make the solution word. The letters in each word don't get rearranged, one complete word gets nested inside the other like two Russian dolls. Here's an example puzzle:
 
 >When you are *unable* to find *comfort*.
@@ -26,7 +23,6 @@ When you think you've solved the puzzle, drag the pointer over the place where o
 
 Answers
 -------
-
 My answers for the Ultraghost puzzles from good, to better, to best:
  * GHS - gushes, ghosts, gashes
  * ORG - ordering, offering, orating
@@ -36,7 +32,6 @@ The answer to the Russian Dolls puzzle is "uncomfortable", "comfort" nests insid
 
 Running Vograbulary
 ===================
-
 You can try the app in a few ways:
  * in [a browser][browser] (most of it should even work without Internet access)
  * as an Android app, if you join my [beta testers community][testers]
@@ -49,37 +44,10 @@ Vograbulary will include definitions for the words, brief readings from public d
 
 Contributing
 ============
-
-Vograbulary is built using Eclipse. Install the tools listed under [libgdx prerequisites][tools], clone this project from git, and then import the project files into Eclipse.
-
-To edit the graphics files, edit the contents of vograbulary-test/assets-raw, and then run vograbulary-test/src/com.github.donkirkby.vograbulary.AssetPacker. To change the font, follow the instructions for running [Hiero][hiero]. Launch Hiero, open the vograbulary-test/assets-raw/default.hiero settings file, and then save the font file over vograbulary-android/assets/data/ui/default.fnt. That will also generate default.png, which you need to move back to vograbulary-test/assets-raw/skin/default.png. Finally, run the AssetPacker again.
-
-If you have the tools for building iOS apps, I'm looking for someone to package the iOS version. It sounds like it's [supported by libgdx][iOS], but [not trivial][iOStrouble].
-
-Building a Release
-------------------
-
-Each release is tagged and published in four places: the Android app on Google Play, the Android app on the releases page, the web page, and the Java jar file on the releases page.
-
-Before publishing a release, check the following:
-
-* The unit tests not only pass, but cover the code enough to keep Jester happy. Use the `jester.sh` script in the vograbulary-test project.
-* All the instructions are up to date in the README file.
-* The version numbers have been incremented in the Android manifest file.
-
-To publish a release:
-
-* Right click the vograbulary-html project, and choose Google: GWT Compile. That takes several minutes, and sometimes complains about some classes or methods that aren't supported by the GWT compiler.
-* If the compile is successful, run the `deploy.sh` script in the vograbulary-html project to copy all the files to the web site project. If you checked out the master branch as `~/git/vograbulary`, then the script assumes that you have checked out the `gh-pages` branch as `~/git/vograbulary-gh-pages`.
-* Commit the `gh-pages` branch and check that the new version works on the web site.
-* Check if the `master` branch has anything to commit. It usually doesn't.
-* Open the Android manifest file, scroll down, and click on the Export Wizard link.
-* Go to the [Google Play page][google], and upload the new version. Also check that the description is up to date, particularly the list of word challenges.
-* Go to the GitHub [releases page][releases], create a new release using a tag like `v0.x.0-alpha`. Attach the apk file.
+Want to make Vograbulary better? There are [many ways][contributing] to help.
 
 License
 =======
-
 Vograbulary is released under the MIT license.
 
 [Hamcrest][hamcrest] is released under the BSD 3-Clause License.
@@ -88,21 +56,14 @@ Vograbulary is released under the MIT license.
 
 [Natural Language Toolkit][nltk] is released by the NLTK project under the Apache 2.0 license.
 
-Icons by [PixelKit][icons] are released under a [CC-BY license][cc].
+[Open Iconic icons][icons] are released under the MIT license.
 
 [browser]: http://donkirkby.github.io/vograbulary/run/
 [testers]: https://plus.google.com/u/0/communities/103264778621024783530
-[releases]: https://github.com/donkirkby/vograbulary/releases
-[tools]: https://github.com/libgdx/libgdx/wiki/Project-setup%2C-running-%26-debugging
-[iOS]: http://www.badlogicgames.com/wordpress/?p=3156
-[iOStrouble]: https://github.com/libgdx/libgdx/wiki/Robovm-notes
+[contributing]: https://github.com/donkirkby/vograbulary/blob/master/CONTRIBUTING.md
 [hamcrest]: http://hamcrest.org/JavaHamcrest/
 [mockito]: https://code.google.com/p/mockito/
 [libgdx]: http://libgdx.badlogicgames.com/
 [nltk]: http://nltk.org/
-[hiero]: https://github.com/libgdx/libgdx/wiki/Hiero
-[icons]: https://www.iconfinder.com/PixelKit
-[cc]: http://creativecommons.org/licenses/by/3.0/
+[icons]: https://github.com/iconic/open-iconic
 [ama]: http://www.npr.org/2014/01/30/268462155/russian-dolls
-[google]: https://play.google.com/apps/publish
-
