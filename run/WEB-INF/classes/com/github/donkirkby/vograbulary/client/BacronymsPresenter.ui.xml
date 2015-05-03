@@ -1,0 +1,11 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+    xmlns:g="urn:import:com.google.gwt.user.client.ui">
+    <g:HTMLPanel>
+        <g:Button ui:field="word1"/>
+        <g:Button ui:field="word2"/>
+        <g:Button ui:field="word3"/>
+        <p ui:field="stateText"/>
+        <g:Button ui:field="nextButton">Next</g:Button>
+    </g:HTMLPanel>
+</ui:UiBinder> 
