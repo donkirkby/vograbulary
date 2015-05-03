@@ -130,10 +130,11 @@ public class Puzzle {
     public BigDecimal getScore() {
         float rawScore = 
                 Math.max(0.000101f, 100 * (float)Math.exp(-delay*Math.log(2)/10));
-        int precision = rawScore >= 100 ? 3 : 2;
         return new BigDecimal(
-                rawScore, 
-                new MathContext(precision, RoundingMode.FLOOR));
+                rawScore,
+                rawScore >= 100
+                ? MathContext.DECIMAL32
+                : new MathContext(2, RoundingMode.FLOOR));//2 significant digits
     }
 
     public String adjustScore(float seconds) {

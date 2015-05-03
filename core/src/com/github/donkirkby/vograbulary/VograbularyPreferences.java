@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.Set;
 
 public abstract class VograbularyPreferences {
-    // stopJesting
+    //stopJesting
 //    private static final String DEFAULT_STUDENT_SELECTIONS = "YY";
     private static final int DEFAULT_VOCABULARY_SIZE = 5000;
     private static final int DEFAULT_ULTRAGHOST_MINIMUM_WORD_LENGTH = 4;
-    // resumeJesting
+    //resumeJesting
 
     private enum Fields { 
         STUDENT_NAMES,
