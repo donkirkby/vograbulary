@@ -21,6 +21,12 @@ The two words are "unable" and "comfort". Scroll down for the answer.
 
 When you think you've solved the puzzle, drag the pointer over the place where one word should be inserted into the other. Press the Solve button to check your answer. If you got it right, it will display the combined word. Press the Next button to see the next puzzle.
 
+Bacronyms
+---------
+Another solitaire challenge: this time, each puzzle shows three words. One of
+them is a bacronym: when you reverse the letters, it spells a different word.
+Click on the bacronym to solve the puzzle.
+
 Answers
 -------
 My answers for the Ultraghost puzzles from good, to better, to best:
