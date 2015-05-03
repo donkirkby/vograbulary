@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Puzzle {
+    private static final int NO_SELECTION = Integer.MIN_VALUE;
+    
     private List<String> words = new ArrayList<>();
-    private int selectedIndex = -1;
+    private int selectedIndex = NO_SELECTION;
 
     public void addWord(String word) {
         words.add(word);
@@ -31,6 +33,6 @@ public class Puzzle {
     }
 
     public boolean isSelected() {
-        return selectedIndex >= 0;
+        return selectedIndex != NO_SELECTION;
     }
 }

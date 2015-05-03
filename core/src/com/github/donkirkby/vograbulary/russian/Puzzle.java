@@ -5,6 +5,7 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 
 public class Puzzle {
+    public static final int NO_SELECTION = Integer.MIN_VALUE;
     private String clue;
     private String[] targets;
     private int targetWord;
@@ -47,7 +48,7 @@ public class Puzzle {
      * Clear the target word and character so no solution is selected.
      */
     public void clearTargets() {
-        targetWord = targetCharacter = -1;
+        targetWord = targetCharacter = NO_SELECTION;
     }
 
     /**
@@ -103,7 +104,7 @@ public class Puzzle {
     }
     
     public boolean isTargetSet() {
-        return targetCharacter >= 0;
+        return targetCharacter != NO_SELECTION;
     }
     
     public boolean isSolved() {

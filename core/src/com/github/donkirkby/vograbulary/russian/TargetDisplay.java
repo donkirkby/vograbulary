@@ -94,8 +94,8 @@ public abstract class TargetDisplay {
         }
         visibleBoundary =
                 screenWidth/2
-                - (1+sign)/2 * getLettersWidth()
-                - sign * other.getLettersWidth();
+                - getLettersWidth() * (1+sign)/2
+                - other.getLettersWidth() * sign;
     }
     
     private void recordLetterStartPositions(boolean isMovingLeft) {
@@ -146,7 +146,7 @@ public abstract class TargetDisplay {
             puzzle.clearTargets();
         }
         else {
-            puzzle.setTargetWord((1 - sign)/2);
+            puzzle.setTargetWord(sign == 1 ? 0 : 1);
             puzzle.setTargetCharacter(before.size());
         }
         

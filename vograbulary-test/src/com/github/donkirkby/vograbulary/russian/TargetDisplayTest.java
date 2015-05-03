@@ -212,9 +212,30 @@ public class TargetDisplayTest {
     }
     
     @Test
+    public void dragPast() {
+        // The drag position is always the pointer position relative to the
+        // text field.
+        int startX = 0;
+        int dragX1 = 110;
+        int dragX2 = 40;
+        
+        leftDisplay.dragStart(startX);
+        leftDisplay.drag(dragX1);
+        leftDisplay.dragStop();
+        leftDisplay.dragStart(startX);
+        leftDisplay.drag(dragX2);
+        
+        assertThat(
+                "right drag visible",
+                rightDisplay.isDragVisible(),
+                is(false));
+    }
+    
+    @Test
     public void hideRight() {
-        int startX = 10;
-        int dragX = 11;
+        // Visible boundary should be right at zero.
+        int startX = 0;
+        int dragX = 1;
         
         leftDisplay.dragStart(startX);
         leftDisplay.drag(dragX);
@@ -224,8 +245,9 @@ public class TargetDisplayTest {
     
     @Test
     public void showRight() {
-        int startX = 10;
-        int dragX = 9;
+        // Visible boundary should be right at zero.
+        int startX = 0;
+        int dragX = -1;
         
         leftDisplay.dragStart(startX);
         leftDisplay.drag(dragX);
@@ -235,6 +257,7 @@ public class TargetDisplayTest {
     
     @Test
     public void hideLeft() {
+        // Visible boundary should be right at 65.
         int startX = 65;
         int dragX = 64;
         
@@ -268,7 +291,7 @@ public class TargetDisplayTest {
         leftDisplay.drag(dragX);
         
         assertThat("target position", rightLetters.get(0).getLeft(), is(69));
-        assertThat("target character", puzzle.getTargetCharacter(), is(-1));
+        assertThat("target set", puzzle.isTargetSet(), is(false));
     }
     
     @Test

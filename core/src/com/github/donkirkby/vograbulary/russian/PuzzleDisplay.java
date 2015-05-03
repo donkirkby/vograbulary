@@ -41,9 +41,6 @@ public class PuzzleDisplay {
         calculateInsertionForWord(insertX, 1);
     }
     private void calculateInsertionForWord(int insertX, int wordIndex) {
-        if (puzzle.getTargetWord() >= 0) {
-            return; // already found target;
-        }
         TargetEntry entry = targetEntries[wordIndex];
         if (insertX < entry.left || entry.left + entry.width < insertX) {
             return;

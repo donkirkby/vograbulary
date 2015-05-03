@@ -15,6 +15,7 @@ import org.junit.runners.Parameterized.Parameters;
 
 @RunWith(Parameterized.class)
 public class PuzzleDisplayTest {
+    private static final int NO_SELECTION = Puzzle.NO_SELECTION;
     private Puzzle puzzle;
     private PuzzleDisplay display;
     
@@ -30,11 +31,11 @@ public class PuzzleDisplayTest {
     @Parameters(name="insert at {0} selects word {1} char {2}")
     public static List<Object[]> getParameters() {
         return Arrays.asList(new Object[][] {
-                {  45, -1,-1 }, // between the two targets: no selection
-                {  14,  0, 1 }, // each letter is 10 pixels wide
-                {   4,  0,-1 }, // before the first letter is not valid
-                {  15,  0, 2 }, // round up when we pass half a letter
-                {  55,  1, 1 }  // second word
+                {  55, NO_SELECTION, NO_SELECTION }, // between the two targets
+                {  24,  0, 1 }, // each letter is 10 pixels wide
+                {  14,  0, NO_SELECTION }, // before the first letter
+                {  25,  0, 2 }, // round up when we pass half a letter
+                {  65,  1, 1 }  // second word
         });
     }
 
@@ -43,9 +44,9 @@ public class PuzzleDisplayTest {
         puzzle = new Puzzle("LEFT RIGHT");
         display = new PuzzleDisplay();
         display.setPuzzle(puzzle);
-        int word1Left = 0;
+        int word1Left = 10;
         int word1Width = 40;
-        int word2Left = 50;
+        int word2Left = 60;
         int word2Width = 50;
         display.setTargetPositions(word1Left, word1Width, word2Left, word2Width);
     }
