@@ -2,9 +2,9 @@
 <html>
 
   <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Vograbulary : Add new words to a student&#39;s vocabulary and make the words stick (grab them)." />
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Vograbulary : Add new words to a student&#39;s vocabulary and make the words stick (grab them).">
 
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
@@ -34,20 +34,20 @@
         <p>Add new words to a student's vocabulary and make the words stick (grab them).</p>
 
 <h1>
-<a name="word-challenges" class="anchor" href="#word-challenges"><span class="octicon octicon-link"></span></a>Word Challenges</h1>
+<a id="word-challenges" class="anchor" href="#word-challenges" aria-hidden="true"><span class="octicon octicon-link"></span></a>Word Challenges</h1>
 
 <p>This app will eventually have several word challenges like anagrams, word ladders, and Quizl, but so far it only has the first two word challenges: Ultraghost and Russian Dolls.
 Students will be able to complete these challenges alone or with a timer, against other students, or against an artificial intelligence.</p>
 
 <h2>
-<a name="ultraghost" class="anchor" href="#ultraghost"><span class="octicon octicon-link"></span></a>Ultraghost</h2>
+<a id="ultraghost" class="anchor" href="#ultraghost" aria-hidden="true"><span class="octicon octicon-link"></span></a>Ultraghost</h2>
 
 <p>On each turn, you are given a three letter puzzle, like CIP. You have to find a word that starts with the first letter, contains the middle letter, and ends with the last letter. For example, CRISP starts with C, contains I, and ends with P. Once you enter your answer, your opponent has a few seconds to enter a better one. An answer is better if it is shorter, or if it is the same length and comes earlier in the dictionary. For example CLIP is shorter than CRISP. The app will then give you a hint if there are any better words that you didn't think of. For example, CHIP is earlier than CLIP in the dictionary.</p>
 
 <p>If you'd like a few practice puzzles, try GHS, ORG, EOS. Scroll down for my answers.</p>
 
 <h2>
-<a name="russian-dolls" class="anchor" href="#russian-dolls"><span class="octicon octicon-link"></span></a>Russian Dolls</h2>
+<a id="russian-dolls" class="anchor" href="#russian-dolls" aria-hidden="true"><span class="octicon octicon-link"></span></a>Russian Dolls</h2>
 
 <p>So far, this is a solitaire challenge based on an episode of <a href="http://www.npr.org/2014/01/30/268462155/russian-dolls">Ask Me Another</a>. Each puzzle gives a clue with two words highlighted. One of those words gets put completely inside the other to make the solution word. The letters in each word don't get rearranged, one complete word gets nested inside the other like two Russian dolls. Here's an example puzzle:</p>
 
@@ -60,7 +60,14 @@ Students will be able to complete these challenges alone or with a timer, agains
 <p>When you think you've solved the puzzle, drag the pointer over the place where one word should be inserted into the other. Press the Solve button to check your answer. If you got it right, it will display the combined word. Press the Next button to see the next puzzle.</p>
 
 <h2>
-<a name="answers" class="anchor" href="#answers"><span class="octicon octicon-link"></span></a>Answers</h2>
+<a id="bacronyms" class="anchor" href="#bacronyms" aria-hidden="true"><span class="octicon octicon-link"></span></a>Bacronyms</h2>
+
+<p>Another solitaire challenge: this time, each puzzle shows three words. One of
+them is a bacronym: when you reverse the letters, it spells a different word.
+Click on the bacronym to solve the puzzle.</p>
+
+<h2>
+<a id="answers" class="anchor" href="#answers" aria-hidden="true"><span class="octicon octicon-link"></span></a>Answers</h2>
 
 <p>My answers for the Ultraghost puzzles from good, to better, to best:</p>
 
@@ -68,36 +75,34 @@ Students will be able to complete these challenges alone or with a timer, agains
 <li>GHS - gushes, ghosts, gashes</li>
 <li>ORG - ordering, offering, orating</li>
 <li>EOS - errors, eons, egos﻿</li>
-</ul><p>The answer to the Russian Dolls puzzle is "uncomfortable", "comfort" nests inside "unable" to form "uncomfortable".</p>
+</ul>
+
+<p>The answer to the Russian Dolls puzzle is "uncomfortable", "comfort" nests inside "unable" to form "uncomfortable".</p>
 
 <h1>
-<a name="running-vograbulary" class="anchor" href="#running-vograbulary"><span class="octicon octicon-link"></span></a>Running Vograbulary</h1>
+<a id="running-vograbulary" class="anchor" href="#running-vograbulary" aria-hidden="true"><span class="octicon octicon-link"></span></a>Running Vograbulary</h1>
 
 <p>You can try the app in a few ways:</p>
 
 <ul>
-<li>in <a href="http://donkirkby.github.io/vograbulary/run/">a browser</a> (requires <a href="http://get.webgl.org/">WebGL</a>)</li>
+<li>in <a href="http://donkirkby.github.io/vograbulary/run/">a browser</a> (most of it should even work without Internet access)</li>
 <li>as an Android app, if you join my <a href="https://plus.google.com/u/0/communities/103264778621024783530">beta testers community</a>
 </li>
-<li>as a Java application: you can download the Java jar from my <a href="https://github.com/donkirkby/vograbulary/releases">releases page</a> and then run it from a command line: <code>java -jar vograbulary.jar</code>
-</li>
-</ul><p>As well as the word challenges, the app will include tools to measure current vocabulary size by testing sample words in an exponential distribution from a word list sorted by usage frequency. For more accurate measurement, the testing will zoom in on the estimated upper limit of the student's vocabulary. </p>
+</ul>
+
+<p>As well as the word challenges, the app will include tools to measure current vocabulary size by testing sample words in an exponential distribution from a word list sorted by usage frequency. For more accurate measurement, the testing will zoom in on the estimated upper limit of the student's vocabulary. </p>
 
 <p>Once approximate vocabulary size is known, it can be expanded by drilling new words with spaced-repetition flashcards. </p>
 
 <p>Vograbulary will include definitions for the words, brief readings from public domain works, plus links to the complete works for further reading.</p>
 
 <h1>
-<a name="contributing" class="anchor" href="#contributing"><span class="octicon octicon-link"></span></a>Contributing</h1>
+<a id="contributing" class="anchor" href="#contributing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Contributing</h1>
 
-<p>Vograbulary is built using Eclipse. Install the tools listed under <a href="https://github.com/libgdx/libgdx/wiki/Project-setup%2C-running-%26-debugging">libgdx prerequisites</a>, clone this project from git, and then import the project files into Eclipse.</p>
-
-<p>To edit the graphics files, edit the contents of vograbulary-test/assets-raw, and then run vograbulary-test/src/com.github.donkirkby.vograbulary.AssetPacker. To change the font, follow the instructions for running <a href="https://github.com/libgdx/libgdx/wiki/Hiero">Hiero</a>. Launch Hiero, open the vograbulary-test/assets-raw/default.hiero settings file, and then save the font file over vograbulary-android/assets/data/ui/default.fnt. That will also generate default.png, which you need to move back to vograbulary-test/assets-raw/skin/default.png. Finally, run the AssetPacker again.</p>
-
-<p>If you have the tools for building iOS apps, I'm looking for someone to package the iOS version. It sounds like it's <a href="http://www.badlogicgames.com/wordpress/?p=3156">supported by libgdx</a>, but <a href="https://github.com/libgdx/libgdx/wiki/Robovm-notes">not trivial</a>.</p>
+<p>Want to make Vograbulary better? There are <a href="https://github.com/donkirkby/vograbulary/blob/master/CONTRIBUTING.md">many ways</a> to help.</p>
 
 <h1>
-<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h1>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h1>
 
 <p>Vograbulary is released under the MIT license.</p>
 
@@ -107,7 +112,7 @@ Students will be able to complete these challenges alone or with a timer, agains
 
 <p><a href="http://nltk.org/">Natural Language Toolkit</a> is released by the NLTK project under the Apache 2.0 license.</p>
 
-<p>Icons by <a href="https://www.iconfinder.com/PixelKit">PixelKit</a> are released under a <a href="http://creativecommons.org/licenses/by/3.0/">CC-BY license</a>.</p>
+<p><a href="https://github.com/iconic/open-iconic">Open Iconic icons</a> are released under the MIT license.</p>
       </section>
     </div>
 
@@ -115,7 +120,7 @@ Students will be able to complete these challenges alone or with a timer, agains
     <div id="footer_wrap" class="outer">
       <footer class="inner">
         <p class="copyright">Vograbulary maintained by <a href="https://github.com/donkirkby">donkirkby</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
       </footer>
     </div>
 
