@@ -60,6 +60,11 @@ To publish a release:
 * Go to the [Google Play page][google], and upload the new version's APK file.
     Also check that the description is up to date, particularly the list of word
     challenges.
+* If you need to update screenshots, you can either take a screenshot on the
+    device by pressing power and volume down at the same time, or you can take
+    a screenshot from the Android emulator. In Eclipse, choose Window: Show
+    View: Other: Android: Devices. Select the emulator, then click the camera
+    icon.
 * Go to the GitHub [releases page][releases], create a new release using a tag
     like `v0.x.0-alpha`. Attach the APK file.
 

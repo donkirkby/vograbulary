@@ -2,8 +2,10 @@ Add new words to a student's vocabulary and make the words stick (grab them).
 
 Word Challenges
 ===============
-This app will eventually have several word challenges like anagrams, word ladders, and Quizl, but so far it only has the first two word challenges: Ultraghost and Russian Dolls.
-Students will be able to complete these challenges alone or with a timer, against other students, or against an artificial intelligence.
+This app will eventually have several word challenges like anagrams, word
+ladders, and Quizl. The current challenges are listed below.
+Students will be able to complete these challenges alone or with a timer,
+against other students, or against the computer.
 
 Ultraghost
 ----------
