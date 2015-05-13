@@ -81,6 +81,7 @@ extends VograbularyPresenter implements BacronymsScreen {
     public void setState(State state) {
         this.state = state;
         stateText.setInnerText(state.name());
+        nextButton.setVisible(state == State.SOLVED);
     }
 
     private void selectWord(int selectedIndex) {

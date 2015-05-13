@@ -49,6 +49,10 @@ extends VograbularyActivity implements BacronymsScreen {
     public void setState(State state) {
         this.state = state;
         stateText.setText(state.name());
+        nextButton.setVisibility(
+                state == State.SOLVED
+                ? View.VISIBLE
+                : View.INVISIBLE);
     }
 
     @Override
