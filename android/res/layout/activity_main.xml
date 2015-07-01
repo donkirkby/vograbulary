@@ -17,10 +17,8 @@
         android:id="@+id/prompt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_weight="1"
         android:text="@string/choose_challenge"
-        android:textSize="@dimen/abc_action_bar_title_text_size" />
+        android:textSize="24sp" />
 
     <ListView
         android:id="@+id/challengeList"
