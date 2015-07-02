@@ -17,6 +17,7 @@ public class Puzzle {
     }
     public static String NOT_SET = null;
     public static String NO_SOLUTION = "";
+    public static float MAX_DELAY = 50; // seconds
     
     private String letters;
     private String solution;
@@ -29,6 +30,8 @@ public class Puzzle {
     private ArrayList<Listener> listeners = 
             new ArrayList<Listener>();
     private boolean isComplete;
+    private float solutionDelay;
+    private float responseDelay;
     
     public Puzzle(String letters, Student owner, WordList wordList) {
         if (letters == null) {
@@ -328,5 +331,30 @@ public class Puzzle {
     
     public void addListener(Listener listener) {
         listeners.add(listener);
+    }
+    
+    public int getScore() {
+        WordResult result = getResult();
+        return getScore(result);
+    }
+
+    public int getScore(WordResult result) {
+        float baseScore = Math.max(0, MAX_DELAY - solutionDelay);
+        float responseDelayLeft =
+                Math.max(0, MAX_DELAY/2 - responseDelay)/MAX_DELAY*2;
+        float resultRatio = 
+                ((float)result.getScore()) / WordResult.NOT_IMPROVED.getScore();
+        float adjustedScore = baseScore * (1 - (1 - resultRatio) * responseDelayLeft);
+        return Math.round(2 * adjustedScore);
+    }
+
+    public int adjustScore(float seconds) {
+        if (solution == null) {
+            solutionDelay += seconds;
+        }
+        else {
+            responseDelay += seconds;
+        }
+        return getScore(WordResult.NOT_IMPROVED);
     }
 }

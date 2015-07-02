@@ -27,16 +27,27 @@ public class ControllerTest {
     private Student student2;
     private ComputerStudent computerStudent;
     private VograbularyPreferences preferences;
+    private Runnable scoreTask;
     private Runnable searchTask;
     private Scheduler scheduler = new Scheduler() {
         @Override
         public void scheduleRepeating(Runnable task, int periodMilliseconds) {
-            searchTask = task;
+            if (scoreTask == null) {
+                scoreTask = task;
+            }
+            else {
+                searchTask = task;
+            }
         }
         
         @Override
         public void cancel(Runnable task) {
-            searchTask = null;
+            if (scoreTask == task) {
+                scoreTask = null;
+            }
+            else {
+                searchTask = null;
+            }
         }
     };
     
@@ -58,6 +69,7 @@ public class ControllerTest {
         student2 = new Student("Student 2");
         computerStudent = new ComputerStudent(preferences);
         controller = new Controller();
+        scoreTask = null;
         searchTask = null;
         controller.setPreferences(preferences);
         controller.setScheduler(scheduler);
@@ -306,7 +318,7 @@ public class ControllerTest {
                 "refresh count", 
                 screen.getRefreshCount(), 
                 greaterThan(startRefreshCount));
-        assertThat("score", student.getScore(), is(1));
+        assertThat("score", student.getScore(), is(33));
     }
     
     @Test
@@ -335,6 +347,21 @@ public class ControllerTest {
         controller.solve();
         
         assertThat("search task", searchTask, nullValue());
+        assertThat("score task", scoreTask, nullValue());
+    }
+    
+    @Test
+    public void cancelScoreTask() {
+        random.setPuzzles("RPE");
+        controller.start();
+        Puzzle puzzle = screen.getPuzzle();
+        
+        puzzle.setSolution("");
+        controller.solve();
+        puzzle.setResponse("");
+        
+        assertThat("search task", searchTask, nullValue());
+        assertThat("score task", scoreTask, nullValue());
     }
     
     @Test
@@ -354,7 +381,22 @@ public class ControllerTest {
         startPuzzle.setSolution("");
         startPuzzle.setResponse("rope");
         
-        assertThat("score", student.getScore(), is(-1));
+        assertThat("score", student.getScore(), is(-33));
+    }
+    
+    @Test
+    public void adjustScore() {
+        controller.start();
+        Puzzle puzzle = screen.getPuzzle();
+        
+        int seconds = 10;
+        int loopCount = seconds * 1000 / Controller.SCORE_MILLISECONDS;
+        for (int i = 0; i < loopCount; i++) {
+            scoreTask.run();
+        }
+        
+        assertThat("score", puzzle.getScore(WordResult.NOT_IMPROVED), is(80));
+        assertThat("refresh count", screen.getScoreRefreshCount(), is(loopCount));
     }
     
     @Test

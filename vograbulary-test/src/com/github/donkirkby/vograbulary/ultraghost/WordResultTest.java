@@ -14,18 +14,18 @@ public class WordResultTest {
 
     @Test
     public void skipped() {
-        assertThat(WordResult.SKIPPED.toString(), is("skipped (+1)"));
+        assertThat(WordResult.SKIPPED.toString(), is("skipped"));
     }
 
     @Test
     public void improvementNotAWord() {
         assertThat(
                 WordResult.IMPROVEMENT_NOT_A_WORD.toString(), 
-                is("not a word (+3)"));
+                is("not a word"));
     }
 
     @Test
     public void wordFound() {
-        assertThat(WordResult.WORD_FOUND.toString(), is("word found (-1)"));
+        assertThat(WordResult.WORD_FOUND.toString(), is("word found"));
     }
 }

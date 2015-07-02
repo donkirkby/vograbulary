@@ -4,6 +4,7 @@ package com.github.donkirkby.vograbulary.ultraghost;
 public class DummyScreen implements UltraghostScreen {
     private Focus currentFocus = Focus.Unknown;
     private int refreshCount;
+    private int scoreRefreshCount;
     private Match match;
     
     @Override
@@ -33,6 +34,15 @@ public class DummyScreen implements UltraghostScreen {
     
     public int getRefreshCount() {
         return refreshCount;
+    }
+
+    @Override
+    public void refreshScore() {
+        scoreRefreshCount++;
+    }
+    
+    public int getScoreRefreshCount() {
+        return scoreRefreshCount;
     }
     
     public Focus getCurrentFocus() {

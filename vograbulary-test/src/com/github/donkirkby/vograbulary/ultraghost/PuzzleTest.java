@@ -160,4 +160,108 @@ public class PuzzleTest {
         
         assertThat("completion count", completionCount, is(1));
     }
+    
+    @Test
+    public void adjustScoreAtStart() {
+        float seconds = 0;
+        int score = puzzle.adjustScore(seconds);
+        
+        assertThat("score", score, is(100));
+    }
+    
+    @Test
+    public void adjustScoreAfterDelay() {
+        // Lose 2% every second.
+        float seconds = 10;
+        int score = puzzle.adjustScore(seconds);
+        
+        assertThat("display", score, is(80));
+    }
+    
+    @Test
+    public void adjustScoreAfterSecondDelay() {
+        float seconds = 10;
+        puzzle.adjustScore(seconds);
+        int score = puzzle.adjustScore(seconds);
+        
+        assertThat("display", score, is(60));
+    }
+    
+    @Test
+    public void adjustScoreAfterTimeout() {
+        float seconds = 51;
+        int score = puzzle.adjustScore(seconds);
+        
+        assertThat("display", score, is(0));
+    }
+    
+    @Test
+    public void getScoreNotComplete() {
+        int score = puzzle.getScore();
+        
+        assertThat("display", score, is(0));
+    }
+    
+    @Test
+    public void getScoreAfterSolution() {
+        puzzle.setSolution("PRICE");
+        puzzle.setResponse("");
+        int score = puzzle.getScore();
+        
+        assertThat("display", score, is(100));
+    }
+    
+    @Test
+    public void getScoreAfterDelayedSolution() {
+        float seconds = 10;
+        puzzle.adjustScore(seconds);
+        puzzle.setSolution("PRICE");
+        puzzle.setResponse("");
+        int score = puzzle.getScore();
+        
+        assertThat("display", score, is(80));
+    }
+    
+    @Test
+    public void getScoreAfterShorterResponse() {
+        puzzle.setSolution("PRICE");
+        puzzle.setResponse("PIPE");
+        int score = puzzle.getScore();
+        
+        assertThat("display", score, is(33));
+    }
+    
+    @Test
+    public void getPotentialScore() {
+        // Lose 2% every second until solution
+        float solutionSeconds = 20;
+        
+        puzzle.adjustScore(solutionSeconds);
+        int notImprovedScore = puzzle.getScore(WordResult.NOT_IMPROVED);
+        int earlierScore = puzzle.getScore(WordResult.EARLIER);
+        int shorterScore = puzzle.getScore(WordResult.SHORTER);
+        
+        assertThat("display", notImprovedScore, is(60));
+        assertThat("display", earlierScore, is(40));
+        assertThat("display", shorterScore, is(20));
+    }
+    
+    @Test
+    public void getScoreAfterDelayedResponse() {
+        // Lose 2% every second until solution
+        float solutionSeconds = 20;
+        // Gain 4% of difference every second until response 
+        float responseSeconds = 5; // time between solution and response
+        
+        puzzle.adjustScore(solutionSeconds);
+        puzzle.setSolution("PRICE");
+        puzzle.adjustScore(responseSeconds);
+        int notImprovedScore = puzzle.getScore(WordResult.NOT_IMPROVED);
+        int earlierScore = puzzle.getScore(WordResult.EARLIER);
+        int shorterScore = puzzle.getScore(WordResult.SHORTER);
+        
+        assertThat("display", notImprovedScore, is(60));
+        assertThat("display", earlierScore, is(40 + 4));
+        assertThat("display", shorterScore, is(20 + 8));
+    }
 }

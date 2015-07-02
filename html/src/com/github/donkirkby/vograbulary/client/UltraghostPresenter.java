@@ -86,8 +86,6 @@ public class UltraghostPresenter extends VograbularyPresenter implements Ultragh
         controller.setWordList(wordList);
         scheduler = new GwtScheduler();
         controller.setScheduler(scheduler);
-
-//      match.setHyperghost(isHyperghost);
   
         focusButtons = Arrays.asList(solveButton, respondButton, nextButton);
         focusFields = Arrays.asList(solution, response);
@@ -192,36 +190,6 @@ public class UltraghostPresenter extends VograbularyPresenter implements Ultragh
     
     @Override
     public void refreshPuzzle() {
-//      if (letters == null) {
-//      // must be in unit tests, nothing to do.
-//      return;
-//  }
-//  if (match == null) {
-//      return;
-//  }
-//  Student winner = match.getWinner();
-//  if (winner != null) {
-//      String resultText = winner.getName() + " win";
-//      if (winner.getName() != "You") {
-//          resultText += "s";
-//      }
-//      result.setText(resultText);
-//      studentName.setText(" ");
-//      letters.setText(" ");
-//      solution.setText(" ");
-//      response.setText(" ");
-//      hint.setText(" ");
-//      for (TextButton button : focusButtons) {
-//          button.setVisible(false);
-//      }
-//      return;
-//  }
-//  Puzzle puzzle = match.getPuzzle();
-//  if (puzzle != null) {
-//      Student owner = puzzle.getOwner();
-//      studentName.setText(owner == null ? "" : owner.getName());
-//      hint.setText(blankForNull(puzzle.getHint()) + " ");
-//  }
         Student winner = match.getWinner();
         Puzzle puzzle = match.getPuzzle();
         if (winner != null) {
@@ -229,25 +197,39 @@ public class UltraghostPresenter extends VograbularyPresenter implements Ultragh
             if (winner.getName() != "You") {
                 resultText += "s";
             }
-            result.setInnerText(resultText);
+            ownerName.setInnerText(resultText);
         }
         else {
-            WordResult puzzleResult = puzzle.getResult();
-            result.setInnerText(
-                    puzzleResult == WordResult.UNKNOWN 
-                    ? "" 
-                    : puzzleResult.toString());
-            
+            ownerName.setInnerText(puzzle.getOwner().getName());
         }
-        ownerName.setInnerText(puzzle.getOwner().getName());
-        letters.setInnerText(puzzle.getLetters() +
-                (puzzle.getPreviousWord() == null
-                ? ""
-                : " after " + puzzle.getPreviousWord()));
+        String letterText = puzzle.getLetters();
+        if (puzzle.getPreviousWord() != null) {
+            letterText = letterText + " after " + puzzle.getPreviousWord();
+        }
+        letters.setInnerText(letterText);
         solution.setText(puzzle.getSolution());
         response.setText(puzzle.getResponse());
         hint.setInnerText(puzzle.getHint());
+        refreshScore();
         summary.setInnerText(match.getSummary());
+    }
+
+    @Override
+    public void refreshScore() {
+        Puzzle puzzle = match.getPuzzle();
+        WordResult puzzleResult = puzzle.getResult();
+        String resultText = puzzleResult == WordResult.UNKNOWN 
+            ? "" 
+            : puzzleResult.toString() + " ";
+        if (puzzle.getResponse() != null) {
+            resultText += "(" + puzzle.getScore() + ")";
+        }
+        else {
+            resultText += puzzle.getScore(WordResult.SHORTER)
+                + " / " + puzzle.getScore(WordResult.EARLIER)
+                + " / " + puzzle.getScore(WordResult.NOT_IMPROVED);
+        }
+        result.setInnerText(resultText);
     }
 
     public void setStudents(Collection<String> students) {

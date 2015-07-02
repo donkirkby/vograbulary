@@ -14,16 +14,18 @@ request?
 
 New Word Challenges
 -------------------
-Do you have ideas for other word challenges to include in Vograbulary? Let me
-know how it would work.
+Do you have an idea for another word challenge to include in Vograbulary? Create an
+issue, and describe how it would work.
 
 Development
 -----------
 Vograbulary is built using Eclipse. The HTML version is built with
 [Google Web Toolkit (GWT)][gwt], and the Android version is built with the
 [Android Developer Tools][adt]. If you want to contribute to the development,
-you should install one or both of these. Clone this project from git, and then
-import the project files into Eclipse.
+you should install one or both of these, and the easiest way is to install
+the [Google Plugin for Eclipse][gooclipse]. Clone this project from git, and
+then import the project files into Eclipse. One step that is tricky is the
+[Android support library setup][suplib].
 
 If you build iOS apps, I'm looking for someone to build a presentation layer for
 that platform. Hopefully, we can use the core logic unchanged with the
@@ -75,3 +77,5 @@ To publish a release:
 [j2objc]: http://j2objc.org/
 [releases]: https://github.com/donkirkby/vograbulary/releases
 [google]: https://play.google.com/apps/publish
+[gooclipse]: https://developers.google.com/eclipse/docs/download
+[suplib]: https://developer.android.com/tools/support-library/setup.html

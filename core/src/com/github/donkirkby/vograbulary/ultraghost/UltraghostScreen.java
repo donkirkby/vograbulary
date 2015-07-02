@@ -35,4 +35,9 @@ public interface UltraghostScreen {
      * Update the display to show all parts of the puzzle.
      */
     public void refreshPuzzle();
+    
+    /**
+     * Update the score on the display.
+     */
+    public void refreshScore();
 }

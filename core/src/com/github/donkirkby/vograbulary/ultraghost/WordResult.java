@@ -35,20 +35,11 @@ public enum WordResult {
     private WordResult(int score) {
         this(score, null);
         this.name = name().toLowerCase().replace('_', ' ');
-        addScore(score);
-    }
-
-    private void addScore(int score) {
-        if (score != 0) {
-            String sign = score > 0 ? "+" : "";
-            this.name += " (" + sign + Integer.toString(score) + ")";
-        }
     }
     
     private WordResult(int score, String name) {
         this.score = score;
         this.name = name;
-        addScore(score);
     }
     
     @Override

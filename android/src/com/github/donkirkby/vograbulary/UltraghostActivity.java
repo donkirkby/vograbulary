@@ -135,31 +135,56 @@ extends VograbularyActivity implements UltraghostScreen, StudentListener {
                 Puzzle puzzle = match.getPuzzle();
                 Student winner = match.getWinner();
                 if (winner != null) {
-                    ownerName.setText("Winner: " + winner.getName());
-                    letters.setText("");
+                    String resultText = winner.getName() + " win";
+                    if (winner.getName() != "You") {
+                        resultText += "s";
+                    }
+                    ownerName.setText(resultText);
                     focusButton(null);
                 }
                 else {
                     ownerName.setText(puzzle.getOwner().getName());
-                    String letterText = puzzle.getLetters();
-                    if (puzzle.getPreviousWord() != null) {
-                        letterText = letterText + " after " +
-                                puzzle.getPreviousWord();
-                    }
-                    letters.setText(letterText);
                 }
+                String letterText = puzzle.getLetters();
+                if (puzzle.getPreviousWord() != null) {
+                    letterText = letterText + " after " +
+                            puzzle.getPreviousWord();
+                }
+                letters.setText(letterText);
                 solution.setText(puzzle.getSolution());
                 response.setText(puzzle.getResponse());
                 hint.setText(puzzle.getHint());
-                if (puzzle.getResult() == WordResult.UNKNOWN) {
-                    result.setText("");
-                }
-                else {
-                    result.setText(puzzle.getResult().toString());
-                }
+                showScore();
                 summary.setText(match.getSummary());
             }
         });
+    }
+
+    @Override
+    public void refreshScore() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                showScore();
+            }
+        });
+    }
+
+    private void showScore() {
+        Puzzle puzzle = match.getPuzzle();
+        WordResult puzzleResult = puzzle.getResult();
+        String resultText = puzzleResult == WordResult.UNKNOWN 
+            ? "" 
+            : puzzleResult.toString() + " ";
+        if (puzzle.getResponse() != null) {
+            resultText += "(" + puzzle.getScore() + ")";
+        }
+        else {
+            resultText += puzzle.getScore(WordResult.SHORTER)
+                + " / " + puzzle.getScore(WordResult.EARLIER)
+                + " / " + puzzle.getScore(WordResult.NOT_IMPROVED);
+        }
+        result.setText(resultText);
     }
     
     public void solve(View view) {

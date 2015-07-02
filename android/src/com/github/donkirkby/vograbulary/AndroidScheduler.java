@@ -1,11 +1,13 @@
 package com.github.donkirkby.vograbulary;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class AndroidScheduler implements Scheduler {
     private Timer timer;
-    private TimerTask timerTask;
+    private Map<Runnable, TimerTask> timerTasks = new HashMap<>();
     
     public AndroidScheduler() {
         boolean isDaemon = true;
@@ -14,15 +16,13 @@ public class AndroidScheduler implements Scheduler {
 
     @Override
     public void scheduleRepeating(final Runnable task, int periodMilliseconds) {
-        if (this.timerTask != null) {
-            throw new IllegalStateException("There is already a scheduled task.");
-        }
-        timerTask = new TimerTask() {
+        TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
                 task.run();
             }
         };
+        timerTasks.put(task, timerTask);
         timer.scheduleAtFixedRate(
                 timerTask,
                 periodMilliseconds,
@@ -31,10 +31,10 @@ public class AndroidScheduler implements Scheduler {
 
     @Override
     public void cancel(Runnable task) {
+        TimerTask timerTask = timerTasks.remove(task);
         if (timerTask != null) {
             timerTask.cancel();
         }
-        this.timerTask = null;
     }
 
 }

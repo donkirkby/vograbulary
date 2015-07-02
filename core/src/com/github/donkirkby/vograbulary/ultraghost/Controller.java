@@ -10,14 +10,16 @@ import com.github.donkirkby.vograbulary.ultraghost.Student.StudentListener;
 
 public class Controller implements StudentListener {
     //stopJesting
-    private static final int PERIOD_MILLISECONDS = 10;
-    private static final int MATCH_SCORE = 21;
+    public static final int SCORE_MILLISECONDS = 100;
+    private static final int SEARCH_MILLISECONDS = 10;
+    private static final int MATCH_SCORE = 300;
     //resumeJesting
 
     private UltraghostRandom random = new UltraghostRandom();
     private VograbularyPreferences preferences;
     private UltraghostScreen screen;
     private WordList wordList = new WordList();
+    private Runnable scoreTask;
     private Runnable searchTask;
     private Scheduler scheduler;
     private List<Student> students = new ArrayList<Student>();
@@ -68,6 +70,14 @@ public class Controller implements StudentListener {
         this.scheduler = scheduler;
     }
     
+    private class ScoreTask implements Runnable {
+        @Override
+        public void run() {
+            screen.getMatch().getPuzzle().adjustScore(SCORE_MILLISECONDS / 1000.0f);
+            screen.refreshScore();
+        }
+    }
+    
     private class SearchTask implements Runnable {
         private List<Student> searchingStudents = new ArrayList<Student>(students);
         private Scheduler scheduler;
@@ -114,8 +124,10 @@ public class Controller implements StudentListener {
         for (Student student : students) {
             student.startSolving(puzzle);
         }
+        scoreTask = new ScoreTask();
+        scheduler.scheduleRepeating(scoreTask, SCORE_MILLISECONDS);
         searchTask = new SearchTask(scheduler);
-        scheduler.scheduleRepeating(searchTask, PERIOD_MILLISECONDS);
+        scheduler.scheduleRepeating(searchTask, SEARCH_MILLISECONDS);
     }
 
     /**
@@ -126,7 +138,8 @@ public class Controller implements StudentListener {
             @Override
             public void completed() {
                 Puzzle puzzle = getMatch().getPuzzle();
-                puzzle.getOwner().addScore(puzzle.getResult().getScore());
+                scheduler.cancel(scoreTask);
+                puzzle.getOwner().addScore(puzzle.getScore());
                 String hint = puzzle.findNextBetter();
                 puzzle.setHint(hint == null ? null : "hint: " + hint);
                 screen.focusNextButton();
