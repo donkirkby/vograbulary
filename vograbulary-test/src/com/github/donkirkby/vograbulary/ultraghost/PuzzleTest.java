@@ -247,6 +247,20 @@ public class PuzzleTest {
     }
     
     @Test
+    public void getScoreAfterInvalidSolution() {
+        // Lose 2% every second until solution
+        float solutionSeconds = 20;
+        float moreSolutionSeconds = 5;
+        
+        puzzle.adjustScore(solutionSeconds);
+        puzzle.setSolution("PRIXE");
+        puzzle.adjustScore(moreSolutionSeconds);
+        int notImprovedScore = puzzle.getScore(WordResult.NOT_IMPROVED);
+        
+        assertThat("display", notImprovedScore, is(50));
+    }
+    
+    @Test
     public void getScoreAfterDelayedResponse() {
         // Lose 2% every second until solution
         float solutionSeconds = 20;

@@ -171,11 +171,7 @@ public class Controller implements StudentListener {
 
     public void solve() {
         Puzzle puzzle = getMatch().getPuzzle();
-        WordResult result = puzzle.getResult();
-        if (result == WordResult.NOT_A_MATCH || 
-                result == WordResult.NOT_A_WORD ||
-                result == WordResult.TOO_SHORT ||
-                result == WordResult.TOO_SOON) {
+        if ( ! puzzle.isSolutionValid()) {
             screen.focusSolution();
         }
         else {

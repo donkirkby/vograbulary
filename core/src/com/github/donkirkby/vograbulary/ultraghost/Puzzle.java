@@ -303,6 +303,15 @@ public class Puzzle {
                 result == WordResult.EARLIER || 
                 result == WordResult.WORD_FOUND;
     }
+    
+    public boolean isSolutionValid() {
+        WordResult result = getResult();
+        return result != WordResult.UNKNOWN &&
+                result != WordResult.NOT_A_MATCH &&
+                result != WordResult.NOT_A_WORD &&
+                result != WordResult.TOO_SHORT &&
+                result != WordResult.TOO_SOON;
+    }
 
     /**
      * Set a limit for how long a word must be to solve the puzzle. Default 4.
@@ -349,11 +358,11 @@ public class Puzzle {
     }
 
     public int adjustScore(float seconds) {
-        if (solution == null) {
-            solutionDelay += seconds;
+        if (isSolutionValid()) {
+            responseDelay += seconds;
         }
         else {
-            responseDelay += seconds;
+            solutionDelay += seconds;
         }
         return getScore(WordResult.NOT_IMPROVED);
     }
