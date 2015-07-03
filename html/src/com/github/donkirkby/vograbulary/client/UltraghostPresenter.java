@@ -11,7 +11,6 @@ import com.github.donkirkby.vograbulary.ultraghost.Puzzle;
 import com.github.donkirkby.vograbulary.ultraghost.Student;
 import com.github.donkirkby.vograbulary.ultraghost.UltraghostScreen;
 import com.github.donkirkby.vograbulary.ultraghost.WordList;
-import com.github.donkirkby.vograbulary.ultraghost.WordResult;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.ParagraphElement;
@@ -217,19 +216,7 @@ public class UltraghostPresenter extends VograbularyPresenter implements Ultragh
     @Override
     public void refreshScore() {
         Puzzle puzzle = match.getPuzzle();
-        WordResult puzzleResult = puzzle.getResult();
-        String resultText = puzzleResult == WordResult.UNKNOWN 
-            ? "" 
-            : puzzleResult.toString() + " ";
-        if (puzzle.getResponse() != null) {
-            resultText += "(" + puzzle.getScore() + ")";
-        }
-        else {
-            resultText += puzzle.getScore(WordResult.SHORTER)
-                + " / " + puzzle.getScore(WordResult.EARLIER)
-                + " / " + puzzle.getScore(WordResult.NOT_IMPROVED);
-        }
-        result.setInnerText(resultText);
+        result.setInnerText(puzzle.getResultDisplay());
     }
 
     public void setStudents(Collection<String> students) {

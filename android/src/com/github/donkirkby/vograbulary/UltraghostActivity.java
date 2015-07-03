@@ -23,7 +23,6 @@ import com.github.donkirkby.vograbulary.ultraghost.Student.StudentListener;
 import com.github.donkirkby.vograbulary.ultraghost.UltraghostRandom;
 import com.github.donkirkby.vograbulary.ultraghost.UltraghostScreen;
 import com.github.donkirkby.vograbulary.ultraghost.WordList;
-import com.github.donkirkby.vograbulary.ultraghost.WordResult;
 
 public class UltraghostActivity
 extends VograbularyActivity implements UltraghostScreen, StudentListener {
@@ -154,7 +153,7 @@ extends VograbularyActivity implements UltraghostScreen, StudentListener {
                 solution.setText(puzzle.getSolution());
                 response.setText(puzzle.getResponse());
                 hint.setText(puzzle.getHint());
-                showScore();
+                result.setText(puzzle.getResultDisplay());
                 summary.setText(match.getSummary());
             }
         });
@@ -165,28 +164,11 @@ extends VograbularyActivity implements UltraghostScreen, StudentListener {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                showScore();
+                result.setText(match.getPuzzle().getResultDisplay());
             }
         });
     }
 
-    private void showScore() {
-        Puzzle puzzle = match.getPuzzle();
-        WordResult puzzleResult = puzzle.getResult();
-        String resultText = puzzleResult == WordResult.UNKNOWN 
-            ? "" 
-            : puzzleResult.toString() + " ";
-        if (puzzle.getResponse() != null) {
-            resultText += "(" + puzzle.getScore() + ")";
-        }
-        else {
-            resultText += puzzle.getScore(WordResult.SHORTER)
-                + " / " + puzzle.getScore(WordResult.EARLIER)
-                + " / " + puzzle.getScore(WordResult.NOT_IMPROVED);
-        }
-        result.setText(resultText);
-    }
-    
     public void solve(View view) {
         match.getPuzzle().setSolution(solution.getText().toString());
         controller.solve();

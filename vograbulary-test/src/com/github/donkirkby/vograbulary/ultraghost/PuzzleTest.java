@@ -278,4 +278,21 @@ public class PuzzleTest {
         assertThat("display", earlierScore, is(40 + 4));
         assertThat("display", shorterScore, is(20 + 8));
     }
+    
+    @Test
+    public void getScoreAfterSkip() {
+        // Lose 2% every second until solution
+        float solutionSeconds = 20;
+        // Gain 4% of difference every second until response 
+        float responseSeconds = 5; // time between solution and response
+        
+        puzzle.adjustScore(solutionSeconds);
+        puzzle.setSolution("");
+        puzzle.adjustScore(responseSeconds);
+        int skippedScore = puzzle.getScore(WordResult.SKIPPED);
+        int wordFoundScore = puzzle.getScore(WordResult.WORD_FOUND);
+        
+        assertThat("display", skippedScore, is(20));
+        assertThat("display", wordFoundScore, is(-20 + 8));
+    }
 }

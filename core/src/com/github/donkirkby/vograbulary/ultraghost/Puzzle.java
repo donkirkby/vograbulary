@@ -32,6 +32,7 @@ public class Puzzle {
     private boolean isComplete;
     private float solutionDelay;
     private float responseDelay;
+    private WordResult cachedResult = WordResult.UNKNOWN;
     
     public Puzzle(String letters, Student owner, WordList wordList) {
         if (letters == null) {
@@ -93,6 +94,7 @@ public class Puzzle {
      * Raise the changed event to any listeners.
      */
     private void onChanged() {
+        cachedResult = WordResult.UNKNOWN;
         boolean isJustCompleted =
                 isComplete
                 ? false
@@ -135,13 +137,36 @@ public class Puzzle {
      * UKNOWN until a solution and response have been entered.
      */
     public WordResult getResult() {
+        if (cachedResult != WordResult.UNKNOWN) {
+            return cachedResult;
+        }
         if (solution == NOT_SET) {
             return WordResult.UNKNOWN;
         }
         if (response == NOT_SET) {
-            return checkSolution();
+            return cachedResult = checkSolution();
         }
-        return checkResponse();
+        return cachedResult = checkResponse();
+    }
+
+    public String getResultDisplay() {
+        WordResult result = getResult();
+        String resultText = result == WordResult.UNKNOWN 
+            ? "" 
+            : result.toString() + " ";
+        if (response != null) {
+            resultText += "(" + getScore() + ")";
+        }
+        else if (NO_SOLUTION.equals(solution)) {
+            resultText += getScore(WordResult.WORD_FOUND)
+                    + " / " + getScore(WordResult.SKIPPED);
+        }
+        else {
+            resultText += getScore(WordResult.SHORTER)
+                    + " / " + getScore(WordResult.EARLIER)
+                    + " / " + getScore(WordResult.NOT_IMPROVED);
+        }
+        return resultText;
     }
 
     /**
@@ -351,9 +376,14 @@ public class Puzzle {
         float baseScore = Math.max(0, MAX_DELAY - solutionDelay);
         float responseDelayLeft =
                 Math.max(0, MAX_DELAY/2 - responseDelay)/MAX_DELAY*2;
-        float resultRatio = 
-                ((float)result.getScore()) / WordResult.NOT_IMPROVED.getScore();
-        float adjustedScore = baseScore * (1 - (1 - resultRatio) * responseDelayLeft);
+        WordResult bestResult = WordResult.NOT_IMPROVED;
+        if (NO_SOLUTION.equals(solution)) {
+            baseScore /= 3;
+            bestResult = WordResult.SKIPPED;
+        }
+        float resultRatio = ((float)result.getScore()) / bestResult.getScore();
+        float adjustedScore =
+                baseScore * (1 - (1 - resultRatio) * responseDelayLeft);
         return Math.round(2 * adjustedScore);
     }
 
