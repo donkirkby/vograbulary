@@ -14,7 +14,7 @@ public class WordResultTest {
 
     @Test
     public void skipped() {
-        assertThat(WordResult.SKIPPED.toString(), is("skipped"));
+        assertThat(WordResult.SKIPPING.toString(), is("skipping"));
     }
 
     @Test

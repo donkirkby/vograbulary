@@ -45,7 +45,7 @@ public class Match {
         String previousWord;
         if (puzzle == null || 
                 ! isHyperghost || 
-                puzzle.getResult() == WordResult.SKIPPED ||
+                puzzle.getResult() == WordResult.SKIP_NOT_IMPROVED ||
                 puzzle.getResult() == WordResult.IMPROVED_SKIP_NOT_A_WORD ||
                 puzzle.getResult() == WordResult.IMPROVED_SKIP_TOO_SOON ||
                 puzzle.getResult() == WordResult.IMPROVED_SKIP_TOO_SHORT) {

@@ -50,7 +50,7 @@ public class PuzzleChallengeTest {
                {"PIE", 5, "", "pipe", WordResult.IMPROVED_SKIP_TOO_SHORT, false},
                {"PIE", 4, "", "pize", WordResult.IMPROVED_SKIP_NOT_A_WORD, false},
                {"PIE", 4, "", "rope", WordResult.IMPROVED_SKIP_NOT_A_MATCH, false},
-               {"PIE", 4, "", "", WordResult.SKIPPED, false},
+               {"PIE", 4, "", "", WordResult.SKIP_NOT_IMPROVED, false},
                {"PIE", 4, null, "pipe", WordResult.UNKNOWN, false},
                {"PIE", 4, "piece", null, WordResult.VALID, false} });
    }
@@ -76,7 +76,7 @@ public class PuzzleChallengeTest {
    
    @Test
    public void isImproved() {
-       boolean isImproved = puzzle.isImproved();
+       boolean isImproved = puzzle.getResult().isImproved();
        assertThat("isImproved", isImproved, is(isExpectedToImprove));
    }
 }

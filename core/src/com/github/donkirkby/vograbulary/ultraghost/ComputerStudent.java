@@ -60,7 +60,7 @@ public class ComputerStudent extends Student {
                 - searchedWordsCount);
         for (int i = 0; i < wordCount && itr.hasNext(); i++) {
             searchPuzzle.setResponse(itr.next());
-            if (searchPuzzle.isImproved()) {
+            if (searchPuzzle.getResult().isImproved()) {
                 searchPuzzle.setSolution(searchPuzzle.getResponse());
             }
         }
@@ -93,7 +93,7 @@ public class ComputerStudent extends Student {
         }
         String challenge = searchPuzzle.getSolution();
         currentPuzzle.setResponse(challenge);
-        if ( ! currentPuzzle.isImproved()) {
+        if ( ! currentPuzzle.getResult().isImproved()) {
             currentPuzzle.setResponse(Puzzle.NO_SOLUTION);
         }
     }

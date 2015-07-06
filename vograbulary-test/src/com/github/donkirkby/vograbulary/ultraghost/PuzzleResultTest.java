@@ -38,7 +38,7 @@ public class PuzzleResultTest {
                {"PIE", 5, "pipe", WordResult.TOO_SHORT},
                {"PIE", 5, "piece", WordResult.VALID},
                {"PIE", 4, Puzzle.NOT_SET, WordResult.UNKNOWN},
-               {"PIE", 4, Puzzle.NO_SOLUTION, WordResult.SKIPPED} });
+               {"PIE", 4, Puzzle.NO_SOLUTION, WordResult.SKIPPING} });
    }
    
    @Test

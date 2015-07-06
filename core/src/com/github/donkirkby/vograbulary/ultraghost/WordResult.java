@@ -1,11 +1,15 @@
 package com.github.donkirkby.vograbulary.ultraghost;
 
+import java.util.EnumSet;
+import java.util.Set;
+
 public enum WordResult {
     //stopJesting
     UNKNOWN,
     NOT_A_WORD, 
     TOO_SHORT,
     TOO_SOON,
+    SKIPPING,
     VALID, 
     NOT_A_MATCH, 
     SHORTER(1),
@@ -13,7 +17,7 @@ public enum WordResult {
     LONGER(3), 
     LATER(3), 
     NOT_IMPROVED(3), 
-    SKIPPED(1),
+    SKIP_NOT_IMPROVED(1, "skipped"),
     WORD_FOUND(-1), // Failed skip
     IMPROVEMENT_NOT_A_WORD(3, "not a word"), 
     IMPROVEMENT_NOT_A_MATCH(3, "not a match"),
@@ -27,6 +31,21 @@ public enum WordResult {
     
     private int score;
     private String name;
+    private static Set<WordResult> notSolved = EnumSet.of(
+            UNKNOWN,
+            NOT_A_MATCH,
+            NOT_A_WORD,
+            TOO_SHORT,
+            TOO_SOON);
+    private static Set<WordResult> improved = EnumSet.of(
+            SHORTER,
+            EARLIER,
+            WORD_FOUND);
+    private static Set<WordResult> completed = EnumSet.copyOf(improved);
+    static {
+        completed.add(SKIP_NOT_IMPROVED);
+        completed.add(NOT_IMPROVED);
+    }
     
     private WordResult() {
         this(0);
@@ -49,5 +68,17 @@ public enum WordResult {
     
     public int getScore() {
         return score;
+    }
+    
+    public boolean isValidSolution() {
+        return ! notSolved.contains(this);
+    }
+    
+    public boolean isImproved() {
+        return improved.contains(this);
+    }
+    
+    public boolean isCompleted() {
+        return completed.contains(this);
     }
 }

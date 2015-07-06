@@ -365,6 +365,19 @@ public class ControllerTest {
     }
     
     @Test
+    public void keepScoreTaskAfterInvalidResponse() {
+        random.setPuzzles("RPE");
+        controller.start();
+        Puzzle puzzle = screen.getPuzzle();
+        
+        puzzle.setSolution("");
+        controller.solve();
+        puzzle.setResponse("RICE");
+        
+        assertThat("score task", scoreTask, notNullValue());
+    }
+    
+    @Test
     public void respond() {
         startPuzzle.setSolution("");
         int startRefreshCount = screen.getRefreshCount();

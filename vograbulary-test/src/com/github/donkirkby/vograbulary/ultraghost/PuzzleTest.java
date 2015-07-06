@@ -146,16 +146,16 @@ public class PuzzleTest {
     
     @Test
     public void completionEvent() {
-        puzzle.setSolution("YYYY");
-        puzzle.setResponse("XXXX");
+        puzzle.setSolution("PRICE");
+        puzzle.setResponse("PIECE");
         
         assertThat("completion count", completionCount, is(1));
     }
     
     @Test
     public void completionEventHappensOnlyOnce() {
-        puzzle.setSolution("YYYY");
-        puzzle.setResponse("XXXX");
+        puzzle.setSolution("PRICE");
+        puzzle.setResponse("PIECE");
         puzzle.setHint("ZZZZ");
         
         assertThat("completion count", completionCount, is(1));
@@ -164,7 +164,8 @@ public class PuzzleTest {
     @Test
     public void adjustScoreAtStart() {
         float seconds = 0;
-        int score = puzzle.adjustScore(seconds);
+        puzzle.adjustScore(seconds);
+        int score = puzzle.getScore(WordResult.NOT_IMPROVED);
         
         assertThat("score", score, is(100));
     }
@@ -173,26 +174,59 @@ public class PuzzleTest {
     public void adjustScoreAfterDelay() {
         // Lose 2% every second.
         float seconds = 10;
-        int score = puzzle.adjustScore(seconds);
+        puzzle.adjustScore(seconds);
+        int score = puzzle.getScore(WordResult.NOT_IMPROVED);
         
-        assertThat("display", score, is(80));
+        assertThat("score", score, is(80));
     }
     
     @Test
     public void adjustScoreAfterSecondDelay() {
         float seconds = 10;
         puzzle.adjustScore(seconds);
-        int score = puzzle.adjustScore(seconds);
+        puzzle.adjustScore(seconds);
+        int score = puzzle.getScore(WordResult.NOT_IMPROVED);
         
-        assertThat("display", score, is(60));
+        assertThat("score", score, is(60));
     }
     
     @Test
     public void adjustScoreAfterTimeout() {
         float seconds = 51;
-        int score = puzzle.adjustScore(seconds);
+        puzzle.adjustScore(seconds);
+        int score = puzzle.getScore(WordResult.NOT_IMPROVED);
         
         assertThat("display", score, is(0));
+    }
+    
+    @Test
+    public void getDisplayAtStart() {
+        float seconds = 0;
+        puzzle.adjustScore(seconds);
+        String display = puzzle.getResultDisplay();
+        
+        assertThat("display", display, is("33 / 67 / 100"));
+    }
+    
+    @Test
+    public void getDisplayAfterSkip() {
+        float seconds = 20;
+        puzzle.adjustScore(seconds);
+        puzzle.setSolution("");
+        String display = puzzle.getResultDisplay();
+        
+        assertThat("display", display, is("skipping -20 / 20"));
+    }
+    
+    @Test
+    public void getDisplayAfterInvalidResponse() {
+        float seconds = 20;
+        puzzle.adjustScore(seconds);
+        puzzle.setSolution("");
+        puzzle.setResponse("X");
+        String display = puzzle.getResultDisplay();
+        
+        assertThat("display", display, is("not a match -12 / 20"));
     }
     
     @Test
@@ -248,16 +282,17 @@ public class PuzzleTest {
     
     @Test
     public void getScoreAfterInvalidSolution() {
-        // Lose 2% every second until solution
+        // Lose 2% every second until solution,
+        // also lose 5 seconds for invalid response
         float solutionSeconds = 20;
-        float moreSolutionSeconds = 5;
+        float moreSolutionSeconds = 3;
         
         puzzle.adjustScore(solutionSeconds);
         puzzle.setSolution("PRIXE");
         puzzle.adjustScore(moreSolutionSeconds);
         int notImprovedScore = puzzle.getScore(WordResult.NOT_IMPROVED);
         
-        assertThat("display", notImprovedScore, is(50));
+        assertThat("display", notImprovedScore, is(44));
     }
     
     @Test
@@ -280,6 +315,28 @@ public class PuzzleTest {
     }
     
     @Test
+    public void getScoreAfterInvalidResponse() {
+        // Lose 2% every second until solution
+        float solutionSeconds = 20;
+        // Gain 4% of difference every second until response,
+        // also lose 5 seconds for invalid response
+        float responseSeconds = 5; // time between solution and response
+        
+        puzzle.adjustScore(solutionSeconds);
+        puzzle.setSolution("PRICE");
+        puzzle.adjustScore(responseSeconds);
+        puzzle.setResponse("PCICE");
+        int notImprovedScore = puzzle.getScore(WordResult.NOT_IMPROVED);
+        int earlierScore = puzzle.getScore(WordResult.EARLIER);
+        int shorterScore = puzzle.getScore(WordResult.SHORTER);
+        
+        assertThat("display", notImprovedScore, is(60));
+        assertThat("display", earlierScore, is(40 + 8));
+        assertThat("display", shorterScore, is(20 + 16));
+        assertThat("completionCount", completionCount, is(0));
+    }
+    
+    @Test
     public void getScoreAfterSkip() {
         // Lose 2% every second until solution
         float solutionSeconds = 20;
@@ -289,7 +346,7 @@ public class PuzzleTest {
         puzzle.adjustScore(solutionSeconds);
         puzzle.setSolution("");
         puzzle.adjustScore(responseSeconds);
-        int skippedScore = puzzle.getScore(WordResult.SKIPPED);
+        int skippedScore = puzzle.getScore(WordResult.SKIP_NOT_IMPROVED);
         int wordFoundScore = puzzle.getScore(WordResult.WORD_FOUND);
         
         assertThat("display", skippedScore, is(20));

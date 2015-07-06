@@ -18,6 +18,7 @@ public class Puzzle {
     public static String NOT_SET = null;
     public static String NO_SOLUTION = "";
     public static float MAX_DELAY = 50; // seconds
+    public static float PENALTY_SECONDS = 5;
     
     private String letters;
     private String solution;
@@ -88,6 +89,9 @@ public class Puzzle {
     public void setSolution(String solution) {
         this.solution = solution;
         onChanged();
+        if ( ! getResult().isValidSolution()) {
+            adjustScore(PENALTY_SECONDS);
+        }
     }
 
     /**
@@ -95,10 +99,11 @@ public class Puzzle {
      */
     private void onChanged() {
         cachedResult = WordResult.UNKNOWN;
+        getResult();
         boolean isJustCompleted =
                 isComplete
                 ? false
-                : (isComplete = (solution != null && response != null));
+                : (isComplete = cachedResult.isCompleted());
         for (Listener listener : listeners) {
             listener.changed();
             if (isJustCompleted) {
@@ -119,6 +124,9 @@ public class Puzzle {
     public void setResponse(String response) {
         this.response = response;
         onChanged();
+        if ( ! isComplete) {
+            adjustScore(PENALTY_SECONDS);
+        }
     }
     
     /**
@@ -154,12 +162,12 @@ public class Puzzle {
         String resultText = result == WordResult.UNKNOWN 
             ? "" 
             : result.toString() + " ";
-        if (response != null) {
+        if (result.isCompleted()) {
             resultText += "(" + getScore() + ")";
         }
         else if (NO_SOLUTION.equals(solution)) {
             resultText += getScore(WordResult.WORD_FOUND)
-                    + " / " + getScore(WordResult.SKIPPED);
+                    + " / " + getScore(WordResult.SKIP_NOT_IMPROVED);
         }
         else {
             resultText += getScore(WordResult.SHORTER)
@@ -177,7 +185,7 @@ public class Puzzle {
         boolean isSkipped = solution == null || solution.length() == 0;
         if (response.length() == 0) {
             return isSkipped
-                    ? WordResult.SKIPPED
+                    ? WordResult.SKIP_NOT_IMPROVED
                     : WordResult.NOT_IMPROVED;
         }
         String challengeUpper = response.toUpperCase();
@@ -215,7 +223,7 @@ public class Puzzle {
      */
     private WordResult checkSolution() {
         if (solution.length() == 0) {
-            return WordResult.SKIPPED;
+            return WordResult.SKIPPING;
         }
         String solutionUpper = solution.toUpperCase();
         if ( ! wordList.contains(solutionUpper)) {
@@ -304,7 +312,7 @@ public class Puzzle {
      */
     public String findNextBetter() {
         String bestSoFar = 
-                isImproved() 
+                getResult().isImproved() 
                 ? response.toUpperCase() 
                 : solution == null ? "" : solution.toUpperCase();
         Puzzle searchPuzzle = new Puzzle(letters, owner);
@@ -315,27 +323,11 @@ public class Puzzle {
                 continue;
             }
             searchPuzzle.setResponse(word);
-            if (searchPuzzle.isImproved()) {
+            if (searchPuzzle.getResult().isImproved()) {
                 return word;
             }
         }
         return null; // no improvement found.
-    }
-
-    public boolean isImproved() {
-        WordResult result = getResult();
-        return result == WordResult.SHORTER || 
-                result == WordResult.EARLIER || 
-                result == WordResult.WORD_FOUND;
-    }
-    
-    public boolean isSolutionValid() {
-        WordResult result = getResult();
-        return result != WordResult.UNKNOWN &&
-                result != WordResult.NOT_A_MATCH &&
-                result != WordResult.NOT_A_WORD &&
-                result != WordResult.TOO_SHORT &&
-                result != WordResult.TOO_SOON;
     }
 
     /**
@@ -379,7 +371,7 @@ public class Puzzle {
         WordResult bestResult = WordResult.NOT_IMPROVED;
         if (NO_SOLUTION.equals(solution)) {
             baseScore /= 3;
-            bestResult = WordResult.SKIPPED;
+            bestResult = WordResult.SKIP_NOT_IMPROVED;
         }
         float resultRatio = ((float)result.getScore()) / bestResult.getScore();
         float adjustedScore =
@@ -387,13 +379,12 @@ public class Puzzle {
         return Math.round(2 * adjustedScore);
     }
 
-    public int adjustScore(float seconds) {
-        if (isSolutionValid()) {
+    public void adjustScore(float seconds) {
+        if (getResult().isValidSolution()) {
             responseDelay += seconds;
         }
         else {
             solutionDelay += seconds;
         }
-        return getScore(WordResult.NOT_IMPROVED);
     }
 }

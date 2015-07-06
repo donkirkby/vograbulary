@@ -171,7 +171,7 @@ public class Controller implements StudentListener {
 
     public void solve() {
         Puzzle puzzle = getMatch().getPuzzle();
-        if ( ! puzzle.isSolutionValid()) {
+        if ( ! puzzle.getResult().isValidSolution()) {
             screen.focusSolution();
         }
         else {
