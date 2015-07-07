@@ -378,6 +378,23 @@ public class ControllerTest {
     }
     
     @Test
+    public void focusAfterInvalidResponse() {
+        random.setPuzzles("RPE");
+        controller.start();
+        Puzzle puzzle = screen.getPuzzle();
+        
+        puzzle.setSolution("");
+        controller.solve();
+        screen.focusSolution(); // just to check that it gets updated.
+        puzzle.setResponse("RICE");
+        
+        assertThat(
+                "focus",
+                screen.getCurrentFocus(),
+                is(DummyScreen.Focus.Response));
+    }
+    
+    @Test
     public void respond() {
         startPuzzle.setSolution("");
         int startRefreshCount = screen.getRefreshCount();

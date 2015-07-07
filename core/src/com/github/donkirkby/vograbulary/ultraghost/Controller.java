@@ -133,7 +133,7 @@ public class Controller implements StudentListener {
     /**
      * Tell the controller to watch for changes in the current puzzle.
      */
-    public void watchPuzzle(Puzzle puzzle) {
+    public void watchPuzzle(final Puzzle puzzle) {
         puzzle.addListener(new Puzzle.Listener() {
             @Override
             public void completed() {
@@ -148,6 +148,10 @@ public class Controller implements StudentListener {
             @Override
             public void changed() {
                 screen.refreshPuzzle();
+                if (puzzle.getResponse() != null &&
+                        ! puzzle.getResult().isCompleted()) {
+                    screen.focusResponse();
+                }
             }
         });
     }
