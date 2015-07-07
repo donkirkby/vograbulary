@@ -31,6 +31,7 @@ public class Puzzle {
     private ArrayList<Listener> listeners = 
             new ArrayList<Listener>();
     private boolean isComplete;
+    private boolean isTimedOut;
     private float solutionDelay;
     private float responseDelay;
     private WordResult cachedResult = WordResult.UNKNOWN;
@@ -103,7 +104,7 @@ public class Puzzle {
         boolean isJustCompleted =
                 isComplete
                 ? false
-                : (isComplete = cachedResult.isCompleted());
+                : (isComplete = isTimedOut || cachedResult.isCompleted());
         for (Listener listener : listeners) {
             listener.changed();
             if (isJustCompleted) {
@@ -162,7 +163,13 @@ public class Puzzle {
         String resultText = result == WordResult.UNKNOWN 
             ? "" 
             : result.toString() + " ";
-        if (result.isCompleted()) {
+        if (isTimedOut) {
+            if (resultText.length() > 0) {
+                resultText += "and ";
+            }
+            resultText += "out of time (" + getScore() + ")";
+        }
+        else if (result.isCompleted()) {
             resultText += "(" + getScore() + ")";
         }
         else if (NO_SOLUTION.equals(solution)) {
@@ -189,15 +196,15 @@ public class Puzzle {
                     : WordResult.NOT_IMPROVED;
         }
         String challengeUpper = response.toUpperCase();
-        if ( ! isMatch(challengeUpper)) {
-            return isSkipped
-                    ? WordResult.IMPROVED_SKIP_NOT_A_MATCH
-                    : WordResult.IMPROVEMENT_NOT_A_MATCH;
-        }
         if ( ! wordList.contains(challengeUpper)) {
             return isSkipped
                     ? WordResult.IMPROVED_SKIP_NOT_A_WORD
                     : WordResult.IMPROVEMENT_NOT_A_WORD;
+        }
+        if ( ! isMatch(challengeUpper)) {
+            return isSkipped
+                    ? WordResult.IMPROVED_SKIP_NOT_A_MATCH
+                    : WordResult.IMPROVEMENT_NOT_A_MATCH;
         }
         if (challengeUpper.length() < getMinimumWordLength()) {
             return isSkipped
@@ -382,9 +389,21 @@ public class Puzzle {
     public void adjustScore(float seconds) {
         if (getResult().isValidSolution()) {
             responseDelay += seconds;
+            if (responseDelay >= MAX_DELAY/2) {
+                isTimedOut = true;
+                onChanged();
+            }
         }
         else {
             solutionDelay += seconds;
+            if (solutionDelay >= MAX_DELAY) {
+                isTimedOut = true;
+                onChanged();
+            }
         }
+    }
+    
+    public boolean isCompleted() {
+        return isTimedOut || getResult().isCompleted();
     }
 }

@@ -226,7 +226,7 @@ public class PuzzleTest {
         puzzle.setResponse("X");
         String display = puzzle.getResultDisplay();
         
-        assertThat("display", display, is("not a match -12 / 20"));
+        assertThat("display", display, is("not a word -12 / 20"));
     }
     
     @Test
@@ -330,9 +330,9 @@ public class PuzzleTest {
         int earlierScore = puzzle.getScore(WordResult.EARLIER);
         int shorterScore = puzzle.getScore(WordResult.SHORTER);
         
-        assertThat("display", notImprovedScore, is(60));
-        assertThat("display", earlierScore, is(40 + 8));
-        assertThat("display", shorterScore, is(20 + 16));
+        assertThat("not improved score", notImprovedScore, is(60));
+        assertThat("earlier score", earlierScore, is(40 + 8));
+        assertThat("shorter score", shorterScore, is(20 + 16));
         assertThat("completionCount", completionCount, is(0));
     }
     
@@ -349,7 +349,67 @@ public class PuzzleTest {
         int skippedScore = puzzle.getScore(WordResult.SKIP_NOT_IMPROVED);
         int wordFoundScore = puzzle.getScore(WordResult.WORD_FOUND);
         
-        assertThat("display", skippedScore, is(20));
-        assertThat("display", wordFoundScore, is(-20 + 8));
+        assertThat("skipped score", skippedScore, is(20));
+        assertThat("word found score", wordFoundScore, is(-20 + 8));
+    }
+    
+    @Test
+    public void solutionTimeout() {
+        // Lose 2% every second until solution
+        float solutionSeconds = 50;
+        
+        puzzle.adjustScore(solutionSeconds);
+        
+        assertThat("score", puzzle.getScore(), is(0));
+        assertThat("result", puzzle.getResultDisplay(), is("out of time (0)"));
+        assertThat("completion count", completionCount, is(1));
+    }
+    
+    @Test
+    public void invalidSolutionTimeout() {
+        // Lose 2% every second until solution
+        float solutionSeconds = 45;
+        
+        puzzle.adjustScore(solutionSeconds);
+        puzzle.setSolution("X");
+        
+        assertThat("score", puzzle.getScore(), is(0));
+        assertThat(
+                "result",
+                puzzle.getResultDisplay(),
+                is("not a word and out of time (0)"));
+    }
+    
+    @Test
+    public void responseTimeout() {
+        // Gain 4% of difference every second until response 
+        float responseSeconds = 25; // time between solution and response
+        
+        puzzle.setSolution("");
+        puzzle.adjustScore(responseSeconds);
+        
+        assertThat("score", puzzle.getScore(), is(33));
+        assertThat(
+                "result",
+                puzzle.getResultDisplay(),
+                is("skipping and out of time (33)"));
+        assertThat("completion count", completionCount, is(1));
+    }
+    
+    @Test
+    public void invalidResponseTimeout() {
+        // Gain 4% of difference every second until response 
+        float responseSeconds = 20; // time between solution and response
+        
+        puzzle.setSolution("");
+        puzzle.adjustScore(responseSeconds);
+        puzzle.setResponse("X");
+        
+        assertThat("score", puzzle.getScore(), is(33));
+        assertThat(
+                "result",
+                puzzle.getResultDisplay(),
+                is("not a word and out of time (33)"));
+        assertThat("completion count", completionCount, is(1));
     }
 }

@@ -303,6 +303,17 @@ public class ControllerTest {
     }
     
     @Test
+    public void solutionTimesOut() {
+        startPuzzle.adjustScore(45);
+        startPuzzle.setSolution("pixe");
+
+        controller.solve();
+        
+        Focus focus = screen.getCurrentFocus();
+        assertThat("focus", focus, is(Focus.Result));
+    }
+    
+    @Test
     public void solveWithHumanOwnerAgainstComputer() {
         createMatch(student, computerStudent);
         

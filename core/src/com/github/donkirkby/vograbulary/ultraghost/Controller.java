@@ -148,8 +148,7 @@ public class Controller implements StudentListener {
             @Override
             public void changed() {
                 screen.refreshPuzzle();
-                if (puzzle.getResponse() != null &&
-                        ! puzzle.getResult().isCompleted()) {
+                if (puzzle.getResponse() != null && ! puzzle.isCompleted()) {
                     screen.focusResponse();
                 }
             }
@@ -175,6 +174,9 @@ public class Controller implements StudentListener {
 
     public void solve() {
         Puzzle puzzle = getMatch().getPuzzle();
+        if (puzzle.isCompleted()) {
+            return;
+        }
         if ( ! puzzle.getResult().isValidSolution()) {
             screen.focusSolution();
         }
@@ -188,9 +190,7 @@ public class Controller implements StudentListener {
                 scheduler.cancel(searchTask);
             }
         }
-        if (puzzle.getResponse() == null) {
-            screen.refreshPuzzle();
-        }
+        screen.refreshPuzzle();
     }
 
     public void cancelMatch() {

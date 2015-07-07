@@ -49,6 +49,7 @@ public class PuzzleChallengeTest {
                {"PIE", 4, "", "pipe", WordResult.WORD_FOUND, true},
                {"PIE", 5, "", "pipe", WordResult.IMPROVED_SKIP_TOO_SHORT, false},
                {"PIE", 4, "", "pize", WordResult.IMPROVED_SKIP_NOT_A_WORD, false},
+               {"PIE", 4, "", "pzze", WordResult.IMPROVED_SKIP_NOT_A_WORD, false},
                {"PIE", 4, "", "rope", WordResult.IMPROVED_SKIP_NOT_A_MATCH, false},
                {"PIE", 4, "", "", WordResult.SKIP_NOT_IMPROVED, false},
                {"PIE", 4, null, "pipe", WordResult.UNKNOWN, false},
