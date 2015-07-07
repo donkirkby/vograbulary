@@ -197,6 +197,7 @@ public class UltraghostPresenter extends VograbularyPresenter implements Ultragh
                 resultText += "s";
             }
             ownerName.setInnerText(resultText);
+            focusButton(null);
         }
         else {
             ownerName.setInnerText(puzzle.getOwner().getName());

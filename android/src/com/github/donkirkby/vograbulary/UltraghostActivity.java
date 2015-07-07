@@ -81,7 +81,7 @@ extends VograbularyActivity implements UltraghostScreen, StudentListener {
                 else if (respondButton.getVisibility() == View.VISIBLE) {
                     respond(null);
                 }
-                else {
+                else if (nextButton.getVisibility() == View.VISIBLE) {
                     next(null);
                 }
                 return true;
