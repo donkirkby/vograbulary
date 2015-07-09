@@ -141,7 +141,7 @@ public class Controller implements StudentListener {
                 scheduler.cancel(scoreTask);
                 puzzle.getOwner().addScore(puzzle.getScore());
                 String hint = puzzle.findNextBetter();
-                puzzle.setHint(hint == null ? null : "hint: " + hint);
+                puzzle.setHint(hint == null ? "Perfect!" : "hint: " + hint);
                 screen.focusNextButton();
             }
             

@@ -487,7 +487,16 @@ public class ControllerTest {
         startPuzzle.setSolution("rope");
         startPuzzle.setResponse("");
         
-        assertThat("hint", startPuzzle.getHint(), nullValue());
+        assertThat("hint", startPuzzle.getHint(), is("Perfect!"));
+    }
+    
+    @Test
+    public void hintAfterInvalid() {
+        startPuzzle.setSolution("r");
+        float solutionSeconds = 1000;
+        startPuzzle.adjustScore(solutionSeconds);
+        
+        assertThat("hint", startPuzzle.getHint(), is("hint: ROPE"));
     }
     
     @Test

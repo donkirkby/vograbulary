@@ -163,23 +163,35 @@ public class Puzzle {
         String resultText = result == WordResult.UNKNOWN 
             ? "" 
             : result.toString() + " ";
-        if (isTimedOut) {
-            if (resultText.length() > 0) {
-                resultText += "and ";
-            }
-            resultText += "out of time (" + getScore() + ")";
+        int potentialScore = getPotentialScore();
+        int score;
+        if (isCompleted()) {
+            score = getScore();
         }
-        else if (result.isCompleted()) {
-            resultText += "(" + getScore() + ")";
+        else if ( ! result.isValidSolution()) {
+            score = potentialScore;
         }
-        else if (NO_SOLUTION.equals(solution)) {
-            resultText += getScore(WordResult.WORD_FOUND)
-                    + " / " + getScore(WordResult.SKIP_NOT_IMPROVED);
+        else if (solution == NO_SOLUTION) {
+            score = getScore(WordResult.WORD_FOUND);
         }
         else {
-            resultText += getScore(WordResult.SHORTER)
-                    + " / " + getScore(WordResult.EARLIER)
-                    + " / " + getScore(WordResult.NOT_IMPROVED);
+            score = getScore(WordResult.SHORTER);
+        }
+        String scoreText = Integer.toString(score);
+        if (potentialScore != score) {
+            scoreText += " of " + potentialScore;
+        }
+        if (isCompleted()) {
+            if (isTimedOut) {
+                if (resultText.length() > 0) {
+                    resultText += "and ";
+                }
+                resultText += "out of time ";
+            }
+            resultText += "(" + scoreText + ")";
+        }
+        else {
+            resultText += scoreText;
         }
         return resultText;
     }
@@ -321,7 +333,7 @@ public class Puzzle {
         String bestSoFar = 
                 getResult().isImproved() 
                 ? response.toUpperCase() 
-                : solution == null ? "" : solution.toUpperCase();
+                : getResult().isValidSolution() ? solution.toUpperCase() : "";
         Puzzle searchPuzzle = new Puzzle(letters, owner);
         searchPuzzle.setPreviousWord(previousWord);
         searchPuzzle.setSolution(bestSoFar);
@@ -372,18 +384,25 @@ public class Puzzle {
     }
 
     public int getScore(WordResult result) {
-        float baseScore = Math.max(0, MAX_DELAY - solutionDelay);
+        float potentialScore = getPotentialScore();
         float responseDelayLeft =
                 Math.max(0, MAX_DELAY/2 - responseDelay)/MAX_DELAY*2;
         WordResult bestResult = WordResult.NOT_IMPROVED;
         if (NO_SOLUTION.equals(solution)) {
-            baseScore /= 3;
             bestResult = WordResult.SKIP_NOT_IMPROVED;
         }
         float resultRatio = ((float)result.getScore()) / bestResult.getScore();
         float adjustedScore =
-                baseScore * (1 - (1 - resultRatio) * responseDelayLeft);
-        return Math.round(2 * adjustedScore);
+                potentialScore * (1 - (1 - resultRatio) * responseDelayLeft);
+        return Math.round(adjustedScore);
+    }
+
+    private int getPotentialScore() {
+        float potentialScore = Math.max(0, MAX_DELAY - solutionDelay);
+        if (NO_SOLUTION.equals(solution)) {
+            potentialScore /= 3;
+        }
+        return Math.round(2 * potentialScore);
     }
 
     public void adjustScore(float seconds) {

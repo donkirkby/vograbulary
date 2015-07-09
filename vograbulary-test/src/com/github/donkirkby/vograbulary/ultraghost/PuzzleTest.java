@@ -196,7 +196,7 @@ public class PuzzleTest {
         puzzle.adjustScore(seconds);
         int score = puzzle.getScore(WordResult.NOT_IMPROVED);
         
-        assertThat("display", score, is(0));
+        assertThat("score", score, is(0));
     }
     
     @Test
@@ -205,7 +205,17 @@ public class PuzzleTest {
         puzzle.adjustScore(seconds);
         String display = puzzle.getResultDisplay();
         
-        assertThat("display", display, is("33 / 67 / 100"));
+        assertThat("display", display, is("100"));
+    }
+    
+    @Test
+    public void getDisplayAfterSolution() {
+        float seconds = 0;
+        puzzle.adjustScore(seconds);
+        puzzle.setSolution("PRICE");
+        String display = puzzle.getResultDisplay();
+        
+        assertThat("display", display, is("valid 33 of 100"));
     }
     
     @Test
@@ -215,7 +225,7 @@ public class PuzzleTest {
         puzzle.setSolution("");
         String display = puzzle.getResultDisplay();
         
-        assertThat("display", display, is("skipping -20 / 20"));
+        assertThat("display", display, is("skipping -20 of 20"));
     }
     
     @Test
@@ -226,7 +236,7 @@ public class PuzzleTest {
         puzzle.setResponse("X");
         String display = puzzle.getResultDisplay();
         
-        assertThat("display", display, is("not a word -12 / 20"));
+        assertThat("display", display, is("not a word -12 of 20"));
     }
     
     @Test
