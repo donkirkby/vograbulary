@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.github.donkirkby.vograbulary.LetterDisplay;
+import com.github.donkirkby.vograbulary.LetterDisplayFactory;
+
 /**
  * Control the display of one of the target words. This abstract class must
  * have a concrete subclass for each platform that sets the position and

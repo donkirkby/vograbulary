@@ -5,9 +5,6 @@ import android.util.TypedValue;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.github.donkirkby.vograbulary.russian.LetterDisplay;
-import com.github.donkirkby.vograbulary.russian.LetterDisplayFactory;
-
 public class AndroidLetterDisplayFactory extends LetterDisplayFactory {
     private ViewGroup layout;
     

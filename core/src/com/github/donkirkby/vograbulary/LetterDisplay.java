@@ -1,4 +1,4 @@
-package com.github.donkirkby.vograbulary.russian;
+package com.github.donkirkby.vograbulary;
 
 import java.util.List;
 

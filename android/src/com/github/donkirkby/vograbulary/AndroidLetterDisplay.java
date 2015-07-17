@@ -4,8 +4,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.RelativeLayout.LayoutParams;
 
-import com.github.donkirkby.vograbulary.russian.LetterDisplay;
-
 public class AndroidLetterDisplay extends LetterDisplay {
     private TextView textView;
     private boolean isInitialized;

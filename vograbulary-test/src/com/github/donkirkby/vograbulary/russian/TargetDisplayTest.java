@@ -1,6 +1,6 @@
 package com.github.donkirkby.vograbulary.russian;
 
-import static com.github.donkirkby.vograbulary.russian.LetterDisplayTest.*;
+import static com.github.donkirkby.vograbulary.LetterDisplayTest.*;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
@@ -11,6 +11,10 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+import com.github.donkirkby.vograbulary.LetterDisplay;
+import com.github.donkirkby.vograbulary.LetterDisplayFactory;
+import com.github.donkirkby.vograbulary.LetterDisplayTest;
 
 
 public class TargetDisplayTest {

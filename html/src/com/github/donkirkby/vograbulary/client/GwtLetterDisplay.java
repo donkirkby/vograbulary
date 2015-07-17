@@ -1,41 +1,45 @@
 package com.github.donkirkby.vograbulary.client;
 
-import com.github.donkirkby.vograbulary.russian.LetterDisplay;
+import com.github.donkirkby.vograbulary.LetterDisplay;
 import com.google.gwt.user.client.ui.AbsolutePanel;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Button;
 
 public class GwtLetterDisplay extends LetterDisplay {
     private static final int TOP_MARGIN = 4;
     private AbsolutePanel panel;
-    private Label label;
+    private Button button;
     
-    public GwtLetterDisplay(AbsolutePanel panel, Label label) {
+    public GwtLetterDisplay(AbsolutePanel panel, Button button) {
         this.panel = panel;
-        this.label = label;
+        this.button = button;
         setLeft(0);
     }
 
     @Override
     public int getLeft() {
-        return panel.getWidgetLeft(label);
+        return panel.getWidgetLeft(button);
+    }
+    
+    public int getTop() {
+        return panel.getWidgetTop(button);
     }
 
     @Override
     public void setLeft(int left) {
-        panel.setWidgetPosition(label, left, TOP_MARGIN);
+        panel.setWidgetPosition(button, left, TOP_MARGIN);
     }
 
     @Override
     public int getWidth() {
-        return label.getOffsetWidth();
+        return button.getOffsetWidth();
     }
 
     @Override
     public String getLetter() {
-        return label.getText();
+        return button.getText();
     }
     
-    public Label getLabel() {
-        return label;
+    public Button getButton() {
+        return button;
     }
 }
