@@ -1,16 +1,29 @@
 package com.github.donkirkby.vograbulary;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class LetterDisplay {
+    public interface LetterDisplayListener {
+        void onClick();
+    }
+    
     private int startLeft;
     private boolean isMovingLeft;
+    private List<LetterDisplayListener> listeners = new ArrayList<>();
+    
+    /** Get the y coordinate of the top side of the letter. */
+    public abstract int getTop();
+    /** Set the letter's top side position on the display. */
+    public abstract void setTop(int top);
     
     /** Get the x coordinate of the left side of the letter. */
     public abstract int getLeft();
     /** Set the letter's left side position on the display. */
     public abstract void setLeft(int left);
     
+    /** Get the letter's height on the display. */
+    public abstract int getHeight();
     /** Get the letter's width on the display. */
     public abstract int getWidth();
     
@@ -24,6 +37,19 @@ public abstract class LetterDisplay {
     /** Set the x coordinate one past the right side of the letter. */
     public void setRight(int right) {
         setLeft(right - getWidth());
+    }
+    
+    public int getCentreY() {
+        return getTop() + getHeight()/2;
+    }
+    public void setCentreY(int centreY) {
+        setTop(centreY - getHeight()/2);
+    }
+    public int getCentreX() {
+        return getLeft() + getWidth()/2;
+    }
+    public void setCentreX(int centreX) {
+        setLeft(centreX - getWidth()/2);
     }
     
     public void recordStartPosition() {
@@ -73,5 +99,15 @@ public abstract class LetterDisplay {
         else {
             after.add(this);
         }
+    }
+    
+    public void click() {
+        for (LetterDisplayListener listener : listeners) {
+            listener.onClick();
+        }
+    }
+    
+    public void addClickListener(LetterDisplayListener listener) {
+        listeners.add(listener);
     }
 }

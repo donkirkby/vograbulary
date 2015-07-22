@@ -13,22 +13,33 @@ public class GwtLetterDisplay extends LetterDisplay {
         this.panel = panel;
         this.button = button;
         setLeft(0);
+        setTop(TOP_MARGIN);
+    }
+
+    @Override
+    public int getTop() {
+        return panel.getWidgetTop(button);
+    }
+    
+    @Override
+    public void setTop(int top) {
+        panel.setWidgetPosition(button, getLeft(), top);
     }
 
     @Override
     public int getLeft() {
         return panel.getWidgetLeft(button);
     }
-    
-    public int getTop() {
-        return panel.getWidgetTop(button);
-    }
 
     @Override
     public void setLeft(int left) {
-        panel.setWidgetPosition(button, left, TOP_MARGIN);
+        panel.setWidgetPosition(button, left, getTop());
     }
 
+    @Override
+    public int getHeight() {
+        return button.getOffsetHeight();
+    }
     @Override
     public int getWidth() {
         return button.getOffsetWidth();

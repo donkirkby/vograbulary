@@ -8,6 +8,7 @@ public class AndroidLetterDisplay extends LetterDisplay {
     private TextView textView;
     private boolean isInitialized;
     private int offsetX; // add to x to get leftMargin
+    private int offsetY; // add to y to get topMargin
     
     public AndroidLetterDisplay(TextView textView) {
         this.textView = textView;
@@ -30,6 +31,20 @@ public class AndroidLetterDisplay extends LetterDisplay {
     }
     
     @Override
+    public int getTop() {
+        checkOffset();
+        return getLayoutParams().topMargin - offsetY;
+    }
+    
+    @Override
+    public void setTop(int top) {
+        checkOffset();
+        LayoutParams layoutParams = getLayoutParams();
+        layoutParams.topMargin = top + offsetX;
+        textView.setLayoutParams(layoutParams);
+    }
+    
+    @Override
     public int getLeft() {
         checkOffset();
         return getLayoutParams().leftMargin - offsetX;
@@ -43,6 +58,10 @@ public class AndroidLetterDisplay extends LetterDisplay {
         textView.setLayoutParams(layoutParams);
     }
 
+    @Override
+    public int getHeight() {
+        return textView.getHeight();
+    }
     @Override
     public int getWidth() {
         return textView.getWidth();

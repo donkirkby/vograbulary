@@ -4,7 +4,6 @@ import static com.github.donkirkby.vograbulary.LetterDisplayTest.*;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
@@ -14,7 +13,7 @@ import org.junit.rules.ExpectedException;
 
 import com.github.donkirkby.vograbulary.LetterDisplay;
 import com.github.donkirkby.vograbulary.LetterDisplayFactory;
-import com.github.donkirkby.vograbulary.LetterDisplayTest;
+import com.github.donkirkby.vograbulary.LetterDisplayTest.DummyLetterDisplayFactory;
 
 
 public class TargetDisplayTest {
@@ -62,26 +61,6 @@ public class TargetDisplayTest {
         }
     }
 
-    private class DummyLetterDisplayFactory extends LetterDisplayFactory {
-        private List<DummyLetterDisplay> active = new ArrayList<>();
-        
-        @Override
-        public LetterDisplay create(String letter) {
-            LetterDisplayTest.DummyLetterDisplay display =
-                    new LetterDisplayTest.DummyLetterDisplay(letter);
-            active.add(display);
-            return display;
-        }
-
-        @Override
-        public void destroy(LetterDisplay letter) {
-            active.remove(letter);
-        }
-        
-        public List<DummyLetterDisplay> getActive() {
-            return active;
-        }
-    }
     private TargetDisplay leftDisplay;
     private TargetDisplay rightDisplay;
     private List<LetterDisplay> leftLetters;
