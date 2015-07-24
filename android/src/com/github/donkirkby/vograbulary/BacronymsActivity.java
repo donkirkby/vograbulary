@@ -5,11 +5,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.github.donkirkby.vograbulary.WordDisplay.WordDisplayListener;
 import com.github.donkirkby.vograbulary.bacronyms.BacronymsScreen;
 import com.github.donkirkby.vograbulary.bacronyms.Controller;
 import com.github.donkirkby.vograbulary.bacronyms.Puzzle;
@@ -21,8 +26,32 @@ extends VograbularyActivity implements BacronymsScreen {
     private Puzzle puzzle;
     private State state;
     private TextView stateText;
-    private List<Button> wordButtons;
+    private List<WordDisplay> wordDisplays;
+    private List<ValueAnimator> animations;
+    private AndroidLetterDisplayFactory displayFactory;
     private Button nextButton;
+    private boolean isLaidOut;
+    private WordDisplayListener wordListener = new WordDisplayListener() {
+        @Override
+        public void onClick(WordDisplay wordDisplay) {
+            for (int i = 0; i < animations.size(); i++) {
+                ValueAnimator wordAnimation = animations.get(i);
+                wordAnimation.cancel();
+                if (wordDisplays.get(i) == wordDisplay &&
+                        Math.abs(wordDisplay.getRotation()) < 0.0001) {
+                    wordAnimation.setFloatValues(0, (float)Math.PI);
+                    puzzle.setSelectedIndex(i);
+                }
+                else {
+                    wordAnimation.setFloatValues(
+                            (float)wordDisplays.get(i).getRotation(),
+                            0);
+                }
+                wordAnimation.start();
+            }
+        }
+    };
+    private ViewGroup bacronymsLayout;
 
     @Override
     public Puzzle getPuzzle() {
@@ -35,9 +64,11 @@ extends VograbularyActivity implements BacronymsScreen {
     }
     
     private void displayWords() {
-        for (int i = 0; i < wordButtons.size(); i++) {
-            wordButtons.get(i).setText(puzzle.getWord(i));
+        for (int i = 0; i < 3; i++) {
+            wordDisplays.get(i).setWord(puzzle.getWord(i));
         }
+        isLaidOut = false;
+        bacronymsLayout.invalidate();
     }
     
     @Override
@@ -59,10 +90,6 @@ extends VograbularyActivity implements BacronymsScreen {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bacronyms);
-        wordButtons = Arrays.asList(
-                (Button)findViewById(R.id.word1),
-                (Button)findViewById(R.id.word2),
-                (Button)findViewById(R.id.word3));
         stateText = (TextView)findViewById(R.id.stateText);
         nextButton = (Button)findViewById(R.id.nextButton);
 
@@ -88,17 +115,57 @@ extends VograbularyActivity implements BacronymsScreen {
                 controller.next();
             }
         });
-        for (int i = 0; i < wordButtons.size(); i++) {
-            final int wordIndex = i;
-            wordButtons.get(i).setOnClickListener(new View.OnClickListener() {
+        bacronymsLayout = (ViewGroup)findViewById(R.id.bacronymsLayout);
+        displayFactory = new AndroidLetterDisplayFactory(bacronymsLayout);
+        wordDisplays = new ArrayList<>();
+        animations = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            final WordDisplay wordDisplay = new WordDisplay(displayFactory);
+            wordDisplay.addListener(wordListener);
+            wordDisplays.add(wordDisplay);
+            ValueAnimator animator = new ValueAnimator().setDuration(1000);
+            animations.add(animator);
+            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
-                public void onClick(View v) {
-                    puzzle.setSelectedIndex(wordIndex);
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    wordDisplay.setRotation((float) animation.getAnimatedValue());
+                }
+            });
+            
+            animator.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+                }
+                
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+                }
+                
+                @Override
+                public void onAnimationEnd(Animator animation) {
                     controller.solve();
-                    displayWords();
+                }
+                
+                @Override
+                public void onAnimationCancel(Animator animation) {
                 }
             });
         }
+        bacronymsLayout.getViewTreeObserver().addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if ( ! isLaidOut) {
+                    int left = 0;
+                    for (WordDisplay wordDisplay : wordDisplays) {
+                        wordDisplay.setLeft(left);
+                        wordDisplay.setTop(wordDisplay.getTop());
+                        left += wordDisplay.getWidth() + 20;
+                    }
+                    isLaidOut = true;
+                }
+            }
+        });
         controller.next();
     }
 }

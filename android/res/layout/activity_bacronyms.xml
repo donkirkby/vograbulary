@@ -4,45 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <Button
-        android:id="@+id/word2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="27dp"
-        android:text="WORD2"
-        android:textSize="45sp" />
-
-    <Button
-        android:id="@+id/word1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/word2"
-        android:layout_alignBottom="@+id/word2"
-        android:layout_marginRight="22dp"
-        android:layout_toLeftOf="@+id/word2"
-        android:text="WORD1"
-        android:textSize="45sp" />
-
-    <Button
-        android:id="@+id/word3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/word2"
-        android:layout_alignBottom="@+id/word2"
-        android:layout_marginLeft="22dp"
-        android:layout_toRightOf="@+id/word2"
-        android:text="WORD3"
-        android:textSize="45sp" />
-
     <TextView
         android:id="@+id/stateText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/word1"
-        android:layout_marginTop="22dp"
-        android:layout_toLeftOf="@+id/word2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="140dp"
         android:text="STATE"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="30sp" />
@@ -51,9 +18,9 @@
         android:id="@+id/nextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/word1"
         android:layout_below="@+id/stateText"
         android:layout_marginTop="20dp"
+        android:layout_toLeftOf="@id/stateText"
         android:text="Next"
         android:textSize="45sp" />
 

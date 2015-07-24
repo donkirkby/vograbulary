@@ -70,7 +70,7 @@ extends VograbularyPresenter implements BacronymsScreen {
             for (int i = 0; i < animations.size(); i++) {
                 WordAnimation wordAnimation = animations.get(i);
                 if (wordAnimation.getWord() == wordDisplay &&
-                        Math.abs(wordAnimation.getWord().getRotation()) < 0.0001) {
+                        Math.abs(wordDisplay.getRotation()) < 0.0001) {
                     wordAnimation.rotateWord(Math.PI);
                     puzzle.setSelectedIndex(i);
                 }

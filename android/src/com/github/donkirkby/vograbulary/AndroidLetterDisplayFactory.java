@@ -2,6 +2,7 @@ package com.github.donkirkby.vograbulary;
 
 import android.graphics.Typeface;
 import android.util.TypedValue;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -20,7 +21,15 @@ public class AndroidLetterDisplayFactory extends LetterDisplayFactory {
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 45);
         textView.setTypeface(Typeface.MONOSPACE);
         layout.addView(textView);
-        return new AndroidLetterDisplay(textView);
+        final AndroidLetterDisplay display = new AndroidLetterDisplay(textView);
+        textView.setClickable(true);
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                display.click();
+            }
+        });
+        return display;
     }
 
     @Override
