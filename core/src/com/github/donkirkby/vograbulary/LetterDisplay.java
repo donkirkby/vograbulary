@@ -27,6 +27,11 @@ public abstract class LetterDisplay {
     /** Get the letter's width on the display. */
     public abstract int getWidth();
     
+    /** Get the letter's text size in pixels. */
+    public abstract float getTextSize();
+    /** Set the letter's text size in pixels. */
+    public abstract void setTextSize(float size);
+    
     /** Get the letter that will display. */
     public abstract String getLetter();
     

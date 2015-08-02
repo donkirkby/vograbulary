@@ -106,6 +106,26 @@ public class WordDisplayTest implements WordDisplayListener {
     }
     
     @Test
+    public void setTextSize() {
+        wordDisplay.setWord("TO");
+        
+        wordDisplay.setTextSize(10);
+        
+        assertThat("text size", factory.getActive().get(1).getTextSize(), is(10f));
+    }
+    
+    @Test
+    public void getTextSize() {
+        wordDisplay.setWord("TO");
+        float expectedTextSize = 5;
+        factory.getActive().get(0).setTextSize(expectedTextSize);
+        
+        float textSize = wordDisplay.getTextSize();
+        
+        assertThat("text size", textSize, is(expectedTextSize));
+    }
+    
+    @Test
     public void setRotation() {
         wordDisplay.setWord("TOTAL");
         wordDisplay.setLeft(0);

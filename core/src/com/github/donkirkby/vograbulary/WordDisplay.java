@@ -96,6 +96,17 @@ public class WordDisplay {
     public int getTop() {
         return letters.get(0).getTop();
     }
+    
+    public float getTextSize() {
+        return letters.get(0).getTextSize();
+    }
+    
+    public void setTextSize(float textSize) {
+        for (LetterDisplay letterDisplay : letters) {
+            letterDisplay.setTextSize(textSize);
+        }
+        width = null; // force recalculate
+    }
 
     /** Set the rotation of the word in radians. */
     public void setRotation(double rotation) {

@@ -18,6 +18,7 @@ public class LetterDisplayTest implements LetterDisplayListener {
     public static class DummyLetterDisplay extends LetterDisplay {
         private int left;
         private int top;
+        private float textSize;
         private String letter;
         
         public DummyLetterDisplay(String letter) {
@@ -42,6 +43,15 @@ public class LetterDisplayTest implements LetterDisplayListener {
         @Override
         public void setLeft(int left) {
             this.left = left;
+        }
+        
+        @Override
+        public float getTextSize() {
+            return textSize;
+        }
+        @Override
+        public void setTextSize(float textSize) {
+            this.textSize = textSize;
         }
         
         @Override

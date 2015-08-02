@@ -14,9 +14,12 @@ import com.google.gwt.animation.client.Animation;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Widget;
@@ -110,6 +113,13 @@ extends VograbularyPresenter implements BacronymsScreen {
             
             animations.add(new WordAnimation(wordDisplay));
         }
+        Window.addResizeHandler(new ResizeHandler() {
+            @Override
+            public void onResize(ResizeEvent event) {
+                layout(3);
+            }
+                
+        });
 
         String puzzleLines = Assets.INSTANCE.bacronyms().getText();
         String wordListText = Assets.INSTANCE.wordList().getText();
@@ -120,6 +130,33 @@ extends VograbularyPresenter implements BacronymsScreen {
         controller.setWordList(wordList);
         controller.loadPuzzles(Arrays.asList(puzzleLines.split("\\n")));
         controller.next();
+    }
+    
+    private void layout(int retries) {
+        int left = 0;
+        for (WordDisplay wordDisplay : wordDisplays) {
+            wordDisplay.setLeft(left);
+            wordDisplay.setTop(wordDisplay.getTop());
+            left += wordDisplay.getWidth() + 20;
+        }
+        int layoutWidth = wordPanel.getOffsetWidth();
+        if (retries > 0 && (left < layoutWidth * .75 || layoutWidth < left)) {
+            float textSize = 0;
+            boolean isSizeCalculated = false;
+            for (WordDisplay wordDisplay : wordDisplays) {
+                if ( ! isSizeCalculated) {
+                    float oldTextSize = wordDisplay.getTextSize();
+                    float correction = layoutWidth * 0.9f / left;
+                    textSize = oldTextSize * correction;
+                    wordPanel.setHeight(textSize * 3 + "px");
+                    isSizeCalculated = true;
+                }
+                wordDisplay.setTextSize(textSize);
+                wordDisplay.setTop((int)textSize);
+            }
+            layout(retries-1);
+        }
+
     }
     
     @Override
@@ -150,11 +187,7 @@ extends VograbularyPresenter implements BacronymsScreen {
         scheduler.scheduleDeferred(new Runnable() {
             @Override
             public void run() {
-                int left = 0;
-                for (WordDisplay word: wordDisplays) {
-                    word.setLeft(left);
-                    left += word.getWidth() + 20;
-                }
+                layout(3);
             }
         });
     }

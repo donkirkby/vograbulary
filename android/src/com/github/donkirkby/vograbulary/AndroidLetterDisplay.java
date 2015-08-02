@@ -68,6 +68,15 @@ public class AndroidLetterDisplay extends LetterDisplay {
     }
 
     @Override
+    public float getTextSize() {
+        return textView.getTextSize();
+    }
+    @Override
+    public void setTextSize(float size) {
+        textView.setTextSize(size);
+    }
+
+    @Override
     public String getLetter() {
         return textView.getText().toString();
     }
