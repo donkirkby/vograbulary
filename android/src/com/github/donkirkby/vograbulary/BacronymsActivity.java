@@ -52,7 +52,6 @@ extends VograbularyActivity implements BacronymsScreen {
         }
     };
     private ViewGroup bacronymsLayout;
-    private boolean isSizeCalculated;
 
     @Override
     public Puzzle getPuzzle() {
@@ -69,7 +68,6 @@ extends VograbularyActivity implements BacronymsScreen {
             wordDisplays.get(i).setWord(puzzle.getWord(i));
         }
         isLaidOut = false;
-        isSizeCalculated = false;
         bacronymsLayout.invalidate();
     }
     
@@ -165,20 +163,20 @@ extends VograbularyActivity implements BacronymsScreen {
                         left += wordDisplay.getWidth() + wordDisplay.getTextSize();
                     }
                     int layoutWidth = bacronymsLayout.getWidth();
-                    if (layoutWidth * .75 < left && left < layoutWidth ||
-                            isSizeCalculated) {
+                    if (layoutWidth * .75 < left && left < layoutWidth) {
                         isLaidOut = true;
                     }
                     else {
                         float textSize = 0;
                         for (WordDisplay wordDisplay : wordDisplays) {
-                            if ( ! isSizeCalculated) {
+                            if (textSize == 0) {
                                 float oldTextSize = wordDisplay.getTextSize();
                                 float correction = layoutWidth * 0.9f / left;
                                 textSize = oldTextSize * correction;
-                                isSizeCalculated = true;
+                                stateText.setTop((int) (textSize*3));
                             }
                             wordDisplay.setTextSize(textSize);
+                            wordDisplay.setTop((int) textSize);
                         }
                         bacronymsLayout.requestLayout();
                     }

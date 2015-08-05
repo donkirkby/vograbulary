@@ -1,5 +1,6 @@
 package com.github.donkirkby.vograbulary;
 
+import android.util.TypedValue;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.RelativeLayout.LayoutParams;
@@ -73,7 +74,7 @@ public class AndroidLetterDisplay extends LetterDisplay {
     }
     @Override
     public void setTextSize(float size) {
-        textView.setTextSize(size);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
     }
 
     @Override

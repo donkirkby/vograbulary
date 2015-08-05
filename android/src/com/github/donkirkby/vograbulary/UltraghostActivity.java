@@ -6,10 +6,15 @@ import java.util.Arrays;
 import java.util.List;
 
 import android.content.Intent;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -46,6 +51,7 @@ extends VograbularyActivity implements UltraghostScreen, StudentListener {
     private Match match;
     private Controller controller;
     private Handler handler;
+    private ViewGroup ultraghostLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +96,49 @@ extends VograbularyActivity implements UltraghostScreen, StudentListener {
         solution.setOnEditorActionListener(actionListener);
         response.setOnEditorActionListener(actionListener);
         
+        ultraghostLayout = (ViewGroup)findViewById(R.id.ultraghostLayout);
+        ultraghostLayout.getViewTreeObserver().addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        Rect bounds = new Rect();
+                        Paint paint = response.getPaint();
+                        int desiredWidth = 22;
+                        StringBuilder testString = new StringBuilder();
+                        for (int i = 0; i < desiredWidth; i++) {
+                            testString.append("X");
+                        }
+                        paint.getTextBounds(
+                                testString.toString(),
+                                0,
+                                desiredWidth,
+                                bounds);
+                        int width = ultraghostLayout.getWidth();
+                        float correction = (float)width / bounds.width();
+                        if (correction < 1 || 1.5 < correction) {
+                            float oldTextSize = response.getTextSize();
+                            float textSize = oldTextSize*correction;
+                            solution.setTextSize(
+                                    TypedValue.COMPLEX_UNIT_PX,
+                                    textSize);
+                            solveButton.setTextSize(
+                                    TypedValue.COMPLEX_UNIT_PX,
+                                    textSize);
+                            response.setTextSize(
+                                    TypedValue.COMPLEX_UNIT_PX,
+                                    textSize);
+                            respondButton.setTextSize(
+                                    TypedValue.COMPLEX_UNIT_PX,
+                                    textSize);
+                            hint.setTextSize(
+                                    TypedValue.COMPLEX_UNIT_PX,
+                                    textSize * .75f);
+                            nextButton.setTextSize(
+                                    TypedValue.COMPLEX_UNIT_PX,
+                                    textSize);
+                        }
+                    }
+                });
         AndroidPreferences preferences = new AndroidPreferences(this);
         controller = new Controller();
         controller.setPreferences(preferences);
