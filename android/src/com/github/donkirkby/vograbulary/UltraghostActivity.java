@@ -17,6 +17,8 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.github.donkirkby.vograbulary.ultraghost.ComputerStudent;
@@ -99,6 +101,8 @@ extends VograbularyActivity implements UltraghostScreen, StudentListener {
         ultraghostLayout = (ViewGroup)findViewById(R.id.ultraghostLayout);
         ultraghostLayout.getViewTreeObserver().addOnGlobalLayoutListener(
                 new ViewTreeObserver.OnGlobalLayoutListener() {
+                    private boolean isLandscape;
+                    
                     @Override
                     public void onGlobalLayout() {
                         Rect bounds = new Rect();
@@ -113,8 +117,26 @@ extends VograbularyActivity implements UltraghostScreen, StudentListener {
                                 0,
                                 desiredWidth,
                                 bounds);
-                        int width = ultraghostLayout.getWidth();
-                        float correction = (float)width / bounds.width();
+                        Rect windowBounds = new Rect();
+                        ultraghostLayout.getWindowVisibleDisplayFrame(windowBounds);
+                        int windowWidth = windowBounds.right - windowBounds.left;
+                        int windowHeight = windowBounds.bottom - windowBounds.top;
+                        if (windowWidth > windowHeight && ! isLandscape) {
+                            isLandscape = true;
+                            RelativeLayout.LayoutParams layoutParams = 
+                                    (LayoutParams) summary.getLayoutParams();
+                            layoutParams.addRule(RelativeLayout.BELOW, R.id.letters);
+                            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT, 0);
+                            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                            
+                            layoutParams =
+                                    (LayoutParams) solveButton.getLayoutParams();
+                            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
+                            layoutParams.addRule(RelativeLayout.LEFT_OF, R.id.summary);
+                        }
+                        float correctionX = (float)windowWidth / bounds.width();
+                        float correctionY = windowHeight / (bounds.height()*15f);
+                        float correction = Math.min(correctionX, correctionY);
                         if (correction < 1 || 1.5 < correction) {
                             float oldTextSize = response.getTextSize();
                             float textSize = oldTextSize*correction;

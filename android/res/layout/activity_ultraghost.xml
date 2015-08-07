@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ultraghostLayout"
     android:layout_width="match_parent"
@@ -16,6 +16,8 @@
         android:id="@+id/ownerName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
         android:text="@string/example_owner"
         android:textSize="30sp" />
 
@@ -23,92 +25,95 @@
         android:id="@+id/letters"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/ownerName"
+        android:layout_centerHorizontal="true"
         android:text="@string/example_letters"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="45sp" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+    <EditText
+        android:id="@+id/solution"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/letters"
+        android:layout_marginLeft="16dp"
+        android:layout_toLeftOf="@+id/solveButton"
+        android:layout_weight="1"
+        android:ems="10"
+        android:imeOptions="actionNext"
+        android:inputType="text|textNoSuggestions"
+        android:textSize="60sp"
+        android:typeface="monospace" >
 
-        <EditText
-            android:id="@+id/solution"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:imeOptions="actionNext"
-            android:inputType="text|textNoSuggestions"
-            android:textSize="60sp"
-            android:typeface="monospace" >
+        <requestFocus />
+    </EditText>
 
-            <requestFocus />
-        </EditText>
+    <Button
+        android:id="@+id/solveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/solution"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="14dp"
+        android:onClick="solve"
+        android:text="@string/solve"
+        android:textSize="45sp" />
 
-        <Button
-            android:id="@+id/solveButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="solve"
-            android:text="@string/solve"
-            android:textSize="45sp" />
+    <EditText
+        android:id="@+id/response"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/solution"
+        android:layout_below="@id/solution"
+        android:layout_toLeftOf="@+id/respondButton"
+        android:layout_weight="1"
+        android:ems="10"
+        android:imeOptions="actionNext"
+        android:inputType="text|textNoSuggestions"
+        android:textSize="60sp"
+        android:typeface="monospace" >
 
-    </LinearLayout>
+    </EditText>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+    <Button
+        android:id="@+id/respondButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/response"
+        android:layout_alignRight="@+id/solveButton"
+        android:onClick="respond"
+        android:text="@string/respond"
+        android:textSize="45sp" />
 
-        <EditText
-            android:id="@+id/response"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:imeOptions="actionNext"
-            android:inputType="text|textNoSuggestions"
-            android:textSize="60sp"
-            android:typeface="monospace" >
+    <TextView
+        android:id="@+id/hint"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/nextButton"
+        android:layout_marginTop="7dp"
+        android:layout_toLeftOf="@id/nextButton"
+        android:layout_weight="1"
+        android:text="@string/example_hint"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="45sp" />
 
-        </EditText>
-
-        <Button
-            android:id="@+id/respondButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="respond"
-            android:text="@string/respond"
-            android:textSize="45sp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <TextView
-            android:id="@+id/hint"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/example_hint"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="45sp" />
-
-        <Button
-            android:id="@+id/nextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="next"
-            android:text="@string/next"
-            android:textSize="45sp" />
-
-    </LinearLayout>
+    <Button
+        android:id="@+id/nextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@id/respondButton"
+        android:layout_below="@+id/response"
+        android:onClick="next"
+        android:text="@string/next"
+        android:textSize="45sp" />
 
     <TextView
         android:id="@+id/result"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/nextButton"
         android:text="@string/example_result"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="30sp" />
@@ -117,8 +122,10 @@
         android:id="@+id/summary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/result"
         android:layout_gravity="start"
         android:text="@string/example_summary"
         android:textSize="30sp" />
 
-</LinearLayout>
+</RelativeLayout>
