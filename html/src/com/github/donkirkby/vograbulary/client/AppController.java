@@ -40,6 +40,7 @@ implements ValueChangeHandler<String>, VograbularyPresenter.NavigationListener {
 
     public void go(HasWidgets container) {
         this.container = container;
+        History.newItem(null); //clear the history so a change event gets fired
         History.newItem(MainPresenter.HISTORY_TOKEN);
     }
 
