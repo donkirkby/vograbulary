@@ -30,6 +30,7 @@
         <mkdir dir="bin"/>
         <copy includeemptydirs="false" todir="bin">
             <fileset dir="src">
+                <exclude name="**/*.launch"/>
                 <exclude name="**/*.java"/>
             </fileset>
         </copy>
@@ -73,10 +74,11 @@
         <mkdir dir="${junit.output.dir}"/>
         <junit fork="yes" printsummary="withOutAndErr" haltonfailure="on">
             <formatter type="xml"/>
+            <test name="com.github.donkirkby.vograbulary.LetterDisplayTest" todir="${junit.output.dir}"/>
+            <test name="com.github.donkirkby.vograbulary.WordDisplayTest" todir="${junit.output.dir}"/>
             <test name="com.github.donkirkby.vograbulary.bacronyms.ControllerTest" todir="${junit.output.dir}"/>
             <test name="com.github.donkirkby.vograbulary.bacronyms.PuzzleTest" todir="${junit.output.dir}"/>
             <test name="com.github.donkirkby.vograbulary.russian.ControllerTest" todir="${junit.output.dir}"/>
-            <test name="com.github.donkirkby.vograbulary.russian.LetterDisplayTest" todir="${junit.output.dir}"/>
             <test name="com.github.donkirkby.vograbulary.russian.PuzzleDisplayTest" todir="${junit.output.dir}"/>
             <test name="com.github.donkirkby.vograbulary.russian.PuzzleScoreTest" todir="${junit.output.dir}"/>
             <test name="com.github.donkirkby.vograbulary.russian.PuzzleTargetIndexTest" todir="${junit.output.dir}"/>
@@ -107,11 +109,11 @@
             <classpath refid="vograbulary-test.classpath"/>
         </junit>
     </target>
-    <target name="PuzzleTargetIndexTest">
+    <target name="LetterDisplayTest">
         <mkdir dir="${junit.output.dir}"/>
         <junit fork="yes" printsummary="withOutAndErr">
             <formatter type="xml"/>
-            <test name="com.github.donkirkby.vograbulary.russian.PuzzleTargetIndexTest" todir="${junit.output.dir}"/>
+            <test name="com.github.donkirkby.vograbulary.LetterDisplayTest" todir="${junit.output.dir}"/>
             <classpath refid="vograbulary-test.classpath"/>
         </junit>
     </target>
@@ -119,7 +121,7 @@
         <mkdir dir="${junit.output.dir}"/>
         <junit fork="yes" printsummary="withOutAndErr">
             <formatter type="xml"/>
-            <test name="com.github.donkirkby.vograbulary.bacronyms.ControllerTest" todir="${junit.output.dir}"/>
+            <test name="com.github.donkirkby.vograbulary.ultraghost.ControllerTest" todir="${junit.output.dir}"/>
             <classpath refid="vograbulary-test.classpath"/>
         </junit>
     </target>
@@ -127,7 +129,7 @@
         <mkdir dir="${junit.output.dir}"/>
         <junit fork="yes" printsummary="withOutAndErr">
             <formatter type="xml"/>
-            <test name="com.github.donkirkby.vograbulary.russian.PuzzleTest" todir="${junit.output.dir}"/>
+            <test name="com.github.donkirkby.vograbulary.ultraghost.PuzzleTest" todir="${junit.output.dir}"/>
             <classpath refid="vograbulary-test.classpath"/>
         </junit>
     </target>
