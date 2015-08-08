@@ -14,7 +14,6 @@ public class WordDisplay {
     private LetterDisplayFactory factory;
     private List<LetterDisplay> letters = new ArrayList<>();
     private List<WordDisplayListener> listeners = new ArrayList<>();
-    private Integer width;
     private int centreX;
     private int centreY;
     private double rotation;
@@ -52,7 +51,6 @@ public class WordDisplay {
             letter.addClickListener(letterDisplayListener);
             letters.add(letter);
         }
-        width = null;
     }
 
     public String getWord() {
@@ -68,11 +66,9 @@ public class WordDisplay {
     }
 
     public int getWidth() {
-        if (width == null) {
-            width = 0;
-            for (LetterDisplay letter : letters) {
-                width += letter.getWidth();
-            }
+        int width = 0;
+        for (LetterDisplay letter : letters) {
+            width += letter.getWidth();
         }
         return width;
     }
@@ -105,7 +101,6 @@ public class WordDisplay {
         for (LetterDisplay letterDisplay : letters) {
             letterDisplay.setTextSize(textSize);
         }
-        width = null; // force recalculate
     }
 
     /** Set the rotation of the word in radians. */

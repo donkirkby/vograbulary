@@ -106,6 +106,16 @@ public class WordDisplayTest implements WordDisplayListener {
     }
     
     @Test
+    public void getTop() {
+        wordDisplay.setWord("I");
+        factory.getActive().get(0).setTop(25);
+        
+        int top = wordDisplay.getTop();
+        
+        assertThat("top", top, is(25));
+    }
+    
+    @Test
     public void setTextSize() {
         wordDisplay.setWord("TO");
         
