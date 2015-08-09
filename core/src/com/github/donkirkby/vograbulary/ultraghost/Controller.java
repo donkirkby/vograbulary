@@ -73,7 +73,7 @@ public class Controller implements StudentListener {
     private class ScoreTask implements Runnable {
         @Override
         public void run() {
-            screen.getMatch().getPuzzle().adjustScore(SCORE_MILLISECONDS / 1000.0f);
+            screen.getMatch().getPuzzle().adjustScore(SCORE_MILLISECONDS / 1000f);
             screen.refreshScore();
         }
     }
@@ -186,9 +186,7 @@ public class Controller implements StudentListener {
                     student.prepareResponse();
                 }
             }
-            if (searchTask != null) {
-                scheduler.cancel(searchTask);
-            }
+            scheduler.cancel(searchTask);
         }
         screen.refreshPuzzle();
     }

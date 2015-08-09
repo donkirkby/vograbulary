@@ -229,6 +229,17 @@ public class PuzzleTest {
     }
     
     @Test
+    public void getDisplayAfterResponse() {
+        float seconds = 20;
+        puzzle.adjustScore(seconds);
+        puzzle.setSolution("");
+        puzzle.setResponse("PIPE");
+        String display = puzzle.getResultDisplay();
+        
+        assertThat("display", display, is("word found (-20 of 20)"));
+    }
+    
+    @Test
     public void getDisplayAfterInvalidResponse() {
         float seconds = 20;
         puzzle.adjustScore(seconds);

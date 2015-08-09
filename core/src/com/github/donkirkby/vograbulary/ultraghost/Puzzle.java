@@ -146,9 +146,12 @@ public class Puzzle {
      * UKNOWN until a solution and response have been entered.
      */
     public WordResult getResult() {
+        //stopJesting
         if (cachedResult != WordResult.UNKNOWN) {
             return cachedResult;
         }
+        //resumeJesting
+        
         if (solution == NOT_SET) {
             return WordResult.UNKNOWN;
         }
@@ -183,7 +186,7 @@ public class Puzzle {
         }
         if (isCompleted()) {
             if (isTimedOut) {
-                if (resultText.length() > 0) {
+                if (resultText.length() != 0) {
                     resultText += "and ";
                 }
                 resultText += "out of time ";

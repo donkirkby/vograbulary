@@ -441,6 +441,37 @@ public class ControllerTest {
     }
     
     @Test
+    public void adjustScoreRoundToZero() {
+        controller.start();
+        Puzzle puzzle = screen.getPuzzle();
+        
+        int seconds = (int) Puzzle.MAX_DELAY;
+        int loopCount = seconds * 1000 / Controller.SCORE_MILLISECONDS - 2;
+        for (int i = 0; i < loopCount; i++) {
+            scoreTask.run();
+        }
+        
+        assertThat("score", puzzle.getScore(WordResult.NOT_IMPROVED), is(0));
+    }
+    
+    @Test
+    public void adjustScoreOnResponseUntilTimeout() {
+        random.setPuzzles("RPE");
+        controller.start();
+        Puzzle puzzle = screen.getPuzzle();
+        
+        puzzle.setSolution("ROPE");
+        controller.solve();
+        int seconds = (int) Puzzle.MAX_DELAY/2;
+        int loopCount = seconds * 1000 / Controller.SCORE_MILLISECONDS;
+        for (int i = 0; i < loopCount; i++) {
+            scoreTask.run();
+        }
+        
+        assertThat("score", puzzle.getScore(WordResult.NOT_IMPROVED), is(100));
+    }
+    
+    @Test
     public void newMatch() {
         controller.start();
         Match match1 = controller.getMatch();
