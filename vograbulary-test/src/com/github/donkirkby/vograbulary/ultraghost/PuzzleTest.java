@@ -232,11 +232,11 @@ public class PuzzleTest {
     public void getDisplayAfterResponse() {
         float seconds = 20;
         puzzle.adjustScore(seconds);
-        puzzle.setSolution("");
-        puzzle.setResponse("PIPE");
+        puzzle.setSolution("PRICE");
+        puzzle.setResponse("PIECE");
         String display = puzzle.getResultDisplay();
         
-        assertThat("display", display, is("word found (-20 of 20)"));
+        assertThat("display", display, is("earlier (40 of 60)"));
     }
     
     @Test

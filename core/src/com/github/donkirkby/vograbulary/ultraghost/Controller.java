@@ -192,8 +192,6 @@ public class Controller implements StudentListener {
     }
 
     public void cancelMatch() {
-        if (searchTask != null) {
-            scheduler.cancel(searchTask);
-        }
+        scheduler.cancel(searchTask);
     }
 }
