@@ -32,13 +32,12 @@ public class Controller {
     
     public void next() {
         Puzzle puzzle = new Puzzle();
-        String line = puzzleLines.get(solvedCount).toUpperCase();
+        String line = puzzleLines.get(solvedCount++).toUpperCase();
         for (String word : line.split("\\s+")) {
             puzzle.addWord(word);
         }
         screen.setPuzzle(puzzle);
         screen.setState(BacronymsScreen.State.NEW);
-        solvedCount++;
     }
     
     public void solve() {

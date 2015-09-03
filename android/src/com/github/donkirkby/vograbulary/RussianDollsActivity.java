@@ -114,6 +114,27 @@ extends VograbularyActivity implements RussianDollsScreen {
                 }
             }
         });
+        start(savedInstanceState);
+    }
+    
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("clueIndex", controller.getClueIndex());
+    }
+    
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        start(savedInstanceState);
+    }
+    
+    private void start(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            int clueIndex = savedInstanceState.getInt("clueIndex", 0);
+            controller.setClueIndex(clueIndex-1);
+            controller.next();
+        }
     }
     
     private class InsertTouchListener implements View.OnTouchListener {

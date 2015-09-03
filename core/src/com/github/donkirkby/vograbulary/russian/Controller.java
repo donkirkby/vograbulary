@@ -8,7 +8,7 @@ import com.github.donkirkby.vograbulary.ultraghost.WordList;
 public class Controller {
     private RussianDollsScreen screen;
     private ArrayList<String> clues = new ArrayList<String>();
-    private int clueNumber = -1;
+    private int clueIndex = -1;
     private WordList wordList;
 
     /**
@@ -30,7 +30,7 @@ public class Controller {
     }
 
     public void next() {
-        String clue = clues.get(++clueNumber);
+        String clue = clues.get(++clueIndex);
         Puzzle previousPuzzle = screen.getPuzzle();
         screen.setPuzzle(
                 previousPuzzle == null
@@ -39,7 +39,7 @@ public class Controller {
     }
 
     public void back() {
-        String clue = clues.get(--clueNumber);
+        String clue = clues.get(--clueIndex);
         screen.setPuzzle(new Puzzle(clue));
     }
 
@@ -59,4 +59,14 @@ public class Controller {
         return screen.getPuzzle().adjustScore(seconds);
     }
 
+    /** Get which clue is being displayed.
+     */
+    public int getClueIndex() {
+        return clueIndex;
+    }
+    /** Set which clue is being displayed.
+     */
+    public void setClueIndex(int clueIndex) {
+        this.clueIndex = clueIndex;
+    }
 }
