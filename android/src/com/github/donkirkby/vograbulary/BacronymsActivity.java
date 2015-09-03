@@ -183,6 +183,26 @@ extends VograbularyActivity implements BacronymsScreen {
                 }
             }
         });
+        start(savedInstanceState);
+    }
+    
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("solvedCount", controller.getSolvedCount());
+    }
+    
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        start(savedInstanceState);
+    }
+    
+    private void start(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            int solvedCount = savedInstanceState.getInt("solvedCount", 1);
+            controller.setSolvedCount(solvedCount - 1);
+        }
         controller.next();
     }
 }

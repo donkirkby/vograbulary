@@ -50,4 +50,18 @@ public class Controller {
             screen.setState(BacronymsScreen.State.WRONG);
         }
     }
+    
+    /** Get the number of puzzles that have been solved.
+     */
+    public int getSolvedCount() {
+        return solvedCount;
+    }
+
+    /** Set the number of puzzles that have been solved.
+     * 
+     * Useful for resuming where you left off.
+     */
+    public void setSolvedCount(int solvedCount) {
+        this.solvedCount = solvedCount;
+    }
 }

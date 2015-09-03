@@ -69,6 +69,7 @@ To publish a release:
     icon.
 * Go to the GitHub [releases page][releases], create a new release using a tag
     like `v0.x.0-alpha`. Attach the APK file.
+* Close the milestone.
 
 [g+]: http://google.com/+donkirkby
 [testers]: https://plus.google.com/communities/103264778621024783530
