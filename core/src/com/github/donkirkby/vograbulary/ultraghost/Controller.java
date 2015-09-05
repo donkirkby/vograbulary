@@ -118,18 +118,25 @@ public class Controller implements StudentListener {
     }
     
     public void start() {
-        Puzzle puzzle = getMatch().createPuzzle(wordList);
+        getMatch().createPuzzle(wordList);
+        restart();
+    }
+
+    public void restart() {
+        Puzzle puzzle = getMatch().getPuzzle();
         watchPuzzle(puzzle);
         screen.refreshPuzzle();
         for (Student student : students) {
             student.startSolving(puzzle);
         }
-        scoreTask = new ScoreTask();
-        scheduler.scheduleRepeating(scoreTask, SCORE_MILLISECONDS);
-        searchTask = new SearchTask(scheduler);
-        scheduler.scheduleRepeating(searchTask, SEARCH_MILLISECONDS);
+        if (scoreTask == null) {
+            scoreTask = new ScoreTask();
+            scheduler.scheduleRepeating(scoreTask, SCORE_MILLISECONDS);
+            searchTask = new SearchTask(scheduler);
+            scheduler.scheduleRepeating(searchTask, SEARCH_MILLISECONDS);
+        }
     }
-
+    
     /**
      * Tell the controller to watch for changes in the current puzzle.
      */
@@ -139,6 +146,7 @@ public class Controller implements StudentListener {
             public void completed() {
                 Puzzle puzzle = getMatch().getPuzzle();
                 scheduler.cancel(scoreTask);
+                scoreTask = null;
                 puzzle.getOwner().addScore(puzzle.getScore());
                 String hint = puzzle.findNextBetter();
                 puzzle.setHint(hint == null ? "Perfect!" : "hint: " + hint);

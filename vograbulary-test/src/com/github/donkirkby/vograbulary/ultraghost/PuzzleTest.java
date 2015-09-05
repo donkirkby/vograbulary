@@ -10,6 +10,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import com.github.donkirkby.vograbulary.SerializableTools;
+
 public class PuzzleTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -432,5 +434,16 @@ public class PuzzleTest {
                 puzzle.getResultDisplay(),
                 is("not a word and out of time (33)"));
         assertThat("completion count", completionCount, is(1));
+    }
+    
+    @Test
+    public void serialize() throws Exception {
+        puzzle.setSolution("BAD");
+        puzzle.getResult();
+        
+        byte[] bytes = SerializableTools.serialize(puzzle);
+        Puzzle puzzle2 = SerializableTools.deserialize(bytes, Puzzle.class);
+        
+        assertThat("letters", puzzle2.getLetters(), is(puzzle.getLetters()));
     }
 }

@@ -5,18 +5,19 @@ import java.util.Iterator;
 import com.github.donkirkby.vograbulary.VograbularyPreferences;
 
 public class ComputerStudent extends Student {
+    private static final long serialVersionUID = 2114858077675128651L;
     private int searchBatchSize = 1;
     private int maxSearchBatchCount = Integer.MAX_VALUE;
-    private int searchBatchCount;
-    private int searchedWordsCount;
-    private Puzzle currentPuzzle;
-    private Puzzle searchPuzzle; // used to search for the best solution.
-    private Iterator<String> itr;
-    private VograbularyPreferences preferences;
+    private int vocabularySize;
+    private transient int searchBatchCount;
+    private transient int searchedWordsCount;
+    private transient Puzzle currentPuzzle;
+    private transient Puzzle searchPuzzle; // used to search for the best solution.
+    private transient Iterator<String> itr;
     
     public ComputerStudent(VograbularyPreferences preferences) {
         super("Computer");
-        this.preferences = preferences;
+        vocabularySize = preferences.getComputerStudentVocabularySize();
     }
     
     public void setSearchBatchSize(int searchBatchSize) {
@@ -29,9 +30,7 @@ public class ComputerStudent extends Student {
     
     public void setMaxSearchBatchCount(int maxSearchBatchCount) {
         this.maxSearchBatchCount = maxSearchBatchCount;
-        searchBatchSize = 
-                preferences.getComputerStudentVocabularySize() 
-                / maxSearchBatchCount;
+        searchBatchSize = vocabularySize / maxSearchBatchCount;
     }
     
     @Override
@@ -53,7 +52,6 @@ public class ComputerStudent extends Student {
     public boolean runSearchBatch() {
         checkCurrentPuzzle();
         searchBatchCount++;
-        int vocabularySize = preferences.getComputerStudentVocabularySize();
         int wordCount = Math.min(
                 searchBatchSize, 
                 vocabularySize 

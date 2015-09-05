@@ -1,11 +1,11 @@
-Add new words to a student's vocabulary and make the words stick (grab them).
+Grab a few new words for your vocabulary.
 
-Word Challenges
-===============
-This app will eventually have several word challenges like anagrams, word
-ladders, and Quizl. The current challenges are listed below.
-Students will be able to complete these challenges alone or with a timer,
-against other students, or against the computer.
+Word Games
+==========
+This app and web site will eventually have several word games like
+anagrams, word ladders, and Quizl. The current games are listed below.
+Players will be able to complete these challenges alone or with a timer,
+against other players, or against the computer.
 
 Ultraghost
 ----------

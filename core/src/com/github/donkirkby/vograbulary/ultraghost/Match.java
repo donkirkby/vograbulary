@@ -1,12 +1,14 @@
 package com.github.donkirkby.vograbulary.ultraghost;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
 
-public class Match {
+public class Match implements Serializable {
+    private static final long serialVersionUID = 3147466969252314807L;
     private boolean isHyperghost;
-    private UltraghostRandom random = new UltraghostRandom();
+    private transient UltraghostRandom random = new UltraghostRandom();
     private int matchScore;
     private Student[] students;
     private int studentIndex = Integer.MIN_VALUE;
@@ -16,6 +18,11 @@ public class Match {
     public Match(int matchScore, Student... students) {
         this.matchScore = matchScore;
         this.students = students;
+    }
+    
+    /** Get the score required to win the match. */
+    public int getMatchScore() {
+        return matchScore;
     }
     
     private void checkStudentOrder() {

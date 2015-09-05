@@ -12,13 +12,12 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import com.github.donkirkby.vograbulary.SerializableTools;
 import com.github.donkirkby.vograbulary.VograbularyPreferences;
 
 public class ComputerStudentTest {
-    private ComputerStudent student;
     private WordList wordList;
     private FocusField focus;
-    private VograbularyPreferences preferences;
     
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -29,10 +28,13 @@ public class ComputerStudentTest {
     public void setUp() {
         wordList = new WordList();
         wordList.read(Arrays.asList("PRICE", "PIECE", "PIPE"));
-        preferences = mock(VograbularyPreferences.class);
+    }
+
+    private ComputerStudent createStudentWithVocabularySize(int vocabularySize) {
+        VograbularyPreferences preferences = mock(VograbularyPreferences.class);
         when(preferences.getComputerStudentVocabularySize()).thenReturn(
-                Integer.MAX_VALUE);
-        student = new ComputerStudent(preferences);
+                vocabularySize);
+        ComputerStudent student = new ComputerStudent(preferences);
         student.setWordList(wordList);
         student.setListener(new Student.StudentListener() {
             @Override
@@ -50,12 +52,19 @@ public class ComputerStudentTest {
                 focus = FocusField.Challenge;
             }
         });
+        return student;
+    }
+    
+    private ComputerStudent createStudent() {
+        ComputerStudent student = createStudentWithVocabularySize(Integer.MAX_VALUE);
+        return student;
     }
     
     @Test
     public void noSolutionFound() {
         int batchSize = 100;
         assertThat("word count", wordList.size(), lessThan(batchSize));
+        ComputerStudent student = createStudent();
         student.setSearchBatchSize(batchSize);
         Puzzle puzzle = new Puzzle("AXR", student, wordList);
         student.startSolving(puzzle);
@@ -69,6 +78,7 @@ public class ComputerStudentTest {
     public void noSolutionFoundWhenNotActiveStudent() {
         int batchSize = 100;
         assertThat("word count", wordList.size(), lessThan(batchSize));
+        ComputerStudent student = createStudent();
         student.setSearchBatchSize(batchSize);
         Puzzle puzzle = new Puzzle("AXR", new Student("Bob"), wordList);
         student.startSolving(puzzle);
@@ -81,6 +91,7 @@ public class ComputerStudentTest {
     
     @Test
     public void maxBatchCount() {
+        ComputerStudent student = createStudent();
         student.setMaxSearchBatchCount(1);
         
         Puzzle puzzle = new Puzzle("AXR", student, wordList);
@@ -93,6 +104,7 @@ public class ComputerStudentTest {
     
     @Test
     public void ignoreWorseWord() {
+        ComputerStudent student = createStudent();
         wordList = new WordList();
         wordList.read(Arrays.asList("PIECE", "PRICE"));
         student.setWordList(wordList);
@@ -110,7 +122,7 @@ public class ComputerStudentTest {
     public void ignoreShortWord() {
         wordList = new WordList();
         wordList.read(Arrays.asList("PIECE", "PIPE"));
-        student.setWordList(wordList);
+        ComputerStudent student = createStudent();
         student.setMaxSearchBatchCount(1);
         
         Puzzle puzzle = new Puzzle("PIE", student, wordList);
@@ -126,7 +138,7 @@ public class ComputerStudentTest {
     public void ignoreWordsBetterThanPrevious() {
         wordList = new WordList();
         wordList.read(Arrays.asList("PRICE", "PIECE", "PIPE"));
-        student.setWordList(wordList);
+        ComputerStudent student = createStudent();
         student.setMaxSearchBatchCount(1);
         
         Puzzle puzzle = new Puzzle("PIE", student, wordList);
@@ -140,7 +152,7 @@ public class ComputerStudentTest {
     
     @Test
     public void vocabularySizeNoMatch() {
-        when(preferences.getComputerStudentVocabularySize()).thenReturn(1);
+        ComputerStudent student = createStudentWithVocabularySize(1);
         
         Puzzle puzzle = new Puzzle("AXR", student, wordList);
         student.startSolving(puzzle);
@@ -152,7 +164,7 @@ public class ComputerStudentTest {
     
     @Test
     public void prepareResponse() {
-        when(preferences.getComputerStudentVocabularySize()).thenReturn(1);
+        ComputerStudent student = createStudentWithVocabularySize(1);
         Puzzle puzzle = new Puzzle("PIE", new Student("Bob"), wordList);
         student.startSolving(puzzle);
         student.runSearchBatch();
@@ -165,7 +177,7 @@ public class ComputerStudentTest {
     
     @Test
     public void prepareResponseNotAsGood() {
-        when(preferences.getComputerStudentVocabularySize()).thenReturn(1);
+        ComputerStudent student = createStudentWithVocabularySize(1);
         Puzzle puzzle = new Puzzle("PIE", new Student("Bob"), wordList);
         student.startSolving(puzzle);
         student.runSearchBatch();
@@ -178,6 +190,7 @@ public class ComputerStudentTest {
     
     @Test
     public void prepareResponseNotReady() {
+        ComputerStudent student = createStudent();
         thrown.expect(IllegalStateException.class);
         thrown.expectMessage("Called prepareResponse() before startSolving().");
         student.prepareResponse();
@@ -185,7 +198,7 @@ public class ComputerStudentTest {
     
     @Test
     public void vocabularySizeMatch() {
-        when(preferences.getComputerStudentVocabularySize()).thenReturn(1);
+        ComputerStudent student = createStudentWithVocabularySize(1);
         
         Puzzle puzzle = new Puzzle("PIE", student, wordList);
         student.startSolving(puzzle);
@@ -201,8 +214,7 @@ public class ComputerStudentTest {
         int maxSearchBatchCount = 20;
         int expectedBatchSize = vocabularySize / maxSearchBatchCount;
         
-        when(preferences.getComputerStudentVocabularySize()).thenReturn(
-                vocabularySize);
+        ComputerStudent student = createStudentWithVocabularySize(vocabularySize);
         student.setMaxSearchBatchCount(maxSearchBatchCount);
         
         int batchSize = student.getSearchBatchSize();
@@ -211,7 +223,7 @@ public class ComputerStudentTest {
     
     @Test
     public void maxBatchCountInactiveStudent() {
-        when(preferences.getComputerStudentVocabularySize()).thenReturn(2);
+        ComputerStudent student = createStudentWithVocabularySize(2);
         student.setMaxSearchBatchCount(1);
         
         Puzzle puzzle = new Puzzle("AXR", new Student("Bob"), wordList);
@@ -224,6 +236,7 @@ public class ComputerStudentTest {
     
     @Test
     public void createSearchTaskCancelsAfterLastWord() {
+        ComputerStudent student = createStudent();
         assertThat("word count", wordList.size(), is(3));
         Puzzle puzzle = new Puzzle("PIE", student, wordList);
         student.startSolving(puzzle);
@@ -246,6 +259,7 @@ public class ComputerStudentTest {
     
     @Test
     public void startThinkingWhenActive() {
+        ComputerStudent student = createStudent();
         focus = FocusField.Solution;
         Puzzle puzzle = new Puzzle("PIE", student, wordList);
         student.startSolving(puzzle);
@@ -255,10 +269,26 @@ public class ComputerStudentTest {
     
     @Test
     public void startThinkingWhenInactive() {
+        ComputerStudent student = createStudent();
         focus = FocusField.Solution;
         Puzzle puzzle = new Puzzle("PIE", new Student("Bob"), wordList);
         student.startSolving(puzzle);
         
         assertThat("focus", focus, is(FocusField.Solution));
+    }
+    
+    @Test
+    public void serialization() throws Exception {
+        ComputerStudent student = createStudent();
+        student.setSearchBatchSize(50);
+        student.startSolving(new Puzzle("ABC", student));
+        
+        byte[] bytes = SerializableTools.serialize(student);
+        ComputerStudent student2 = SerializableTools.deserialize(
+                bytes,
+                ComputerStudent.class);
+        
+        assertThat("batch size", student2.getSearchBatchSize(), is(50));
+        assertThat("puzzle", student2.getCurrentPuzzle(), nullValue());
     }
 }

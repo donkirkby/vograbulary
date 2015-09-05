@@ -1,6 +1,9 @@
 package com.github.donkirkby.vograbulary.ultraghost;
 
-public class Student {
+import java.io.Serializable;
+
+public class Student implements Serializable {
+    private static final long serialVersionUID = -3342014979878536752L;
     public interface StudentListener {
         void askForSolution();
         
@@ -9,12 +12,12 @@ public class Student {
         void showThinking();
     }
     
-    private StudentListener listener;
+    private transient StudentListener listener;
     private String name;
     private int score;
     private int scoreCount;
     private Match match;
-    private WordList wordList;
+    private transient WordList wordList;
     
     public Student(String name) {
         this.name = name;

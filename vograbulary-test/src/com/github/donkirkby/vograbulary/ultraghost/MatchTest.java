@@ -9,6 +9,7 @@ import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.github.donkirkby.vograbulary.SerializableTools;
 import com.github.donkirkby.vograbulary.VograbularyPreferences;
 
 public class MatchTest {
@@ -149,5 +150,14 @@ public class MatchTest {
         Student winner = match.getWinner();
         
         assertThat("winner", winner, nullValue());
+    }
+    
+    @Test
+    public void serialize() throws Exception {
+        byte[] bytes = SerializableTools.serialize(match);
+        Match match2 = SerializableTools.deserialize(bytes, Match.class);
+        
+        assertThat(match2.getMatchScore(), is(MATCH_SCORE));
+        assertThat(match2.getStudents().get(0).getName(), is(student.getName()));
     }
 }

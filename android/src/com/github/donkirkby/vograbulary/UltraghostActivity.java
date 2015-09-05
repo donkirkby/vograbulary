@@ -194,7 +194,35 @@ extends VograbularyActivity implements UltraghostScreen, StudentListener {
         if (intent.getBooleanExtra(INTENT_EXTRA_IS_HYPERGHOST, true)) {
             controller.getMatch().setHyperghost(true);
         }
-        controller.start();
+        start(savedInstanceState);
+    }
+    
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("match", match);
+    }
+    
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        start(savedInstanceState);
+    }
+    
+    private void start(Bundle savedInstanceState) {
+        if (savedInstanceState == null) {
+            controller.start();
+        }
+        else {
+            Match savedMatch = (Match) savedInstanceState.getSerializable("match");
+            controller.clearStudents();
+            for (Student student : savedMatch.getStudents()) {
+                controller.addStudent(student);
+                student.setListener(this);
+            }
+            match = savedMatch;
+            controller.restart();
+        }
     }
 
     @Override
@@ -316,7 +344,7 @@ extends VograbularyActivity implements UltraghostScreen, StudentListener {
     }
 
     private void focusButton(Button target) {
-        boolean isFinished = match.getWinner() != null;
+        boolean isFinished = match != null && match.getWinner() != null;
         for (Button button : focusButtons) {
             button.setVisibility(
                     button == target && !isFinished

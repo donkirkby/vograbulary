@@ -1,8 +1,11 @@
 package com.github.donkirkby.vograbulary.ultraghost;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Puzzle {
+public class Puzzle implements Serializable {
+    private static final long serialVersionUID = -3638349068583271443L;
+
     public interface Listener {
         /**
          * This is called whenever one of the fields is changed.
@@ -25,10 +28,10 @@ public class Puzzle {
     private String response;
     private String hint;
     private Student owner;
-    private WordList wordList;
+    private transient WordList wordList;
     private int minimumWordLength = 4;
     private String previousWord;
-    private ArrayList<Listener> listeners = 
+    private transient ArrayList<Listener> listeners = 
             new ArrayList<Listener>();
     private boolean isComplete;
     private boolean isTimedOut;
@@ -68,6 +71,16 @@ public class Puzzle {
      */
     public String getLetters() {
         return letters;
+    }
+    
+    /** Get the word list used by this puzzle. */
+    public WordList getWordList() {
+        return wordList;
+    }
+    
+    /** Set the word list used by this puzzle. */
+    public void setWordList(WordList wordList) {
+        this.wordList = wordList;
     }
 
     /**
