@@ -1,11 +1,19 @@
 package com.github.donkirkby.vograbulary.ultraghost;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
 public class WordList implements Iterable<String> {
     private ArrayList<String> wordList = new ArrayList<String>();
+    
+    public WordList() {
+    }
+    
+    public WordList(String... words) {
+        read(Arrays.asList(words));
+    }
     
     /** Add all the words in a list.
      */

@@ -1,7 +1,5 @@
 package com.github.donkirkby.vograbulary;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -167,14 +165,7 @@ extends VograbularyActivity implements UltraghostScreen, StudentListener {
         controller.setRandom(new UltraghostRandom());
         controller.setScheduler(new AndroidScheduler());
         controller.setScreen(this);
-        List<String> wordSource;
-        try {
-            wordSource = loadTextAsset("wordlist.txt");
-        } catch (IOException e) {
-            wordSource = new ArrayList<String>();
-        }
-        WordList wordList = new WordList();
-        wordList.read(wordSource);
+        WordList wordList = loadWordList();
         if (studentNames.length < 2) {
             ComputerStudent computerStudent = new ComputerStudent(preferences);
             computerStudent.setWordList(wordList);
@@ -196,7 +187,7 @@ extends VograbularyActivity implements UltraghostScreen, StudentListener {
         }
         start(savedInstanceState);
     }
-    
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);

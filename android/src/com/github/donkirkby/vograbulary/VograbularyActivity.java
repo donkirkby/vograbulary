@@ -4,6 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
+
+import com.github.donkirkby.vograbulary.ultraghost.WordList;
 
 import android.app.Activity;
 
@@ -21,5 +24,17 @@ public class VograbularyActivity extends Activity {
             reader.close();
         }
         return lines;
+    }
+
+    protected WordList loadWordList() {
+        List<String> wordSource;
+        try {
+            wordSource = loadTextAsset("wordlist.txt");
+        } catch (IOException e) {
+            wordSource = new ArrayList<String>();
+        }
+        WordList wordList = new WordList();
+        wordList.read(wordSource);
+        return wordList;
     }
 }

@@ -24,6 +24,7 @@ public class MainActivity extends Activity {
         menuStringIds = Arrays.asList(
                 R.string.title_activity_ultraghost,
                 R.string.title_activity_hyperghost,
+                R.string.title_activity_anagrams,
                 R.string.title_activity_russian_dolls,
                 R.string.title_activity_bacronyms,
                 R.string.title_activity_students);
@@ -58,6 +59,9 @@ public class MainActivity extends Activity {
         else if (menuStringId == R.string.title_activity_hyperghost) {
             intent.setClass(this, StudentChooserActivity.class);
             intent.putExtra(UltraghostActivity.INTENT_EXTRA_IS_HYPERGHOST, true);
+        }
+        else if (menuStringId == R.string.title_activity_anagrams) {
+            intent.setClass(this, AnagramsActivity.class);
         }
         else if (menuStringId == R.string.title_activity_russian_dolls) {
             intent.setClass(this, RussianDollsActivity.class);

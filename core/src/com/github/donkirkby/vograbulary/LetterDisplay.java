@@ -5,11 +5,13 @@ import java.util.List;
 
 public abstract class LetterDisplay {
     public interface LetterDisplayListener {
-        void onClick();
+        void onClick(LetterDisplay letter);
     }
     
     private int startLeft;
     private boolean isMovingLeft;
+    private int homeLeft;
+    private int homeTop;
     private List<LetterDisplayListener> listeners = new ArrayList<>();
     
     /** Get the y coordinate of the top side of the letter. */
@@ -17,10 +19,27 @@ public abstract class LetterDisplay {
     /** Set the letter's top side position on the display. */
     public abstract void setTop(int top);
     
+    public int getHomeLeft() {
+        return homeLeft;
+    }
+    public void setHomeLeft(int homeLeft) {
+        this.homeLeft = homeLeft;
+    }
+    
+    public int getHomeTop() {
+        return homeTop;
+    }
+    public void setHomeTop(int homeTop) {
+        this.homeTop = homeTop;
+    }
+    
     /** Get the x coordinate of the left side of the letter. */
     public abstract int getLeft();
     /** Set the letter's left side position on the display. */
     public abstract void setLeft(int left);
+    
+    /** Start an animation to move the letter to a new position. */
+    public abstract void animateTo(int left, int top);
     
     /** Get the letter's height on the display. */
     public abstract int getHeight();
@@ -108,7 +127,7 @@ public abstract class LetterDisplay {
     
     public void click() {
         for (LetterDisplayListener listener : listeners) {
-            listener.onClick();
+            listener.onClick(this);
         }
     }
     

@@ -94,17 +94,13 @@ extends VograbularyActivity implements BacronymsScreen {
         nextButton = (Button)findViewById(R.id.nextButton);
 
         List<String> puzzleLines;
-        List<String> wordSource;
         try {
             puzzleLines = loadTextAsset("bacronyms.txt");
-            wordSource = loadTextAsset("wordlist.txt");
         } catch (IOException e) {
             puzzleLines = Arrays.asList(
                     "Failed to open file. " + e.getMessage());
-            wordSource = new ArrayList<String>();
         }
-        WordList wordList = new WordList();
-        wordList.read(wordSource);
+        WordList wordList = loadWordList();
         controller.setScreen(this);
         controller.setWordList(wordList);
         controller.loadPuzzles(puzzleLines);

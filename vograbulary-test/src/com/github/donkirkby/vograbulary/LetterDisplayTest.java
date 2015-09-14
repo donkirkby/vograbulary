@@ -46,6 +46,12 @@ public class LetterDisplayTest implements LetterDisplayListener {
         }
         
         @Override
+        public void animateTo(int left, int top) {
+            setLeft(left);
+            setTop(top);
+        }
+        
+        @Override
         public float getTextSize() {
             return textSize;
         }
@@ -102,7 +108,7 @@ public class LetterDisplayTest implements LetterDisplayListener {
     }
 
     @Override
-    public void onClick() {
+    public void onClick(LetterDisplay letter) {
         clickCount++;
     }
 

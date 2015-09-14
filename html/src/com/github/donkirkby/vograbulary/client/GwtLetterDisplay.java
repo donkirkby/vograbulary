@@ -1,5 +1,7 @@
 package com.github.donkirkby.vograbulary.client;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 import com.github.donkirkby.vograbulary.LetterDisplay;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.AbsolutePanel;
@@ -38,6 +40,11 @@ public class GwtLetterDisplay extends LetterDisplay {
     @Override
     public void setLeft(int left) {
         panel.setWidgetPosition(button, left, getTop());
+    }
+    
+    @Override
+    public void animateTo(int left, int top) {
+        throw new NotImplementedException();
     }
 
     @Override

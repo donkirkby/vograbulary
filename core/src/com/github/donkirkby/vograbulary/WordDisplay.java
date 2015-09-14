@@ -20,7 +20,7 @@ public class WordDisplay {
     
     private LetterDisplayListener letterDisplayListener = new LetterDisplayListener() {
         @Override
-        public void onClick() {
+        public void onClick(LetterDisplay letter) {
             for (WordDisplayListener listener : listeners) {
                 listener.onClick(WordDisplay.this);
             }

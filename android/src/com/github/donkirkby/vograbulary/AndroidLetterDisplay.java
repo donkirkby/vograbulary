@@ -60,6 +60,11 @@ public class AndroidLetterDisplay extends LetterDisplay {
     }
 
     @Override
+    public void animateTo(int left, int top) {
+        textView.animate().x(left).y(top);
+    }
+
+    @Override
     public int getHeight() {
         return textView.getHeight();
     }
