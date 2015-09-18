@@ -28,7 +28,7 @@
     <string name="example_hint">HINT</string>
     <string name="choose_word_length">Minimum word length is 0.</string>
     <string name="choose_vocabulary_size">Computer\'s vocabulary size is 0.</string>
-    <string name="title_activity_anagrams">Anagrams</string>
+    <string name="title_activity_anagrams">Anagrams (beta)</string>
     <string name="dismiss_message">OK</string>
 
 </resources>

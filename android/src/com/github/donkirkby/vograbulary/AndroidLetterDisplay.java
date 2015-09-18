@@ -26,7 +26,7 @@ public class AndroidLetterDisplay extends LetterDisplay {
         if ( ! isInitialized) {
             int[] location = new int[2];
             textView.getLocationOnScreen(location);
-            offsetX = getLayoutParams().leftMargin - location[0];
+            offsetX = (int)textView.getTranslationX() - location[0];
             isInitialized = true;
         }
     }
@@ -34,34 +34,31 @@ public class AndroidLetterDisplay extends LetterDisplay {
     @Override
     public int getTop() {
         checkOffset();
-        return getLayoutParams().topMargin - offsetY;
+        return (int)textView.getTranslationY() - offsetY;
     }
     
     @Override
     public void setTop(int top) {
         checkOffset();
-        LayoutParams layoutParams = getLayoutParams();
-        layoutParams.topMargin = top + offsetX;
-        textView.setLayoutParams(layoutParams);
+        textView.setTranslationY(top + offsetY);
     }
     
     @Override
     public int getLeft() {
         checkOffset();
-        return getLayoutParams().leftMargin - offsetX;
+        return (int)textView.getTranslationX() - offsetX;
     }
 
     @Override
     public void setLeft(int left) {
         checkOffset();
-        LayoutParams layoutParams = getLayoutParams();
-        layoutParams.leftMargin = left + offsetX;
-        textView.setLayoutParams(layoutParams);
+        textView.setTranslationX(left + offsetX);
     }
 
     @Override
     public void animateTo(int left, int top) {
-        textView.animate().x(left).y(top);
+        checkOffset();
+        textView.animate().x(left + offsetX).y(top + offsetY);
     }
 
     @Override

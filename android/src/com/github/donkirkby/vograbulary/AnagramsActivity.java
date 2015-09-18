@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 
-import android.content.res.Resources;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.View;
@@ -42,14 +40,14 @@ public class AnagramsActivity extends VograbularyActivity {
     private AnagramsPlayer mActivePlayer;
     private int mLongestWordSize;
     private int mMaxWordCount; // most words owned by a single player
-    private LetterDisplay mPlaceHolderTile;
+//    private LetterDisplay mPlaceHolderTile;
 //  private int mPlaceHolderIndex = PLACEHOLDER_UNUSED;
 //
     private int mTileWidthInWord;
     private int mTileWidthInGrid;
 //
 //  private int mGridTop;
-    private int mWordTop;
+//    private int mWordTop;
 //  private int mAddToWordThreshold;
 //
 //  private static Random mRand = new Random();
@@ -61,16 +59,16 @@ public class AnagramsActivity extends VograbularyActivity {
 //  private DragAnimation mDragAnimation;
 //  private ExpandContractAnimation mExpandContractAnimation;
 //
-    private int mEvenTileColor;
-    private int mOddTileColor;
-    private int mPlayer1Color;
-    private int mPlayer2Color;
-    private int mPlayer1SurroundedColor;
-    private int mPlayer2SurroundedColor;
-    private int mTextColor;
-    private int mNextColor;
-    private int mClearColor;
-    private int mDropShadowColor;
+//    private int mEvenTileColor;
+//    private int mOddTileColor;
+//    private int mPlayer1Color;
+//    private int mPlayer2Color;
+//    private int mPlayer1SurroundedColor;
+//    private int mPlayer2SurroundedColor;
+//    private int mTextColor;
+//    private int mNextColor;
+//    private int mClearColor;
+//    private int mDropShadowColor;
 //
     private Button mSubmitButton;
     private Button mNextButton;
@@ -78,8 +76,8 @@ public class AnagramsActivity extends VograbularyActivity {
     private Button mPlayer1Button;
     private Button mPlayer2Button;
     private TextView mMessage;
-//  TextWidget mPlayer1Score;
-//  TextWidget mPlayer2Score;
+    private TextView mPlayer1Score;
+    private TextView mPlayer2Score;
     private AndroidLetterDisplayFactory letterDisplayFactory;
     private LetterDisplay.LetterDisplayListener letterListener =
             new LetterDisplay.LetterDisplayListener() {
@@ -112,17 +110,17 @@ public class AnagramsActivity extends VograbularyActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_anagrams);
 
-        Resources res = getResources();
-        mEvenTileColor = res.getColor(R.color.tile_even);
-        mOddTileColor = res.getColor(R.color.tile_odd);
-        mPlayer1Color = res.getColor(R.color.player1);
-        mPlayer2Color = res.getColor(R.color.player2);
-        mPlayer1SurroundedColor = res.getColor(R.color.player1_surrounded);
-        mPlayer2SurroundedColor = res.getColor(R.color.player2_surrounded);
-        mTextColor = res.getColor(R.color.tile_text);
-        mNextColor = Color.GREEN;
-        mClearColor = Color.rgb(200, 0, 200);
-        mDropShadowColor = res.getColor(R.color.tile_dropshadow);
+//        Resources res = getResources();
+//        mEvenTileColor = res.getColor(R.color.tile_even);
+//        mOddTileColor = res.getColor(R.color.tile_odd);
+//        mPlayer1Color = res.getColor(R.color.player1);
+//        mPlayer2Color = res.getColor(R.color.player2);
+//        mPlayer1SurroundedColor = res.getColor(R.color.player1_surrounded);
+//        mPlayer2SurroundedColor = res.getColor(R.color.player2_surrounded);
+//        mTextColor = res.getColor(R.color.tile_text);
+//        mNextColor = Color.GREEN;
+//        mClearColor = Color.rgb(200, 0, 200);
+//        mDropShadowColor = res.getColor(R.color.tile_dropshadow);
         rootLayout = (ViewGroup)findViewById(R.id.anagramsLayout);
         mPlayer1Button = (Button)findViewById(R.id.player1);
         mPlayer2Button = (Button)findViewById(R.id.player2);
@@ -130,6 +128,8 @@ public class AnagramsActivity extends VograbularyActivity {
         mSubmitButton = (Button)findViewById(R.id.submit);
         mClearButton = (Button)findViewById(R.id.clear);
         mMessage = (TextView)findViewById(R.id.message);
+        mPlayer1Score = (TextView)findViewById(R.id.score1);
+        mPlayer2Score = (TextView)findViewById(R.id.score2);
         
         letterDisplayFactory = new AndroidLetterDisplayFactory(rootLayout);
 
@@ -153,10 +153,6 @@ public class AnagramsActivity extends VograbularyActivity {
         mGameModel.setDeck(new String(letters));
         mGameModel.addPlayer(new AnagramsPlayer());
         mGameModel.addPlayer(new AnagramsPlayer());
-        for (int i = 0; i < 4; i++) {
-            mGameModel.revealLetter();
-        }
-        String unclaimed = mGameModel.getUnclaimedLetters();
         final List<AnagramsPlayer> players = mGameModel.getPlayers();
         for (AnagramsPlayer player : players) {
             List<List<LetterDisplay>> playerWordList = new ArrayList<>();
@@ -172,11 +168,15 @@ public class AnagramsActivity extends VograbularyActivity {
             }
         }
               
+        for (int i = 0; i < 4; i++) {
+            mGameModel.revealLetter();
+        }
+        String unclaimed = mGameModel.getUnclaimedLetters();
         for (int i = 0; i < unclaimed.length(); i++) {
             mUnclaimed.add(addTile(unclaimed.substring(i, i + 1)));
         }
               
-        mPlaceHolderTile = addTile("");
+//        mPlaceHolderTile = addTile("");
         mPlayer1Button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -225,19 +225,9 @@ public class AnagramsActivity extends VograbularyActivity {
             }
         });
         setActivePlayer(null);
-//
-//      String player1Score = String.valueOf(
-//              players.get(0).getScore());
-//      String player2Score = String.valueOf(
-//              players.get(1).getScore());
-//
-//      mPlayer1Score = new TextWidget(COLOR_INVISIBLE, player1Score,
-//              mPlayer1SurroundedColor);
-//      mPlayer2Score = new TextWidget(COLOR_INVISIBLE, player2Score,
-//              mPlayer2SurroundedColor);
-//      addWidget(mPlayer1Score);
-//      addWidget(mPlayer2Score);
-//  }
+
+        mPlayer1Score.setText(String.valueOf(players.get(0).getScore()));
+        mPlayer2Score.setText(String.valueOf(players.get(1).getScore()));
         rootLayout.getViewTreeObserver().addOnGlobalLayoutListener(
                 new ViewTreeObserver.OnGlobalLayoutListener() {
                     private int previousWidth;
@@ -254,6 +244,7 @@ public class AnagramsActivity extends VograbularyActivity {
                         }
                     }
                 });
+        layoutBoard();
     }
 
     private LetterDisplay addTile(String letter) {
@@ -262,36 +253,7 @@ public class AnagramsActivity extends VograbularyActivity {
 //        tile.setDragListener(this);
         return tile;
     }
-//
-//  @Override
-//  public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-//
-//      // Enforce a minimum height to width ratio for the board
-//
-//      int measuredWidth = getDefaultSize(getSuggestedMinimumWidth(),
-//              widthMeasureSpec);
-//      int measuredHeight = getDefaultSize(getSuggestedMinimumHeight(),
-//              heightMeasureSpec);
-//
-////        final double measuredHeightToWidthRatio = (double) measuredHeight
-////                / measuredWidth;
-////
-////        if (measuredHeightToWidthRatio < MIN_HEIGHT_TO_WIDTH) {
-////            setMeasuredDimension((int) (measuredHeight / MIN_HEIGHT_TO_WIDTH),
-////                    measuredHeight);
-////        } else {
-//          setMeasuredDimension(measuredWidth, measuredHeight);
-////        }
-//
-//  }
-//
-//  @Override
-//  protected void onLayout(boolean changed, int left, int top, int right,
-//          int bottom) {
-//      super.onLayout(changed, left, top, right, bottom);
-//      layoutBoard();
-//  }
-//
+    
     private void layoutBoard() {
         mLongestWordSize = 7; // Always leave room for minimum letters.
         mMaxWordCount = Math.max(5, // Always leave room for minimum words.
@@ -324,7 +286,7 @@ public class AnagramsActivity extends VograbularyActivity {
 
         AnagramsPlayer player1 = mGameModel.getPlayers().get(0);
         AnagramsPlayer player2 = mGameModel.getPlayers().get(1);
-        mPlayerBuildingAreas.put(player1, new Rect(0, 0, displayWidth / 2 - 2
+        mPlayerBuildingAreas.put(player1, new Rect(tileWidth, 0, displayWidth / 2 - 2
                 * tileHeight, tileHeight));
         mPlayerBuildingAreas.put(player2, new Rect(displayWidth / 2 + 2
                 * tileHeight, 0, displayWidth, tileHeight));
@@ -336,34 +298,15 @@ public class AnagramsActivity extends VograbularyActivity {
             int y = tileHeight * row;
             LetterDisplay letterDisplay = mUnclaimed.get(i);
             letterDisplay.animateTo(x, y);
-//            letterDisplay.setLeft(x);
-//            letterDisplay.setTop(y);
             letterDisplay.setHomeLeft(x);
             letterDisplay.setHomeTop(y);
         }
 
-        layoutPlayerWords(mGameModel.getPlayers().get(0), 0, tileHeight);
+        layoutPlayerWords(mGameModel.getPlayers().get(0), tileWidth, tileHeight);
         layoutPlayerWords(
                 mGameModel.getPlayers().get(1),
                 displayWidth / 2 + 2 * tileHeight,
                 tileHeight);
-//
-//        mPlaceHolderTile.applyLayout(0, mWordTop, mTileWidthInWord, tileHeight);
-//
-//        mPlayer1Button.applyLayout(0, displayHeight - tileHeight, tileHeight,
-//                tileHeight);
-//        mPlayer2Button.applyLayout(displayWidth - tileHeight, displayHeight
-//                - tileHeight, tileHeight, tileHeight);
-//        mPlayer1Score.applyLayout(displayWidth / 4 - tileHeight, displayHeight
-//                - tileHeight, tileHeight * 2, tileHeight);
-//        mPlayer2Score.applyLayout(displayWidth * 3 / 4, displayHeight - tileHeight,
-//                tileHeight * 2, tileHeight);
-//        mSubmitButton.applyLayout((displayWidth - 3 * tileHeight) / 2,
-//                displayHeight - tileHeight, tileHeight, tileHeight);
-//        mNextButton.applyLayout((displayWidth - tileHeight) / 2, displayHeight
-//                - tileHeight, tileHeight, tileHeight);
-//        mClearButton.applyLayout((displayWidth + tileHeight) / 2, displayHeight
-//                - tileHeight, tileHeight, tileHeight);
     }
 
     private void layoutPlayerWords(
@@ -397,11 +340,7 @@ public class AnagramsActivity extends VograbularyActivity {
 
         if (buildingArea.contains(t.getCentreX(), t.getCentreY())) {
             removeTileFromWord(t);
-            animateToPosition(
-                    t,
-                    t.getHomeLeft(),
-                    t.getHomeTop(),
-                    mTileWidthInGrid);
+            t.animateTo(t.getHomeLeft(), t.getHomeTop());
         } else {
             addTileToWord(t);
             List<LetterDisplay> owningWord = findOwningWord(t);
@@ -547,16 +486,6 @@ public class AnagramsActivity extends VograbularyActivity {
 //              ANIMATION_DURATION, newWidth);
 //      tile.addAnimation(mExpandContractAnimation);
 //  }
-//
-    private void animateToPosition(LetterDisplay tile, int x, int y, int width) {
-        tile.animateTo(x, y);
-//        tile.cancelAllAnimations();
-//        tile.addAnimation(new RotationAnimation(tile, ANIMATION_DURATION, 0));
-//        tile.addAnimation(new TranslationAnimation(tile, ANIMATION_DURATION, x,
-//                y));
-//        tile.addAnimation(new ExpandContractAnimation(tile, ANIMATION_DURATION,
-//                width));
-    }
 
     private void addTileToWord(LetterDisplay tile) {
         mActiveWord.remove(tile);
@@ -574,11 +503,7 @@ public class AnagramsActivity extends VograbularyActivity {
         while (it.hasNext()) {
             LetterDisplay t = it.next();
             it.remove();
-            animateToPosition(
-                    t,
-                    t.getHomeLeft(),
-                    t.getHomeTop(),
-                    mTileWidthInGrid);
+            t.animateTo(t.getHomeLeft(), t.getHomeTop());
         }
     }
 
@@ -598,7 +523,7 @@ public class AnagramsActivity extends VograbularyActivity {
             int x = buildingArea.left + mTileWidthInWord * i;
             int y = buildingArea.top;
 
-            animateToPosition(t, x, y, mTileWidthInWord);
+            t.animateTo(x, y);
         }
     }
 
@@ -634,8 +559,6 @@ public class AnagramsActivity extends VograbularyActivity {
 
     private void submitWord() {
 
-        final Resources res = getResources();
-        final String dismiss = res.getString(R.string.dismiss_message);
         try {
             if (mCapturedWord != null) {
                 mGameModel.changeWord(buildWord(mCapturedWord),
@@ -654,10 +577,10 @@ public class AnagramsActivity extends VograbularyActivity {
             mActiveWord = new ArrayList<LetterDisplay>();
             setActivePlayer(null);
 
-//            mPlayer1Score.setText(String.valueOf(mGameModel.getPlayers().get(0)
-//                    .getScore()));
-//            mPlayer2Score.setText(String.valueOf(mGameModel.getPlayers().get(1)
-//                    .getScore()));
+            mPlayer1Score.setText(String.valueOf(
+                    mGameModel.getPlayers().get(0).getScore()));
+            mPlayer2Score.setText(String.valueOf(
+                    mGameModel.getPlayers().get(1).getScore()));
 
             layoutBoard();
 
