@@ -5,8 +5,17 @@
     
     </ui:style>
     <g:HTMLPanel>
-        <p ui:field="ownerName">Owner</p>
-        <p ui:field="letters">ABC</p>
+        <!-- HEADER -->
+        <div id="header_wrap" class="outer">
+            <header class="inner">
+                <h1 ui:field="letters">ABC</h1>
+                <h2 ui:field="ownerName">Owner</h2>
+            </header>
+        </div>
+        <!-- MAIN CONTENT -->
+        <div id="main_content_wrap" class="outer">
+            <section id="main_content" class="inner">
+        
         <table>
             <tr>
                 <td><g:TextBox ui:field="solution"/></td>
@@ -23,5 +32,14 @@
         </table>
         <p ui:field="result">result</p>
         <div ui:field="summary"/>
+
+            </section>
+        </div>
+        <!-- FOOTER  -->
+        <div id="footer_wrap" class="outer">
+          <footer class="inner">
+            <p class="copyright">by <a href="https://donkirkby.github.com">Don Kirkby</a></p>
+          </footer>
+        </div>
     </g:HTMLPanel>
 </ui:UiBinder> 

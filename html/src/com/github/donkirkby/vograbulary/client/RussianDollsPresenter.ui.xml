@@ -12,9 +12,20 @@
     }
     </ui:style>
     <g:HTMLPanel>
+        <!-- HEADER -->
+        <div id="header_wrap" class="outer">
+            <header class="inner">
+              <h1 id="project_title">Russian Dolls</h1>
+              <h2 id="project_tagline">Put one word inside the other.</h2>
+            </header>
+        </div>
+        <!-- MAIN CONTENT -->
+        <div id="main_content_wrap" class="outer">
+            <section id="main_content" class="inner">
+                
         <p ui:field="clue"/>
         <g:AbsolutePanel ui:field="insertPanel" styleName="{style.insertPanel}">
-            <g:Image url="images/insert.png" ui:field="insertButton"/>
+            <g:Image url="../images/insert.png" ui:field="insertButton"/>
         </g:AbsolutePanel>
         <g:AbsolutePanel ui:field="targetPanel" styleName="{style.targetPanel}">
             <g:at left="20" top="2">
@@ -24,14 +35,23 @@
                 <g:Label ui:field="targetWord2"/>
             </g:at>
             <g:at left="20" top="22">
-                <g:Image url="images/drag.png" ui:field="dragButton1"/>
+                <g:Image url="../images/drag.png" ui:field="dragButton1"/>
             </g:at>
             <g:at left="100" top="22">
-                <g:Image url="images/drag.png" ui:field="dragButton2"/>
+                <g:Image url="../images/drag.png" ui:field="dragButton2"/>
             </g:at>
         </g:AbsolutePanel>
         <g:Button ui:field="nextButton"/>
         <p ui:field="scoreDisplay"/>
         <p ui:field="totalDisplay"/>
+        
+            </section>
+        </div>
+        <!-- FOOTER  -->
+        <div id="footer_wrap" class="outer">
+          <footer class="inner">
+            <p class="copyright">by <a href="https://donkirkby.github.com">Don Kirkby</a></p>
+          </footer>
+        </div>
     </g:HTMLPanel>
 </ui:UiBinder> 

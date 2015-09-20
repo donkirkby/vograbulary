@@ -5,7 +5,16 @@
 
     </ui:style>
     <g:HTMLPanel>
-        <p>Choose one or more students to take the challenge.</p>
+        <!-- HEADER -->
+        <div id="header_wrap" class="outer">
+            <header class="inner">
+              <h2 id="project_tagline">Choose one or more players.</h2>
+            </header>
+        </div>
+        <!-- MAIN CONTENT -->
+        <div id="main_content_wrap" class="outer">
+            <section id="main_content" class="inner">
+        
         <g:HTMLPanel ui:field="studentPanel" />
         <label>
             Minimum word length:
@@ -32,5 +41,14 @@
         </label>
         <br/>
         <g:Button ui:field="startButton">Start</g:Button>
+
+            </section>
+        </div>
+        <!-- FOOTER  -->
+        <div id="footer_wrap" class="outer">
+          <footer class="inner">
+            <p class="copyright">by <a href="https://donkirkby.github.com">Don Kirkby</a></p>
+          </footer>
+        </div>
     </g:HTMLPanel>
 </ui:UiBinder> 

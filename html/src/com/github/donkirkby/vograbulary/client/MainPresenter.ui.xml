@@ -5,7 +5,16 @@
     
     </ui:style>
     <g:HTMLPanel>
-        <p>Choose a Vograbulary challenge.</p>
+        <!-- HEADER -->
+        <div id="header_wrap" class="outer">
+            <header class="inner">
+              <h1 id="project_title">Vograbulary</h1>
+              <h2 id="project_tagline">Choose a game:</h2>
+            </header>
+        </div>
+        <!-- MAIN CONTENT -->
+        <div id="main_content_wrap" class="outer">
+            <section id="main_content" class="inner">
         <dl>
             <dt><a href="#ultraghost">Ultraghost</a></dt>
             <dd>On each turn, you are given a three letter puzzle, like CIP. You
@@ -19,7 +28,7 @@
                 are any better words that you didn't think of. For example,
                 CHIP is earlier than CLIP in the dictionary.</dd>
             <dt><a href="#hyperghost">Hyperghost</a></dt>
-            <dd>Very similar to Hyperghost, but you reuse the same letters until
+            <dd>Very similar to Ultraghost, but you reuse the same letters until
                 no one can think of another word. Each new word has to be
                 slightly worse than the previous word. The other students can
                 respond with a word that is between the two words. If the
@@ -33,8 +42,16 @@
             <dd>Each puzzle shows three words. One of them is a bacronym: when
                 you reverse the letters, it spells a different word. Click on
                 the bacronym to solve the puzzle.</dd>
-            <dt><a href="#students">Students</a></dt>
-            <dd>Edit student names.</dd>
+            <dt><a href="#students">Players</a></dt>
+            <dd>Edit player names.</dd>
         </dl>
+            </section>
+        </div>
+        <!-- FOOTER  -->
+        <div id="footer_wrap" class="outer">
+          <footer class="inner">
+            <p class="copyright">by <a href="https://donkirkby.github.com">Don Kirkby</a></p>
+          </footer>
+        </div>
     </g:HTMLPanel>
 </ui:UiBinder> 

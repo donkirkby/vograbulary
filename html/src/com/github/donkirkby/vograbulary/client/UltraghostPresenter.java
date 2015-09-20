@@ -13,6 +13,7 @@ import com.github.donkirkby.vograbulary.ultraghost.UltraghostScreen;
 import com.github.donkirkby.vograbulary.ultraghost.WordList;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -37,10 +38,10 @@ public class UltraghostPresenter extends VograbularyPresenter implements Ultragh
     }
     
     @UiField
-    ParagraphElement ownerName;
+    HeadingElement ownerName;
     
     @UiField
-    ParagraphElement letters;
+    HeadingElement letters;
     
     @UiField
     TextBox solution;
@@ -77,6 +78,9 @@ public class UltraghostPresenter extends VograbularyPresenter implements Ultragh
     public UltraghostPresenter(GwtPreferences preferences) {
         initWidget(uiBinder.createAndBindUi(this));
 
+        letters.setId("letters");
+        ownerName.setId("ownerName");
+        
         this.preferences = preferences;
         String wordListText = Assets.INSTANCE.wordList().getText();
         WordList wordList = new WordList();
