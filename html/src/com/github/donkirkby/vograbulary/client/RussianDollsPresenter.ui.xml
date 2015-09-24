@@ -1,6 +1,8 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
     xmlns:g="urn:import:com.google.gwt.user.client.ui">
+    <ui:with field="assets"
+        type="com.github.donkirkby.vograbulary.client.Assets"></ui:with>
     <ui:style>
     .insertPanel {
         width: 100%;
@@ -25,7 +27,7 @@
                 
         <p ui:field="clue"/>
         <g:AbsolutePanel ui:field="insertPanel" styleName="{style.insertPanel}">
-            <g:Image url="../images/insert.png" ui:field="insertButton"/>
+            <g:Image url="{assets.insert.getSafeUri.asString}" ui:field="insertButton"/>
         </g:AbsolutePanel>
         <g:AbsolutePanel ui:field="targetPanel" styleName="{style.targetPanel}">
             <g:at left="20" top="2">
@@ -35,10 +37,10 @@
                 <g:Label ui:field="targetWord2"/>
             </g:at>
             <g:at left="20" top="22">
-                <g:Image url="../images/drag.png" ui:field="dragButton1"/>
+                <g:Image url="{assets.drag.getSafeUri.asString}" ui:field="dragButton1"/>
             </g:at>
             <g:at left="100" top="22">
-                <g:Image url="../images/drag.png" ui:field="dragButton2"/>
+                <g:Image url="{assets.drag.getSafeUri.asString}" ui:field="dragButton2"/>
             </g:at>
         </g:AbsolutePanel>
         <g:Button ui:field="nextButton"/>

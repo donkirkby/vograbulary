@@ -31,4 +31,11 @@
 		<nature>com.google.gwt.eclipse.core.gwtNature</nature>
 		<nature>org.eclipse.wst.common.project.facet.core.nature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>src/com/github/donkirkby/vograbulary/assets</name>
+			<type>2</type>
+			<location>PARENT-1-PROJECT_LOC/core/assets</location>
+		</link>
+	</linkedResources>
 </projectDescription>
