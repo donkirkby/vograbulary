@@ -13,6 +13,11 @@ On each turn, you are given a three letter puzzle, like CIP. You have to find a 
 
 If you'd like a few practice puzzles, try GHS, ORG, EOS. Scroll down for my answers.
 
+Anagrams
+--------
+Reveal random letters, then try to make words with them. Steal your opponents
+words by making anagrams of them, or by adding one or more new letters.
+
 Russian Dolls
 -------------
 So far, this is a solitaire challenge based on an episode of [Ask Me Another][ama]. Each puzzle gives a clue with two words highlighted. One of those words gets put completely inside the other to make the solution word. The letters in each word don't get rearranged, one complete word gets nested inside the other like two Russian dolls. Here's an example puzzle:
