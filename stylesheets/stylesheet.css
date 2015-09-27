@@ -137,8 +137,6 @@ img {
   position: relative;
   margin: 0 auto;
   max-width: 739px;
-  padding: 5px;
-  margin: 10px 0 10px 0;
   border: 1px solid #ebebeb;
 
   box-shadow: 0 0 5px #ebebeb;
@@ -234,7 +232,6 @@ hr {
 }
 
 table {
-  border: 1px solid #373737;
   margin-bottom: 20px;
   text-align: left;
  }
@@ -248,7 +245,6 @@ th {
 
 td {
   padding: 10px;
-  border: 1px solid #373737;
  }
 
 form {
@@ -266,7 +262,7 @@ Full-Width Styles
 
 .inner {
   position: relative;
-  max-width: 640px;
+  max-width: 800px;
   padding: 20px 10px;
   margin: 0 auto;
 }
@@ -299,7 +295,7 @@ Full-Width Styles
   padding: 50px 10px 30px 10px;
 }
 
-#project_title {
+#project_title, #letters {
   margin: 0;
   color: #fff;
   font-size: 42px;
@@ -307,7 +303,7 @@ Full-Width Styles
   text-shadow: #111 0px 0px 10px;
 }
 
-#project_tagline {
+#project_tagline, #ownerName {
   color: #fff;
   font-size: 24px;
   font-weight: 300;
@@ -421,5 +417,7 @@ Small Device Styles
     max-width: 480px;
     font-size: 11px;
   }
-
+  .targetWord {
+    font-family: monospace
+  }
 }
