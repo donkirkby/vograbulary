@@ -15,16 +15,12 @@
 bin/
 gen/
 .gwt
+book/vograbulary.pdf
 html/gwt-unitCache
 html/test-classes/
 html/war/WEB-INF/classes/
 html/war/WEB-INF/deploy/
 html/war/vograbulary_html
-vograbulary-html/gwt-unitCache
-vograbulary-html/war/WEB-INF/deploy
-vograbulary-html/war/WEB-INF/classes/com
-vograbulary-html/war/assets
-vograbulary-html/war/com.github.donkirkby.vograbulary.GwtDefinition
 vograbulary-test/jester.log
 vograbulary-test/jesterReport.xml
 vograbulary-test/junit

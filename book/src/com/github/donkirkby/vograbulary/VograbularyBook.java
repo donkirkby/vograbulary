@@ -1,9 +1,15 @@
 package com.github.donkirkby.vograbulary;
 
 import java.awt.geom.Dimension2D;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.pdfclown.documents.Document;
 import org.pdfclown.documents.Page;
@@ -16,6 +22,9 @@ import org.pdfclown.documents.interaction.viewer.ViewerPreferences;
 import org.pdfclown.documents.interchange.metadata.Information;
 import org.pdfclown.files.File;
 import org.pdfclown.files.SerializationModeEnum;
+import org.pdfclown.util.math.geom.Dimension;
+
+import com.github.donkirkby.vograbulary.poemsorting.Poem;
 
 public class VograbularyBook {
     public static void main(String[] args) {
@@ -32,9 +41,8 @@ public class VograbularyBook {
     }
 
     private static void populate(Document document) {
-        Page page = new Page(document); // Instantiates the page inside the
-                                        // document context.
-        document.getPages().add(page); // Puts the page in the pages collection.
+        Page page = new Page(document);
+        document.getPages().add(page);
 
         PrimitiveComposer composer = new PrimitiveComposer(page);
         BlockComposer blockComposer = new BlockComposer(composer);
@@ -56,41 +64,111 @@ public class VograbularyBook {
                 StandardType1Font.FamilyEnum.Courier,
                 false, // bold
                 false); // italic
-        int puzzleFontSize = 12;
+        int puzzleFontSize = 18;
 
         Dimension2D pageSize = page.getSize();
+        Dimension2D paragraphSpace = new Dimension(0, 10);
         Rectangle2D titleFrame = new Rectangle2D.Double(
                 20,
                 50,
-                pageSize.getWidth() - 90,
-                pageSize.getHeight() - 250
+                pageSize.getWidth() - 40,
+                pageSize.getHeight() - 90
                 );
         blockComposer.begin(titleFrame, XAlignmentEnum.Center, YAlignmentEnum.Top);
         composer.setFont(titleFont, titleFontSize);
         blockComposer.showText("Vograbulary");
+        blockComposer.showBreak(paragraphSpace);
         blockComposer.end();
         Rectangle2D usedSpace = blockComposer.getBoundBox();
         Rectangle2D bodyFrame = new Rectangle2D.Double(
                 titleFrame.getX(),
-                usedSpace.getMaxY() + 10,
+                usedSpace.getMaxY(),
                 titleFrame.getWidth(),
                 titleFrame.getHeight() - usedSpace.getHeight());
         blockComposer.begin(bodyFrame, XAlignmentEnum.Left, YAlignmentEnum.Top);
         composer.setFont(textFont, textFontSize);
-        blockComposer.showText(
-                "Each puzzle starts with a poem, then the letters in each " +
-                "word are sorted. To solve the puzzle, find the original " +
-                "words and read the poem. Solutions are listed at the end.");
-        blockComposer.showBreak();
-        composer.setFont(puzzleFont, puzzleFontSize);
-        blockComposer.showText("ARX 23");
-        blockComposer.showBreak();
-        blockComposer.showText("ARX 25");
+        List<String> introduction = loadTextAsset("introduction.md");
+        for (String line : introduction) {
+            blockComposer.showText(line);
+            blockComposer.showText(" ");
+        }
+        blockComposer.showBreak(paragraphSpace);
         blockComposer.end();
-
+        composer.setFont(puzzleFont, puzzleFontSize);
+        List<String> poemsText = loadTextAsset("whitman.md");
+        List<Poem> poems = Poem.load(poemsText);
+        double charWidth = puzzleFont.getWidth('_', puzzleFontSize);
+        double charHeight = puzzleFont.getHeight("_", puzzleFontSize);
+        double y = blockComposer.getBoundBox().getMaxY();
+        for (int i = 0; i < 5; i++) {
+            composer.setFont(textFont, textFontSize);
+            composer.showText(
+                    "Poem " + i,
+                    new Point2D.Double(titleFrame.getX(), y));
+            y += textFont.getHeight('X', textFontSize) * 1.5;
+            Poem poem = poems.get(i);
+            Poem sorted = poem.sortWords();
+            for (String line : sorted.getLines()) {
+                double x = titleFrame.getX();
+                String[] words = line.split(" ");
+                for (String word : words) {
+                    if (x > titleFrame.getX()) {
+                        x += charWidth;
+                    }
+                    if (x + charWidth * word.length() > titleFrame.getMaxX()) {
+                        y += 2*charHeight;
+                        x = titleFrame.getX();
+                    }
+                    if (y + 2*charHeight > titleFrame.getMaxY()) {
+                        composer.flush();
+                        page = new Page(document);
+                        document.getPages().add(page);
+                        
+                        composer = new PrimitiveComposer(page);
+                        y = titleFrame.getY();
+                    }
+                    for (int charIndex = 0; charIndex < word.length(); charIndex++) {
+                        composer.setFont(puzzleFont, puzzleFontSize);
+                        composer.showText("_", new Point2D.Double(x, y));
+                        composer.setFont(puzzleFont, puzzleFontSize/2);
+                        composer.showText(
+                                word.substring(charIndex, charIndex+1),
+                                new Point2D.Double(x+charWidth/2, y+charHeight),
+                                XAlignmentEnum.Center,
+                                YAlignmentEnum.Top,
+                                0);
+                        x += charWidth * 1.25;
+                    }
+                }
+                y += 2*charHeight;
+            }
+        }
         composer.flush();
     }
     
+    private static List<String> loadTextAsset(String assetName) {
+        try {
+            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+            InputStream stream = classLoader.getResourceAsStream(
+              "com/github/donkirkby/vograbulary/assets/"+assetName);
+            ArrayList<String> lines = new ArrayList<String>();
+            BufferedReader reader =new BufferedReader(new InputStreamReader(stream));
+            try {
+                String line;
+                while (null != (line = reader.readLine())) {
+                    lines.add(line);
+                }
+            } finally {
+                    reader.close();
+            }
+            return lines;
+        } catch (IOException ex) {
+            throw new RuntimeException(
+                    "Asset " + assetName + " failed to load.",
+                    ex);
+        }
+    }
+
     private static String serialize(File file, String filePath) throws IOException {
         applyDocumentSettings(file.getDocument());
 
