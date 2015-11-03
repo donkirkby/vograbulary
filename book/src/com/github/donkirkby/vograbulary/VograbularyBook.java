@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -41,31 +42,33 @@ public class VograbularyBook {
     }
 
     private static void populate(Document document) {
-        Page page = new Page(document);
-        document.getPages().add(page);
-
-        PrimitiveComposer composer = new PrimitiveComposer(page);
-        BlockComposer blockComposer = new BlockComposer(composer);
-
+        boolean isLargePrint = false;
+        double fontScale = isLargePrint ? 4 : 1;
         StandardType1Font titleFont = new StandardType1Font(
                 document,
                 StandardType1Font.FamilyEnum.Helvetica,
                 true, // bold
                 false); // italic
-        int titleFontSize = 20;
+        double titleFontSize = 20*fontScale;
         StandardType1Font textFont = new StandardType1Font(
                 document,
                 StandardType1Font.FamilyEnum.Times,
                 false, // bold
                 false); // italic
-        int textFontSize = 12;
+        double textFontSize = 12*fontScale;
         StandardType1Font puzzleFont = new StandardType1Font(
                 document,
                 StandardType1Font.FamilyEnum.Courier,
                 false, // bold
                 false); // italic
-        int puzzleFontSize = 18;
+        double puzzleFontSize = 22*fontScale;
 
+        Page page = new Page(document);
+        document.getPages().add(page);
+        
+        PrimitiveComposer composer = new PrimitiveComposer(page);
+        BlockComposer blockComposer = new BlockComposer(composer);
+        
         Dimension2D pageSize = page.getSize();
         Dimension2D paragraphSpace = new Dimension(0, 10);
         Rectangle2D titleFrame = new Rectangle2D.Double(
@@ -96,14 +99,30 @@ public class VograbularyBook {
         blockComposer.end();
         composer.setFont(puzzleFont, puzzleFontSize);
         List<String> poemsText = loadTextAsset("whitman.md");
-        List<Poem> poems = Poem.load(poemsText);
+        List<Poem> poems = new ArrayList<Poem>();
+        for (Poem poem : Poem.load(poemsText)) {
+            if (poem.getLines().size() <= 20) {
+                poems.add(poem);
+            }
+        }
+        Collections.shuffle(poems);
+        
         double charWidth = puzzleFont.getWidth('_', puzzleFontSize);
         double charHeight = puzzleFont.getHeight("_", puzzleFontSize);
         double y = blockComposer.getBoundBox().getMaxY();
-        for (int i = 0; i < 5; i++) {
+        final int poemCount = 5;
+        ArrayList<Integer> solutionPositions = new ArrayList<Integer>();
+        for (int i = 0; i < poemCount; i++) {
+            solutionPositions.add(i);
+        }
+        Collections.shuffle(solutionPositions);
+        for (int i = 0; i < poemCount; i++) {
             composer.setFont(textFont, textFontSize);
             composer.showText(
-                    "Poem " + i,
+                    String.format(
+                            "%d. see solution %d",
+                            i+1,
+                            solutionPositions.get(i) + 1),
                     new Point2D.Double(titleFrame.getX(), y));
             y += textFont.getHeight('X', textFontSize) * 1.5;
             Poem poem = poems.get(i);
@@ -117,7 +136,7 @@ public class VograbularyBook {
                     }
                     if (x + charWidth * word.length() > titleFrame.getMaxX()) {
                         y += 2*charHeight;
-                        x = titleFrame.getX();
+                        x = titleFrame.getX() + 2.5*charWidth;
                     }
                     if (y + 2*charHeight > titleFrame.getMaxY()) {
                         composer.flush();
@@ -129,18 +148,88 @@ public class VograbularyBook {
                     }
                     for (int charIndex = 0; charIndex < word.length(); charIndex++) {
                         composer.setFont(puzzleFont, puzzleFontSize);
-                        composer.showText("_", new Point2D.Double(x, y));
-                        composer.setFont(puzzleFont, puzzleFontSize/2);
-                        composer.showText(
-                                word.substring(charIndex, charIndex+1),
-                                new Point2D.Double(x+charWidth/2, y+charHeight),
-                                XAlignmentEnum.Center,
-                                YAlignmentEnum.Top,
-                                0);
+                        String cString = word.substring(charIndex, charIndex+1);
+                        char c = cString.charAt(0);
+                        if (c < 'a' || 'z' < c) {
+                            composer.showText(cString, new Point2D.Double(x, y));
+                        }
+                        else {
+                            composer.showText("_", new Point2D.Double(x, y));
+                            composer.setFont(puzzleFont, puzzleFontSize*.75);
+                            composer.showText(
+                                    cString,
+                                    new Point2D.Double(x+charWidth/2, y+charHeight),
+                                    XAlignmentEnum.Center,
+                                    YAlignmentEnum.Top,
+                                    0);
+                        }
                         x += charWidth * 1.25;
                     }
                 }
                 y += 2*charHeight;
+            }
+        }
+        composer.flush();
+
+        page = new Page(document);
+        document.getPages().add(page);
+        
+        composer = new PrimitiveComposer(page);
+        blockComposer = new BlockComposer(composer);
+        
+        titleFrame = new Rectangle2D.Double(
+                20,
+                50,
+                pageSize.getWidth() - 40,
+                pageSize.getHeight() - 90
+                );
+        blockComposer.begin(titleFrame, XAlignmentEnum.Center, YAlignmentEnum.Top);
+        composer.setFont(titleFont, titleFontSize);
+//        blockComposer.showText("Solutions");
+        blockComposer.showBreak(paragraphSpace);
+        blockComposer.end();
+        usedSpace = blockComposer.getBoundBox();
+        bodyFrame = new Rectangle2D.Double(
+                titleFrame.getX(),
+                titleFrame.getY() + usedSpace.getHeight(),
+                titleFrame.getWidth(),
+                titleFrame.getHeight() - usedSpace.getHeight());
+        blockComposer.begin(bodyFrame, XAlignmentEnum.Left, YAlignmentEnum.Top);
+        composer.setFont(textFont, textFontSize);
+        for (int i = 0; i < poemCount; i++) {
+            int poemIndex = solutionPositions.indexOf(i);
+            Poem poem = poems.get(poemIndex);
+            ArrayList<String> printLines = new ArrayList<String>();
+            printLines.add(String.format(
+                            "%d. %s",
+                            i+1,
+                            poem.getTitle()));
+            printLines.addAll(poem.getLines());
+            blockComposer.showBreak(paragraphSpace);
+            for (String line : printLines) {
+                int charCount = 0;
+                while (true) {
+                    charCount += blockComposer.showText(line.substring(charCount));
+                    if (charCount >= line.length()) {
+                        break;
+                    }
+                    composer.flush();
+                    page = new Page(document);
+                    document.getPages().add(page);
+                    
+                    composer = new PrimitiveComposer(page);
+                    blockComposer = new BlockComposer(composer);
+                    
+                    bodyFrame = new Rectangle2D.Double(
+                            20,
+                            50,
+                            pageSize.getWidth() - 40,
+                            pageSize.getHeight() - 90
+                            );
+                    blockComposer.begin(bodyFrame, XAlignmentEnum.Left, YAlignmentEnum.Top);
+                    composer.setFont(textFont, textFontSize);
+                }
+                blockComposer.showBreak();
             }
         }
         composer.flush();

@@ -3,6 +3,8 @@ package com.github.donkirkby.vograbulary.poemsorting;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Poem {
     private String title;
@@ -22,9 +24,9 @@ public class Poem {
                     poems.add(poem);
                     poem = null;
                 }
-                title = line.replaceAll("^#+\\s*(.*\\S)\\s*#+$", "$1");
+                title = line.replaceAll("^#+([^#]*)#+$", "$1").trim();
             }
-            else {
+            else if (line.length() > 0) {
                 if (poem == null){
                     poem = new Poem();
                     poem.title = title;
@@ -49,18 +51,22 @@ public class Poem {
         Poem poem = new Poem();
         poem.lines = new ArrayList<String>();
         char[] buffer = new char[1000];
+        Pattern letters = Pattern.compile("[A-Za-z]+");
         for (String line : lines) {
             StringBuilder sortedWords = new StringBuilder();
-            String[] words = line.toLowerCase().split(" ");
-            for (int i = 0; i < words.length; i++) {
-                String word = words[i];
-                if (i > 0) {
-                    sortedWords.append(" ");
-                }
-                word.getChars(0, word.length(), buffer, 0);
-                Arrays.sort(buffer, 0, word.length());
-                sortedWords.append(buffer, 0, word.length());
+            Matcher matcher = letters.matcher(line.toLowerCase());
+            while (matcher.find()) {
+                // append any punctuation or spaces that didn't match
+                sortedWords.append(line.substring(
+                        sortedWords.length(),
+                        matcher.start()));
+                matcher.group().getChars(0, matcher.group().length(), buffer, 0);
+                Arrays.sort(buffer, 0, matcher.group().length());
+                sortedWords.append(buffer, 0, matcher.group().length());
             }
+            sortedWords.append(line.substring(
+                    sortedWords.length(),
+                    line.length()));
             poem.lines.add(sortedWords.toString());
         }
         return poem;

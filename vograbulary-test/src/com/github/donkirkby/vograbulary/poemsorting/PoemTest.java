@@ -23,7 +23,7 @@ public class PoemTest {
     @Test
     public void loadTitle() {
         List<Poem> poems = Poem.load(
-                "# A Poem #",
+                "## A Poem ##",
                 "The first line,",
                 "And the second.");
         
@@ -52,18 +52,32 @@ public class PoemTest {
     }
     
     @Test
+    public void skipBlankLines() {
+        List<Poem> poems = Poem.load(
+                "# Section #",
+                "",
+                "## A Poem ##",
+                "",
+                "The first line,",
+                "And the second.");
+        
+        assertThat("poems length", poems.size(), is(1));
+        assertThat("line count", poems.get(0).getLines().size(), is(2));
+    }
+    
+    @Test
     public void sortWords() {
         List<Poem> poems = Poem.load(
                 "# A Poem #",
-                "The first line,",
-                "And the second.");
+                "The first line's end",
+                "Is head-to-head with the second.");
         Poem poem = poems.get(0);
         
         Poem sorted = poem.sortWords();
         
         assertThat("lines", sorted.getLines(), is(Arrays.asList(
-                "eht first ,eiln",
-                "adn eht .cdenos")));
+                "eht first eiln's den",
+                "is adeh-ot-adeh hitw eht cdenos.")));
         assertThat("title", poem.getTitle(), is("A Poem"));
     }
 }
