@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 
 public class Poem {
     private String title;
+    private String author;
     private ArrayList<String> lines;
 
     public static List<Poem> load(String... lines) {
@@ -18,9 +19,19 @@ public class Poem {
         List<Poem> poems = new ArrayList<Poem>();
         Poem poem = null;
         String title = null;
-        for (String line : lines) {
+        Pattern authorPattern = Pattern.compile(" by\\s+([^#]+)#+$");
+        Matcher authorMatcher = authorPattern.matcher(lines.get(0));
+        String author = null;
+        int startLine = 0;
+        if (authorMatcher.find()) {
+            author = authorMatcher.group(1).trim();
+            startLine = 1;
+        }
+        for (int i = startLine; i < lines.size(); i++) {
+            String line = lines.get(i);
             if (line.startsWith("#")) {
                 if (poem != null) {
+                    poem.checkAuthor(author);
                     poems.add(poem);
                     poem = null;
                 }
@@ -35,8 +46,22 @@ public class Poem {
                 poem.lines.add(line);
             }
         }
+        poem.checkAuthor(author);
         poems.add(poem);
         return poems;
+    }
+    
+    private void checkAuthor(String author) {
+        if (author != null) {
+            this.author = author;
+        }
+        else {
+            String lastLine = lines.get(lines.size()-1);
+            if (lastLine.equals(lastLine.toUpperCase())) {
+                this.author = lastLine;
+                lines.remove(lines.size() - 1);
+            }
+        }
     }
     
     public String getTitle() {
@@ -45,6 +70,10 @@ public class Poem {
 
     public List<String> getLines() {
         return lines;
+    }
+    
+    public String getAuthor() {
+        return author;
     }
 
     public Poem sortWords() {

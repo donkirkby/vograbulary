@@ -98,13 +98,9 @@ public class VograbularyBook {
         blockComposer.showBreak(paragraphSpace);
         blockComposer.end();
         composer.setFont(puzzleFont, puzzleFontSize);
-        List<String> poemsText = loadTextAsset("whitman.md");
         List<Poem> poems = new ArrayList<Poem>();
-        for (Poem poem : Poem.load(poemsText)) {
-            if (poem.getLines().size() <= 20) {
-                poems.add(poem);
-            }
-        }
+        loadPoems("whitman.md", poems);
+        loadPoems("lyrical_poetry.md", poems);
         Collections.shuffle(poems);
         
         double charWidth = puzzleFont.getWidth('_', puzzleFontSize);
@@ -117,15 +113,16 @@ public class VograbularyBook {
         }
         Collections.shuffle(solutionPositions);
         for (int i = 0; i < poemCount; i++) {
+            Poem poem = poems.get(i);
             composer.setFont(textFont, textFontSize);
             composer.showText(
                     String.format(
-                            "%d. see solution %d",
+                            "%d. %s (see solution %d)",
                             i+1,
+                            poem.getAuthor().toUpperCase(),
                             solutionPositions.get(i) + 1),
                     new Point2D.Double(titleFrame.getX(), y));
             y += textFont.getHeight('X', textFontSize) * 1.5;
-            Poem poem = poems.get(i);
             Poem sorted = poem.sortWords();
             for (String line : sorted.getLines()) {
                 double x = titleFrame.getX();
@@ -233,6 +230,15 @@ public class VograbularyBook {
             }
         }
         composer.flush();
+    }
+
+    private static void loadPoems(final String assetName, List<Poem> poems) {
+        List<String> poemsText = loadTextAsset(assetName);
+        for (Poem poem : Poem.load(poemsText)) {
+            if (poem.getLines().size() <= 20) {
+                poems.add(poem);
+            }
+        }
     }
     
     private static List<String> loadTextAsset(String assetName) {

@@ -1,4 +1,4 @@
-# Shakespeare's Sonnets #
+# Sonnets by William Shakespeare #
 
 ### I ###
 

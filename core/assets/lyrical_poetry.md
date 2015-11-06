@@ -1,4 +1,4 @@
-# The Golden Treasury, by James Tenison #
+# The Golden Treasury #
 ## Of the Best Songs and Lyrical Poems in the English Language ##
 
 ## FIRST BOOK ##

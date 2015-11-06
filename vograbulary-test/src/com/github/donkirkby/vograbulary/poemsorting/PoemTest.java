@@ -36,6 +36,37 @@ public class PoemTest {
     }
     
     @Test
+    public void loadAuthor() {
+        List<Poem> poems = Poem.load(
+                "## A Poem ##",
+                "The first line,",
+                "And the second.",
+                "J. JOHNSON");
+        
+        assertThat("poems length", poems.size(), is(1));
+        Poem poem = poems.get(0);
+        List<String> lines = poem.getLines();
+        assertThat("author", poem.getAuthor(), is("J. JOHNSON"));
+        assertThat("line count", lines.size(), is(2));
+    }
+    
+    @Test
+    public void loadCollectionAuthor() {
+        List<Poem> poems = Poem.load(
+                "# Poems by F. Franklin #",
+                "## A Poem ##",
+                "The first line,",
+                "And the second.",
+                "J. JOHNSON");
+        
+        assertThat("poems length", poems.size(), is(1));
+        Poem poem = poems.get(0);
+        List<String> lines = poem.getLines();
+        assertThat("author", poem.getAuthor(), is("F. Franklin"));
+        assertThat("line count", lines.size(), is(3));
+    }
+    
+    @Test
     public void loadTwoPoems() {
         List<Poem> poems = Poem.load(
                 "# A Poem #",
