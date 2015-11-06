@@ -114,7 +114,7 @@ public class VograbularyBook {
         Collections.shuffle(solutionPositions);
         for (int i = 0; i < poemCount; i++) {
             Poem poem = poems.get(i);
-            composer.setFont(textFont, textFontSize);
+            composer.setFont(titleFont, textFontSize);
             composer.showText(
                     String.format(
                             "%d. %s (see solution %d)",
