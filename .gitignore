@@ -16,6 +16,9 @@ bin/
 gen/
 .gwt
 book/vograbulary.pdf
+book/vograbulary.aux
+book/vograbulary.log
+book/vograbulary.tex
 html/gwt-unitCache
 html/test-classes/
 html/war/WEB-INF/classes/
