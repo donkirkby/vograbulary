@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.github.donkirkby.vograbulary.poemsorting.Poem;
+import com.github.donkirkby.vograbulary.poemsorting.PoemDisplay;
 
 public class VograbularyBook {
     public static void main(String[] args) {
@@ -63,29 +64,26 @@ public class VograbularyBook {
                     title,
                     solutionPositions.get(i) + 1);
             writer.printf("\\poemtitle{%s}\n", title);
-            writer.write("\\begin{verse}\n");
-            Poem sorted = poem.sortWords();
-            for (String line : sorted.getLines()) {
-                String[] words = line.split(" ");
-                for (int wordIndex = 0; wordIndex < words.length; wordIndex++) {
-                    String word = words[wordIndex];
-                    writer.write("\\(\\def\\stacktype{L}\\rule{0pt}{\\baselineskip}\n");
-                    for (int charIndex = 0; charIndex < word.length(); charIndex++) {
-                        String cString = word.substring(charIndex, charIndex+1);
-                        char c = cString.charAt(0);
-                        if (c < 'a' || 'z' < c) {
-                            writer.write(cString);
-                        }
-                        else {
-                            writer.printf("\\stackunder{\\Huge{\\_}}{%s}\n", cString);
-                        }
-                    }
-                    writer.printf(
-                            "\\)%s\n",
-                            wordIndex == words.length-1 ? "\\\\" : "\\rule{5pt}{0pt}");
+            writer.printf("\\begin{verbatim}\n");
+            PoemDisplay display = new PoemDisplay(poem, 60);
+            for (int lineIndex = 0; lineIndex < display.getBodyLineCount(); lineIndex++) {
+                writer.write("\n\n");
+                for (int charIndex = 0; charIndex < display.getWidth(); charIndex++) {
+                    writer.write(display.getBody(lineIndex, charIndex));
                 }
+                writer.write('\n');
             }
-            writer.write("\\end{verse}");
+            for (int charIndex = 0; charIndex < display.getWidth(); charIndex++) {
+                writer.write("-");
+            }
+            writer.write('\n');
+            for (int lineIndex = 0; lineIndex < display.getClueLineCount(); lineIndex++) {
+                for (int charIndex = 0; charIndex < display.getWidth(); charIndex++) {
+                    writer.write(display.getClue(lineIndex, charIndex));
+                }
+                writer.write('\n');
+            }
+            writer.write("\\end{verbatim}");
         }
         writer.write("\\newpage\\Large\\textbf{Solutions}\n");
         for (int i = 0; i < poemCount; i++) {
