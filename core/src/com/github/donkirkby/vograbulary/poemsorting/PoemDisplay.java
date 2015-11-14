@@ -6,11 +6,13 @@ import java.util.List;
 
 public class PoemDisplay {
     private int width;
+    private Poem poem;
     private int clueLineCount;
     private List<String> bodyLines = new ArrayList<String>();
     private List<String> clueColumns = new ArrayList<String>();
     
-    public PoemDisplay(Poem poem, int width) {
+    public PoemDisplay(Poem poem, int maxWidth) {
+        this.poem = poem;
         List<String> poemLines = new ArrayList<String>();
         Poem sortedPoem = poem.sortWords();
         final int poemLineCount = poem.getLines().size();
@@ -20,9 +22,9 @@ public class PoemDisplay {
             String indent = "";
             int start = 0;
             int lastBreak = 0;
-            for (int charIndex = 0; charIndex < poemLine.length(); charIndex++) {
+            for (int charIndex = 0; charIndex <= poemLine.length(); charIndex++) {
                 boolean shouldAdd;
-                if (charIndex == poemLine.length() - 1) {
+                if (charIndex == poemLine.length()) {
                     shouldAdd = true;
                     lastBreak = poemLine.length();
                 }
@@ -30,7 +32,7 @@ public class PoemDisplay {
                     if (poemLine.charAt(charIndex) == ' ') {
                         lastBreak = charIndex;
                     }
-                    shouldAdd = charIndex - start >= width;
+                    shouldAdd = charIndex - start + indent.length() >= maxWidth;
                 }
                 if (shouldAdd) {
                     poemLines.add(indent + poemLine.substring(start, lastBreak));
@@ -60,6 +62,10 @@ public class PoemDisplay {
             clueColumns.add(new String(column, 0, letterCount));
             clueLineCount = Math.max(clueLineCount, letterCount);
         }
+    }
+    
+    public Poem getPoem() {
+        return poem;
     }
 
     public int getWidth() {

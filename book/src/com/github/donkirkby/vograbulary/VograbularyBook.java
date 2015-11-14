@@ -45,16 +45,27 @@ public class VograbularyBook {
         loadPoems("whitman.md", poems);
         loadPoems("lyrical_poetry.md", poems);
         Collections.shuffle(poems);
-
         final int poemCount = 5;
+        List<PoemDisplay> chosenPoems = new ArrayList<PoemDisplay>();
+        for (Poem poem : poems) {
+            PoemDisplay display = new PoemDisplay(poem, 45);
+            if (display.getBodyLineCount()*3 + display.getClueLineCount() < 50) {
+                chosenPoems.add(display);
+                if (chosenPoems.size() >= poemCount) {
+                    break;
+                }
+            }
+        }
+
         ArrayList<Integer> solutionPositions = new ArrayList<Integer>();
-        for (int i = 0; i < poemCount; i++) {
+        for (int i = 0; i < chosenPoems.size(); i++) {
             solutionPositions.add(i);
         }
         Collections.shuffle(solutionPositions);
-        for (int i = 0; i < poemCount; i++) {
-            Poem poem = poems.get(i);
-            String title = poem.getTitle();
+        for (int i = 0; i < chosenPoems.size(); i++) {
+            PoemDisplay display = chosenPoems.get(i);
+            Poem poem = display.getPoem();
+            String title = poem.getTitle().replace("&", "\\&");
             if (poem.getAuthor() != null) {
                 title += ", by " + poem.getAuthor();
             }
@@ -63,36 +74,67 @@ public class VograbularyBook {
                     i+1,
                     title,
                     solutionPositions.get(i) + 1);
-            writer.printf("\\poemtitle{%s}\n", title);
-            writer.printf("\\begin{verbatim}\n");
-            PoemDisplay display = new PoemDisplay(poem, 60);
-            for (int lineIndex = 0; lineIndex < display.getBodyLineCount(); lineIndex++) {
-                writer.write("\n\n");
-                for (int charIndex = 0; charIndex < display.getWidth(); charIndex++) {
-                    writer.write(display.getBody(lineIndex, charIndex));
-                }
-                writer.write('\n');
-            }
+            writer.write("\\begin{table}[h]\n");
+            writer.printf("\\caption{%s}\n", title);
+            writer.printf("\\begin{tabular}{|");
             for (int charIndex = 0; charIndex < display.getWidth(); charIndex++) {
-                writer.write("-");
+                if (charIndex > 0) {
+                    writer.write(' ');
+                }
+                if ((charIndex / 5) % 2 == 1) {
+                    writer.write(">{\\columncolor[HTML]{EFEFEF}}");
+                }
+                writer.write('c');
             }
-            writer.write('\n');
+            writer.write("|}\n");
+            writer.write("\\hline\n");
+            for (int lineIndex = 0; lineIndex < display.getBodyLineCount(); lineIndex++) {
+                writer.write("\\rule{0pt}{18pt}");
+                for (int charIndex = 0; charIndex < display.getWidth(); charIndex++) {
+                    if (charIndex != 0) {
+                        writer.write('&');
+                    }
+                    final char c = display.getBody(lineIndex, charIndex);
+                    if (c < 'a' || 'z' < c) {
+                        writer.write(c);
+                    }
+                    else {
+                        writer.write("\\hdash");
+                    }
+                }
+                writer.write("\\\\\n");
+                for (int charIndex = 0; charIndex < display.getWidth(); charIndex++) {
+                    if (charIndex != 0) {
+                        writer.write('&');
+                    }
+                    final char c = display.getBody(lineIndex, charIndex);
+                    if ('a' <= c && c <= 'z') {
+                        writer.write(c);
+                    }
+                }
+                writer.write("\\\\\n");
+            }
+            writer.write("\\hline\n");
             for (int lineIndex = 0; lineIndex < display.getClueLineCount(); lineIndex++) {
                 for (int charIndex = 0; charIndex < display.getWidth(); charIndex++) {
+                    if (charIndex != 0) {
+                        writer.write('&');
+                    }
                     writer.write(display.getClue(lineIndex, charIndex));
                 }
-                writer.write('\n');
+                writer.write("\\\\\n");
             }
-            writer.write("\\end{verbatim}");
+            writer.write("\\hline\n\\end{tabular}\\end{table}");
         }
+        writer.write("\\FloatBarrier\n");
         writer.write("\\newpage\\Large\\textbf{Solutions}\n");
         for (int i = 0; i < poemCount; i++) {
             int poemIndex = solutionPositions.indexOf(i);
-            Poem poem = poems.get(poemIndex);
+            Poem poem = chosenPoems.get(poemIndex).getPoem();
             String title = String.format(
                             "%d. %s",
                             i+1,
-                            poem.getTitle());
+                            poem.getTitle().replace("&", "\\&"));
             writer.printf("\\poemtitle{%s}\n\\begin{verse}\n", title);
             for (String line : poem.getLines()) {
                 writer.printf("%s\\\\\n", line);

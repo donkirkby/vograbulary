@@ -29,6 +29,30 @@ public class PoemDisplayTest {
     }
     
     @Test
+    public void wrapTwice() {
+        List<Poem> poems = Poem.load(
+                "Guess I'm a poet,",
+                "I didn't know it.");
+        int width = 10;
+        String expectedDisplay =
+                "egssu i'm\n" +
+                "    a    \n" +
+                "    eopt,\n" +
+                "i ddin't \n" +
+                "    know \n" +
+                "    it.  \n" +
+                "gudianetm\n" +
+                "i esdnit \n" +
+                "    ioow \n" +
+                "    kt   \n" +
+                "    p    \n" +
+                "    s    \n";
+        PoemDisplay display = new PoemDisplay(poems.get(0), width);
+        
+        assertThat("display", buildTextDisplay(display), is(expectedDisplay));
+    }
+    
+    @Test
     public void displayBlankColumn() {
         List<Poem> poems = Poem.load(
                 "Guess I'm a poet,",
