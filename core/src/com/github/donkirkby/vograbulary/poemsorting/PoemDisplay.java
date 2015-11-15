@@ -17,8 +17,8 @@ public class PoemDisplay {
         Poem sortedPoem = poem.sortWords();
         final int poemLineCount = poem.getLines().size();
         for (int poemLineIndex = 0; poemLineIndex < poemLineCount; poemLineIndex++) {
-            String poemLine = poem.getLines().get(poemLineIndex);
-            String sortedLine = sortedPoem.getLines().get(poemLineIndex);
+            String poemLine = poem.getLines().get(poemLineIndex).trim();
+            String sortedLine = sortedPoem.getLines().get(poemLineIndex).trim();
             String indent = "";
             int start = 0;
             int lastBreak = 0;
