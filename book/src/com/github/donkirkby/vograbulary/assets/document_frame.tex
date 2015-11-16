@@ -2,10 +2,11 @@
 \usepackage[letterpaper, margin=0.5in]{geometry}
 \usepackage[table,xcdraw]{xcolor}
 \usepackage{verse}
-\usepackage{placeins}
 \setlength\tabcolsep{0pt}
 \begin{document}
-\newcommand{\hdash}{{\fontsize{36pt}{0.1em}\selectfont \rule{0pt}{18pt}\_}}
+\newcommand{\puzzlesize}[1]{{\fontsize{36pt}{0.1em}\selectfont #1}}
+\newcommand{\hdash}{\puzzlesize{\_}}
+\newcommand{\hspacer}{\puzzlesize{\phantom{\_}}}
    \begin{center}
       \Large\textbf{Vograbulary}\\
       \large\textit{by Don Kirkby}
@@ -15,5 +16,6 @@ Each puzzle starts with a poem, then the letters in each word are sorted. To
 solve the puzzle, find the original words and read the poem. Solutions are
 listed at the end.
 }
+
 ## insert-puzzles ##
 \end{document}

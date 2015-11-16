@@ -11,7 +11,9 @@ import org.junit.Test;
 public class PoemTest {
     @Test
     public void loadLines() {
-        List<Poem> poems = Poem.load("The first line,", "And the second.");
+        List<Poem> poems = Poem.load(
+                "The first line,  ",
+                "And the second.");
         
         assertThat("poems length", poems.size(), is(1));
         Poem poem = poems.get(0);
@@ -24,7 +26,7 @@ public class PoemTest {
     public void loadTitle() {
         List<Poem> poems = Poem.load(
                 "## A Poem ##",
-                "The first line,",
+                "The first line,  ",
                 "And the second.");
         
         assertThat("poems length", poems.size(), is(1));
@@ -39,8 +41,8 @@ public class PoemTest {
     public void loadAuthor() {
         List<Poem> poems = Poem.load(
                 "## A Poem ##",
-                "The first line,",
-                "And the second.",
+                "The first line,  ",
+                "And the second.  ",
                 "J. JOHNSON");
         
         assertThat("poems length", poems.size(), is(1));
@@ -55,8 +57,8 @@ public class PoemTest {
         List<Poem> poems = Poem.load(
                 "# Poems by F. Franklin #",
                 "## A Poem ##",
-                "The first line,",
-                "And the second.",
+                "The first line,  ",
+                "And the second.  ",
                 "J. JOHNSON");
         
         assertThat("poems length", poems.size(), is(1));
@@ -70,7 +72,7 @@ public class PoemTest {
     public void loadTwoPoems() {
         List<Poem> poems = Poem.load(
                 "# A Poem #",
-                "The first line,",
+                "The first line,  ",
                 "And the second.",
                 "# Another Poem #",
                 "With one line");
@@ -89,7 +91,7 @@ public class PoemTest {
                 "",
                 "## A Poem ##",
                 "",
-                "The first line,",
+                "The first line,  ",
                 "And the second.");
         
         assertThat("poems length", poems.size(), is(1));
@@ -97,10 +99,26 @@ public class PoemTest {
     }
     
     @Test
+    public void ignoreSoftWrap() {
+        List<Poem> poems = Poem.load(
+                "The first line,",
+                "    and the second.");
+        
+        assertThat("poems length", poems.size(), is(1));
+        Poem poem = poems.get(0);
+        List<String> lines = poem.getLines();
+        assertThat("line count", lines.size(), is(1));
+        assertThat(
+                "second line",
+                lines.get(0),
+                is("The first line, and the second."));
+    }
+    
+    @Test
     public void sortWords() {
         List<Poem> poems = Poem.load(
                 "# A Poem #",
-                "The first line's end",
+                "The first line's end  ",
                 "Is head-to-head with the second.");
         Poem poem = poems.get(0);
         

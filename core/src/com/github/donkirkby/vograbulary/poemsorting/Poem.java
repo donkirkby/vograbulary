@@ -42,8 +42,22 @@ public class Poem {
                     poem = new Poem();
                     poem.title = title;
                     poem.lines = new ArrayList<String>();
+                    poem.lines.add(line);
                 }
-                poem.lines.add(line);
+                else {
+                    String lastLine = poem.lines.get(poem.lines.size()-1);
+                    if (lastLine.endsWith("  ")) {
+                        poem.lines.set(poem.lines.size()-1, lastLine.substring(
+                                0,
+                                lastLine.length()-2));
+                        poem.lines.add(line);
+                    }
+                    else {
+                        poem.lines.set(
+                                poem.lines.size()-1,
+                                lastLine + " " + line.replaceAll("^ +", ""));
+                    }
+                }
             }
         }
         poem.checkAuthor(author);

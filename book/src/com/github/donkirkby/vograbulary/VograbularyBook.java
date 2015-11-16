@@ -30,6 +30,13 @@ public class VograbularyBook {
                 writer.close();
             }
             Process process = Runtime.getRuntime().exec("pdflatex vograbulary.tex");
+            process.getOutputStream().close();
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(process.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+            }
             process.waitFor();
             System.out.println("Done.");
         } catch (IOException | InterruptedException e) {
@@ -45,7 +52,7 @@ public class VograbularyBook {
         loadPoems("whitman.md", poems);
         loadPoems("lyrical_poetry.md", poems);
         Collections.shuffle(poems);
-        final int poemCount = 5;
+        final int poemCount = 10;
         List<PoemDisplay> chosenPoems = new ArrayList<PoemDisplay>();
         for (Poem poem : poems) {
             PoemDisplay display = new PoemDisplay(poem, 45);
@@ -67,16 +74,16 @@ public class VograbularyBook {
             Poem poem = display.getPoem();
             String title = poem.getTitle().replace("&", "\\&");
             if (poem.getAuthor() != null) {
-                title += ", by " + poem.getAuthor();
+                title += " by " + poem.getAuthor();
             }
             title = String.format(
                     "%d. %s (see solution %d)",
                     i+1,
                     title,
                     solutionPositions.get(i) + 1);
-            writer.write("\\begin{table}[h]\n");
-            writer.printf("\\caption{%s}\n", title);
-            writer.printf("\\begin{tabular}{|");
+            writer.write("\\begin{tabular}{l}\n");
+            writer.printf("\\poemtitle{%s}\\\\\n", title);
+            writer.write("\\begin{tabular}{|");
             for (int charIndex = 0; charIndex < display.getWidth(); charIndex++) {
                 if (charIndex > 0) {
                     writer.write(' ');
@@ -88,6 +95,13 @@ public class VograbularyBook {
             }
             writer.write("|}\n");
             writer.write("\\hline\n");
+            for (int charIndex = 0; charIndex < display.getWidth(); charIndex++) {
+                if (charIndex > 0) {
+                    writer.write('&');
+                }
+                writer.write("\\hspacer");
+            }
+            writer.write(" \\\\[-\\normalbaselineskip]\n");
             for (int lineIndex = 0; lineIndex < display.getBodyLineCount(); lineIndex++) {
                 writer.write("\\rule{0pt}{18pt}");
                 for (int charIndex = 0; charIndex < display.getWidth(); charIndex++) {
@@ -96,7 +110,7 @@ public class VograbularyBook {
                     }
                     final char c = display.getBody(lineIndex, charIndex);
                     if (c < 'a' || 'z' < c) {
-                        writer.write(c);
+                        writer.printf("\\puzzlesize{%c}", c);
                     }
                     else {
                         writer.write("\\hdash");
@@ -124,9 +138,9 @@ public class VograbularyBook {
                 }
                 writer.write("\\\\\n");
             }
-            writer.write("\\hline\n\\end{tabular}\\end{table}");
+            writer.write("\\hline\n\\end{tabular}\n");
+            writer.write("\\end{tabular}\n\n");
         }
-        writer.write("\\FloatBarrier\n");
         writer.write("\\newpage\\Large\\textbf{Solutions}\n");
         for (int i = 0; i < poemCount; i++) {
             int poemIndex = solutionPositions.indexOf(i);

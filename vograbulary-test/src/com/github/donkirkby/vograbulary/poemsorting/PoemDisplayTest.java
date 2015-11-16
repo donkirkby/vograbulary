@@ -11,7 +11,7 @@ public class PoemDisplayTest {
     @Test
     public void display() {
         List<Poem> poems = Poem.load(
-                "Guess I'm a poet,",
+                "Guess I'm a poet,  ",
                 "I didn't know it.");
         int width = 15;
         String expectedDisplay =
@@ -51,7 +51,7 @@ public class PoemDisplayTest {
     @Test
     public void wrapTwice() {
         List<Poem> poems = Poem.load(
-                "Guess I'm a poet,",
+                "Guess I'm a poet,  ",
                 "I didn't know it.");
         int width = 10;
         String expectedDisplay =
@@ -75,7 +75,7 @@ public class PoemDisplayTest {
     @Test
     public void displayBlankColumn() {
         List<Poem> poems = Poem.load(
-                "Guess I'm a poet,",
+                "Guess I'm a poet,  ",
                 "I did not know it.");
         int width = 20;
         String expectedDisplay =
