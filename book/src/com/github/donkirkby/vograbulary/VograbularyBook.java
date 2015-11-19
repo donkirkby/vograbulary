@@ -52,7 +52,7 @@ public class VograbularyBook {
         loadPoems("whitman.md", poems);
         loadPoems("lyrical_poetry.md", poems);
         Collections.shuffle(poems);
-        final int poemCount = 10;
+        final int poemCount = 3;
         List<PoemDisplay> chosenPoems = new ArrayList<PoemDisplay>();
         for (Poem poem : poems) {
             PoemDisplay display = new PoemDisplay(poem, 45);
@@ -81,68 +81,68 @@ public class VograbularyBook {
                     i+1,
                     title,
                     solutionPositions.get(i) + 1);
-            writer.write("\\begin{tabular}{l}\n");
+            writer.write("\\begin{tabular}{p{0.97\\linewidth}}\n\\phantom{.}\\\\\n");
             writer.printf("\\poemtitle{%s}\\\\\n", title);
-            writer.write("\\begin{tabular}{|");
+            writer.write("\\begin{tabular}{|c");
+            String columnColour = "";
             for (int charIndex = 0; charIndex < display.getWidth(); charIndex++) {
-                if (charIndex > 0) {
-                    writer.write(' ');
-                }
-                if ((charIndex / 5) % 2 == 1) {
-                    writer.write(">{\\columncolor[HTML]{EFEFEF}}");
-                }
+                writer.write(' ');
+                columnColour = (charIndex / 5) % 2 == 1
+                        ? ">{\\columncolor[gray]{0.9}}"
+                        : "";
+                writer.write(columnColour);
                 writer.write('c');
             }
-            writer.write("|}\n");
+            writer.printf("%sc|}\n", columnColour);
             writer.write("\\hline\n");
-            for (int charIndex = 0; charIndex < display.getWidth(); charIndex++) {
-                if (charIndex > 0) {
-                    writer.write('&');
-                }
-                writer.write("\\hspacer");
-            }
-            writer.write(" \\\\[-\\normalbaselineskip]\n");
             for (int lineIndex = 0; lineIndex < display.getBodyLineCount(); lineIndex++) {
-                writer.write("\\rule{0pt}{18pt}");
+                writer.write("\\phantom{.}");
+                StringBuilder underlineCommand = new StringBuilder("\\hhline{|~");
+                String blankLine = "";
                 for (int charIndex = 0; charIndex < display.getWidth(); charIndex++) {
-                    if (charIndex != 0) {
-                        writer.write('&');
-                    }
+                    blankLine = (charIndex / 5) % 2 == 1
+                            ? ">{\\arrayrulecolor[gray]{0.9}}-"
+                            : "~";
+                    writer.write('&');
                     final char c = display.getBody(lineIndex, charIndex);
-                    if (c < 'a' || 'z' < c) {
+                    if (c == ' ') {
+                        writer.write("\\pzsp");
+                        underlineCommand.append(blankLine);
+                    }
+                    else if (c < 'a' || 'z' < c) {
                         writer.printf("\\puzzlesize{%c}", c);
+                        underlineCommand.append(blankLine);
                     }
                     else {
-                        writer.write("\\hdash");
+                        writer.write("\\pzsp");
+                        underlineCommand.append(">{\\arrayrulecolor{black}}-");
                     }
                 }
-                writer.write("\\\\\n");
+                underlineCommand.append(blankLine);
+                underlineCommand.append("|}\\arrayrulecolor{black}");
+                writer.printf("&\\phantom{.}\\\\\n%s\n", underlineCommand.toString());
                 for (int charIndex = 0; charIndex < display.getWidth(); charIndex++) {
-                    if (charIndex != 0) {
-                        writer.write('&');
-                    }
+                    writer.write('&');
                     final char c = display.getBody(lineIndex, charIndex);
                     if ('a' <= c && c <= 'z') {
                         writer.write(c);
                     }
                 }
-                writer.write("\\\\\n");
+                writer.write("& \\\\\n");
             }
             writer.write("\\hline\n");
             for (int lineIndex = 0; lineIndex < display.getClueLineCount(); lineIndex++) {
                 for (int charIndex = 0; charIndex < display.getWidth(); charIndex++) {
-                    if (charIndex != 0) {
-                        writer.write('&');
-                    }
+                    writer.write('&');
                     writer.write(display.getClue(lineIndex, charIndex));
                 }
-                writer.write("\\\\\n");
+                writer.write("&\\\\\n");
             }
             writer.write("\\hline\n\\end{tabular}\n");
             writer.write("\\end{tabular}\n\n");
         }
         writer.write("\\newpage\\Large\\textbf{Solutions}\n");
-        for (int i = 0; i < poemCount; i++) {
+        for (int i = 0; i < chosenPoems.size(); i++) {
             int poemIndex = solutionPositions.indexOf(i);
             Poem poem = chosenPoems.get(poemIndex).getPoem();
             String title = String.format(
