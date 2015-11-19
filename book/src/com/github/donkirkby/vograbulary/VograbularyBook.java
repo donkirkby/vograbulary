@@ -84,43 +84,32 @@ public class VograbularyBook {
             writer.write("\\begin{tabular}{p{0.97\\linewidth}}\n\\phantom{.}\\\\\n");
             writer.printf("\\poemtitle{%s}\\\\\n", title);
             writer.write("\\begin{tabular}{|c");
-            String columnColour = "";
+            char columnType = 'c';
             for (int charIndex = 0; charIndex < display.getWidth(); charIndex++) {
                 writer.write(' ');
-                columnColour = (charIndex / 5) % 2 == 1
-                        ? ">{\\columncolor[gray]{0.9}}"
-                        : "";
-                writer.write(columnColour);
-                writer.write('c');
+                columnType = (charIndex / 5) % 2 == 1
+                        ? 'G'  // gray
+                        : 'c';
+                writer.write(columnType);
             }
-            writer.printf("%sc|}\n", columnColour);
+            writer.printf("%c|}\n", columnType);
             writer.write("\\hline\n");
             for (int lineIndex = 0; lineIndex < display.getBodyLineCount(); lineIndex++) {
                 writer.write("\\phantom{.}");
-                StringBuilder underlineCommand = new StringBuilder("\\hhline{|~");
-                String blankLine = "";
                 for (int charIndex = 0; charIndex < display.getWidth(); charIndex++) {
-                    blankLine = (charIndex / 5) % 2 == 1
-                            ? ">{\\arrayrulecolor[gray]{0.9}}-"
-                            : "~";
                     writer.write('&');
                     final char c = display.getBody(lineIndex, charIndex);
                     if (c == ' ') {
                         writer.write("\\pzsp");
-                        underlineCommand.append(blankLine);
                     }
                     else if (c < 'a' || 'z' < c) {
                         writer.printf("\\puzzlesize{%c}", c);
-                        underlineCommand.append(blankLine);
                     }
                     else {
-                        writer.write("\\pzsp");
-                        underlineCommand.append(">{\\arrayrulecolor{black}}-");
+                        writer.write("\\hdash");
                     }
                 }
-                underlineCommand.append(blankLine);
-                underlineCommand.append("|}\\arrayrulecolor{black}");
-                writer.printf("&\\phantom{.}\\\\\n%s\n", underlineCommand.toString());
+                writer.printf("&\\phantom{.}\\\\\n\n");
                 for (int charIndex = 0; charIndex < display.getWidth(); charIndex++) {
                     writer.write('&');
                     final char c = display.getBody(lineIndex, charIndex);
