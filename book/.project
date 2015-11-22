@@ -21,6 +21,16 @@
 			<locationURI>PARENT-1-PROJECT_LOC/core/assets/lyrical_poetry.md</locationURI>
 		</link>
 		<link>
+			<name>src/com/github/donkirkby/vograbulary/assets/russianDolls.txt</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/core/assets/russianDolls.txt</locationURI>
+		</link>
+		<link>
+			<name>src/com/github/donkirkby/vograbulary/assets/wordlist.txt</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/core/assets/wordlist.txt</locationURI>
+		</link>
+		<link>
 			<name>src/com/github/donkirkby/vograbulary/assets/shakespeare.md</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/core/assets/shakespeare.md</locationURI>

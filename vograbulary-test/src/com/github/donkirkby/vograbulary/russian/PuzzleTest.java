@@ -9,6 +9,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import com.github.donkirkby.vograbulary.russian.Puzzle.NoSolutionException;
+import com.github.donkirkby.vograbulary.ultraghost.WordList;
+
 public class PuzzleTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -90,6 +93,35 @@ public class PuzzleTest {
         String target2 = puzzle.getTarget(1);
         assertThat("target 1", target1, is("TARGETS"));
         assertThat("target 2", target2, is("PUNCTUATION"));
+    }
+    
+    @Test
+    public void findSolutionEarly() {
+        Puzzle puzzle = new Puzzle("LIPS SHOD");
+        WordList wordList = new WordList("slipshod", "uncomfortable");
+        
+        String solution = puzzle.findSolution(wordList);
+        
+        assertThat("combination", solution, is("SLIPSHOD"));
+    }
+    
+    @Test
+    public void findSolutionLate() {
+        Puzzle puzzle = new Puzzle("predict amen");
+        WordList wordList = new WordList("potato", "predicament");
+        
+        String solution = puzzle.findSolution(wordList);
+        
+        assertThat("combination", solution, is("PREDICAMENT"));
+    }
+    
+    @Test
+    public void noSolution() {
+        Puzzle puzzle = new Puzzle("comfort unstable");
+        WordList wordList = new WordList("potato", "uncomfortable");
+        
+        thrown.expect(NoSolutionException.class);
+        puzzle.findSolution(wordList);
     }
 
     @Test

@@ -1,6 +1,7 @@
 package com.github.donkirkby.vograbulary;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -11,6 +12,8 @@ import java.util.List;
 
 import com.github.donkirkby.vograbulary.poemsorting.Poem;
 import com.github.donkirkby.vograbulary.poemsorting.PoemDisplay;
+import com.github.donkirkby.vograbulary.russian.Puzzle;
+import com.github.donkirkby.vograbulary.ultraghost.WordList;
 
 public class VograbularyBook {
     public static void main(String[] args) {
@@ -45,14 +48,11 @@ public class VograbularyBook {
     }
 
     private static void populate(PrintWriter writer) {
-//        boolean isLargePrint = false;
-//        double fontScale = isLargePrint ? 4 : 1;
-        
         List<Poem> poems = new ArrayList<Poem>();
         loadPoems("whitman.md", poems);
         loadPoems("lyrical_poetry.md", poems);
         Collections.shuffle(poems);
-        final int poemCount = 3;
+        final int poemCount = 10;
         List<PoemDisplay> chosenPoems = new ArrayList<PoemDisplay>();
         for (Poem poem : poems) {
             PoemDisplay display = new PoemDisplay(poem, 45);
@@ -69,6 +69,9 @@ public class VograbularyBook {
             solutionPositions.add(i);
         }
         Collections.shuffle(solutionPositions);
+        
+        List<String> russianDolls = loadTextAsset("russianDolls.txt");
+        russianDolls.remove(0); // remove example
         for (int i = 0; i < chosenPoems.size(); i++) {
             PoemDisplay display = chosenPoems.get(i);
             Poem poem = display.getPoem();
@@ -77,12 +80,12 @@ public class VograbularyBook {
                 title += " by " + poem.getAuthor();
             }
             title = String.format(
-                    "%d. %s (see solution %d)",
+                    "Poem %d. %s (see solution %d)",
                     i+1,
                     title,
                     solutionPositions.get(i) + 1);
             writer.write("\\begin{tabular}{p{0.97\\linewidth}}\n\\phantom{.}\\\\\n");
-            writer.printf("\\poemtitle{%s}\\\\\n", title);
+            writer.printf("\\textbf{%s}\\\\\n", title);
             writer.write("\\begin{tabular}{|c");
             char columnType = 'c';
             for (int charIndex = 0; charIndex < display.getWidth(); charIndex++) {
@@ -129,13 +132,23 @@ public class VograbularyBook {
             }
             writer.write("\\hline\n\\end{tabular}\n");
             writer.write("\\end{tabular}\n\n");
+            Puzzle russianDollsPuzzle = new Puzzle(russianDolls.get(i));
+            title = String.format(
+                    "Doll %d. %s (see solution %d)",
+                    i+1,
+                    russianDollsPuzzle.getClue(),
+                    solutionPositions.get(i) + 1);
+            writer.printf("\\textbf{%s}\n", title);
+            writer.write("\n\n");
         }
+        WordList wordList = new WordList();
+        wordList.read(loadTextAsset("wordlist.txt"));
         writer.write("\\newpage\\Large\\textbf{Solutions}\n");
         for (int i = 0; i < chosenPoems.size(); i++) {
             int poemIndex = solutionPositions.indexOf(i);
             Poem poem = chosenPoems.get(poemIndex).getPoem();
             String title = String.format(
-                            "%d. %s",
+                            "Poem %d. %s",
                             i+1,
                             poem.getTitle().replace("&", "\\&"));
             writer.printf("\\poemtitle{%s}\n\\begin{verse}\n", title);
@@ -143,6 +156,13 @@ public class VograbularyBook {
                 writer.printf("%s\\\\\n", line);
             }
             writer.write("\\end{verse}\n");
+            Puzzle russianDollsPuzzle = new Puzzle(russianDolls.get(poemIndex));
+            title = String.format(
+                    "Doll %d. %s",
+                    i+1,
+                    russianDollsPuzzle.findSolution(wordList));
+            writer.printf("\\poemtitle{%s}\n\n", title);
+            
         }
     }
 
@@ -160,6 +180,9 @@ public class VograbularyBook {
             ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
             InputStream stream = classLoader.getResourceAsStream(
               "com/github/donkirkby/vograbulary/assets/"+assetName);
+            if (stream == null) {
+                throw new FileNotFoundException();
+            }
             ArrayList<String> lines = new ArrayList<String>();
             BufferedReader reader =new BufferedReader(new InputStreamReader(stream));
             try {

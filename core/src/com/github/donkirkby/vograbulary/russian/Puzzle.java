@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 
+import com.github.donkirkby.vograbulary.ultraghost.WordList;
+
 public class Puzzle {
     public static final int NO_SELECTION = Integer.MIN_VALUE;
     private String clue;
@@ -13,6 +15,14 @@ public class Puzzle {
     private boolean isSolved;
     private float delay = 0;
     private BigDecimal totalScore;
+    
+    public static class NoSolutionException extends RuntimeException {
+        private static final long serialVersionUID = -4948543814705260615L;
+        
+        public NoSolutionException(String message) {
+            super(message);
+        }
+    }
     
     public Puzzle(String clue) {
         this(clue, BigDecimal.ZERO);
@@ -160,5 +170,19 @@ public class Puzzle {
     
     public BigDecimal getTotalScore() {
         return totalScore;
+    }
+
+    public String findSolution(WordList wordList) {
+        for (int wordIndex = 0; wordIndex < 2; wordIndex++) {
+            setTargetWord(wordIndex);
+            final int targetLength = targets[wordIndex].length();
+            for (int charIndex = 1; charIndex < targetLength; charIndex++) {
+                setTargetCharacter(charIndex);
+                if (wordList.contains(getCombination())) {
+                    return getCombination();
+                }
+            }
+        }
+        throw new NoSolutionException("No solution for clue: " + clue);
     }
 }
