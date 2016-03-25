@@ -35,6 +35,7 @@ public class Puzzle implements Serializable {
             new ArrayList<Listener>();
     private boolean isComplete;
     private boolean isTimedOut;
+    private boolean isPaused;
     private float solutionDelay;
     private float responseDelay;
     private WordResult cachedResult = WordResult.UNKNOWN;
@@ -422,6 +423,9 @@ public class Puzzle implements Serializable {
     }
 
     public void adjustScore(float seconds) {
+        if (isPaused) {
+            return;
+        }
         if (getResult().isValidSolution()) {
             responseDelay += seconds;
             if (responseDelay >= MAX_DELAY/2) {
@@ -440,5 +444,18 @@ public class Puzzle implements Serializable {
     
     public boolean isCompleted() {
         return isTimedOut || getResult().isCompleted();
+    }
+    
+    /** True if the score timer has been paused. */
+    public boolean isPaused() {
+        return isPaused;
+    }
+    public void setPaused(boolean isPaused) {
+        this.isPaused = isPaused;
+        onChanged();
+    }
+
+    public void togglePause() {
+        setPaused( ! this.isPaused);
     }
 }

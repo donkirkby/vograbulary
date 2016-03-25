@@ -73,12 +73,14 @@ public class Match implements Serializable {
                 break;
             }
         }
+        boolean isPaused = puzzle != null && puzzle.isPaused();
         puzzle = new Puzzle(
                 letters, 
                 students[studentIndex], 
                 wordList);
         puzzle.setPreviousWord(previousWord);
         puzzle.setMinimumWordLength(minimumWordLength);
+        puzzle.setPaused(isPaused);
         return puzzle;
     }
 

@@ -72,6 +72,25 @@ public class MatchTest {
     }
     
     @Test
+    public void secondPuzzleNotPaused() {
+        random.setPuzzles("ABC", "XYZ");
+        match.createPuzzle(wordList);
+        Puzzle puzzle = match.createPuzzle(wordList);
+        
+        assertThat("isPaused", puzzle.isPaused(), is(false));
+    }
+    
+    @Test
+    public void secondPuzzlePaused() {
+        random.setPuzzles("ABC", "XYZ");
+        Puzzle puzzle1 = match.createPuzzle(wordList);
+        puzzle1.setPaused(true);
+        Puzzle puzzle2 = match.createPuzzle(wordList);
+        
+        assertThat("isPaused", puzzle2.isPaused(), is(true));
+    }
+    
+    @Test
     public void wordLength() {
         random.setPuzzles("PIE");
         int expected = 5;

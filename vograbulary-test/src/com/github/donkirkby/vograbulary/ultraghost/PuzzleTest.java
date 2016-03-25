@@ -202,6 +202,31 @@ public class PuzzleTest {
     }
     
     @Test
+    public void adjustScoreWhenPaused() {
+        float seconds = 10;
+        puzzle.setPaused(true);
+        puzzle.adjustScore(seconds);
+        int score = puzzle.getScore(WordResult.NOT_IMPROVED);
+        
+        assertThat("score", score, is(100));
+    }
+
+    @Test
+    public void togglePause() {
+        boolean isPaused1 = puzzle.isPaused();
+        puzzle.togglePause();
+        boolean isPaused2 = puzzle.isPaused();
+        int startCount = changeCount;
+        puzzle.togglePause();
+        boolean isPaused3 = puzzle.isPaused();
+        
+        assertThat("paused at start", isPaused1, is(false));
+        assertThat("paused after toggle", isPaused2, is(true));
+        assertThat("paused after toggle back", isPaused3, is(false));
+        assertThat("changeCount", changeCount, is(startCount+1));
+    }
+    
+    @Test
     public void getDisplayAtStart() {
         float seconds = 0;
         puzzle.adjustScore(seconds);

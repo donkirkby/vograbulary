@@ -46,6 +46,7 @@ extends VograbularyActivity implements UltraghostScreen, StudentListener {
     private Button solveButton;
     private Button respondButton;
     private Button nextButton;
+    private Button pauseButton;
     private List<Button> focusButtons;
     
     private Match match;
@@ -72,6 +73,7 @@ extends VograbularyActivity implements UltraghostScreen, StudentListener {
         solveButton = (Button)findViewById(R.id.solveButton);
         respondButton = (Button)findViewById(R.id.respondButton);
         nextButton = (Button)findViewById(R.id.nextButton);
+        pauseButton = (Button)findViewById(R.id.pauseButton);
         focusButtons = Arrays.asList(solveButton, respondButton, nextButton);
         handler = new Handler();
         
@@ -154,6 +156,9 @@ extends VograbularyActivity implements UltraghostScreen, StudentListener {
                                     TypedValue.COMPLEX_UNIT_PX,
                                     textSize * .75f);
                             nextButton.setTextSize(
+                                    TypedValue.COMPLEX_UNIT_PX,
+                                    textSize);
+                            pauseButton.setTextSize(
                                     TypedValue.COMPLEX_UNIT_PX,
                                     textSize);
                         }
@@ -245,6 +250,10 @@ extends VograbularyActivity implements UltraghostScreen, StudentListener {
                 hint.setText(puzzle.getHint());
                 result.setText(puzzle.getResultDisplay());
                 summary.setText(match.getSummary());
+                pauseButton.setText(getResources().getString(
+                        puzzle.isPaused()
+                        ? R.string.resume
+                        : R.string.pause));
             }
         });
     }
@@ -271,11 +280,13 @@ extends VograbularyActivity implements UltraghostScreen, StudentListener {
     public void next(View view) {
         controller.start();
     }
+    
+    public void pause(View view) {
+        match.getPuzzle().togglePause();
+    }
 
     @Override
     public void clear() {
-        // TODO Auto-generated method stub
-        
     }
 
     private void focusField(final EditText field) {
@@ -342,6 +353,10 @@ extends VograbularyActivity implements UltraghostScreen, StudentListener {
                     ? Button.VISIBLE
                     : Button.INVISIBLE);
         }
+        pauseButton.setVisibility(
+                target != nextButton && !isFinished
+                ? Button.VISIBLE
+                : Button.INVISIBLE);
     }
 
     @Override

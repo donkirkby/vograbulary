@@ -5,6 +5,8 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="next">Next</string>
+    <string name="pause">Pause</string>
+    <string name="resume">Resume</string>
     <string name="previous">Previous</string>
     <string name="word">Word</string>
     <string name="insert_description">insertion arrow</string>
