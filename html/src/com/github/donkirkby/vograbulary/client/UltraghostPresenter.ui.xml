@@ -29,9 +29,14 @@
                 <td><span ui:field="hint"/></td>
                 <td><g:Button ui:field="nextButton" text="Next"/></td>
             </tr>
+            <tr>
+                <td>
+                    <p ui:field="result">result</p>
+                    <div ui:field="summary"/>
+                </td>
+                <td><g:Button ui:field="pauseButton" text="Pause"/></td>
+            </tr>
         </table>
-        <p ui:field="result">result</p>
-        <div ui:field="summary"/>
 
             </section>
         </div>

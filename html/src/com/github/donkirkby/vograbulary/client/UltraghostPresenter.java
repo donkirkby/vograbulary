@@ -62,6 +62,9 @@ public class UltraghostPresenter extends VograbularyPresenter implements Ultragh
     Button nextButton;
     
     @UiField
+    Button pauseButton;
+    
+    @UiField
     ParagraphElement result;
     
     @UiField
@@ -132,6 +135,11 @@ public class UltraghostPresenter extends VograbularyPresenter implements Ultragh
         controller.start();
     }
     
+    @UiHandler("pauseButton")
+    void pause(ClickEvent e) {
+        match.getPuzzle().togglePause();
+    }
+    
     private void focusField(final TextBox target) {
         for (TextBox field : focusFields) {
             field.setEnabled(target == field);
@@ -148,10 +156,11 @@ public class UltraghostPresenter extends VograbularyPresenter implements Ultragh
     }
 
     private void focusButton(Button target) {
-        Student winner = match.getWinner();
+        boolean isFinished = match.getWinner() != null;
         for (Button button : focusButtons) {
-            button.setVisible(winner == null && button == target);
+            button.setVisible(button == target && ! isFinished);
         }
+        pauseButton.setVisible(target != nextButton && ! isFinished);
     }
 
     @Override
@@ -216,6 +225,7 @@ public class UltraghostPresenter extends VograbularyPresenter implements Ultragh
         hint.setInnerText(puzzle.getHint());
         refreshScore();
         summary.setInnerText(match.getSummary());
+        pauseButton.setText(puzzle.isPaused() ? "Resume" : "Pause");
     }
 
     @Override
