@@ -415,11 +415,12 @@ public class Puzzle implements Serializable {
     }
 
     private int getPotentialScore() {
-        float potentialScore = Math.max(0, MAX_DELAY - solutionDelay);
+        float progress = Math.min(solutionDelay/MAX_DELAY, 1);
+        float potentialScore = 101 - (float)Math.exp(progress*Math.log(101));
         if (NO_SOLUTION.equals(solution)) {
             potentialScore /= 3;
         }
-        return Math.round(2 * potentialScore);
+        return Math.round(potentialScore);
     }
 
     public void adjustScore(float seconds) {

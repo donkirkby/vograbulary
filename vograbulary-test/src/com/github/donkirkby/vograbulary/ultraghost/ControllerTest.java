@@ -436,22 +436,8 @@ public class ControllerTest {
             scoreTask.run();
         }
         
-        assertThat("score", puzzle.getScore(WordResult.NOT_IMPROVED), is(80));
+        assertThat("score", puzzle.getScore(WordResult.NOT_IMPROVED), is(98));
         assertThat("refresh count", screen.getScoreRefreshCount(), is(loopCount));
-    }
-    
-    @Test
-    public void adjustScoreRoundToZero() {
-        controller.start();
-        Puzzle puzzle = screen.getPuzzle();
-        
-        int seconds = (int) Puzzle.MAX_DELAY;
-        int loopCount = seconds * 1000 / Controller.SCORE_MILLISECONDS - 2;
-        for (int i = 0; i < loopCount; i++) {
-            scoreTask.run();
-        }
-        
-        assertThat("score", puzzle.getScore(WordResult.NOT_IMPROVED), is(0));
     }
     
     @Test

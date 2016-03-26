@@ -179,7 +179,7 @@ public class PuzzleTest {
         puzzle.adjustScore(seconds);
         int score = puzzle.getScore(WordResult.NOT_IMPROVED);
         
-        assertThat("score", score, is(80));
+        assertThat("score", score, is(98));
     }
     
     @Test
@@ -189,7 +189,7 @@ public class PuzzleTest {
         puzzle.adjustScore(seconds);
         int score = puzzle.getScore(WordResult.NOT_IMPROVED);
         
-        assertThat("score", score, is(60));
+        assertThat("score", score, is(95));
     }
     
     @Test
@@ -247,7 +247,8 @@ public class PuzzleTest {
     
     @Test
     public void getDisplayAfterSkip() {
-        float seconds = 20;
+        // Drops slowly at first, to 60 after 40.2s.
+        float seconds = 40.2f;
         puzzle.adjustScore(seconds);
         puzzle.setSolution("");
         String display = puzzle.getResultDisplay();
@@ -257,7 +258,7 @@ public class PuzzleTest {
     
     @Test
     public void getDisplayAfterResponse() {
-        float seconds = 20;
+        float seconds = 40.2f;
         puzzle.adjustScore(seconds);
         puzzle.setSolution("PRICE");
         puzzle.setResponse("PIECE");
@@ -268,7 +269,7 @@ public class PuzzleTest {
     
     @Test
     public void getDisplayAfterInvalidResponse() {
-        float seconds = 20;
+        float seconds = 40.2f;
         puzzle.adjustScore(seconds);
         puzzle.setSolution("");
         puzzle.setResponse("X");
@@ -301,7 +302,7 @@ public class PuzzleTest {
         puzzle.setResponse("");
         int score = puzzle.getScore();
         
-        assertThat("display", score, is(80));
+        assertThat("display", score, is(98));
     }
     
     @Test
@@ -315,7 +316,7 @@ public class PuzzleTest {
     
     @Test
     public void getPotentialScore() {
-        // Lose 2% every second until solution
+        // Drops slowly at first, to 95 after 20s.
         float solutionSeconds = 20;
         
         puzzle.adjustScore(solutionSeconds);
@@ -323,16 +324,15 @@ public class PuzzleTest {
         int earlierScore = puzzle.getScore(WordResult.EARLIER);
         int shorterScore = puzzle.getScore(WordResult.SHORTER);
         
-        assertThat("display", notImprovedScore, is(60));
-        assertThat("display", earlierScore, is(40));
-        assertThat("display", shorterScore, is(20));
+        assertThat("display", notImprovedScore, is(95));
+        assertThat("display", earlierScore, is(63)); // 2/3
+        assertThat("display", shorterScore, is(32)); // 1/3
     }
     
     @Test
     public void getScoreAfterInvalidSolution() {
-        // Lose 2% every second until solution,
-        // also lose 5 seconds for invalid response
-        float solutionSeconds = 20;
+        // Lose 5 seconds for invalid response
+        float solutionSeconds = 12;
         float moreSolutionSeconds = 3;
         
         puzzle.adjustScore(solutionSeconds);
@@ -340,13 +340,13 @@ public class PuzzleTest {
         puzzle.adjustScore(moreSolutionSeconds);
         int notImprovedScore = puzzle.getScore(WordResult.NOT_IMPROVED);
         
-        assertThat("display", notImprovedScore, is(44));
+        assertThat("display", notImprovedScore, is(95));
     }
     
     @Test
     public void getScoreAfterDelayedResponse() {
-        // Lose 2% every second until solution
-        float solutionSeconds = 20;
+        // Drops slowly at first, to 60 after 40.2s.
+        float solutionSeconds = 40.2f;
         // Gain 4% of difference every second until response 
         float responseSeconds = 5; // time between solution and response
         
@@ -364,8 +364,8 @@ public class PuzzleTest {
     
     @Test
     public void getScoreAfterInvalidResponse() {
-        // Lose 2% every second until solution
-        float solutionSeconds = 20;
+        // Drops slowly at first, to 60 after 40.2s.
+        float solutionSeconds = 40.2f;
         // Gain 4% of difference every second until response,
         // also lose 5 seconds for invalid response
         float responseSeconds = 5; // time between solution and response
@@ -386,8 +386,8 @@ public class PuzzleTest {
     
     @Test
     public void getScoreAfterSkip() {
-        // Lose 2% every second until solution
-        float solutionSeconds = 20;
+        // Drops slowly at first, to 60 after 40.2s.
+        float solutionSeconds = 40.2f;
         // Gain 4% of difference every second until response 
         float responseSeconds = 5; // time between solution and response
         
@@ -397,13 +397,13 @@ public class PuzzleTest {
         int skippedScore = puzzle.getScore(WordResult.SKIP_NOT_IMPROVED);
         int wordFoundScore = puzzle.getScore(WordResult.WORD_FOUND);
         
-        assertThat("skipped score", skippedScore, is(20));
+        assertThat("skipped score", skippedScore, is(20)); // 1/3 for skip
         assertThat("word found score", wordFoundScore, is(-20 + 8));
     }
     
     @Test
     public void solutionTimeout() {
-        // Lose 2% every second until solution
+        // Out of time after 50s.
         float solutionSeconds = 50;
         
         puzzle.adjustScore(solutionSeconds);
