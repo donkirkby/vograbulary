@@ -30,6 +30,7 @@ vograbulary-test/junit
 
 wordpile/sample3.txt
 wordpile/sorted_words.txt
+wordpile/gutenberg_cache
 
 # Local configuration file (sdk path, etc)
 local.properties
