@@ -1,0 +1,19 @@
+apply plugin: 'java'
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile project(':core')
+}
+
+sourceCompatibility = "1.7"
+targetCompatibility = "1.7"
+
+task installAssets(type: Copy) {
+    from '../core/src/main/java/com/github/donkirkby/vograbulary/assets'
+    into 'src/main/resources'
+}
+
+processResources.dependsOn(installAssets)
+gradle.buildFinished {
+    delete fileTree('src/main/resources/').exclude('document_frame.tex')
+}

@@ -1,2 +1,2 @@
 #!/bin/sh
-rsync -a --delete --exclude /WEB-INF war/run war/vograbulary_html war/images war/stylesheets ../../vograbulary-gh-pages
+rsync -a --delete --exclude /WEB-INF war/run ../build/classes/artifacts/html_GWT/vograbulary war/images war/stylesheets ../docs

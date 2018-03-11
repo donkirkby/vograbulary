@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="html:GWT">
+    <output-path>$PROJECT_DIR$/build/classes/artifacts/html_GWT</output-path>
+    <root id="root">
+      <element id="gwt-compiler-output" facet="html/gwt/GWT" />
+    </root>
+  </artifact>
+</component>
